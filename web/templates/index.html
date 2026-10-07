@@ -249,23 +249,93 @@
 
               <!-- Charts & Converter Row -->
               <div class="dash-charts-row">
-                <!-- Chart: Spline Curves with pins -->
+                <!-- Chart: Real Live Revenue & Order Trajectory Chart (Dual-Axis Chart.js) -->
                 <div class="dash-chart-card">
                   <div class="dash-chart-card-header">
                     <div>
-                      <div class="dash-chart-title">Revenue & Order Trajectory</div>
-                      <div style="font-size: 20px; font-weight: 800; color: #fff; margin-top: 4px;">
-                        $25,421.64 <span style="font-size: 11px; color: #34d399; font-weight: 700;">+5.2% vs last month</span>
+                      <div class="dash-chart-title">Revenue &amp; Order Trajectory</div>
+                      <div class="trajectory-headline-val">
+                        <span id="trajectoryHeadlineRevenue">$8,338,712.01</span>
+                        <span id="trajectoryHeadlineGrowth" class="dash-kpi-pill pill-growth" style="font-size: 11.5px; padding: 2px 8px;">↑ 5.2% vs prev</span>
                       </div>
                     </div>
-                    <div class="dash-chart-legend">
-                      <span><span class="legend-dot" style="background: #3b82f6;"></span> Champions</span>
-                      <span><span class="legend-dot" style="background: #10b981;"></span> Loyal</span>
-                      <span><span class="legend-dot" style="background: #f43f5e;"></span> At-Risk</span>
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                      <select id="trajectoryPeriodSelect" class="trajectory-period-select" aria-label="Select aggregation period">
+                        <option value="12m" selected>Last 12 Months (Monthly)</option>
+                        <option value="6m">Last 6 Months (Monthly)</option>
+                        <option value="all">Full History (25 Months)</option>
+                        <option value="90d">Last 90 Days (Daily)</option>
+                        <option value="30d">Last 30 Days (Daily)</option>
+                        <option value="7d">Last 7 Days (Daily)</option>
+                      </select>
                     </div>
                   </div>
+
+                  <!-- 4 KPI Summary Cards matching reference -->
+                  <div class="trajectory-kpis-grid">
+                    <div class="trajectory-kpi-tile featured">
+                      <div class="kpi-tile-icon-box box-orange">💰</div>
+                      <div class="kpi-tile-content">
+                        <div class="kpi-tile-label">Total Revenue</div>
+                        <div class="kpi-tile-value" id="kpiTotalRevenue">$8,338,712.01</div>
+                        <div class="kpi-tile-sub" id="kpiRevenueGrowth"><span>↑</span> +5.2% vs prev</div>
+                      </div>
+                    </div>
+
+                    <div class="trajectory-kpi-tile">
+                      <div class="kpi-tile-icon-box box-teal">📦</div>
+                      <div class="kpi-tile-content">
+                        <div class="kpi-tile-label">Total Orders</div>
+                        <div class="kpi-tile-value" id="kpiTotalOrders">17,132</div>
+                        <div class="kpi-tile-sub" id="kpiOrdersGrowth"><span>↑</span> +4.1% vs prev</div>
+                      </div>
+                    </div>
+
+                    <div class="trajectory-kpi-tile">
+                      <div class="kpi-tile-icon-box box-purple">💳</div>
+                      <div class="kpi-tile-content">
+                        <div class="kpi-tile-label">Avg. Order Value</div>
+                        <div class="kpi-tile-value" id="kpiAvgOrderValue">$486.73</div>
+                        <div class="kpi-tile-sub" id="kpiAovGrowth"><span>↑</span> +1.1% vs prev</div>
+                      </div>
+                    </div>
+
+                    <div class="trajectory-kpi-tile">
+                      <div class="kpi-tile-icon-box box-amber">📈</div>
+                      <div class="kpi-tile-content">
+                        <div class="kpi-tile-label">Trajectory Trend</div>
+                        <div class="kpi-tile-value" id="kpiTrajectoryTrend">Accelerating</div>
+                        <div class="kpi-tile-sub" id="kpiTrajectorySpan">UCI Retail II Engine</div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Dual-Axis Legend -->
+                  <div class="trajectory-legend-bar">
+                    <div class="trajectory-legend-item">
+                      <span class="legend-dot-glow" style="background: #ff933d; box-shadow: 0 0 8px rgba(255, 147, 61, 0.6);"></span>
+                      <span>Revenue (USD) &mdash; Left Axis</span>
+                    </div>
+                    <div class="trajectory-legend-item">
+                      <span class="legend-dot-glow" style="background: #2dd4bf; box-shadow: 0 0 8px rgba(45, 212, 191, 0.6);"></span>
+                      <span>Order Volume &mdash; Right Axis</span>
+                    </div>
+                    <div style="margin-left: auto; font-size: 11px; color: var(--text-muted);" id="trajectoryDataStatus">
+                      ● Live Data
+                    </div>
+                  </div>
+
+                  <!-- Chart Canvas Container -->
                   <div class="dash-chart-canvas-wrapper">
-                    <canvas id="dashCashflowCanvas"></canvas>
+                    <canvas id="dashTrajectoryChart"></canvas>
+                    <div id="chartLoadingOverlay" class="trajectory-loading-overlay" style="display: none;">
+                      <div class="chart-spinner"></div>
+                      <span>Aggregating real transactions...</span>
+                    </div>
+                    <div id="chartErrorState" class="trajectory-error-state" style="display: none;">
+                      <span>Failed to load trajectory analytics</span>
+                      <button type="button" onclick="window.reloadTrajectoryChart && window.reloadTrajectoryChart()">Retry</button>
+                    </div>
                   </div>
                 </div>
 
@@ -1326,6 +1396,7 @@
     </div>
   </footer>
 
+  <script src="/static/js/chart.min.js"></script>
   <script src="/static/js/dashflow.js"></script>
 </body>
 </html>

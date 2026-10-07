@@ -205,6 +205,129 @@ def api_health():
         "p99_latency_ms": 0.84
     })
 
+# Analytics dataset paths
+MONTHLY_ANALYTICS_PATH = os.path.join(BASE_DIR, "data", "warehouse", "monthly_revenue_orders.json")
+DAILY_ANALYTICS_PATH = os.path.join(BASE_DIR, "data", "warehouse", "daily_revenue_orders.json")
+
+def load_analytics_data():
+    monthly = []
+    daily = []
+    if os.path.exists(MONTHLY_ANALYTICS_PATH):
+        try:
+            with open(MONTHLY_ANALYTICS_PATH, "r") as f:
+                monthly = json.load(f)
+        except Exception:
+            pass
+    if os.path.exists(DAILY_ANALYTICS_PATH):
+        try:
+            with open(DAILY_ANALYTICS_PATH, "r") as f:
+                daily = json.load(f)
+        except Exception:
+            pass
+    return monthly, daily
+
+@app.route("/api/analytics/revenue-orders")
+def api_revenue_orders():
+    """
+    Returns live aggregated transaction trajectory for dual-axis Revenue & Order Volume chart.
+    Supports periods: 12m (default), 6m, all, 90d, 30d, 7d
+    """
+    period = request.args.get("period", "12m").lower().strip()
+    monthly, daily = load_analytics_data()
+
+    if not monthly and not daily:
+        return jsonify({"error": "No revenue data available", "period": period}), 404
+
+    month_names = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
+
+    if period in ["90d", "30d", "7d"] and daily:
+        days_count = 90 if period == "90d" else (30 if period == "30d" else 7)
+        curr_slice = daily[-days_count:]
+        prev_slice = daily[-(days_count * 2):-days_count] if len(daily) >= (days_count * 2) else []
+
+        labels = [d["day"][5:] for d in curr_slice]
+        full_dates = [d["day"] for d in curr_slice]
+        revenue_series = [d["revenue"] for d in curr_slice]
+        orders_series = [d["orders"] for d in curr_slice]
+        date_range_label = f"{curr_slice[0]['day']} - {curr_slice[-1]['day']}"
+    else:
+        if period == "6m":
+            m_count = 6
+        elif period == "all":
+            m_count = len(monthly)
+        else:
+            period = "12m"
+            m_count = 12
+
+        curr_slice = monthly[-m_count:]
+        prev_slice = monthly[-(m_count * 2):-m_count] if len(monthly) >= (m_count * 2) else []
+
+        def fmt_m(m_str):
+            parts = m_str.split("-")
+            m_idx = int(parts[1]) - 1
+            return f"{month_names[m_idx]} {parts[0]}"
+
+        labels = [fmt_m(m["month"]) for m in curr_slice]
+        full_dates = [m["month"] for m in curr_slice]
+        revenue_series = [m["revenue"] for m in curr_slice]
+        orders_series = [m["orders"] for m in curr_slice]
+        date_range_label = f"{fmt_m(curr_slice[0]['month'])} - {fmt_m(curr_slice[-1]['month'])}"
+
+    total_revenue = round(sum(revenue_series), 2)
+    total_orders = sum(orders_series)
+    avg_order_value = round(total_revenue / total_orders, 2) if total_orders > 0 else 0.0
+
+    if prev_slice:
+        prev_rev = sum(x["revenue"] for x in prev_slice)
+        prev_orders = sum(x["orders"] for x in prev_slice)
+        prev_aov = prev_rev / prev_orders if prev_orders > 0 else 0.0
+
+        revenue_growth = round(((total_revenue - prev_rev) / prev_rev * 100), 2) if prev_rev > 0 else 0.0
+        orders_growth = round(((total_orders - prev_orders) / prev_orders * 100), 2) if prev_orders > 0 else 0.0
+        aov_growth = round(((avg_order_value - prev_aov) / prev_aov * 100), 2) if prev_aov > 0 else 0.0
+    else:
+        if len(curr_slice) >= 2:
+            prev_one = curr_slice[-2]
+            curr_one = curr_slice[-1]
+            revenue_growth = round(((curr_one["revenue"] - prev_one["revenue"]) / prev_one["revenue"] * 100), 2) if prev_one["revenue"] > 0 else 0.0
+            orders_growth = round(((curr_one["orders"] - prev_one["orders"]) / prev_one["orders"] * 100), 2) if prev_one["orders"] > 0 else 0.0
+            prev_one_aov = prev_one["revenue"] / prev_one["orders"] if prev_one["orders"] > 0 else 0.0
+            curr_one_aov = curr_one["revenue"] / curr_one["orders"] if curr_one["orders"] > 0 else 0.0
+            aov_growth = round(((curr_one_aov - prev_one_aov) / prev_one_aov * 100), 2) if prev_one_aov > 0 else 0.0
+        else:
+            revenue_growth = 0.0
+            orders_growth = 0.0
+            aov_growth = 0.0
+
+    if len(curr_slice) >= 2:
+        latest = curr_slice[-1]
+        prior = curr_slice[-2]
+        headline_revenue = latest["revenue"]
+        headline_growth = round(((latest["revenue"] - prior["revenue"]) / prior["revenue"] * 100), 2) if prior["revenue"] > 0 else 0.0
+        headline_period_text = f"vs {labels[-2]}"
+    else:
+        headline_revenue = total_revenue
+        headline_growth = revenue_growth
+        headline_period_text = "vs previous period"
+
+    return jsonify({
+        "period": period,
+        "date_range_label": date_range_label,
+        "labels": labels,
+        "full_dates": full_dates,
+        "revenue": revenue_series,
+        "orders": orders_series,
+        "total_revenue": total_revenue,
+        "total_orders": total_orders,
+        "avg_order_value": avg_order_value,
+        "revenue_growth": revenue_growth,
+        "orders_growth": orders_growth,
+        "aov_growth": aov_growth,
+        "headline_revenue": headline_revenue,
+        "headline_growth": headline_growth,
+        "headline_period_text": headline_period_text
+    })
+
 
 # ------------------------------------------------------------------------------
 # Streamlit Execution Adapter

@@ -400,100 +400,263 @@ function initWhatIfSimulator() {
 }
 
 /* ==============================================================================
-   7. DASHBOARD CHARTS (Matching media_1791354420546.png Spline Curves)
+   7. DASHBOARD CHARTS — REAL DATA REVENUE & ORDER TRAJECTORY
+   Dual-Axis Area & Spline Chart powered by UCI Online Retail II Warehouse API
    ============================================================================== */
+let trajectoryChartInstance = null;
+
 function initDashboardCharts() {
-  const canvas = document.getElementById('dashCashflowCanvas');
+  const canvas = document.getElementById('dashTrajectoryChart');
   if (!canvas) return;
 
-  const ctx = canvas.getContext('2d');
-  let animationProgress = 0;
+  const periodSelect = document.getElementById('trajectoryPeriodSelect');
+  const loadingOverlay = document.getElementById('chartLoadingOverlay');
+  const errorState = document.getElementById('chartErrorState');
 
-  // Multi-series points matching DashFlow screenshot
-  const labels = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct'];
-  const seriesIncome = [12000, 15400, 14200, 18900, 22100, 20400, 26800, 25421, 28100, 31200];
-  const seriesInvest = [6500, 7200, 8100, 9400, 11200, 10800, 13400, 14100, 15600, 17200];
-  const seriesExpense = [4200, 4800, 5100, 6200, 7100, 6800, 7900, 8300, 8900, 9400];
+  // KPI DOM elements
+  const elHeadlineRevenue = document.getElementById('trajectoryHeadlineRevenue');
+  const elHeadlineGrowth  = document.getElementById('trajectoryHeadlineGrowth');
+  const elKpiRevenue      = document.getElementById('kpiTotalRevenue');
+  const elKpiRevGrowth    = document.getElementById('kpiRevenueGrowth');
+  const elKpiOrders       = document.getElementById('kpiTotalOrders');
+  const elKpiOrdGrowth    = document.getElementById('kpiOrdersGrowth');
+  const elKpiAov          = document.getElementById('kpiAvgOrderValue');
+  const elKpiAovGrowth    = document.getElementById('kpiAovGrowth');
+  const elDataStatus      = document.getElementById('trajectoryDataStatus');
 
-  function drawSpline(points, color, fillColor) {
-    const w = canvas.width;
-    const h = canvas.height;
-    const pad = 20;
+  function formatCurrency(val) {
+    return new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency: 'USD',
+      maximumFractionDigits: 2
+    }).format(val);
+  }
 
-    const maxVal = 35000;
-    const stepX = (w - pad * 2) / (points.length - 1);
+  function formatNumber(val) {
+    return new Intl.NumberFormat('en-US').format(val);
+  }
 
-    ctx.beginPath();
-    points.forEach((val, i) => {
-      const curVal = val * animationProgress;
-      const x = pad + i * stepX;
-      const y = h - pad - (curVal / maxVal) * (h - pad * 2);
+  function updateKpiPill(element, growth, suffix = 'vs prev') {
+    if (!element) return;
+    const isPos = growth >= 0;
+    const arrow = isPos ? '↑' : '↓';
+    const sign = isPos ? '+' : '';
+    element.innerHTML = `<span>${arrow}</span> ${sign}${growth.toFixed(1)}% ${suffix}`;
+    if (element.classList.contains('pill-growth') || element.classList.contains('pill-warning')) {
+      element.className = `dash-kpi-pill ${isPos ? 'pill-growth' : 'pill-warning'}`;
+    } else {
+      element.className = `kpi-tile-sub ${isPos ? '' : 'negative'}`;
+    }
+  }
 
-      if (i === 0) {
-        ctx.moveTo(x, y);
-      } else {
-        const prevVal = points[i - 1] * animationProgress;
-        const prevX = pad + (i - 1) * stepX;
-        const prevY = h - pad - (prevVal / maxVal) * (h - pad * 2);
-        const cpX1 = prevX + (x - prevX) / 2;
-        const cpX2 = prevX + (x - prevX) / 2;
-        ctx.bezierCurveTo(cpX1, prevY, cpX2, y, x, y);
+  function renderChart(data) {
+    const ctx = canvas.getContext('2d');
+
+    if (trajectoryChartInstance) {
+      trajectoryChartInstance.destroy();
+      trajectoryChartInstance = null;
+    }
+
+    // Check if Chart.js is loaded
+    if (typeof Chart === 'undefined') {
+      console.error('Chart.js library not loaded yet');
+      return;
+    }
+
+    // Create linear gradients for area fills
+    const chartHeight = canvas.clientHeight || 280;
+    const revGradient = ctx.createLinearGradient(0, 0, 0, chartHeight);
+    revGradient.addColorStop(0, 'rgba(255, 147, 61, 0.28)');
+    revGradient.addColorStop(0.65, 'rgba(255, 147, 61, 0.05)');
+    revGradient.addColorStop(1, 'rgba(255, 147, 61, 0.0)');
+
+    const ordGradient = ctx.createLinearGradient(0, 0, 0, chartHeight);
+    ordGradient.addColorStop(0, 'rgba(45, 212, 191, 0.22)');
+    ordGradient.addColorStop(0.65, 'rgba(45, 212, 191, 0.04)');
+    ordGradient.addColorStop(1, 'rgba(45, 212, 191, 0.0)');
+
+    trajectoryChartInstance = new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: data.labels,
+        datasets: [
+          {
+            label: 'Revenue (USD)',
+            data: data.revenue,
+            yAxisID: 'yRevenue',
+            borderColor: '#ff933d',
+            backgroundColor: revGradient,
+            borderWidth: 2.5,
+            tension: 0.38,
+            fill: true,
+            pointRadius: data.labels.length > 40 ? 0 : 3.5,
+            pointHoverRadius: 6,
+            pointBackgroundColor: '#ff933d',
+            pointBorderColor: '#121216',
+            pointBorderWidth: 2,
+            pointHoverBorderColor: '#ffffff',
+            pointHoverBorderWidth: 2
+          },
+          {
+            label: 'Order Volume',
+            data: data.orders,
+            yAxisID: 'yOrders',
+            borderColor: '#2dd4bf',
+            backgroundColor: ordGradient,
+            borderWidth: 2,
+            borderDash: [5, 4],
+            tension: 0.38,
+            fill: true,
+            pointRadius: data.labels.length > 40 ? 0 : 3,
+            pointHoverRadius: 5.5,
+            pointBackgroundColor: '#2dd4bf',
+            pointBorderColor: '#121216',
+            pointBorderWidth: 2,
+            pointHoverBorderColor: '#ffffff',
+            pointHoverBorderWidth: 2
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        interaction: {
+          mode: 'index',
+          intersect: false
+        },
+        animation: {
+          duration: 900,
+          easing: 'easeOutQuart'
+        },
+        plugins: {
+          legend: {
+            display: false // Using our custom legend matching DashFlow UI
+          },
+          tooltip: {
+            backgroundColor: 'rgba(17, 18, 23, 0.94)',
+            titleColor: '#ffffff',
+            bodyColor: '#e2e8f0',
+            borderColor: 'rgba(255, 255, 255, 0.12)',
+            borderWidth: 1,
+            padding: 12,
+            boxPadding: 6,
+            usePointStyle: true,
+            titleFont: { size: 12, weight: '700' },
+            bodyFont: { size: 12, weight: '600' },
+            callbacks: {
+              label: function(context) {
+                if (context.datasetIndex === 0) {
+                  return ` Revenue: ${formatCurrency(context.parsed.y)}`;
+                } else {
+                  return ` Orders: ${formatNumber(context.parsed.y)} transactions`;
+                }
+              }
+            }
+          }
+        },
+        scales: {
+          x: {
+            grid: {
+              color: 'rgba(255, 255, 255, 0.035)',
+              drawBorder: false
+            },
+            ticks: {
+              color: 'rgba(255, 255, 255, 0.45)',
+              font: { size: 11, weight: '600' },
+              maxTicksLimit: data.labels.length > 40 ? 10 : 12,
+              maxRotation: 0
+            }
+          },
+          yRevenue: {
+            type: 'linear',
+            position: 'left',
+            grid: {
+              color: 'rgba(255, 255, 255, 0.04)',
+              drawBorder: false
+            },
+            ticks: {
+              color: 'rgba(255, 147, 61, 0.75)',
+              font: { size: 11, weight: '600' },
+              callback: function(val) {
+                if (val >= 1000000) return `$${(val / 1000000).toFixed(1)}M`;
+                if (val >= 1000) return `$${(val / 1000).toFixed(0)}k`;
+                return `$${val}`;
+              }
+            }
+          },
+          yOrders: {
+            type: 'linear',
+            position: 'right',
+            grid: {
+              drawOnChartArea: false,
+              drawBorder: false
+            },
+            ticks: {
+              color: 'rgba(45, 212, 191, 0.75)',
+              font: { size: 11, weight: '600' },
+              callback: function(val) {
+                if (val >= 1000) return `${(val / 1000).toFixed(1)}k`;
+                return val;
+              }
+            }
+          }
+        }
       }
     });
-
-    ctx.strokeStyle = color;
-    ctx.lineWidth = 2.5;
-    ctx.stroke();
-
-    if (fillColor) {
-      ctx.lineTo(w - pad, h - pad);
-      ctx.lineTo(pad, h - pad);
-      ctx.closePath();
-      ctx.fillStyle = fillColor;
-      ctx.fill();
-    }
   }
 
-  function resizeAndRender() {
-    const rect = canvas.parentElement.getBoundingClientRect();
-    canvas.width = rect.width * window.devicePixelRatio;
-    canvas.height = rect.height * window.devicePixelRatio;
-    ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
+  function fetchTrajectory(period = '12m') {
+    if (loadingOverlay) loadingOverlay.style.display = 'flex';
+    if (errorState) errorState.style.display = 'none';
 
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    fetch(`/api/analytics/revenue-orders?period=${encodeURIComponent(period)}`)
+      .then(res => {
+        if (!res.ok) throw new Error(`HTTP error ${res.status}`);
+        return res.json();
+      })
+      .then(data => {
+        if (loadingOverlay) loadingOverlay.style.display = 'none';
 
-    // Subtle horizontal gridlines
-    ctx.strokeStyle = 'rgba(255, 255, 255, 0.04)';
-    ctx.lineWidth = 1;
-    for (let i = 0; i <= 4; i++) {
-      const y = 20 + i * ((rect.height - 40) / 4);
-      ctx.beginPath();
-      ctx.moveTo(20, y);
-      ctx.lineTo(rect.width - 20, y);
-      ctx.stroke();
-    }
+        // Update Headline
+        if (elHeadlineRevenue) elHeadlineRevenue.textContent = formatCurrency(data.headline_revenue || data.total_revenue);
+        if (elHeadlineGrowth) updateKpiPill(elHeadlineGrowth, data.headline_growth || data.revenue_growth, 'vs prev');
 
-    // Gradients
-    const gradIncome = ctx.createLinearGradient(0, 0, 0, rect.height);
-    gradIncome.addColorStop(0, 'rgba(59, 130, 246, 0.18)');
-    gradIncome.addColorStop(1, 'rgba(59, 130, 246, 0.0)');
+        // Update 4 KPI Tiles
+        if (elKpiRevenue) elKpiRevenue.textContent = formatCurrency(data.total_revenue);
+        if (elKpiRevGrowth) updateKpiPill(elKpiRevGrowth, data.revenue_growth, 'vs prev');
 
-    drawSpline(seriesIncome, '#3b82f6', gradIncome);
-    drawSpline(seriesInvest, '#10b981', null);
-    drawSpline(seriesExpense, '#f43f5e', null);
+        if (elKpiOrders) elKpiOrders.textContent = formatNumber(data.total_orders);
+        if (elKpiOrdGrowth) updateKpiPill(elKpiOrdGrowth, data.orders_growth, 'vs prev');
+
+        if (elKpiAov) elKpiAov.textContent = formatCurrency(data.avg_order_value);
+        if (elKpiAovGrowth) updateKpiPill(elKpiAovGrowth, data.aov_growth, 'vs prev');
+
+        if (elDataStatus) {
+          elDataStatus.innerHTML = `● ${data.granularity === 'daily' ? 'Daily' : 'Monthly'} (${data.data_points} points)`;
+        }
+
+        renderChart(data);
+      })
+      .catch(err => {
+        console.error('Error loading trajectory data:', err);
+        if (loadingOverlay) loadingOverlay.style.display = 'none';
+        if (errorState) errorState.style.display = 'flex';
+      });
   }
 
-  function animate() {
-    animationProgress += 0.04;
-    if (animationProgress > 1) animationProgress = 1;
-    resizeAndRender();
-    if (animationProgress < 1) {
-      requestAnimationFrame(animate);
-    }
+  window.reloadTrajectoryChart = function() {
+    const period = periodSelect ? periodSelect.value : '12m';
+    fetchTrajectory(period);
+  };
+
+  if (periodSelect) {
+    periodSelect.addEventListener('change', (e) => {
+      fetchTrajectory(e.target.value);
+    });
   }
 
-  window.addEventListener('resize', resizeAndRender);
-  animate();
+  // Initial load
+  fetchTrajectory(periodSelect ? periodSelect.value : '12m');
 }
 
 /* ==============================================================================
