@@ -381,14 +381,24 @@ button, input, select, textarea {
 }
 
 /* ==============================================================================
-   02. HERO SECTION
+   02. SINGLE DASHBOARD SPA CONTAINER
    ============================================================================== */
 .hero-section {
-  padding-top: 150px;
-  padding-bottom: 90px;
+  padding-top: 84px;
+  padding-bottom: 24px;
   position: relative;
   overflow: hidden;
   text-align: center;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.dash-hero-compact-header {
+  margin-bottom: 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .hero-tag {
@@ -398,13 +408,32 @@ button, input, select, textarea {
   background: rgba(255, 147, 61, 0.1);
   border: 1px solid rgba(255, 147, 61, 0.3);
   color: var(--accent-orange);
-  font-size: 11.5px;
+  font-size: 11px;
   font-weight: 700;
   letter-spacing: 0.8px;
   text-transform: uppercase;
-  padding: 6px 16px;
+  padding: 4px 14px;
   border-radius: var(--radius-full);
-  margin-bottom: 24px;
+  margin-bottom: 10px;
+}
+
+.hero-title-compact {
+  font-size: clamp(24px, 3.2vw, 36px);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  line-height: 1.15;
+  color: #ffffff;
+  max-width: 860px;
+  margin: 0 auto 6px;
+}
+
+.hero-subtitle-compact {
+  font-size: 13.5px;
+  color: var(--text-secondary);
+  line-height: 1.45;
+  max-width: 660px;
+  margin: 0 auto;
+  font-weight: 400;
 }
 
 .hero-title {
@@ -431,45 +460,45 @@ button, input, select, textarea {
   align-items: center;
   justify-content: center;
   gap: 16px;
-  margin-bottom: 64px;
+  margin-bottom: 32px;
   flex-wrap: wrap;
 }
 
-/* Floating Hero Dashboard Preview */
+/* Single Dashboard Container */
 .hero-mockup-wrapper {
-  perspective: 1200px;
-  max-width: 1140px;
+  max-width: 1400px;
+  width: 100%;
   margin: 0 auto;
-  padding: 0 12px;
+  padding: 0 16px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
 }
 
 .hero-mockup {
-  background: #0f1014;
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  border-radius: 22px;
+  background: #090a0d;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 20px;
   overflow: hidden;
-  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.8), 0 0 60px rgba(255, 147, 61, 0.08);
-  transform: rotateX(6deg) translateY(0);
-  transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.6s ease;
-}
-
-.hero-mockup:hover {
-  transform: rotateX(1deg) translateY(-8px);
-  box-shadow: 0 40px 100px rgba(0, 0, 0, 0.9), 0 0 80px rgba(255, 147, 61, 0.15);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8), 0 0 50px rgba(255, 147, 61, 0.06);
+  flex: 1;
+  display: flex;
+  flex-direction: column;
 }
 
 /* ==============================================================================
-   DASHBOARD FRAME MOCKUP (Matching media_1791354420546.png)
+   DASHBOARD FRAME MOCKUP (Full SPA)
    ============================================================================== */
 .dash-window {
   display: grid;
   grid-template-columns: 240px 1fr;
-  min-height: 720px;
+  min-height: calc(100vh - 130px);
   background: #090a0d;
   text-align: left;
-  border-radius: var(--radius-lg);
+  border-radius: 20px;
   overflow: hidden;
   position: relative;
+  flex: 1;
 }
 
 /* Sidebar Luxury Styling */
@@ -479,7 +508,7 @@ button, input, select, textarea {
   padding: 22px 14px;
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 18px;
   position: relative;
   z-index: 2;
 }
@@ -2550,4 +2579,110 @@ button, input, select, textarea {
   .dash-kpi-sparkline {
     display: none;
   }
+}
+
+/* ==============================================================================
+   SPA TAB PANES & MODAL OVERLAY STYLES
+   ============================================================================== */
+.spa-tab-pane {
+  display: none;
+  flex-direction: column;
+  gap: 20px;
+  animation: spa-fade-in 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.spa-tab-pane.active {
+  display: flex;
+}
+
+@keyframes spa-fade-in {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Modal Drawer Overlay */
+.spa-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(4, 5, 8, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  z-index: 2000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s ease;
+}
+
+.spa-modal-overlay.open {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.spa-modal-dialog {
+  background: #0f1015;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: var(--radius-lg);
+  max-width: 980px;
+  width: 100%;
+  max-height: 88vh;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.9), 0 0 60px rgba(255, 147, 61, 0.12);
+  overflow: hidden;
+  transform: scale(0.96) translateY(12px);
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.spa-modal-overlay.open .spa-modal-dialog {
+  transform: scale(1) translateY(0);
+}
+
+.spa-modal-header {
+  padding: 18px 24px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #121319;
+}
+
+.spa-modal-title {
+  font-size: 17px;
+  font-weight: 800;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.spa-modal-close-btn {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: var(--text-secondary);
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 16px;
+  transition: all 0.15s ease;
+}
+
+.spa-modal-close-btn:hover {
+  background: rgba(255, 255, 255, 0.14);
+  color: #ffffff;
+}
+
+.spa-modal-body {
+  padding: 24px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
 }

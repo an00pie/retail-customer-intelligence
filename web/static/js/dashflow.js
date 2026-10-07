@@ -5,6 +5,7 @@
  */
 
 document.addEventListener('DOMContentLoaded', () => {
+  initSpaDashboardNavigation();
   initScrollReveals();
   initMobileNav();
   initFaqAccordion();
@@ -14,6 +15,114 @@ document.addEventListener('DOMContentLoaded', () => {
   initDashboardCharts();
   initAnchorScroll();
 });
+
+/* ==============================================================================
+   0. SPA DASHBOARD VIEW SWITCHER & MODAL DRAWER SYSTEM
+   ============================================================================== */
+function initSpaDashboardNavigation() {
+  const sidebarItems = document.querySelectorAll('.dash-nav-item');
+  const navLinks = document.querySelectorAll('.nav-link');
+  const actionPills = document.querySelectorAll('.dash-action-pill');
+  const tabPanes = document.querySelectorAll('.spa-tab-pane');
+
+  function switchTab(tabId) {
+    if (!tabId) return;
+
+    // Check if it's a modal overlay tab
+    if (tabId === 'architecture' || tabId === 'mining' || tabId === 'faq') {
+      openSpaModal(tabId);
+      return;
+    }
+
+    // Otherwise switch main content pane
+    const targetPane = document.getElementById(`tab-${tabId}`);
+    if (targetPane) {
+      tabPanes.forEach(pane => pane.classList.remove('active'));
+      targetPane.classList.add('active');
+
+      // Update sidebar active states
+      sidebarItems.forEach(item => {
+        item.classList.toggle('active', item.dataset.tab === tabId);
+      });
+
+      // Update top navbar active states if applicable
+      navLinks.forEach(link => {
+        link.classList.toggle('active', link.dataset.tab === tabId);
+      });
+
+      // If switching back to dashboard or chart view, trigger resize to ensure proper rendering
+      if (tabId === 'dashboard' && window.trajectoryChartInstance) {
+        setTimeout(() => {
+          window.trajectoryChartInstance.resize();
+        }, 80);
+      }
+    }
+  }
+
+  // Hook sidebar items
+  sidebarItems.forEach(item => {
+    item.addEventListener('click', (e) => {
+      e.preventDefault();
+      const tab = item.dataset.tab;
+      if (tab) switchTab(tab);
+    });
+  });
+
+  // Hook top navbar links
+  navLinks.forEach(link => {
+    link.addEventListener('click', (e) => {
+      e.preventDefault();
+      const tab = link.dataset.tab;
+      if (tab) switchTab(tab);
+    });
+  });
+
+  // Hook dashboard header action pills
+  actionPills.forEach(pill => {
+    pill.addEventListener('click', (e) => {
+      e.preventDefault();
+      const tab = pill.dataset.tab;
+      if (tab) switchTab(tab);
+    });
+  });
+
+  // Global modal opener/closer
+  window.openSpaModal = function(modalName) {
+    const modal = document.getElementById(`modal-${modalName}`);
+    if (modal) {
+      modal.classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+  };
+
+  window.closeSpaModal = function(modalName) {
+    if (modalName) {
+      const modal = document.getElementById(`modal-${modalName}`);
+      if (modal) modal.classList.remove('open');
+    } else {
+      document.querySelectorAll('.spa-modal-overlay').forEach(m => m.classList.remove('open'));
+    }
+    document.body.style.overflow = '';
+  };
+
+  // Close modals on overlay backdrop click or Escape key
+  document.querySelectorAll('.spa-modal-overlay').forEach(overlay => {
+    overlay.addEventListener('click', (e) => {
+      if (e.target === overlay) {
+        window.closeSpaModal();
+      }
+    });
+  });
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      window.closeSpaModal();
+    }
+  });
+
+  // Expose switchTab globally
+  window.switchDashboardTab = switchTab;
+}
 
 /* ==============================================================================
    1. SCROLL REVEALS (IntersectionObserver)
