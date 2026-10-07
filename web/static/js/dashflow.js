@@ -985,26 +985,25 @@ function initInteractiveGlobe() {
     curRotSpeedY += (targetRotSpeedY - curRotSpeedY) * 0.05;
     rotY += curRotSpeedY;
 
-    // Center position of the globe lowered slightly into the background horizon
-    // cx centered, cy moved lower (below heading line) so the text area remains clean
-    const cx = width * 0.5 + pointerX;
-    const cy = Math.min(height * 0.62, 390) + pointerY;
-    const currentRadius = Math.min(width * 0.44, 380);
+    // Center position of the globe placed behind hero & shifted slightly right
+    const cx = width * 0.52 + pointerX;
+    const cy = Math.min(height * 0.58, 360) + pointerY;
+    const currentRadius = Math.min(width * 0.38, 340);
 
     // 1. Soft Radiant Atmospheric Nebula Glow behind Globe (Restrained, not overpowering)
-    const auraGrad = ctx.createRadialGradient(cx, cy, currentRadius * 0.25, cx, cy, currentRadius * 1.35);
-    auraGrad.addColorStop(0, isHovered ? 'rgba(16, 185, 129, 0.14)' : 'rgba(16, 185, 129, 0.09)');
-    auraGrad.addColorStop(0.4, 'rgba(5, 150, 105, 0.05)');
-    auraGrad.addColorStop(0.75, 'rgba(4, 25, 16, 0.02)');
+    const auraGrad = ctx.createRadialGradient(cx, cy, currentRadius * 0.2, cx, cy, currentRadius * 1.3);
+    auraGrad.addColorStop(0, isHovered ? 'rgba(16, 185, 129, 0.10)' : 'rgba(16, 185, 129, 0.06)');
+    auraGrad.addColorStop(0.45, 'rgba(5, 150, 105, 0.03)');
+    auraGrad.addColorStop(0.8, 'rgba(4, 25, 16, 0.01)');
     auraGrad.addColorStop(1, 'rgba(3, 7, 5, 0.0)');
     ctx.fillStyle = auraGrad;
     ctx.beginPath();
-    ctx.arc(cx, cy, currentRadius * 1.35, 0, Math.PI * 2);
+    ctx.arc(cx, cy, currentRadius * 1.3, 0, Math.PI * 2);
     ctx.fill();
 
     // 2. Subtle Planetary Limb / Rim Glow
-    ctx.strokeStyle = isHovered ? 'rgba(52, 211, 153, 0.24)' : 'rgba(16, 185, 129, 0.16)';
-    ctx.lineWidth = 1.0;
+    ctx.strokeStyle = isHovered ? 'rgba(52, 211, 153, 0.18)' : 'rgba(16, 185, 129, 0.12)';
+    ctx.lineWidth = 0.85;
     ctx.beginPath();
     ctx.arc(cx, cy, currentRadius * 1.01, 0, Math.PI * 2);
     ctx.stroke();
@@ -1026,23 +1025,23 @@ function initInteractiveGlobe() {
       v.y = y2;
       v.z = z2;
 
-      const fov = 480;
+      const fov = 500;
       const scale = fov / (fov + z2 * currentRadius * 0.55);
       v.scale = scale;
       v.screenX = cx + x1 * currentRadius * scale;
       v.screenY = cy + y2 * currentRadius * scale;
-      v.alpha = Math.max(0.02, Math.min(0.45, (1 - z2) * 0.28));
+      v.alpha = Math.max(0.02, Math.min(0.35, (1 - z2) * 0.22));
     }
 
     // 4. Draw Connecting Wireframe Edges (Quiet, thin, architectural lines)
-    ctx.lineWidth = 0.75;
+    ctx.lineWidth = 0.65;
     for (let i = 0; i < edges.length; i++) {
       const p1 = vertices[edges[i][0]];
       const p2 = vertices[edges[i][1]];
 
       const avgZ = (p1.z + p2.z) * 0.5;
-      if (avgZ < 0.45) {
-        const edgeAlpha = Math.max(0.02, Math.min(0.28, (1 - avgZ) * 0.22));
+      if (avgZ < 0.40) {
+        const edgeAlpha = Math.max(0.02, Math.min(0.20, (1 - avgZ) * 0.16));
         ctx.strokeStyle = `rgba(52, 211, 153, ${edgeAlpha * (isHovered ? 1.15 : 1)})`;
         ctx.beginPath();
         ctx.moveTo(p1.screenX, p1.screenY);
