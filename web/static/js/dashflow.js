@@ -647,22 +647,23 @@ function initDashboardCharts() {
             display: false // Using our custom legend matching DashFlow UI
           },
           tooltip: {
-            backgroundColor: 'rgba(5, 18, 12, 0.94)',
+            backgroundColor: 'rgba(5, 14, 10, 0.92)',
             titleColor: '#ffffff',
-            bodyColor: '#a7f3d0',
-            borderColor: 'rgba(16, 185, 129, 0.3)',
+            bodyColor: '#cbd5e1',
+            borderColor: 'rgba(16, 185, 129, 0.22)',
             borderWidth: 1,
-            padding: 12,
-            boxPadding: 6,
+            padding: 10,
+            boxPadding: 5,
             usePointStyle: true,
-            titleFont: { size: 12, weight: '700' },
-            bodyFont: { size: 12, weight: '600' },
+            cornerRadius: 8,
+            titleFont: { size: 11, weight: '700', family: 'Inter, sans-serif' },
+            bodyFont: { size: 11, weight: '500', family: 'Inter, sans-serif' },
             callbacks: {
               label: function(context) {
                 if (context.datasetIndex === 0) {
-                  return ` Revenue: ${formatCurrency(context.parsed.y)}`;
+                  return ` Revenue:  ${formatCurrency(context.parsed.y)}`;
                 } else {
-                  return ` Orders: ${formatNumber(context.parsed.y)} transactions`;
+                  return ` Orders:   ${formatNumber(context.parsed.y)} txns`;
                 }
               }
             }
@@ -773,7 +774,8 @@ function initDashboardCharts() {
         if (elKpiAovGrowth) updateKpiPill(elKpiAovGrowth, data.aov_growth, 'vs previous period');
 
         if (elDataStatus) {
-          elDataStatus.innerHTML = `● UCI Online Retail II Warehouse &mdash; ${data.granularity === 'daily' ? 'Daily' : 'Monthly'} (${data.data_points} points)`;
+          const ptCount = data.data_points || (data.labels ? data.labels.length : 12);
+          elDataStatus.innerHTML = `● UCI Online Retail II Warehouse &mdash; ${data.granularity === 'daily' ? 'Daily' : 'Monthly'} (${ptCount} points)`;
         }
 
         renderChart(data);
@@ -983,25 +985,26 @@ function initInteractiveGlobe() {
     curRotSpeedY += (targetRotSpeedY - curRotSpeedY) * 0.05;
     rotY += curRotSpeedY;
 
-    // Center position of the globe in the hero area
+    // Center position of the globe lowered slightly into the background horizon
+    // cx centered, cy moved lower (below heading line) so the text area remains clean
     const cx = width * 0.5 + pointerX;
-    const cy = Math.min(height * 0.44, 275) + pointerY;
-    const currentRadius = Math.min(width * 0.40, 335);
+    const cy = Math.min(height * 0.62, 390) + pointerY;
+    const currentRadius = Math.min(width * 0.44, 380);
 
-    // 1. Radiant Atmospheric Nebula Glow behind Globe
-    const auraGrad = ctx.createRadialGradient(cx, cy, currentRadius * 0.2, cx, cy, currentRadius * 1.45);
-    auraGrad.addColorStop(0, isHovered ? 'rgba(16, 185, 129, 0.32)' : 'rgba(16, 185, 129, 0.22)');
-    auraGrad.addColorStop(0.35, 'rgba(5, 150, 105, 0.12)');
-    auraGrad.addColorStop(0.65, 'rgba(4, 25, 16, 0.04)');
+    // 1. Soft Radiant Atmospheric Nebula Glow behind Globe (Restrained, not overpowering)
+    const auraGrad = ctx.createRadialGradient(cx, cy, currentRadius * 0.25, cx, cy, currentRadius * 1.35);
+    auraGrad.addColorStop(0, isHovered ? 'rgba(16, 185, 129, 0.14)' : 'rgba(16, 185, 129, 0.09)');
+    auraGrad.addColorStop(0.4, 'rgba(5, 150, 105, 0.05)');
+    auraGrad.addColorStop(0.75, 'rgba(4, 25, 16, 0.02)');
     auraGrad.addColorStop(1, 'rgba(3, 7, 5, 0.0)');
     ctx.fillStyle = auraGrad;
     ctx.beginPath();
-    ctx.arc(cx, cy, currentRadius * 1.45, 0, Math.PI * 2);
+    ctx.arc(cx, cy, currentRadius * 1.35, 0, Math.PI * 2);
     ctx.fill();
 
-    // 2. Planetary Limb / Rim Glow
-    ctx.strokeStyle = isHovered ? 'rgba(52, 211, 153, 0.45)' : 'rgba(16, 185, 129, 0.32)';
-    ctx.lineWidth = 1.5;
+    // 2. Subtle Planetary Limb / Rim Glow
+    ctx.strokeStyle = isHovered ? 'rgba(52, 211, 153, 0.24)' : 'rgba(16, 185, 129, 0.16)';
+    ctx.lineWidth = 1.0;
     ctx.beginPath();
     ctx.arc(cx, cy, currentRadius * 1.01, 0, Math.PI * 2);
     ctx.stroke();
@@ -1023,24 +1026,24 @@ function initInteractiveGlobe() {
       v.y = y2;
       v.z = z2;
 
-      const fov = 460;
+      const fov = 480;
       const scale = fov / (fov + z2 * currentRadius * 0.55);
       v.scale = scale;
       v.screenX = cx + x1 * currentRadius * scale;
       v.screenY = cy + y2 * currentRadius * scale;
-      v.alpha = Math.max(0.04, Math.min(0.95, (1 - z2) * 0.55));
+      v.alpha = Math.max(0.02, Math.min(0.45, (1 - z2) * 0.28));
     }
 
-    // 4. Draw Connecting Wireframe Edges
-    ctx.lineWidth = 0.95;
+    // 4. Draw Connecting Wireframe Edges (Quiet, thin, architectural lines)
+    ctx.lineWidth = 0.75;
     for (let i = 0; i < edges.length; i++) {
       const p1 = vertices[edges[i][0]];
       const p2 = vertices[edges[i][1]];
 
       const avgZ = (p1.z + p2.z) * 0.5;
       if (avgZ < 0.45) {
-        const edgeAlpha = Math.max(0.04, Math.min(0.65, (1 - avgZ) * 0.45));
-        ctx.strokeStyle = `rgba(52, 211, 153, ${edgeAlpha * (isHovered ? 1.25 : 1)})`;
+        const edgeAlpha = Math.max(0.02, Math.min(0.28, (1 - avgZ) * 0.22));
+        ctx.strokeStyle = `rgba(52, 211, 153, ${edgeAlpha * (isHovered ? 1.15 : 1)})`;
         ctx.beginPath();
         ctx.moveTo(p1.screenX, p1.screenY);
         ctx.lineTo(p2.screenX, p2.screenY);
@@ -1048,7 +1051,7 @@ function initInteractiveGlobe() {
       }
     }
 
-    // 5. Draw Geodesic Arcs connecting hubs
+    // 5. Draw Geodesic Arcs connecting hubs (Refined, quiet telemetry tracks)
     const now = Date.now();
     for (let a = 0; a < arcs.length; a++) {
       const hFrom = hubs[arcs[a].from];
@@ -1057,12 +1060,12 @@ function initInteractiveGlobe() {
       const vTo = vertices[hTo.ring * pointsPerRing + hTo.index];
 
       // If at least one point is on front hemisphere
-      if (vFrom && vTo && (vFrom.z < 0.2 || vTo.z < 0.2)) {
+      if (vFrom && vTo && (vFrom.z < 0.25 || vTo.z < 0.25)) {
         const midX = (vFrom.screenX + vTo.screenX) * 0.5;
-        const midY = (vFrom.screenY + vTo.screenY) * 0.5 - 28 * vFrom.scale;
+        const midY = (vFrom.screenY + vTo.screenY) * 0.5 - 24 * vFrom.scale;
 
-        ctx.strokeStyle = 'rgba(110, 231, 183, 0.32)';
-        ctx.lineWidth = 1.2;
+        ctx.strokeStyle = 'rgba(110, 231, 183, 0.18)';
+        ctx.lineWidth = 0.9;
         ctx.setLineDash([3, 4]);
         ctx.beginPath();
         ctx.moveTo(vFrom.screenX, vFrom.screenY);
@@ -1070,71 +1073,71 @@ function initInteractiveGlobe() {
         ctx.stroke();
         ctx.setLineDash([]);
 
-        // Animated light packet traveling along the arc
-        const t = (now / 2200 + a * 0.22) % 1;
+        // Subtle traveling packet
+        const t = (now / 2600 + a * 0.22) % 1;
         const ptX = (1 - t) * (1 - t) * vFrom.screenX + 2 * (1 - t) * t * midX + t * t * vTo.screenX;
         const ptY = (1 - t) * (1 - t) * vFrom.screenY + 2 * (1 - t) * t * midY + t * t * vTo.screenY;
 
-        ctx.fillStyle = '#ffffff';
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.75)';
         ctx.beginPath();
-        ctx.arc(ptX, ptY, 2.2 * vFrom.scale, 0, Math.PI * 2);
+        ctx.arc(ptX, ptY, 1.6 * vFrom.scale, 0, Math.PI * 2);
         ctx.fill();
 
-        ctx.fillStyle = 'rgba(52, 211, 153, 0.45)';
+        ctx.fillStyle = 'rgba(52, 211, 153, 0.25)';
         ctx.beginPath();
-        ctx.arc(ptX, ptY, 5.5 * vFrom.scale, 0, Math.PI * 2);
+        ctx.arc(ptX, ptY, 4.0 * vFrom.scale, 0, Math.PI * 2);
         ctx.fill();
       }
     }
 
-    // 6. Draw Vertex Nodes
+    // 6. Draw Vertex Nodes (Small, delicate points)
     for (let i = 0; i < vertices.length; i++) {
       const v = vertices[i];
-      if (v.z < 0.3) {
+      if (v.z < 0.25) {
         ctx.fillStyle = `rgba(16, 185, 129, ${v.alpha})`;
         ctx.beginPath();
-        const nodeRadius = (v.z < -0.4 ? 2.0 : 1.2) * v.scale;
+        const nodeRadius = (v.z < -0.4 ? 1.4 : 0.9) * v.scale;
         ctx.arc(v.screenX, v.screenY, nodeRadius, 0, Math.PI * 2);
         ctx.fill();
       }
     }
 
-    // 7. Draw Commercial Hubs with Animated Radar Pulses
-    ctx.font = '600 9px "JetBrains Mono", monospace';
+    // 7. Draw Commercial Hubs with Restrained Pulses
+    ctx.font = '500 8.5px "JetBrains Mono", monospace';
     for (let h = 0; h < hubs.length; h++) {
       const hub = hubs[h];
       const hubIdx = hub.ring * pointsPerRing + hub.index;
       if (hubIdx < vertices.length) {
         const hv = vertices[hubIdx];
-        if (hv.z < 0.1) {
-          const depthFade = Math.max(0.3, Math.min(1.0, 1 - hv.z));
-          const wavePhase = (now / 1200 + h * 0.25) % 1;
-          const waveRadius = wavePhase * 16 * hv.scale;
-          const waveAlpha = (1 - wavePhase) * 0.7 * depthFade;
+        if (hv.z < 0.08) {
+          const depthFade = Math.max(0.2, Math.min(0.75, (1 - hv.z) * 0.75));
+          const wavePhase = (now / 1500 + h * 0.25) % 1;
+          const waveRadius = wavePhase * 13 * hv.scale;
+          const waveAlpha = (1 - wavePhase) * 0.45 * depthFade;
 
-          // Expanding radar pulse
+          // Expanding subtle radar pulse
           ctx.strokeStyle = `rgba(52, 211, 153, ${waveAlpha})`;
-          ctx.lineWidth = 1.3;
+          ctx.lineWidth = 1.0;
           ctx.beginPath();
           ctx.arc(hv.screenX, hv.screenY, waveRadius, 0, Math.PI * 2);
           ctx.stroke();
 
           // Hub point
-          ctx.fillStyle = `rgba(255, 255, 255, ${depthFade})`;
+          ctx.fillStyle = `rgba(255, 255, 255, ${depthFade * 0.9})`;
           ctx.beginPath();
-          ctx.arc(hv.screenX, hv.screenY, 2.5 * hv.scale, 0, Math.PI * 2);
+          ctx.arc(hv.screenX, hv.screenY, 1.8 * hv.scale, 0, Math.PI * 2);
           ctx.fill();
 
           // Outer ring
-          ctx.strokeStyle = `rgba(110, 231, 183, ${depthFade * 0.8})`;
-          ctx.lineWidth = 1.5;
+          ctx.strokeStyle = `rgba(110, 231, 183, ${depthFade * 0.5})`;
+          ctx.lineWidth = 1.0;
           ctx.beginPath();
-          ctx.arc(hv.screenX, hv.screenY, 5 * hv.scale, 0, Math.PI * 2);
+          ctx.arc(hv.screenX, hv.screenY, 3.8 * hv.scale, 0, Math.PI * 2);
           ctx.stroke();
 
-          // Micro label
-          ctx.fillStyle = `rgba(203, 213, 225, ${depthFade * 0.85})`;
-          ctx.fillText(hub.label, hv.screenX + 8, hv.screenY - 5);
+          // Quiet micro label
+          ctx.fillStyle = `rgba(148, 163, 184, ${depthFade * 0.75})`;
+          ctx.fillText(hub.label, hv.screenX + 7, hv.screenY - 4);
         }
       }
     }
