@@ -72,7 +72,7 @@ Two data sources feed the pipeline:
 - `CREATE EXTERNAL TABLE raw_transactions (...)` and `CREATE EXTERNAL TABLE raw_products (...)` pointing at the HDFS raw paths, partitioned by date where applicable.
 - Cleaning: a `clean_transactions` table (via `INSERT OVERWRITE ... SELECT`) that removes nulls/duplicates and casts types.
 - Aggregation: HiveQL queries/views for:
-  - Per-customer RFM base numbers (last purchase date, purchase count, total spend) — this replaces the MapReduce RFM job.
+  - Per-customer RFM base numbers (last purchase date, purchase count, total spend) calculated directly via Hive/Spark.
   - Per-category average price/rating/review volume from scraped data.
 - Store as ORC or Parquet for efficient downstream reads.
 

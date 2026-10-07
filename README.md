@@ -80,8 +80,10 @@ python3 hbase/load_hbase.py
 ```
 
 ### 7. Run Module 6 & 7: Web Application & BI Dashboard
-Launches the interactive UI:
+Launches the interactive DashFlow-redesigned UI & serving API:
 ```bash
+python3 web/app.py
+# Or via Streamlit:
 streamlit run web/app.py
 ```
 Open your browser at `http://localhost:8501`.

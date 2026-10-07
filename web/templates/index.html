@@ -1,0 +1,1331 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Customer Intelligence Platform — Turn Retail Data Into Customer Intelligence</title>
+  <meta name="description" content="Analyze customer behavior, discover valuable segments, predict lifetime value, and identify churn risk through one intelligent data platform.">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220%22%20%2232%22%20%2232%22><circle cx=%2216%22 cy=%2216%22 r=%2216%22 fill=%22%23ff933d%22/><path d=%22M10 20L16 10L22 20Z%22 fill=%22%230d0d0d%22/></svg>">
+  <link rel="stylesheet" href="/static/css/dashflow.css">
+</head>
+<body>
+
+  <!-- Ambient Backdrop Glows & Subtle Grid -->
+  <div class="canvas-atmosphere">
+    <div class="canvas-aura-top"></div>
+    <div class="canvas-aura-bottom"></div>
+    <div class="canvas-grid"></div>
+  </div>
+
+  <!-- ==============================================================================
+       01. NAVIGATION (Floating Capsule Navbar — Matching media_1791354559966.png)
+       ============================================================================== -->
+  <div class="nav-capsule-wrapper">
+    <nav class="nav-capsule">
+      <a href="#hero" class="nav-brand">
+        <div class="nav-brand-badge">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+          </svg>
+        </div>
+        <span class="nav-brand-title">Customer Intelligence</span>
+      </a>
+
+      <div class="nav-links">
+        <a href="#overview" class="nav-link">Overview</a>
+        <a href="#mining" class="nav-link">Data Mining</a>
+        <a href="#architecture" class="nav-link">Architecture</a>
+        <a href="#rfm" class="nav-link">RFM & ML</a>
+        <a href="#dashboard" class="nav-link">Dashboard</a>
+        <a href="#lookup" class="nav-link">Lookup</a>
+        <a href="#faq" class="nav-link">FAQ</a>
+      </div>
+
+      <a href="#dashboard" class="nav-cta-btn">
+        <span>Explore Platform</span>
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="5" y1="12" x2="19" y2="12"></line>
+          <polyline points="12 5 19 12 12 19"></polyline>
+        </svg>
+      </a>
+
+      <button class="nav-mobile-toggle" id="mobileNavToggle" aria-label="Toggle navigation menu">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="3" y1="12" x2="21" y2="12"></line>
+          <line x1="3" y1="6" x2="21" y2="6"></line>
+          <line x1="3" y1="18" x2="21" y2="18"></line>
+        </svg>
+      </button>
+    </nav>
+  </div>
+
+  <!-- Mobile Dropdown Menu -->
+  <div class="nav-mobile-dropdown" id="mobileNavDropdown">
+    <a href="#overview" class="nav-link">Platform Overview</a>
+    <a href="#mining" class="nav-link">Data Mining Layer</a>
+    <a href="#architecture" class="nav-link">Big Data Architecture</a>
+    <a href="#rfm" class="nav-link">RFM Intelligence</a>
+    <a href="#segmentation" class="nav-link">Customer Segmentation</a>
+    <a href="#models" class="nav-link">CLV & Churn ML</a>
+    <a href="#dashboard" class="nav-link">Interactive Dashboard</a>
+    <a href="#lookup" class="nav-link">Customer Profile Lookup</a>
+    <a href="#faq" class="nav-link">Technical FAQ</a>
+    <a href="#dashboard" class="btn-pill-primary" style="justify-content: center; margin-top: 10px;">Explore Platform →</a>
+  </div>
+
+  <!-- ==============================================================================
+       02. HERO SECTION (Matching media_1791354410284.png & media_1791354420546.png)
+       ============================================================================== -->
+  <section class="hero-section" id="hero">
+    <div class="container">
+      <div class="reveal-fade-up">
+        <div class="hero-tag">
+          <span>⚡</span>
+          <span>Big Data & Customer Intelligence Platform</span>
+        </div>
+      </div>
+
+      <div class="reveal-fade-up stagger-1">
+        <h1 class="hero-title">Turn Retail Data Into Customer Intelligence.</h1>
+      </div>
+
+      <div class="reveal-fade-up stagger-2">
+        <p class="hero-subtitle">
+          Analyze customer behavior, discover valuable segments, predict lifetime value, and identify churn risk through one intelligent data platform.
+        </p>
+      </div>
+
+      <div class="reveal-fade-up stagger-3 hero-actions">
+        <a href="#dashboard" class="btn-pill-primary">
+          <span>Explore Platform</span>
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+            <polyline points="12 5 19 12 12 19"></polyline>
+          </svg>
+        </a>
+        <a href="#architecture" class="btn-pill-secondary">
+          <span>View Architecture</span>
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="9 18 15 12 9 6"></polyline>
+          </svg>
+        </a>
+      </div>
+
+      <!-- Floating Hero Dashboard Preview (media_1791354420546.png Reproduction) -->
+      <div class="hero-mockup-wrapper reveal-fade-up stagger-4">
+        <div class="hero-mockup">
+          <div class="dash-window">
+            
+            <!-- Left Sidebar -->
+            <aside class="dash-sidebar">
+              <div class="dash-company">
+                <div class="dash-company-logo">📊</div>
+                <div class="dash-company-info">
+                  <div class="dash-company-name">Customer Intelligence</div>
+                  <div class="dash-company-tag">Enterprise Hub</div>
+                </div>
+              </div>
+
+              <div class="dash-search-pill">
+                <span>🔍 Search customers...</span>
+                <span class="dash-search-key">⌘F</span>
+              </div>
+
+              <div>
+                <div class="dash-nav-group-title">MAIN MENU</div>
+                <div class="dash-nav-items">
+                  <div class="dash-nav-item active">
+                    <span>📊</span>
+                    <span>Dashboard</span>
+                  </div>
+                  <a href="#lookup" class="dash-nav-item">
+                    <span>👥</span>
+                    <span>Customer Lookup</span>
+                  </a>
+                  <a href="#rfm" class="dash-nav-item">
+                    <span>📈</span>
+                    <span>RFM Analytics</span>
+                  </a>
+                  <a href="#segmentation" class="dash-nav-item">
+                    <span>🎯</span>
+                    <span>Segmentation</span>
+                  </a>
+                  <a href="#models" class="dash-nav-item">
+                    <span>🔮</span>
+                    <span>CLV Forecast</span>
+                  </a>
+                  <a href="#models" class="dash-nav-item">
+                    <span>⚠️</span>
+                    <span>Churn Risk</span>
+                    <span class="dash-badge-count">Live</span>
+                  </a>
+                </div>
+              </div>
+
+              <div>
+                <div class="dash-nav-group-title">MANAGEMENT</div>
+                <div class="dash-nav-items">
+                  <a href="#architecture" class="dash-nav-item">
+                    <span>🏛️</span>
+                    <span>Big Data Pipeline</span>
+                  </a>
+                  <a href="#mining" class="dash-nav-item">
+                    <span>🌐</span>
+                    <span>Scraper Catalog</span>
+                  </a>
+                  <a href="#stack" class="dash-nav-item">
+                    <span>⚙️</span>
+                    <span>Serving Telemetry</span>
+                  </a>
+                </div>
+              </div>
+            </aside>
+
+            <!-- Main Content Pane -->
+            <main class="dash-content">
+              <div class="dash-header-bar">
+                <div class="dash-title-block">
+                  <h2>Dashboard</h2>
+                  <p>Real-time retail statistics for quick decision-making</p>
+                </div>
+                <div class="dash-action-group">
+                  <a href="#lookup" class="dash-action-pill primary">🔍 Lookup Customer</a>
+                  <a href="#rfm" class="dash-action-pill">⚡ RFM Calculator</a>
+                  <a href="#models" class="dash-action-pill">🔮 ML Forecast</a>
+                  <a href="#architecture" class="dash-action-pill">🏛️ Architecture</a>
+                </div>
+              </div>
+
+              <!-- Top KPI Cards (3 Cards matching media_1791354420546.png) -->
+              <div class="dash-kpis-grid">
+                <!-- Card 1: Tracked Revenue / Total Customers -->
+                <div class="dash-kpi-card">
+                  <div class="dash-kpi-top">
+                    <span>Total Customers & Gross Revenue</span>
+                    <span>👁️</span>
+                  </div>
+                  <div class="dash-kpi-val">
+                    <span>$8,914,210.45</span>
+                    <span class="dash-kpi-curr">USD</span>
+                  </div>
+                  <div class="dash-kpi-pill pill-growth">
+                    <span>↑ 14.2%</span>
+                    <span style="font-weight: 500; opacity: 0.8;">5,878 Profiles Tracked</span>
+                  </div>
+                </div>
+
+                <!-- Card 2: Champions Cohort -->
+                <div class="dash-kpi-card">
+                  <div class="dash-kpi-top">
+                    <span>Champions Cohort Spend</span>
+                    <span>👁️</span>
+                  </div>
+                  <div class="dash-kpi-val">
+                    <span>$3,744,812.80</span>
+                    <span class="dash-kpi-curr">USD</span>
+                  </div>
+                  <div class="dash-kpi-pill pill-growth">
+                    <span>⭐ 1,117 VIPs</span>
+                    <span style="font-weight: 500; opacity: 0.8;">42.0% of Total Revenue</span>
+                  </div>
+                </div>
+
+                <!-- Card 3: At-Risk & Churn Exposure -->
+                <div class="dash-kpi-card">
+                  <div class="dash-kpi-top">
+                    <span>At-Risk Customer Exposure</span>
+                    <span>👁️</span>
+                  </div>
+                  <div class="dash-kpi-val">
+                    <span>$1,604,557.00</span>
+                    <span class="dash-kpi-curr">USD</span>
+                  </div>
+                  <div class="dash-kpi-pill pill-warning">
+                    <span>⚠️ 1,478 Accounts</span>
+                    <span style="font-weight: 500; opacity: 0.8;">Awaiting Retention Campaign</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Charts & Converter Row -->
+              <div class="dash-charts-row">
+                <!-- Chart: Spline Curves with pins -->
+                <div class="dash-chart-card">
+                  <div class="dash-chart-card-header">
+                    <div>
+                      <div class="dash-chart-title">Revenue & Order Trajectory</div>
+                      <div style="font-size: 20px; font-weight: 800; color: #fff; margin-top: 4px;">
+                        $25,421.64 <span style="font-size: 11px; color: #34d399; font-weight: 700;">+5.2% vs last month</span>
+                      </div>
+                    </div>
+                    <div class="dash-chart-legend">
+                      <span><span class="legend-dot" style="background: #3b82f6;"></span> Champions</span>
+                      <span><span class="legend-dot" style="background: #10b981;"></span> Loyal</span>
+                      <span><span class="legend-dot" style="background: #f43f5e;"></span> At-Risk</span>
+                    </div>
+                  </div>
+                  <div class="dash-chart-canvas-wrapper">
+                    <canvas id="dashCashflowCanvas"></canvas>
+                  </div>
+                </div>
+
+                <!-- Quick Customer Converter / Lookup Widget -->
+                <div class="dash-convert-widget">
+                  <div style="font-size: 13.5px; font-weight: 700; color: #fff;">Quick Customer Lookup</div>
+                  <div class="dash-convert-input-box">
+                    <div>
+                      <div class="dash-convert-label">Customer ID</div>
+                      <div class="dash-convert-val">#15485</div>
+                    </div>
+                    <span class="dash-kpi-pill pill-growth">Champions</span>
+                  </div>
+
+                  <div class="dash-convert-divider">
+                    <div class="dash-convert-switch-btn">⇄</div>
+                  </div>
+
+                  <div class="dash-convert-input-box">
+                    <div>
+                      <div class="dash-convert-label">Predicted 90D CLV</div>
+                      <div class="dash-convert-val" style="color: var(--accent-orange);">$1,050.90</div>
+                    </div>
+                    <div style="text-align: right;">
+                      <div class="dash-convert-label">Churn Prob</div>
+                      <div style="font-size: 12px; font-weight: 800; color: #34d399;">26.7%</div>
+                    </div>
+                  </div>
+
+                  <a href="#lookup" class="btn-pill-primary" style="width: 100%; justify-content: center; padding: 10px; font-size: 13px;">
+                    Inspect Profile →
+                  </a>
+                </div>
+              </div>
+
+            </main>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==============================================================================
+       03. TRUSTED TECHNOLOGY / STACK MARQUEE
+       ============================================================================== -->
+  <section class="marquee-section" id="marquee">
+    <div class="marquee-label">POWERED BY DISTRIBUTED BIG DATA & MACHINE LEARNING INFRASTRUCTURE</div>
+    <div class="marquee-track">
+      <!-- 2 identical sets for seamless continuous loop -->
+      <div class="marquee-item"><span class="icon">🐍</span> Python 3.9+</div>
+      <div class="marquee-item"><span class="icon">🐘</span> Apache Hadoop HDFS</div>
+      <div class="marquee-item"><span class="icon">🐝</span> Apache Hive Parquet</div>
+      <div class="marquee-item"><span class="icon">⚡</span> Apache Spark</div>
+      <div class="marquee-item"><span class="icon">🔥</span> PySpark MLlib</div>
+      <div class="marquee-item"><span class="icon">🗄️</span> Apache HBase NoSQL</div>
+      <div class="marquee-item"><span class="icon">🤖</span> Scikit-Learn</div>
+      <div class="marquee-item"><span class="icon">📊</span> Tableau & Power BI</div>
+      <div class="marquee-item"><span class="icon">🕸️</span> Web Scraper Engine</div>
+
+      <!-- Duplicate for infinite wrap -->
+      <div class="marquee-item"><span class="icon">🐍</span> Python 3.9+</div>
+      <div class="marquee-item"><span class="icon">🐘</span> Apache Hadoop HDFS</div>
+      <div class="marquee-item"><span class="icon">🐝</span> Apache Hive Parquet</div>
+      <div class="marquee-item"><span class="icon">⚡</span> Apache Spark</div>
+      <div class="marquee-item"><span class="icon">🔥</span> PySpark MLlib</div>
+      <div class="marquee-item"><span class="icon">🗄️</span> Apache HBase NoSQL</div>
+      <div class="marquee-item"><span class="icon">🤖</span> Scikit-Learn</div>
+      <div class="marquee-item"><span class="icon">📊</span> Tableau & Power BI</div>
+      <div class="marquee-item"><span class="icon">🕸️</span> Web Scraper Engine</div>
+    </div>
+  </section>
+
+  <!-- ==============================================================================
+       04. PLATFORM OVERVIEW (Built For Intelligent Retail)
+       ============================================================================== -->
+  <section class="overview-section" id="overview">
+    <div class="container">
+      <div class="section-header-centered reveal-fade-up">
+        <div class="section-tag">Built For Intelligent Retail</div>
+        <h2 class="section-title">One Platform. End-To-End Customer Intelligence.</h2>
+        <p class="section-desc">
+          From raw retail transactions to actionable customer intelligence, the platform connects data mining, Big Data processing, machine learning and visualization into one unified workflow.
+        </p>
+      </div>
+
+      <div class="overview-cards-grid">
+        <!-- Card 1: DATA -->
+        <div class="overview-card reveal-fade-up stagger-1">
+          <div class="card-step-badge">Phase 01 / Ingestion & Lake</div>
+          <h3 class="overview-card-title">DATA</h3>
+          <p class="overview-card-desc">
+            Continuous catalog web mining combined with 1.06M transactional records ingested into HDFS Raw Zone and structured into Hive columnar Parquet tables.
+          </p>
+          <div class="card-tag-pills">
+            <span class="card-tag-pill">Web Scraping</span>
+            <span class="card-tag-pill">HDFS /retail/raw</span>
+            <span class="card-tag-pill">Hive Warehouse</span>
+            <span class="card-tag-pill">Snappy Parquet</span>
+          </div>
+        </div>
+
+        <!-- Card 2: INTELLIGENCE -->
+        <div class="overview-card reveal-fade-up stagger-2">
+          <div class="card-step-badge">Phase 02 / Analytics & Modeling</div>
+          <h3 class="overview-card-title">INTELLIGENCE</h3>
+          <p class="overview-card-desc">
+            Distributed PySpark feature engineering computes Recency, Frequency, and Monetary scores, feeding unsupervised K-Means clustering and supervised ML models.
+          </p>
+          <div class="card-tag-pills">
+            <span class="card-tag-pill">RFM Aggregation</span>
+            <span class="card-tag-pill">K-Means (k=4)</span>
+            <span class="card-tag-pill">CLV Regressor</span>
+            <span class="card-tag-pill">Churn Classifier</span>
+          </div>
+        </div>
+
+        <!-- Card 3: ACTION -->
+        <div class="overview-card reveal-fade-up stagger-3">
+          <div class="card-step-badge">Phase 03 / Serving & Business Impact</div>
+          <h3 class="overview-card-title">ACTION</h3>
+          <p class="overview-card-desc">
+            Sub-millisecond customer profile lookups powered by Apache HBase columnar NoSQL store, driving automated retention plays and Tableau business intelligence.
+          </p>
+          <div class="card-tag-pills">
+            <span class="card-tag-pill">HBase Column Store</span>
+            <span class="card-tag-pill">&lt; 1ms Point Lookup</span>
+            <span class="card-tag-pill">Tableau Export</span>
+            <span class="card-tag-pill">Automated Campaigns</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==============================================================================
+       05. DATA MINING SECTION
+       ============================================================================== -->
+  <section class="mining-section" id="mining">
+    <div class="container">
+      <div class="mining-grid">
+        <div class="reveal-fade-up">
+          <div class="section-tag">Catalog Enrichment</div>
+          <h2 class="section-title">Data Mining Before Data Intelligence</h2>
+          <p class="section-desc">
+            Traditional retail analytics rely purely on internal receipts. Our data mining spider crawls real-world retail web catalogs to enrich transaction history with external price benchmarks, rating distributions, and category hierarchies.
+          </p>
+
+          <div class="mining-features-list">
+            <div class="mining-feature-item">
+              <div class="mining-feature-icon">🔍</div>
+              <div class="mining-feature-text">
+                <h4>Automated Web Spider</h4>
+                <p>Crawls public retail catalogs extracting item title, unit price, star ratings, and category taxonomy with automated pagination.</p>
+              </div>
+            </div>
+            <div class="mining-feature-item">
+              <div class="mining-feature-icon">📦</div>
+              <div class="mining-feature-text">
+                <h4>Partitioned Landing Schema</h4>
+                <p>Lands unmodified catalog data directly into timestamped HDFS landing partitions (<code>/retail/raw/products/YYYY-MM-DD/</code>) ready for Hive schema-on-read.</p>
+              </div>
+            </div>
+            <div class="mining-feature-item">
+              <div class="mining-feature-icon">🏷️</div>
+              <div class="mining-feature-text">
+                <h4>Price & Rating Benchmarking</h4>
+                <p>Calculates baseline market benchmarks ($35.75 average unit price, 2.84 / 5.0 average catalog rating) to detect high-value product affinities.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Scraped Catalog Preview Card -->
+        <div class="reveal-fade-up stagger-2">
+          <div class="catalog-preview-card">
+            <div class="catalog-header">
+              <div>
+                <div style="font-size: 15px; font-weight: 800; color: #fff;">Scraped Product Schema Record</div>
+                <div style="font-size: 12px; color: var(--text-muted);">Extracted Catalog Partition</div>
+              </div>
+              <span class="catalog-chip">● Live Ingested</span>
+            </div>
+
+            <table class="catalog-table">
+              <tr>
+                <td class="label">Product Title</td>
+                <td class="val">A Light in the Attic</td>
+              </tr>
+              <tr>
+                <td class="label">Unit Price</td>
+                <td class="val" style="color: var(--accent-orange);">$51.77 USD</td>
+              </tr>
+              <tr>
+                <td class="label">Catalog Rating</td>
+                <td class="val">★★★☆☆ (3.0 / 5.0)</td>
+              </tr>
+              <tr>
+                <td class="label">Category</td>
+                <td class="val">Poetry & E-Commerce Retail</td>
+              </tr>
+              <tr>
+                <td class="label">Stock Availability</td>
+                <td class="val" style="color: #34d399;">In Stock (22 units)</td>
+              </tr>
+              <tr>
+                <td class="label">Benchmark Avg Price</td>
+                <td class="val">$35.75 USD (Cohort Baseline)</td>
+              </tr>
+              <tr>
+                <td class="label">Benchmark Avg Rating</td>
+                <td class="val">2.84 / 5.0 (5-Category Sample)</td>
+              </tr>
+            </table>
+
+            <div style="margin-top: 20px; padding: 12px; background: rgba(255,255,255,0.03); border: 1px solid var(--border-subtle); border-radius: var(--radius-sm); font-size: 12px; color: var(--text-secondary); display: flex; align-items: center; justify-content: space-between;">
+              <span>Target Partition: <code>/retail/raw/products/</code></span>
+              <span style="color: var(--accent-orange); font-weight: 700;">HDFS Verified</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==============================================================================
+       06. BIG DATA ARCHITECTURE
+       ============================================================================== -->
+  <section class="architecture-section" id="architecture">
+    <div class="container">
+      <div class="section-header-centered reveal-fade-up">
+        <div class="section-tag">End-To-End Infrastructure</div>
+        <h2 class="section-title">From Raw Data To Intelligent Decisions</h2>
+        <p class="section-desc">
+          An enterprise big data pipeline engineered for scalability. Raw data flows through distributed storage, analytical warehousing, in-memory ML processing, and sub-millisecond NoSQL serving.
+        </p>
+      </div>
+
+      <div class="pipeline-diagram">
+        <!-- Node 1 -->
+        <div class="pipeline-step reveal-fade-up stagger-1">
+          <div class="step-num">01</div>
+          <div class="step-content">
+            <h4>Web & Retail Data Sources</h4>
+            <p>1,067,371 raw transaction rows from UCI Online Retail II + scraped multi-category product catalog.</p>
+          </div>
+          <div class="step-tech-badge">Sources</div>
+        </div>
+
+        <div class="pipeline-connector">↓</div>
+
+        <!-- Node 2 -->
+        <div class="pipeline-step reveal-fade-up stagger-1">
+          <div class="step-num">02</div>
+          <div class="step-content">
+            <h4>Data Mining & Catalog Scraping</h4>
+            <p>Automated Python spider extracts prices, star ratings, and review metadata into JSON & CSV.</p>
+          </div>
+          <div class="step-tech-badge">Scrapy / BS4</div>
+        </div>
+
+        <div class="pipeline-connector">↓</div>
+
+        <!-- Node 3 -->
+        <div class="pipeline-step reveal-fade-up stagger-2">
+          <div class="step-num">03</div>
+          <div class="step-content">
+            <h4>HDFS Distributed Raw Landing Zone</h4>
+            <p>Immutable raw storage at <code>/retail/raw/transactions/</code> and <code>/retail/raw/products/</code>.</p>
+          </div>
+          <div class="step-tech-badge">Hadoop HDFS</div>
+        </div>
+
+        <div class="pipeline-connector">↓</div>
+
+        <!-- Node 4 -->
+        <div class="pipeline-step reveal-fade-up stagger-2">
+          <div class="step-num">04</div>
+          <div class="step-content">
+            <h4>Apache Hive Analytical Warehouse</h4>
+            <p>Schema validation, cancellation filtering, deduplication, and Snappy-compressed Parquet storage (805,549 clean rows).</p>
+          </div>
+          <div class="step-tech-badge">Apache Hive</div>
+        </div>
+
+        <div class="pipeline-connector">↓</div>
+
+        <!-- Node 5 -->
+        <div class="pipeline-step reveal-fade-up stagger-3">
+          <div class="step-num">05</div>
+          <div class="step-content">
+            <h4>Apache Spark / PySpark ML Pipeline</h4>
+            <p>Distributed feature aggregation, Recency-Frequency-Monetary computation, log-scaling, and ML training.</p>
+          </div>
+          <div class="step-tech-badge">Apache Spark</div>
+        </div>
+
+        <div class="pipeline-connector">↓</div>
+
+        <!-- Node 6 -->
+        <div class="pipeline-step reveal-fade-up stagger-3">
+          <div class="step-num">06</div>
+          <div class="step-content">
+            <h4>RFM Segmentation + Machine Learning</h4>
+            <p>K-Means clustering (k=4), Gradient Boosting CLV regression (R² 0.5238), and Random Forest Churn classification (AUC 0.806).</p>
+          </div>
+          <div class="step-tech-badge">Scikit-Learn</div>
+        </div>
+
+        <div class="pipeline-connector">↓</div>
+
+        <!-- Node 7 -->
+        <div class="pipeline-step reveal-fade-up stagger-4">
+          <div class="step-num">07</div>
+          <div class="step-content">
+            <h4>Apache HBase Serving Layer</h4>
+            <p>Low-latency columnar NoSQL Key-Value store enabling sub-millisecond (p99 &lt; 1ms) point-lookups for 5,878 customer profiles.</p>
+          </div>
+          <div class="step-tech-badge">Apache HBase</div>
+        </div>
+
+        <div class="pipeline-connector">↓</div>
+
+        <!-- Node 8 -->
+        <div class="pipeline-step reveal-fade-up stagger-4">
+          <div class="step-num">08</div>
+          <div class="step-content">
+            <h4>Web Application & BI Analytics Hub</h4>
+            <p>Interactive DashFlow UI, instant scenario simulator, customer lookup drawer, and Tableau/Power BI analytical exports.</p>
+          </div>
+          <div class="step-tech-badge">Web & BI Hub</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==============================================================================
+       07. RFM INTELLIGENCE SECTION
+       ============================================================================== -->
+  <section class="rfm-section" id="rfm">
+    <div class="container">
+      <div class="rfm-grid">
+        <div class="reveal-fade-up">
+          <div class="section-tag">Behavioral Analytics</div>
+          <h2 class="section-title">Understand Every Customer</h2>
+          <p class="section-desc">
+            Raw transactions tell you what was bought; RFM analysis reveals customer intent, commitment, and long-term value. We compress complex purchase histories into three behavioral dimensions.
+          </p>
+
+          <div class="rfm-pillars" style="margin-top: 24px;">
+            <div class="rfm-pillar-card">
+              <span class="rfm-pillar-letter pillar-r">R — RECENCY</span>
+              <div class="rfm-pillar-title">How recently did the customer purchase?</div>
+              <div class="rfm-pillar-desc">Measures days elapsed since last checkout. High recency signals high active interest and campaign receptiveness.</div>
+            </div>
+
+            <div class="rfm-pillar-card">
+              <span class="rfm-pillar-letter pillar-f">F — FREQUENCY</span>
+              <div class="rfm-pillar-title">How often does the customer purchase?</div>
+              <div class="rfm-pillar-desc">Total discrete orders over lifetime. Measures habituation, brand affinity, and recurring demand velocity.</div>
+            </div>
+
+            <div class="rfm-pillar-card">
+              <span class="rfm-pillar-letter pillar-m">M — MONETARY</span>
+              <div class="rfm-pillar-title">How much does the customer spend?</div>
+              <div class="rfm-pillar-desc">Gross historical spend volume. Direct indicator of purchasing power, wallet share, and financial impact.</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Interactive RFM Calculator Card -->
+        <div class="reveal-fade-up stagger-2">
+          <div class="rfm-interactive-card">
+            <div class="rfm-card-header">
+              <div>
+                <div style="font-size: 16px; font-weight: 800; color: #fff;">Interactive RFM Calculator</div>
+                <div style="font-size: 12px; color: var(--text-muted);">Adjust parameters to evaluate segmentation</div>
+              </div>
+              <span id="rfmSegmentBadge" class="cluster-card-badge badge-loyal">Loyal Customers</span>
+            </div>
+
+            <!-- Recency Slider -->
+            <div class="rfm-slider-row">
+              <div class="rfm-slider-label">
+                <span>Recency (Days since last purchase)</span>
+                <span class="value" id="rfmRecencyVal">15 days</span>
+              </div>
+              <input type="range" class="rfm-slider-input" id="rfmRecencySlider" min="1" max="500" value="15">
+            </div>
+
+            <!-- Frequency Slider -->
+            <div class="rfm-slider-row">
+              <div class="rfm-slider-label">
+                <span>Frequency (Total completed orders)</span>
+                <span class="value" id="rfmFreqVal">7 orders</span>
+              </div>
+              <input type="range" class="rfm-slider-input" id="rfmFreqSlider" min="1" max="50" value="7">
+            </div>
+
+            <!-- Monetary Slider -->
+            <div class="rfm-slider-row">
+              <div class="rfm-slider-label">
+                <span>Monetary (Total lifetime spend)</span>
+                <span class="value" id="rfmMonetaryVal">$1,280</span>
+              </div>
+              <input type="range" class="rfm-slider-input" id="rfmMonetarySlider" min="50" max="35000" step="50" value="1280">
+            </div>
+
+            <!-- Result Box -->
+            <div class="rfm-result-box">
+              <div>
+                <div style="font-size: 11px; color: var(--text-muted); font-weight: 600;">Composite RFM Score</div>
+                <div style="font-size: 18px; font-weight: 800; color: #ffffff;" id="rfmScoreBadge">RFM: 5-3-3</div>
+              </div>
+              <div style="text-align: right;">
+                <div style="font-size: 11px; color: var(--text-muted); font-weight: 600;">Estimated 90D CLV</div>
+                <div style="font-size: 18px; font-weight: 800; color: var(--accent-orange);" id="rfmClvEst">$734</div>
+              </div>
+            </div>
+
+            <div style="font-size: 11px; color: var(--text-dim); text-align: center; margin-top: 14px;">
+              Normalized with log1p transformation & StandardScaler from <code>models/rfm_scaler.joblib</code>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==============================================================================
+       08. CUSTOMER SEGMENTATION (K-Means Clustering)
+       ============================================================================== -->
+  <section class="segmentation-section" id="segmentation">
+    <div class="container">
+      <div class="section-header-centered reveal-fade-up">
+        <div class="section-tag">Unsupervised Machine Learning</div>
+        <h2 class="section-title">Turn Customers Into Meaningful Segments</h2>
+        <p class="section-desc">
+          K-Means clustering (k=4) trained on normalized RFM vectors segments the 5,878 customer base into actionable behavioral cohorts with verified centroid characteristics.
+        </p>
+      </div>
+
+      <div class="clusters-grid">
+        <!-- Cluster 2: Champions -->
+        <div class="cluster-card reveal-fade-up stagger-1">
+          <span class="cluster-card-badge badge-champ">● Cluster 2</span>
+          <div class="cluster-name">Champions</div>
+          <p style="font-size: 13px; color: var(--text-secondary); line-height: 1.4;">
+            High-velocity, top-spending customers who buy frequently and visited very recently. Prime ambassadors for premium tiers.
+          </p>
+          <div style="display: flex; flex-direction: column; gap: 8px; margin-top: auto;">
+            <div class="cluster-stat-row"><span class="k">Mean Recency</span><span class="v">24.8 days</span></div>
+            <div class="cluster-stat-row"><span class="k">Mean Frequency</span><span class="v">20.0 orders</span></div>
+            <div class="cluster-stat-row"><span class="k">Mean Spend</span><span class="v">$11,466</span></div>
+            <div class="cluster-stat-row"><span class="k">Cohort Size</span><span class="v">1,117 accounts</span></div>
+          </div>
+        </div>
+
+        <!-- Cluster 0: Loyal Customers -->
+        <div class="cluster-card reveal-fade-up stagger-2">
+          <span class="cluster-card-badge badge-loyal">● Cluster 0</span>
+          <div class="cluster-name">Loyal Customers</div>
+          <p style="font-size: 13px; color: var(--text-secondary); line-height: 1.4;">
+            Steady regular buyers with recent purchases and moderate spend. Highly responsive to cross-selling and volume incentives.
+          </p>
+          <div style="display: flex; flex-direction: column; gap: 8px; margin-top: auto;">
+            <div class="cluster-stat-row"><span class="k">Mean Recency</span><span class="v">27.6 days</span></div>
+            <div class="cluster-stat-row"><span class="k">Mean Frequency</span><span class="v">3.0 orders</span></div>
+            <div class="cluster-stat-row"><span class="k">Mean Spend</span><span class="v">$855</span></div>
+            <div class="cluster-stat-row"><span class="k">Cohort Size</span><span class="v">2,112 accounts</span></div>
+          </div>
+        </div>
+
+        <!-- Cluster 3: At-Risk -->
+        <div class="cluster-card reveal-fade-up stagger-3">
+          <span class="cluster-card-badge badge-risk">● Cluster 3</span>
+          <div class="cluster-name">At-Risk</div>
+          <p style="font-size: 13px; color: var(--text-secondary); line-height: 1.4;">
+            Historically valuable accounts with substantial past spend that haven't purchased in over 6 months. Urgent retention needed.
+          </p>
+          <div style="display: flex; flex-direction: column; gap: 8px; margin-top: auto;">
+            <div class="cluster-stat-row"><span class="k">Mean Recency</span><span class="v">210.7 days</span></div>
+            <div class="cluster-stat-row"><span class="k">Mean Frequency</span><span class="v">5.4 orders</span></div>
+            <div class="cluster-stat-row"><span class="k">Mean Spend</span><span class="v">$2,148</span></div>
+            <div class="cluster-stat-row"><span class="k">Cohort Size</span><span class="v">1,478 accounts</span></div>
+          </div>
+        </div>
+
+        <!-- Cluster 1: Lost / Churned -->
+        <div class="cluster-card reveal-fade-up stagger-4">
+          <span class="cluster-card-badge badge-lost">● Cluster 1</span>
+          <div class="cluster-name">Lost / Churned</div>
+          <p style="font-size: 13px; color: var(--text-secondary); line-height: 1.4;">
+            Single-order accounts dormant for over a year with minimal lifetime spend. Low candidate for direct sales outreach.
+          </p>
+          <div style="display: flex; flex-direction: column; gap: 8px; margin-top: auto;">
+            <div class="cluster-stat-row"><span class="k">Mean Recency</span><span class="v">393.0 days</span></div>
+            <div class="cluster-stat-row"><span class="k">Mean Frequency</span><span class="v">1.4 orders</span></div>
+            <div class="cluster-stat-row"><span class="k">Mean Spend</span><span class="v">$346</span></div>
+            <div class="cluster-stat-row"><span class="k">Cohort Size</span><span class="v">1,171 accounts</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==============================================================================
+       09 & 10. CLV PREDICTION & CHURN RISK (Supervised Machine Learning)
+       ============================================================================== -->
+  <section class="models-split-section" id="models">
+    <div class="container">
+      <div class="models-split-grid">
+        <!-- CLV Regression Box -->
+        <div class="model-card-box reveal-fade-up stagger-1">
+          <div class="model-tag">Supervised Regression</div>
+          <h3 class="model-title">Predict Customer Lifetime Value</h3>
+          <p class="model-desc">
+            A Gradient Boosting regressor trained on 90-day observation splits predicts future customer expenditure using winsorized outlier-stabilized revenue targets.
+          </p>
+
+          <div style="font-size: 12px; color: var(--text-muted); font-family: var(--font-mono); background: rgba(255,255,255,0.03); padding: 10px 14px; border-radius: var(--radius-sm); border: 1px solid var(--border-subtle);">
+            Features: [recency_days, frequency, total_spend, tenure_days, avg_order_value]
+          </div>
+
+          <div class="model-metrics-row">
+            <div class="model-metric-tile">
+              <div class="metric-tile-val" style="color: #34d399;">0.5238</div>
+              <div class="metric-tile-lbl">Robust Cohort R²</div>
+            </div>
+            <div class="model-metric-tile">
+              <div class="metric-tile-val">$321.78</div>
+              <div class="metric-tile-lbl">Mean Abs Error (MAE)</div>
+            </div>
+            <div class="model-metric-tile">
+              <div class="metric-tile-val">$606.12</div>
+              <div class="metric-tile-lbl">RMSE Metric</div>
+            </div>
+          </div>
+
+          <div style="font-size: 12px; color: var(--text-dim); margin-top: auto;">
+            Cap threshold: <code>$6,245.56</code> (p99 winsorization) · Model: <code>clv_regressor.joblib</code>
+          </div>
+        </div>
+
+        <!-- Churn Classification Box -->
+        <div class="model-card-box reveal-fade-up stagger-2">
+          <div class="model-tag">Supervised Classification</div>
+          <h3 class="model-title">Know Who Is At Risk</h3>
+          <p class="model-desc">
+            A Random Forest classifier analyzes behavioral dormancy patterns to estimate the exact probability that an active customer will lapse into churned status.
+          </p>
+
+          <div style="font-size: 12px; color: var(--text-muted); font-family: var(--font-mono); background: rgba(255,255,255,0.03); padding: 10px 14px; border-radius: var(--radius-sm); border: 1px solid var(--border-subtle);">
+            Risk Levels: Low (&lt;30%) · Medium (30-60%) · High (&gt;60%)
+          </div>
+
+          <div class="model-metrics-row">
+            <div class="model-metric-tile">
+              <div class="metric-tile-val" style="color: #34d399;">0.8056</div>
+              <div class="metric-tile-lbl">ROC-AUC Score</div>
+            </div>
+            <div class="model-metric-tile">
+              <div class="metric-tile-val">75.09%</div>
+              <div class="metric-tile-lbl">Overall Accuracy</div>
+            </div>
+            <div class="model-metric-tile">
+              <div class="metric-tile-val">0.7876</div>
+              <div class="metric-tile-lbl">Harmonic F1-Score</div>
+            </div>
+          </div>
+
+          <div style="font-size: 12px; color: var(--text-dim); margin-top: auto;">
+            Decision trees: 100 estimators · Model: <code>churn_classifier.joblib</code>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==============================================================================
+       11. INTERACTIVE WHAT-IF SCENARIO SIMULATOR
+       ============================================================================== -->
+  <section class="overview-section" style="padding-top: 0;" id="simulator">
+    <div class="container">
+      <div class="section-header-centered reveal-fade-up">
+        <div class="section-tag">Instant ML Inference</div>
+        <h2 class="section-title">What-If Customer Scenario Simulator</h2>
+        <p class="section-desc">
+          Test hypothetical customer transaction patterns for instant, on-the-fly RFM segmentation, CLV forecasting, and churn risk scoring.
+        </p>
+      </div>
+
+      <div style="display: grid; grid-template-columns: 1.2fr 1fr; gap: 32px; align-items: start;">
+        <div class="overview-card reveal-fade-up stagger-1">
+          <div style="font-size: 16px; font-weight: 800; color: #fff; margin-bottom: 16px;">Adjust Customer Inputs</div>
+
+          <div class="rfm-slider-row">
+            <div class="rfm-slider-label">
+              <span>Recency (Days since last checkout)</span>
+              <span class="value" id="simRecencyVal">25 days</span>
+            </div>
+            <input type="range" class="rfm-slider-input" id="simRecency" min="1" max="730" value="25" oninput="document.getElementById('simRecencyVal').textContent = this.value + ' days'">
+          </div>
+
+          <div class="rfm-slider-row">
+            <div class="rfm-slider-label">
+              <span>Frequency (Total completed orders)</span>
+              <span class="value" id="simFreqVal">6 orders</span>
+            </div>
+            <input type="range" class="rfm-slider-input" id="simFreq" min="1" max="150" value="6" oninput="document.getElementById('simFreqVal').textContent = this.value + ' orders'">
+          </div>
+
+          <div class="rfm-slider-row">
+            <div class="rfm-slider-label">
+              <span>Total Historical Spend ($)</span>
+              <span class="value" id="simSpendVal">$1,250</span>
+            </div>
+            <input type="range" class="rfm-slider-input" id="simSpend" min="20" max="50000" step="50" value="1250" oninput="document.getElementById('simSpendVal').textContent = '$' + Number(this.value).toLocaleString()">
+          </div>
+
+          <div class="rfm-slider-row">
+            <div class="rfm-slider-label">
+              <span>Customer Tenure (Days with company)</span>
+              <span class="value" id="simTenureVal">300 days</span>
+            </div>
+            <input type="range" class="rfm-slider-input" id="simTenure" min="1" max="730" value="300" oninput="document.getElementById('simTenureVal').textContent = this.value + ' days'">
+          </div>
+        </div>
+
+        <!-- Instant Inference Output Card -->
+        <div class="overview-card reveal-fade-up stagger-2" style="background: linear-gradient(145deg, #121319 0%, #1a1a24 100%); border-color: rgba(255, 147, 61, 0.3);">
+          <div style="font-size: 11px; font-weight: 800; letter-spacing: 1px; color: var(--accent-orange); text-transform: uppercase;">Real-Time Inference Output</div>
+          <div style="font-size: 26px; font-weight: 800; color: #fff; margin: 4px 0 16px 0;" id="simSegOutput">Champions</div>
+
+          <div style="background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: var(--radius-md); padding: 16px; margin-bottom: 12px;">
+            <div style="font-size: 12px; color: var(--text-muted); font-weight: 600;">Predicted 90-Day CLV</div>
+            <div style="font-size: 26px; font-weight: 800; color: var(--accent-orange);" id="simClvOutput">$685.20</div>
+          </div>
+
+          <div style="background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: var(--radius-md); padding: 16px;">
+            <div style="font-size: 12px; color: var(--text-muted); font-weight: 600;">Estimated Churn Probability</div>
+            <div style="font-size: 26px; font-weight: 800; color: #34d399;" id="simChurnOutput">12.4%</div>
+          </div>
+
+          <div style="margin-top: 14px; font-size: 11px; color: var(--text-dim); text-align: center;">
+            Connected directly to <code>/api/predict</code> backend inference engine
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==============================================================================
+       12. CUSTOMER INTELLIGENCE LOOKUP (Direct HBase Serving Layer Query)
+       ============================================================================== -->
+  <section class="lookup-section" id="lookup">
+    <div class="container">
+      <div class="section-header-centered reveal-fade-up">
+        <div class="section-tag">Sub-Millisecond Serving Store</div>
+        <h2 class="section-title">Every Customer. One Intelligent Profile.</h2>
+        <p class="section-desc">
+          Direct low-latency query to the Apache HBase columnar NoSQL serving layer. Point lookups return full RFM metrics, predicted CLV, and churn probability in under 1 millisecond.
+        </p>
+      </div>
+
+      <div class="lookup-grid">
+        <!-- Search Controller Card -->
+        <div class="lookup-search-card reveal-fade-up stagger-1">
+          <div>
+            <div style="font-size: 16px; font-weight: 800; color: #fff;">Find Customer Profile</div>
+            <div style="font-size: 12.5px; color: var(--text-muted); margin-top: 4px;">
+              Select a verified sample customer or enter any ID from the 5,878 profile store:
+            </div>
+          </div>
+
+          <div class="quick-customer-pills">
+            <span class="sample-id-pill active" data-id="15485">#15485</span>
+            <span class="sample-id-pill" data-id="13748">#13748</span>
+            <span class="sample-id-pill" data-id="13269">#13269</span>
+            <span class="sample-id-pill" data-id="18229">#18229</span>
+            <span class="sample-id-pill" data-id="15550">#15550</span>
+            <span class="sample-id-pill" data-id="16964">#16964</span>
+            <span class="sample-id-pill" data-id="16717">#16717</span>
+            <span class="sample-id-pill" data-id="C1024">#C1024</span>
+          </div>
+
+          <div class="search-input-wrapper">
+            <input type="text" class="lookup-input" id="lookupCustIdInput" placeholder="Enter Customer ID (e.g. 15485)" value="15485">
+            <button class="lookup-btn" id="lookupSearchBtn">Search</button>
+          </div>
+
+          <div style="background: rgba(255,255,255,0.02); border: 1px solid var(--border-subtle); border-radius: var(--radius-md); padding: 16px;">
+            <div style="font-size: 12px; font-weight: 700; color: #fff; margin-bottom: 6px;">HBase Serving Status: Live</div>
+            <div style="font-size: 11.5px; color: var(--text-muted); line-height: 1.5;">
+              Primary store: <code>customer_profile</code> column families: <code>info:</code>, <code>pred:</code>, <code>meta:</code>. Fallback: High-performance embedded KV cache.
+            </div>
+          </div>
+        </div>
+
+        <!-- Render Target for Customer Profile (Slide-Over Card Frame 008 Reproduction) -->
+        <div id="customerProfileTarget" class="reveal-fade-up stagger-2">
+          <!-- Dynamically populated by dashflow.js -->
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==============================================================================
+       13. BUSINESS IMPACT SECTION (From Prediction To Action)
+       ============================================================================== -->
+  <section class="impact-section" id="impact">
+    <div class="container">
+      <div class="section-header-centered reveal-fade-up">
+        <div class="section-tag">Value Realization</div>
+        <h2 class="section-title">From Prediction To Action</h2>
+        <p class="section-desc">
+          Analytics create value only when tied to decisions. Our platform connects data science outputs directly to revenue optimization and automated retention strategies.
+        </p>
+      </div>
+
+      <div class="impact-chain-grid">
+        <div class="impact-chain-card reveal-fade-up stagger-1">
+          <div class="impact-step-num">STEP 01</div>
+          <div class="impact-step-title">IDENTIFY</div>
+          <div class="impact-step-desc">High-value customers and dormant spenders are discovered instantly through RFM feature matrices.</div>
+        </div>
+
+        <div class="impact-chain-card reveal-fade-up stagger-2">
+          <div class="impact-step-num">STEP 02</div>
+          <div class="impact-step-title">PREDICT</div>
+          <div class="impact-step-desc">Future 90-day gross lifetime value and churn risk probabilities are inferred per account before behavior shifts.</div>
+        </div>
+
+        <div class="impact-chain-card reveal-fade-up stagger-3">
+          <div class="impact-step-num">STEP 03</div>
+          <div class="impact-step-title">TARGET</div>
+          <div class="impact-step-desc">Automated marketing lists segmented by behavioral propensity: VIP loyalty, cross-sell, or re-activation.</div>
+        </div>
+
+        <div class="impact-chain-card reveal-fade-up stagger-4">
+          <div class="impact-step-num">STEP 04</div>
+          <div class="impact-step-title">RETAIN</div>
+          <div class="impact-step-desc">Proactive retention workflows trigger before churn occurs, preserving critical customer equity.</div>
+        </div>
+
+        <div class="impact-chain-card reveal-fade-up stagger-4">
+          <div class="impact-step-num">STEP 05</div>
+          <div class="impact-step-title">OPTIMIZE</div>
+          <div class="impact-step-desc">Marketing expenditure shifts from blanket discounting to the top 20% highest-yielding customer segments.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==============================================================================
+       14. TECHNICAL STACK SECTION
+       ============================================================================== -->
+  <section class="stack-section" id="stack">
+    <div class="container">
+      <div class="section-header-centered reveal-fade-up">
+        <div class="section-tag">Architecture Matrix</div>
+        <h2 class="section-title">Production-Grade Data Stack</h2>
+        <p class="section-desc">
+          Engineered with enterprise Big Data technologies, verified machine learning models, and modern web application frameworks.
+        </p>
+      </div>
+
+      <div class="stack-categories-grid">
+        <!-- Cat 1 -->
+        <div class="stack-category-card reveal-fade-up stagger-1">
+          <div class="stack-cat-title">DATA MINING & EXTRACTION</div>
+          <div class="stack-badges-wrap">
+            <div class="stack-badge"><span>🕷️</span> Scrapy Spider</div>
+            <div class="stack-badge"><span>🍲</span> BeautifulSoup 4</div>
+            <div class="stack-badge"><span>🌐</span> Selenium WebDriver</div>
+            <div class="stack-badge"><span>⚡</span> Requests & LXML</div>
+          </div>
+        </div>
+
+        <!-- Cat 2 -->
+        <div class="stack-category-card reveal-fade-up stagger-2">
+          <div class="stack-cat-title">BIG DATA STORAGE & WAREHOUSE</div>
+          <div class="stack-badges-wrap">
+            <div class="stack-badge"><span>🐘</span> Apache Hadoop HDFS</div>
+            <div class="stack-badge"><span>🐝</span> Apache Hive Parquet</div>
+            <div class="stack-badge"><span>⚡</span> Apache Spark 3.5</div>
+            <div class="stack-badge"><span>📁</span> Snappy Columnar</div>
+          </div>
+        </div>
+
+        <!-- Cat 3 -->
+        <div class="stack-category-card reveal-fade-up stagger-3">
+          <div class="stack-cat-title">MACHINE LEARNING ENGINES</div>
+          <div class="stack-badges-wrap">
+            <div class="stack-badge"><span>🤖</span> Scikit-Learn 1.6</div>
+            <div class="stack-badge"><span>🔥</span> PySpark MLlib</div>
+            <div class="stack-badge"><span>🎯</span> K-Means Clustering</div>
+            <div class="stack-badge"><span>🌲</span> Random Forest & GBT</div>
+          </div>
+        </div>
+
+        <!-- Cat 4 -->
+        <div class="stack-category-card reveal-fade-up stagger-1">
+          <div class="stack-cat-title">LOW-LATENCY SERVING STORE</div>
+          <div class="stack-badges-wrap">
+            <div class="stack-badge"><span>🗄️</span> Apache HBase NoSQL</div>
+            <div class="stack-badge"><span>🔌</span> HappyBase Thrift</div>
+            <div class="stack-badge"><span>⚡</span> Columnar KV Cache</div>
+            <div class="stack-badge"><span>⏱️</span> &lt; 1ms Point Query</div>
+          </div>
+        </div>
+
+        <!-- Cat 5 -->
+        <div class="stack-category-card reveal-fade-up stagger-2">
+          <div class="stack-cat-title">WEB APPLICATION & REST API</div>
+          <div class="stack-badges-wrap">
+            <div class="stack-badge"><span>🧪</span> Python Flask 3.1</div>
+            <div class="stack-badge"><span>🎈</span> Streamlit BI Hub</div>
+            <div class="stack-badge"><span>🔌</span> RESTful JSON Endpoints</div>
+            <div class="stack-badge"><span>🎨</span> Framer Design System</div>
+          </div>
+        </div>
+
+        <!-- Cat 6 -->
+        <div class="stack-category-card reveal-fade-up stagger-3">
+          <div class="stack-cat-title">BUSINESS INTELLIGENCE & CHARTS</div>
+          <div class="stack-badges-wrap">
+            <div class="stack-badge"><span>📊</span> Tableau Desktop</div>
+            <div class="stack-badge"><span>⚡</span> Microsoft Power BI</div>
+            <div class="stack-badge"><span>📈</span> HTML5 Canvas Splines</div>
+            <div class="stack-badge"><span>📦</span> Parquet / CSV Exports</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==============================================================================
+       15. FAQ ACCORDION SECTION (DashFlow Smooth Motion)
+       ============================================================================== -->
+  <section class="faq-section" id="faq">
+    <div class="container">
+      <div class="section-header-centered reveal-fade-up">
+        <div class="section-tag">Frequently Asked Questions</div>
+        <h2 class="section-title">Technical Deep Dive & Answers</h2>
+        <p class="section-desc">
+          Everything you need to know about our distributed big data architecture, machine learning models, and real-time serving store.
+        </p>
+      </div>
+
+      <div class="faq-accordion-wrap reveal-fade-up stagger-1">
+        <!-- Q1 -->
+        <div class="faq-item">
+          <div class="faq-header">
+            <div class="faq-question">What problem does the Customer Intelligence Platform solve?</div>
+            <div class="faq-chevron">▾</div>
+          </div>
+          <div class="faq-content">
+            <div class="faq-content-inner">
+              Retail businesses struggle with massive unstructured transactional logs where identifying top customers, predicting future spend, and preventing customer churn is slow and fragmented. This platform provides an end-to-end Big Data pipeline from web mining to HDFS, Hive, Spark ML, and HBase sub-millisecond serving for automated decision-making.
+            </div>
+          </div>
+        </div>
+
+        <!-- Q2 -->
+        <div class="faq-item">
+          <div class="faq-header">
+            <div class="faq-question">What is RFM analysis and how is it calculated?</div>
+            <div class="faq-chevron">▾</div>
+          </div>
+          <div class="faq-content">
+            <div class="faq-content-inner">
+              RFM analyzes customer behavior along three dimensions: <strong>Recency</strong> (days since last purchase), <strong>Frequency</strong> (total number of discrete orders), and <strong>Monetary</strong> (total lifetime spend). These features are normalized using log1p transformations and standard scaling to power unsupervised K-Means clustering.
+            </div>
+          </div>
+        </div>
+
+        <!-- Q3 -->
+        <div class="faq-item">
+          <div class="faq-header">
+            <div class="faq-question">Why is HDFS used instead of local file storage?</div>
+            <div class="faq-chevron">▾</div>
+          </div>
+          <div class="faq-content">
+            <div class="faq-content-inner">
+              Hadoop Distributed File System (HDFS) provides fault-tolerant, horizontally scalable distributed storage across clusters with 3x replication. It serves as our immutable raw data landing zone capable of scaling to hundreds of millions of transaction rows without single-point failure bottlenecks.
+            </div>
+          </div>
+        </div>
+
+        <!-- Q4 -->
+        <div class="faq-item">
+          <div class="faq-header">
+            <div class="faq-question">Why is Apache Hive chosen for the data warehouse layer?</div>
+            <div class="faq-chevron">▾</div>
+          </div>
+          <div class="faq-content">
+            <div class="faq-content-inner">
+              Hive provides a schema-on-read relational abstraction over HDFS with columnar Snappy Parquet storage. It cleans 1.06M raw records into 805,549 verified transactions, removes invoice cancellations, drops null customer identifiers, and computes baseline aggregates with high compression efficiency.
+            </div>
+          </div>
+        </div>
+
+        <!-- Q5 -->
+        <div class="faq-item">
+          <div class="faq-header">
+            <div class="faq-question">Why is Apache Spark used for distributed machine learning?</div>
+            <div class="faq-chevron">▾</div>
+          </div>
+          <div class="faq-content">
+            <div class="faq-content-inner">
+              Apache Spark provides an in-memory resilient distributed dataset (RDD) engine and PySpark MLlib that processes iterative feature aggregations and matrix operations in RAM, delivering ultra-fast feature extraction and model scoring at scale.
+            </div>
+          </div>
+        </div>
+
+        <!-- Q6 -->
+        <div class="faq-item">
+          <div class="faq-header">
+            <div class="faq-question">Why is Apache HBase used for low-latency serving?</div>
+            <div class="faq-chevron">▾</div>
+          </div>
+          <div class="faq-content">
+            <div class="faq-content-inner">
+              Analytical systems like Hive are optimized for batch scans, not real-time lookups. Apache HBase provides a column-family NoSQL Key-Value store on top of HDFS designed specifically for sub-millisecond point queries (<code>p99 &lt; 1ms</code>) by customer row key.
+            </div>
+          </div>
+        </div>
+
+        <!-- Q7 -->
+        <div class="faq-item">
+          <div class="faq-header">
+            <div class="faq-question">How does customer segmentation with K-Means work?</div>
+            <div class="faq-chevron">▾</div>
+          </div>
+          <div class="faq-content">
+            <div class="faq-content-inner">
+              Unsupervised K-Means clustering (k=4) groups 5,878 customers into distinct cohorts: Champions (high spend & frequency), Loyal Customers (steady orders), At-Risk (high past spend but inactive), and Lost / Churned (dormant single purchases). Segment mappings are verified in <code>models/segment_mapping.json</code>.
+            </div>
+          </div>
+        </div>
+
+        <!-- Q8 -->
+        <div class="faq-item">
+          <div class="faq-header">
+            <div class="faq-question">How does CLV prediction work?</div>
+            <div class="faq-chevron">▾</div>
+          </div>
+          <div class="faq-content">
+            <div class="faq-content-inner">
+              Using a 90-day future observation window cutoff, supervised Gradient Boosting regression trains on historical RFM and order tenure features to predict future gross customer value. The model achieves a robust cohort R² of 0.5238 with a p99 winsorization cap at $6,245.56.
+            </div>
+          </div>
+        </div>
+
+        <!-- Q9 -->
+        <div class="faq-item">
+          <div class="faq-header">
+            <div class="faq-question">How does churn prediction work?</div>
+            <div class="faq-chevron">▾</div>
+          </div>
+          <div class="faq-content">
+            <div class="faq-content-inner">
+              A supervised Random Forest classifier predicts the binary likelihood of customer defection in the upcoming period based on behavioral lapse vectors. It achieves an ROC-AUC of 0.8056 and 75.09% overall accuracy on held-out test data.
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==============================================================================
+       16. FINAL CTA SECTION
+       ============================================================================== -->
+  <section class="cta-section" id="cta">
+    <div class="container">
+      <div class="cta-box reveal-fade-up">
+        <h2 class="cta-title">Turn Retail Data Into Your Competitive Advantage.</h2>
+        <p class="cta-desc">
+          Discover the customers that matter, predict what happens next, and turn raw transactional records into smarter, high-ROI business decisions.
+        </p>
+        <div class="cta-actions">
+          <a href="#dashboard" class="btn-pill-primary">
+            <span>Explore Platform</span>
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <line x1="5" y1="12" x2="19" y2="12"></line>
+              <polyline points="12 5 19 12 12 19"></polyline>
+            </svg>
+          </a>
+          <a href="#architecture" class="btn-pill-secondary">
+            <span>View Architecture</span>
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <polyline points="9 18 15 12 9 6"></polyline>
+            </svg>
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==============================================================================
+       17. FOOTER SECTION
+       ============================================================================== -->
+  <footer class="footer-section">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <div style="display: flex; align-items: center; gap: 10px;">
+            <div class="nav-brand-badge" style="width: 32px; height: 32px;">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+              </svg>
+            </div>
+            <span style="font-size: 15px; font-weight: 800; color: #fff; text-transform: uppercase;">Customer Intelligence</span>
+          </div>
+          <p class="footer-desc">
+            An end-to-end Big Data & Machine Learning analytics platform transforming retail transactions into actionable customer intelligence.
+          </p>
+          <div style="font-size: 11.5px; color: var(--text-dim);">
+            Architecture Version: 2.4.0 · Distributed Spark & HBase Serving
+          </div>
+        </div>
+
+        <div>
+          <div class="footer-col-title">PLATFORM</div>
+          <div class="footer-col-links">
+            <a href="#overview">Overview</a>
+            <a href="#mining">Data Mining</a>
+            <a href="#architecture">Architecture</a>
+            <a href="#dashboard">Analytics Dashboard</a>
+          </div>
+        </div>
+
+        <div>
+          <div class="footer-col-title">INTELLIGENCE</div>
+          <div class="footer-col-links">
+            <a href="#rfm">RFM Scoring</a>
+            <a href="#segmentation">K-Means Cohorts</a>
+            <a href="#models">CLV Regression</a>
+            <a href="#models">Churn Classification</a>
+          </div>
+        </div>
+
+        <div>
+          <div class="footer-col-title">RESOURCES</div>
+          <div class="footer-col-links">
+            <a href="#lookup">Customer Lookup</a>
+            <a href="#stack">Technical Stack</a>
+            <a href="#faq">Engineering FAQ</a>
+            <a href="https://github.com/an00pie/retail-customer-intelligence" target="_blank" rel="noopener">GitHub Repository</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <div>Customer Intelligence Platform for Retail &copy; 2026. Sales & Marketing Analytics.</div>
+        <div>Built with Apache Spark, Hive, HDFS, HBase, and Scikit-Learn.</div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="/static/js/dashflow.js"></script>
+</body>
+</html>
