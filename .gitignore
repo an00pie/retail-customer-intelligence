@@ -9,9 +9,9 @@ __pycache__/
 *$py.class
 *.so
 
-# Large binary / compressed raw sources
-data/raw/transactions/online_retail_II.xlsx
-data/raw/transactions/online_retail_ii.zip
+# Large data directories and scratch files
+data/
+scratch/
 
 # Spark & local warehouse
 spark-warehouse/
