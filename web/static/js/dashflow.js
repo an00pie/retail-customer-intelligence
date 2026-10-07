@@ -617,22 +617,27 @@ function initDashboardCharts() {
       .then(data => {
         if (loadingOverlay) loadingOverlay.style.display = 'none';
 
-        // Update Headline
+        // Update Headline / Hero Revenue
         if (elHeadlineRevenue) elHeadlineRevenue.textContent = formatCurrency(data.headline_revenue || data.total_revenue);
-        if (elHeadlineGrowth) updateKpiPill(elHeadlineGrowth, data.headline_growth || data.revenue_growth, 'vs prev');
+        if (elHeadlineGrowth) updateKpiPill(elHeadlineGrowth, data.headline_growth || data.revenue_growth, 'vs previous period');
+
+        const heroRev = document.getElementById('kpiHeroTotalRevenue');
+        const heroGrowth = document.getElementById('kpiHeroRevGrowth');
+        if (heroRev) heroRev.textContent = formatCurrency(data.headline_revenue || data.total_revenue);
+        if (heroGrowth) updateKpiPill(heroGrowth, data.headline_growth || data.revenue_growth, 'vs previous period');
 
         // Update 4 KPI Tiles
         if (elKpiRevenue) elKpiRevenue.textContent = formatCurrency(data.total_revenue);
-        if (elKpiRevGrowth) updateKpiPill(elKpiRevGrowth, data.revenue_growth, 'vs prev');
+        if (elKpiRevGrowth) updateKpiPill(elKpiRevGrowth, data.revenue_growth, 'vs previous period');
 
         if (elKpiOrders) elKpiOrders.textContent = formatNumber(data.total_orders);
-        if (elKpiOrdGrowth) updateKpiPill(elKpiOrdGrowth, data.orders_growth, 'vs prev');
+        if (elKpiOrdGrowth) updateKpiPill(elKpiOrdGrowth, data.orders_growth, 'vs previous period');
 
         if (elKpiAov) elKpiAov.textContent = formatCurrency(data.avg_order_value);
-        if (elKpiAovGrowth) updateKpiPill(elKpiAovGrowth, data.aov_growth, 'vs prev');
+        if (elKpiAovGrowth) updateKpiPill(elKpiAovGrowth, data.aov_growth, 'vs previous period');
 
         if (elDataStatus) {
-          elDataStatus.innerHTML = `● ${data.granularity === 'daily' ? 'Daily' : 'Monthly'} (${data.data_points} points)`;
+          elDataStatus.innerHTML = `● UCI Online Retail II Warehouse &mdash; ${data.granularity === 'daily' ? 'Daily' : 'Monthly'} (${data.data_points} points)`;
         }
 
         renderChart(data);
@@ -644,8 +649,21 @@ function initDashboardCharts() {
       });
   }
 
+  // Hook period pills (7D 30D 3M 6M 1Y All) matching reference
+  const periodPills = document.querySelectorAll('.period-pill');
+  periodPills.forEach(pill => {
+    pill.addEventListener('click', () => {
+      periodPills.forEach(p => p.classList.remove('active'));
+      pill.classList.add('active');
+      const chosen = pill.dataset.period || '12m';
+      if (periodSelect) periodSelect.value = chosen;
+      fetchTrajectory(chosen);
+    });
+  });
+
   window.reloadTrajectoryChart = function() {
-    const period = periodSelect ? periodSelect.value : '12m';
+    const activePill = document.querySelector('.period-pill.active');
+    const period = activePill ? activePill.dataset.period : (periodSelect ? periodSelect.value : '12m');
     fetchTrajectory(period);
   };
 
@@ -656,7 +674,7 @@ function initDashboardCharts() {
   }
 
   // Initial load
-  fetchTrajectory(periodSelect ? periodSelect.value : '12m');
+  fetchTrajectory('12m');
 }
 
 /* ==============================================================================

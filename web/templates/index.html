@@ -116,76 +116,85 @@
         <div class="hero-mockup">
           <div class="dash-window">
             
-            <!-- Left Sidebar -->
+            <!-- Left Sidebar (Luxury Reference UI) -->
             <aside class="dash-sidebar">
               <div class="dash-company">
-                <div class="dash-company-logo">📊</div>
+                <div class="dash-company-logo">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+                </div>
                 <div class="dash-company-info">
-                  <div class="dash-company-name">Customer Intelligence</div>
-                  <div class="dash-company-tag">Enterprise Hub</div>
+                  <div class="dash-company-name">CUSTOMER</div>
+                  <div class="dash-company-tag">INTELLIGENCE</div>
                 </div>
               </div>
 
-              <div class="dash-search-pill">
-                <span>🔍 Search customers...</span>
-                <span class="dash-search-key">⌘F</span>
+              <div class="dash-nav-items">
+                <a href="#dashboard" class="dash-nav-item active">
+                  <span class="dash-nav-icon">📊</span>
+                  <span>Dashboard</span>
+                </a>
+                <a href="#lookup" class="dash-nav-item">
+                  <span class="dash-nav-icon">👥</span>
+                  <span>Customer Lookup</span>
+                </a>
+                <a href="#rfm" class="dash-nav-item">
+                  <span class="dash-nav-icon">📈</span>
+                  <span>RFM Analytics</span>
+                </a>
+                <a href="#segmentation" class="dash-nav-item">
+                  <span class="dash-nav-icon">🎯</span>
+                  <span>Segmentation</span>
+                </a>
+                <a href="#models" class="dash-nav-item">
+                  <span class="dash-nav-icon">🔮</span>
+                  <span>CLV Forecast</span>
+                </a>
+                <a href="#models" class="dash-nav-item">
+                  <span class="dash-nav-icon">🛡️</span>
+                  <span>Churn Risk</span>
+                </a>
               </div>
 
-              <div>
-                <div class="dash-nav-group-title">MAIN MENU</div>
-                <div class="dash-nav-items">
-                  <div class="dash-nav-item active">
-                    <span>📊</span>
-                    <span>Dashboard</span>
-                  </div>
-                  <a href="#lookup" class="dash-nav-item">
-                    <span>👥</span>
-                    <span>Customer Lookup</span>
-                  </a>
-                  <a href="#rfm" class="dash-nav-item">
-                    <span>📈</span>
-                    <span>RFM Analytics</span>
-                  </a>
-                  <a href="#segmentation" class="dash-nav-item">
-                    <span>🎯</span>
-                    <span>Segmentation</span>
-                  </a>
-                  <a href="#models" class="dash-nav-item">
-                    <span>🔮</span>
-                    <span>CLV Forecast</span>
-                  </a>
-                  <a href="#models" class="dash-nav-item">
-                    <span>⚠️</span>
-                    <span>Churn Risk</span>
-                    <span class="dash-badge-count">Live</span>
-                  </a>
+              <!-- Bottom Sidebar Promo Card (Matching reference) -->
+              <div class="dash-sidebar-promo">
+                <div class="dash-promo-icon-box">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>
                 </div>
-              </div>
-
-              <div>
-                <div class="dash-nav-group-title">MANAGEMENT</div>
-                <div class="dash-nav-items">
-                  <a href="#architecture" class="dash-nav-item">
-                    <span>🏛️</span>
-                    <span>Big Data Pipeline</span>
-                  </a>
-                  <a href="#mining" class="dash-nav-item">
-                    <span>🌐</span>
-                    <span>Scraper Catalog</span>
-                  </a>
-                  <a href="#stack" class="dash-nav-item">
-                    <span>⚙️</span>
-                    <span>Serving Telemetry</span>
-                  </a>
-                </div>
+                <div class="dash-promo-title">Turn Data Into Loyal Customers</div>
+                <div class="dash-promo-desc">Actionable insights for smarter retail decisions.</div>
+                <a href="#dashboard" class="dash-promo-btn">
+                  <span>Explore Platform</span>
+                  <span>→</span>
+                </a>
               </div>
             </aside>
 
             <!-- Main Content Pane -->
             <main class="dash-content">
+              <!-- Top Navigation Search & Actions Bar (Matching reference) -->
+              <div class="dash-top-bar">
+                <div class="dash-search-container">
+                  <span class="dash-search-icon">🔍</span>
+                  <input type="text" class="dash-search-input" placeholder="Search customer ID, segment, or keyword..." readonly onclick="document.querySelector('#lookup').scrollIntoView({behavior:'smooth'})">
+                  <span class="dash-search-shortcut">⌘ K</span>
+                </div>
+                <div class="dash-top-actions">
+                  <div class="dash-date-pill">
+                    <span>📅</span>
+                    <span>Jan 2011 - Dec 2011</span>
+                    <span style="font-size: 10px; opacity: 0.7;">▾</span>
+                  </div>
+                  <div class="dash-user-avatar" title="Retail Intelligence Admin">A</div>
+                </div>
+              </div>
+
+              <!-- Dashboard Title Bar -->
               <div class="dash-header-bar">
                 <div class="dash-title-block">
-                  <h2>Dashboard</h2>
+                  <div class="dash-title-with-icon">
+                    <span class="dash-title-icon">📊</span>
+                    <h2>Dashboard</h2>
+                  </div>
                   <p>Real-time retail statistics for quick decision-making</p>
                 </div>
                 <div class="dash-action-group">
@@ -196,178 +205,175 @@
                 </div>
               </div>
 
-              <!-- Top KPI Cards (3 Cards matching media_1791354420546.png) -->
-              <div class="dash-kpis-grid">
-                <!-- Card 1: Tracked Revenue / Total Customers -->
-                <div class="dash-kpi-card">
-                  <div class="dash-kpi-top">
-                    <span>Total Customers & Gross Revenue</span>
-                    <span>👁️</span>
+              <!-- Top KPI Cards (4 luxury cards matching reference) -->
+              <div class="dash-kpis-grid-four">
+                <!-- Card 1: Total Customers -->
+                <div class="dash-kpi-card-luxury">
+                  <div class="dash-kpi-icon-box box-orange">👥</div>
+                  <div class="dash-kpi-body">
+                    <div class="dash-kpi-title">Total Customers</div>
+                    <div class="dash-kpi-num">8,914,210</div>
+                    <div class="dash-kpi-trend trend-up">
+                      <span>↑ 14.2%</span>
+                      <span class="trend-compare">vs previous period</span>
+                    </div>
                   </div>
-                  <div class="dash-kpi-val">
-                    <span>$8,914,210.45</span>
-                    <span class="dash-kpi-curr">USD</span>
-                  </div>
-                  <div class="dash-kpi-pill pill-growth">
-                    <span>↑ 14.2%</span>
-                    <span style="font-weight: 500; opacity: 0.8;">5,878 Profiles Tracked</span>
-                  </div>
-                </div>
-
-                <!-- Card 2: Champions Cohort -->
-                <div class="dash-kpi-card">
-                  <div class="dash-kpi-top">
-                    <span>Champions Cohort Spend</span>
-                    <span>👁️</span>
-                  </div>
-                  <div class="dash-kpi-val">
-                    <span>$3,744,812.80</span>
-                    <span class="dash-kpi-curr">USD</span>
-                  </div>
-                  <div class="dash-kpi-pill pill-growth">
-                    <span>⭐ 1,117 VIPs</span>
-                    <span style="font-weight: 500; opacity: 0.8;">42.0% of Total Revenue</span>
+                  <div class="dash-kpi-sparkline spark-orange">
+                    <svg viewBox="0 0 60 28" fill="none"><path d="M2 24 C 18 20, 24 16, 36 12 C 44 9, 52 4, 58 3" stroke="#ff933d" stroke-width="2.5" stroke-linecap="round"/><circle cx="58" cy="3" r="2.5" fill="#ff933d"/></svg>
                   </div>
                 </div>
 
-                <!-- Card 3: At-Risk & Churn Exposure -->
-                <div class="dash-kpi-card">
-                  <div class="dash-kpi-top">
-                    <span>At-Risk Customer Exposure</span>
-                    <span>👁️</span>
+                <!-- Card 2: Total Orders -->
+                <div class="dash-kpi-card-luxury">
+                  <div class="dash-kpi-icon-box box-teal">🛒</div>
+                  <div class="dash-kpi-body">
+                    <div class="dash-kpi-title">Total Orders</div>
+                    <div class="dash-kpi-num">17,132</div>
+                    <div class="dash-kpi-trend trend-down">
+                      <span>↓ 6.5%</span>
+                      <span class="trend-compare">vs previous period</span>
+                    </div>
                   </div>
-                  <div class="dash-kpi-val">
-                    <span>$1,604,557.00</span>
-                    <span class="dash-kpi-curr">USD</span>
+                  <div class="dash-kpi-sparkline spark-teal">
+                    <svg viewBox="0 0 60 28" fill="none"><path d="M2 18 C 16 12, 28 22, 42 16 C 50 12, 54 8, 58 6" stroke="#2dd4bf" stroke-width="2.5" stroke-linecap="round"/><circle cx="58" cy="6" r="2.5" fill="#2dd4bf"/></svg>
                   </div>
-                  <div class="dash-kpi-pill pill-warning">
-                    <span>⚠️ 1,478 Accounts</span>
-                    <span style="font-weight: 500; opacity: 0.8;">Awaiting Retention Campaign</span>
+                </div>
+
+                <!-- Card 3: Avg. Order Value -->
+                <div class="dash-kpi-card-luxury">
+                  <div class="dash-kpi-icon-box box-purple">💳</div>
+                  <div class="dash-kpi-body">
+                    <div class="dash-kpi-title">Avg. Order Value</div>
+                    <div class="dash-kpi-num">$486.73</div>
+                    <div class="dash-kpi-trend trend-up">
+                      <span>↑ 2.3%</span>
+                      <span class="trend-compare">vs previous period</span>
+                    </div>
+                  </div>
+                  <div class="dash-kpi-sparkline spark-purple">
+                    <svg viewBox="0 0 60 28" fill="none"><path d="M2 22 C 14 20, 24 24, 38 18 C 48 14, 54 8, 58 7" stroke="#c084fc" stroke-width="2.5" stroke-linecap="round"/><circle cx="58" cy="7" r="2.5" fill="#c084fc"/></svg>
+                  </div>
+                </div>
+
+                <!-- Card 4: Total Revenue -->
+                <div class="dash-kpi-card-luxury">
+                  <div class="dash-kpi-icon-box box-rose">📊</div>
+                  <div class="dash-kpi-body">
+                    <div class="dash-kpi-title">Total Revenue</div>
+                    <div class="dash-kpi-num" id="kpiHeroTotalRevenue">$518,210.79</div>
+                    <div class="dash-kpi-trend trend-down" id="kpiHeroRevGrowth">
+                      <span>↓ 55.4%</span>
+                      <span class="trend-compare">vs previous period</span>
+                    </div>
+                  </div>
+                  <div class="dash-kpi-sparkline spark-rose">
+                    <svg viewBox="0 0 60 28" fill="none"><path d="M2 20 C 16 14, 28 18, 40 8 C 50 12, 54 6, 58 4" stroke="#fb7185" stroke-width="2.5" stroke-linecap="round"/><circle cx="58" cy="4" r="2.5" fill="#fb7185"/></svg>
                   </div>
                 </div>
               </div>
 
-              <!-- Charts & Converter Row -->
-              <div class="dash-charts-row">
-                <!-- Chart: Real Live Revenue & Order Trajectory Chart (Dual-Axis Chart.js) -->
-                <div class="dash-chart-card">
-                  <div class="dash-chart-card-header">
+              <!-- Main Hero Analytics: Revenue & Order Trajectory -->
+              <div class="dash-chart-card-luxury">
+                <div class="dash-chart-card-header">
+                  <div class="dash-chart-title-group">
+                    <div class="dash-chart-icon-box">📈</div>
                     <div>
                       <div class="dash-chart-title">Revenue &amp; Order Trajectory</div>
-                      <div class="trajectory-headline-val">
-                        <span id="trajectoryHeadlineRevenue">$8,338,712.01</span>
-                        <span id="trajectoryHeadlineGrowth" class="dash-kpi-pill pill-growth" style="font-size: 11.5px; padding: 2px 8px;">↑ 5.2% vs prev</span>
-                      </div>
-                    </div>
-                    <div style="display: flex; align-items: center; gap: 10px;">
-                      <select id="trajectoryPeriodSelect" class="trajectory-period-select" aria-label="Select aggregation period">
-                        <option value="12m" selected>Last 12 Months (Monthly)</option>
-                        <option value="6m">Last 6 Months (Monthly)</option>
-                        <option value="all">Full History (25 Months)</option>
-                        <option value="90d">Last 90 Days (Daily)</option>
-                        <option value="30d">Last 30 Days (Daily)</option>
-                        <option value="7d">Last 7 Days (Daily)</option>
-                      </select>
+                      <div class="dash-chart-sub">Monthly revenue and order volume trends from actual transaction data</div>
                     </div>
                   </div>
-
-                  <!-- 4 KPI Summary Cards matching reference -->
-                  <div class="trajectory-kpis-grid">
-                    <div class="trajectory-kpi-tile featured">
-                      <div class="kpi-tile-icon-box box-orange">💰</div>
-                      <div class="kpi-tile-content">
-                        <div class="kpi-tile-label">Total Revenue</div>
-                        <div class="kpi-tile-value" id="kpiTotalRevenue">$8,338,712.01</div>
-                        <div class="kpi-tile-sub" id="kpiRevenueGrowth"><span>↑</span> +5.2% vs prev</div>
-                      </div>
+                  <div class="dash-chart-controls">
+                    <div class="trajectory-period-pills" id="trajectoryPeriodPills">
+                      <button type="button" class="period-pill" data-period="7d">7D</button>
+                      <button type="button" class="period-pill" data-period="30d">30D</button>
+                      <button type="button" class="period-pill" data-period="90d">3M</button>
+                      <button type="button" class="period-pill" data-period="6m">6M</button>
+                      <button type="button" class="period-pill active" data-period="12m">1Y</button>
+                      <button type="button" class="period-pill" data-period="all">All</button>
                     </div>
-
-                    <div class="trajectory-kpi-tile">
-                      <div class="kpi-tile-icon-box box-teal">📦</div>
-                      <div class="kpi-tile-content">
-                        <div class="kpi-tile-label">Total Orders</div>
-                        <div class="kpi-tile-value" id="kpiTotalOrders">17,132</div>
-                        <div class="kpi-tile-sub" id="kpiOrdersGrowth"><span>↑</span> +4.1% vs prev</div>
-                      </div>
-                    </div>
-
-                    <div class="trajectory-kpi-tile">
-                      <div class="kpi-tile-icon-box box-purple">💳</div>
-                      <div class="kpi-tile-content">
-                        <div class="kpi-tile-label">Avg. Order Value</div>
-                        <div class="kpi-tile-value" id="kpiAvgOrderValue">$486.73</div>
-                        <div class="kpi-tile-sub" id="kpiAovGrowth"><span>↑</span> +1.1% vs prev</div>
-                      </div>
-                    </div>
-
-                    <div class="trajectory-kpi-tile">
-                      <div class="kpi-tile-icon-box box-amber">📈</div>
-                      <div class="kpi-tile-content">
-                        <div class="kpi-tile-label">Trajectory Trend</div>
-                        <div class="kpi-tile-value" id="kpiTrajectoryTrend">Accelerating</div>
-                        <div class="kpi-tile-sub" id="kpiTrajectorySpan">UCI Retail II Engine</div>
-                      </div>
-                    </div>
-                  </div>
-
-                  <!-- Dual-Axis Legend -->
-                  <div class="trajectory-legend-bar">
-                    <div class="trajectory-legend-item">
-                      <span class="legend-dot-glow" style="background: #ff933d; box-shadow: 0 0 8px rgba(255, 147, 61, 0.6);"></span>
-                      <span>Revenue (USD) &mdash; Left Axis</span>
-                    </div>
-                    <div class="trajectory-legend-item">
-                      <span class="legend-dot-glow" style="background: #2dd4bf; box-shadow: 0 0 8px rgba(45, 212, 191, 0.6);"></span>
-                      <span>Order Volume &mdash; Right Axis</span>
-                    </div>
-                    <div style="margin-left: auto; font-size: 11px; color: var(--text-muted);" id="trajectoryDataStatus">
-                      ● Live Data
-                    </div>
-                  </div>
-
-                  <!-- Chart Canvas Container -->
-                  <div class="dash-chart-canvas-wrapper">
-                    <canvas id="dashTrajectoryChart"></canvas>
-                    <div id="chartLoadingOverlay" class="trajectory-loading-overlay" style="display: none;">
-                      <div class="chart-spinner"></div>
-                      <span>Aggregating real transactions...</span>
-                    </div>
-                    <div id="chartErrorState" class="trajectory-error-state" style="display: none;">
-                      <span>Failed to load trajectory analytics</span>
-                      <button type="button" onclick="window.reloadTrajectoryChart && window.reloadTrajectoryChart()">Retry</button>
-                    </div>
+                    <select id="trajectoryPeriodSelect" class="trajectory-period-select-hidden" aria-label="Select aggregation period">
+                      <option value="12m" selected>Last 12 Months (Monthly)</option>
+                      <option value="6m">Last 6 Months (Monthly)</option>
+                      <option value="all">Full History (25 Months)</option>
+                      <option value="90d">Last 90 Days (Daily)</option>
+                      <option value="30d">Last 30 Days (Daily)</option>
+                      <option value="7d">Last 7 Days (Daily)</option>
+                    </select>
                   </div>
                 </div>
 
-                <!-- Quick Customer Converter / Lookup Widget -->
-                <div class="dash-convert-widget">
-                  <div style="font-size: 13.5px; font-weight: 700; color: #fff;">Quick Customer Lookup</div>
-                  <div class="dash-convert-input-box">
+                <!-- Chart Canvas Container -->
+                <div class="dash-chart-canvas-wrapper-luxury">
+                  <canvas id="dashTrajectoryChart"></canvas>
+                  <div id="chartLoadingOverlay" class="trajectory-loading-overlay" style="display: none;">
+                    <div class="chart-spinner"></div>
+                    <span>Aggregating real transactions...</span>
+                  </div>
+                  <div id="chartErrorState" class="trajectory-error-state" style="display: none;">
+                    <span>Failed to load trajectory analytics</span>
+                    <button type="button" onclick="window.reloadTrajectoryChart && window.reloadTrajectoryChart()">Retry</button>
+                  </div>
+                </div>
+
+                <!-- Bottom Legend matching reference -->
+                <div class="trajectory-legend-bar-luxury">
+                  <div class="trajectory-legend-item">
+                    <span class="legend-dot-luxury dot-orange"></span>
+                    <span>Revenue (USD)</span>
+                  </div>
+                  <div class="trajectory-legend-item">
+                    <span class="legend-dot-luxury dot-teal"></span>
+                    <span>Order Volume</span>
+                  </div>
+                  <div style="margin-left: auto; font-size: 11.5px; color: var(--text-dim);" id="trajectoryDataStatus">
+                    ● UCI Online Retail II Warehouse (Live)
+                  </div>
+                </div>
+              </div>
+
+              <!-- Key Insights Section (Matching reference bottom row) -->
+              <div class="dash-insights-card">
+                <div class="dash-insights-header">
+                  <div class="dash-insights-title-group">
+                    <span class="dash-insights-icon">⭐</span>
                     <div>
-                      <div class="dash-convert-label">Customer ID</div>
-                      <div class="dash-convert-val">#15485</div>
-                    </div>
-                    <span class="dash-kpi-pill pill-growth">Champions</span>
-                  </div>
-
-                  <div class="dash-convert-divider">
-                    <div class="dash-convert-switch-btn">⇄</div>
-                  </div>
-
-                  <div class="dash-convert-input-box">
-                    <div>
-                      <div class="dash-convert-label">Predicted 90D CLV</div>
-                      <div class="dash-convert-val" style="color: var(--accent-orange);">$1,050.90</div>
-                    </div>
-                    <div style="text-align: right;">
-                      <div class="dash-convert-label">Churn Prob</div>
-                      <div style="font-size: 12px; font-weight: 800; color: #34d399;">26.7%</div>
+                      <div class="dash-insights-title">Key Insights</div>
+                      <div class="dash-insights-sub">AI-powered insights from your customer data</div>
                     </div>
                   </div>
-
-                  <a href="#lookup" class="btn-pill-primary" style="width: 100%; justify-content: center; padding: 10px; font-size: 13px;">
-                    Inspect Profile →
+                  <a href="#models" class="dash-insights-link">
+                    <span>View Full Analytics</span>
+                    <span>→</span>
                   </a>
+                </div>
+
+                <div class="dash-insights-grid">
+                  <!-- Insight 1: Revenue Peak -->
+                  <div class="dash-insight-tile">
+                    <div class="dash-insight-icon-box box-teal">↗</div>
+                    <div class="dash-insight-content">
+                      <div class="dash-insight-heading">Revenue Peak in October</div>
+                      <div class="dash-insight-text">Highest monthly volume of $1.14M with 2,621 completed orders</div>
+                    </div>
+                  </div>
+
+                  <!-- Insight 2: Growing Customer Base -->
+                  <div class="dash-insight-tile">
+                    <div class="dash-insight-icon-box box-neutral">👥</div>
+                    <div class="dash-insight-content">
+                      <div class="dash-insight-heading">Growing Customer Base</div>
+                      <div class="dash-insight-text">14.2% increase in total tracked customer profiles this period</div>
+                    </div>
+                  </div>
+
+                  <!-- Insight 3: December Seasonal Decline -->
+                  <div class="dash-insight-tile">
+                    <div class="dash-insight-icon-box box-rose">↘</div>
+                    <div class="dash-insight-content">
+                      <div class="dash-insight-heading">December Incomplete Cycle</div>
+                      <div class="dash-insight-text">Period ends on Dec 9th cutoff; normalized run-rate reflects holiday velocity</div>
+                    </div>
+                  </div>
                 </div>
               </div>
 
@@ -927,7 +933,7 @@
         </p>
       </div>
 
-      <div style="display: grid; grid-template-columns: 1.2fr 1fr; gap: 32px; align-items: start;">
+      <div class="simulator-layout-grid" style="display: grid; grid-template-columns: 1.2fr 1fr; gap: 32px; align-items: start;">
         <div class="overview-card reveal-fade-up stagger-1">
           <div style="font-size: 16px; font-weight: 800; color: #fff; margin-bottom: 16px;">Adjust Customer Inputs</div>
 
