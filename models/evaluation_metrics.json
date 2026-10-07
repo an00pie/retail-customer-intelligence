@@ -1,0 +1,51 @@
+{
+  "clv_regression": {
+    "robust_cohort_r2": 0.523763199455046,
+    "robust_cohort_mae": 321.7825144091273,
+    "robust_cohort_rmse": 606.1176427593412,
+    "log_scale_r2": -0.32705354985283486,
+    "raw_test_mae": 536.8409055926458,
+    "raw_test_rmse": 5055.94370850846,
+    "raw_test_r2": 0.029027164834730557,
+    "winsorization_cap_p99": 6245.562199999987
+  },
+  "churn_classification": {
+    "accuracy": 0.7509462528387585,
+    "roc_auc": 0.8055601869219476,
+    "f1_score": 0.7876049063912202
+  },
+  "catalog_enrichment_benchmark": {
+    "avg_catalog_price": 35.754999999999995,
+    "avg_catalog_rating": 2.835
+  },
+  "cluster_profiles": [
+    {
+      "cluster": 0,
+      "mean_recency": 27.64902280130293,
+      "mean_frequency": 3.020358306188925,
+      "mean_spend": 854.994193811075,
+      "score": 29.843747193087182
+    },
+    {
+      "cluster": 1,
+      "mean_recency": 392.97177615571775,
+      "mean_frequency": 1.4155717761557178,
+      "mean_spend": 345.9593625304136,
+      "score": 0.8781323522872685
+    },
+    {
+      "cluster": 2,
+      "mean_recency": 24.819158460161145,
+      "mean_frequency": 20.003581020590868,
+      "mean_spend": 11466.013545210386,
+      "score": 444.08935957004167
+    },
+    {
+      "cluster": 3,
+      "mean_recency": 210.7320703653586,
+      "mean_frequency": 5.41745602165088,
+      "mean_spend": 2148.1817794316644,
+      "score": 10.145755320508723
+    }
+  ]
+}

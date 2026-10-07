@@ -1,0 +1,25 @@
+# Virtual environments
+.venv/
+venv/
+ENV/
+
+# Python cache
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# Large binary / compressed raw sources
+data/raw/transactions/online_retail_II.xlsx
+data/raw/transactions/online_retail_ii.zip
+
+# Spark & local warehouse
+spark-warehouse/
+metastore_db/
+derby.log
+
+# IDE & OS
+.DS_Store
+.idea/
+.vscode/
+*.swp
