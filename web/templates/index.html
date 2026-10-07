@@ -60,16 +60,16 @@
 
   <!-- Mobile Dropdown Menu -->
   <div class="nav-mobile-dropdown" id="mobileNavDropdown">
-    <a href="#overview" class="nav-link">Platform Overview</a>
-    <a href="#mining" class="nav-link">Data Mining Layer</a>
-    <a href="#architecture" class="nav-link">Big Data Architecture</a>
-    <a href="#rfm" class="nav-link">RFM Intelligence</a>
-    <a href="#segmentation" class="nav-link">Customer Segmentation</a>
-    <a href="#models" class="nav-link">CLV & Churn ML</a>
-    <a href="#dashboard" class="nav-link">Interactive Dashboard</a>
-    <a href="#lookup" class="nav-link">Customer Profile Lookup</a>
-    <a href="#faq" class="nav-link">Technical FAQ</a>
-    <a href="#dashboard" class="btn-pill-primary" style="justify-content: center; margin-top: 10px;">Explore Platform →</a>
+    <a href="#dashboard" class="nav-link" data-tab="dashboard">Dashboard Overview</a>
+    <a href="#lookup" class="nav-link" data-tab="lookup">Customer Lookup</a>
+    <a href="#rfm" class="nav-link" data-tab="rfm">RFM Intelligence</a>
+    <a href="#segmentation" class="nav-link" data-tab="segmentation">Customer Segmentation</a>
+    <a href="#clv" class="nav-link" data-tab="clv">CLV Forecast</a>
+    <a href="#churn" class="nav-link" data-tab="churn">Churn Risk ML</a>
+    <a href="#architecture" class="nav-link" data-tab="architecture">Big Data Architecture</a>
+    <a href="#mining" class="nav-link" data-tab="mining">Data Mining Layer</a>
+    <a href="#faq" class="nav-link" data-tab="faq">Technical FAQ</a>
+    <a href="#dashboard" class="btn-pill-primary" data-tab="dashboard" style="justify-content: center; margin-top: 10px;">Explore Platform →</a>
   </div>
 
   <!-- ==============================================================================
@@ -158,9 +158,9 @@
             <main class="dash-content">
               <!-- Top Navigation Search & Actions Bar (Matching reference) -->
               <div class="dash-top-bar">
-                <div class="dash-search-container">
+                <div class="dash-search-container" onclick="window.switchDashboardTab('lookup')">
                   <span class="dash-search-icon">🔍</span>
-                  <input type="text" class="dash-search-input" placeholder="Search customer ID, segment, or keyword..." readonly onclick="document.querySelector('#lookup').scrollIntoView({behavior:'smooth'})">
+                  <input type="text" class="dash-search-input" placeholder="Search customer ID, segment, or keyword..." readonly>
                   <span class="dash-search-shortcut">⌘ K</span>
                 </div>
                 <div class="dash-top-actions">

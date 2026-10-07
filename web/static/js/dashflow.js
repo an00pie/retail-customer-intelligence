@@ -20,13 +20,9 @@ document.addEventListener('DOMContentLoaded', () => {
    0. SPA DASHBOARD VIEW SWITCHER & MODAL DRAWER SYSTEM
    ============================================================================== */
 function initSpaDashboardNavigation() {
-  const sidebarItems = document.querySelectorAll('.dash-nav-item');
-  const navLinks = document.querySelectorAll('.nav-link');
-  const actionPills = document.querySelectorAll('.dash-action-pill');
-  const tabPanes = document.querySelectorAll('.spa-tab-pane');
-
-  function switchTab(tabId) {
-    if (!tabId) return;
+  function switchTab(rawTabId) {
+    if (!rawTabId) return;
+    const tabId = String(rawTabId).trim().replace(/^#/, '');
 
     // Check if it's a modal overlay tab
     if (tabId === 'architecture' || tabId === 'mining' || tabId === 'faq') {
@@ -37,53 +33,61 @@ function initSpaDashboardNavigation() {
     // Otherwise switch main content pane
     const targetPane = document.getElementById(`tab-${tabId}`);
     if (targetPane) {
-      tabPanes.forEach(pane => pane.classList.remove('active'));
+      // Deactivate all tab panes and activate target
+      const allPanes = document.querySelectorAll('.spa-tab-pane');
+      allPanes.forEach(pane => pane.classList.remove('active'));
       targetPane.classList.add('active');
 
-      // Update sidebar active states
-      sidebarItems.forEach(item => {
-        item.classList.toggle('active', item.dataset.tab === tabId);
+      // Update active states on sidebar items, nav links, and pills
+      document.querySelectorAll('.dash-nav-item, .nav-link, .dash-action-pill').forEach(el => {
+        const itemTab = el.getAttribute('data-tab') || (el.getAttribute('href') || '').replace(/^#/, '');
+        el.classList.toggle('active', itemTab === tabId);
       });
 
-      // Update top navbar active states if applicable
-      navLinks.forEach(link => {
-        link.classList.toggle('active', link.dataset.tab === tabId);
-      });
+      // Scroll smoothly to the top of the dashboard content window
+      const dashContent = document.querySelector('.dash-content');
+      if (dashContent) {
+        dashContent.scrollTop = 0;
+      }
 
       // If switching back to dashboard or chart view, trigger resize to ensure proper rendering
       if (tabId === 'dashboard' && window.trajectoryChartInstance) {
         setTimeout(() => {
-          window.trajectoryChartInstance.resize();
+          try {
+            window.trajectoryChartInstance.resize();
+          } catch (e) {
+            console.warn('Chart resize err:', e);
+          }
         }, 80);
       }
+    } else {
+      console.warn(`Tab pane #tab-${tabId} not found.`);
     }
   }
 
-  // Hook sidebar items
-  sidebarItems.forEach(item => {
-    item.addEventListener('click', (e) => {
+  // Delegated document-level click listener for ALL elements with data-tab or matching nav links
+  document.addEventListener('click', (e) => {
+    // 1. Check for explicit data-tab trigger
+    const tabEl = e.target.closest('[data-tab]');
+    if (tabEl) {
       e.preventDefault();
-      const tab = item.dataset.tab;
+      e.stopPropagation();
+      const tab = tabEl.getAttribute('data-tab');
       if (tab) switchTab(tab);
-    });
-  });
+      return;
+    }
 
-  // Hook top navbar links
-  navLinks.forEach(link => {
-    link.addEventListener('click', (e) => {
-      e.preventDefault();
-      const tab = link.dataset.tab;
-      if (tab) switchTab(tab);
-    });
-  });
-
-  // Hook dashboard header action pills
-  actionPills.forEach(pill => {
-    pill.addEventListener('click', (e) => {
-      e.preventDefault();
-      const tab = pill.dataset.tab;
-      if (tab) switchTab(tab);
-    });
+    // 2. Check for sidebar items or navbar links with href="#..."
+    const linkEl = e.target.closest('.dash-nav-item, .nav-capsule .nav-link, .nav-mobile-dropdown .nav-link');
+    if (linkEl && linkEl.getAttribute('href') && linkEl.getAttribute('href').startsWith('#')) {
+      const hrefVal = linkEl.getAttribute('href').substring(1);
+      if (hrefVal && hrefVal !== 'hero') {
+        e.preventDefault();
+        e.stopPropagation();
+        switchTab(hrefVal);
+        return;
+      }
+    }
   });
 
   // Global modal opener/closer
@@ -787,13 +791,27 @@ function initDashboardCharts() {
 }
 
 /* ==============================================================================
-   8. SMOOTH ANCHOR SCROLLING
+   8. SMOOTH ANCHOR SCROLLING (Filtered for non-SPA elements)
    ============================================================================== */
 function initAnchorScroll() {
   document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     anchor.addEventListener('click', function(e) {
+      // Skip if this anchor is managed by SPA navigation or modal
+      if (
+        this.dataset.tab ||
+        this.closest('.dash-sidebar') ||
+        this.closest('.nav-capsule') ||
+        this.closest('.nav-mobile-dropdown') ||
+        this.classList.contains('dash-action-pill') ||
+        this.classList.contains('nav-link') ||
+        this.classList.contains('dash-nav-item')
+      ) {
+        return;
+      }
+
       const targetId = this.getAttribute('href');
-      if (targetId === '#' || !targetId) return;
+      if (!targetId || targetId === '#' || targetId.startsWith('#tab-')) return;
+
       const targetEl = document.querySelector(targetId);
       if (targetEl) {
         e.preventDefault();
