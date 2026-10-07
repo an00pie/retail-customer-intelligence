@@ -3,18 +3,22 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Customer Intelligence Platform — Turn Retail Data Into Customer Intelligence</title>
-  <meta name="description" content="Analyze customer behavior, discover valuable segments, predict lifetime value, and identify churn risk through one intelligent data platform.">
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220%22%20%2232%22%20%2232%22><circle cx=%2216%22 cy=%2216%22 r=%2216%22 fill=%22%23ff933d%22/><path d=%22M10 20L16 10L22 20Z%22 fill=%22%230d0d0d%22/></svg>">
+  <title>Customer Intelligence Platform — Web3-Verse Green Luxury Edition</title>
+  <meta name="description" content="Live analytics, RFM behavioral clustering, CLV predictions, and churn intelligence across 1.06M retail transactions with high-performance HBase serving.">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220%200%2032%2032%22><circle cx=%2216%22 cy=%2216%22 r=%2216%22 fill=%22%2310b981%22/><path d=%22M10 20L16 10L22 20Z%22 fill=%22%23040806%22/></svg>">
   <link rel="stylesheet" href="/static/css/dashflow.css">
 </head>
 <body>
 
-  <!-- Ambient Backdrop Glows & Subtle Grid -->
+  <!-- Ambient Backdrop Glows, Subtle Grid & Interactive Web3-Verse Wireframe Globe -->
   <div class="canvas-atmosphere">
     <div class="canvas-aura-top"></div>
     <div class="canvas-aura-bottom"></div>
+    <div class="canvas-aura-radial"></div>
     <div class="canvas-grid"></div>
+    <div class="globe-container" id="globeContainer">
+      <canvas id="globeCanvas" class="globe-canvas"></canvas>
+    </div>
   </div>
 
   <!-- ==============================================================================
@@ -187,78 +191,78 @@
                     <p>Real-time retail statistics for quick decision-making</p>
                   </div>
                   <div class="dash-action-group">
-                    <a href="#lookup" class="dash-action-pill primary" data-tab="lookup">🔍 Lookup Customer</a>
-                  <a href="#rfm" class="dash-action-pill" data-tab="rfm">⚡ RFM Calculator</a>
-                  <a href="#models" class="dash-action-pill" data-tab="clv">🔮 ML Forecast</a>
-                  <a href="#architecture" class="dash-action-pill" data-tab="architecture">🏛️ Architecture</a>
-                </div>
-              </div>
-
-              <!-- Top KPI Cards (4 luxury cards matching reference) -->
-              <div class="dash-kpis-grid-four">
-                <!-- Card 1: Total Customers -->
-                <div class="dash-kpi-card-luxury">
-                  <div class="dash-kpi-icon-box box-orange">👥</div>
-                  <div class="dash-kpi-body">
-                    <div class="dash-kpi-title">Total Customers</div>
-                    <div class="dash-kpi-num">8,914,210</div>
-                    <div class="dash-kpi-trend trend-up">
-                      <span>↑ 14.2%</span>
-                      <span class="trend-compare">vs previous period</span>
-                    </div>
-                  </div>
-                  <div class="dash-kpi-sparkline spark-orange">
-                    <svg viewBox="0 0 60 28" fill="none"><path d="M2 24 C 18 20, 24 16, 36 12 C 44 9, 52 4, 58 3" stroke="#ff933d" stroke-width="2.5" stroke-linecap="round"/><circle cx="58" cy="3" r="2.5" fill="#ff933d"/></svg>
+                    <a href="#lookup" class="dash-action-pill primary" data-tab="lookup">◉ Lookup Customer</a>
+                    <a href="#rfm" class="dash-action-pill" data-tab="rfm">⚡ RFM Calculator</a>
+                    <a href="#models" class="dash-action-pill" data-tab="clv">◈ ML Forecast</a>
+                    <a href="#architecture" class="dash-action-pill" data-tab="architecture">◇ Architecture</a>
                   </div>
                 </div>
 
-                <!-- Card 2: Total Orders -->
-                <div class="dash-kpi-card-luxury">
-                  <div class="dash-kpi-icon-box box-teal">🛒</div>
-                  <div class="dash-kpi-body">
-                    <div class="dash-kpi-title">Total Orders</div>
-                    <div class="dash-kpi-num">17,132</div>
-                    <div class="dash-kpi-trend trend-down">
-                      <span>↓ 6.5%</span>
-                      <span class="trend-compare">vs previous period</span>
+                <!-- Top KPI Cards (4 luxury cards matching reference) -->
+                <div class="dash-kpis-grid-four">
+                  <!-- Card 1: Total Customers -->
+                  <div class="dash-kpi-card-luxury">
+                    <div class="dash-kpi-icon-box box-emerald">👥</div>
+                    <div class="dash-kpi-body">
+                      <div class="dash-kpi-title">Total Customers</div>
+                      <div class="dash-kpi-num">8,914,210</div>
+                      <div class="dash-kpi-trend trend-up">
+                        <span>↑ 14.2%</span>
+                        <span class="trend-compare">vs previous period</span>
+                      </div>
+                    </div>
+                    <div class="dash-kpi-sparkline spark-emerald">
+                      <svg viewBox="0 0 60 28" fill="none"><path d="M2 24 C 18 20, 24 16, 36 12 C 44 9, 52 4, 58 3" stroke="#10b981" stroke-width="2.5" stroke-linecap="round"/><circle cx="58" cy="3" r="2.5" fill="#34d399"/></svg>
                     </div>
                   </div>
-                  <div class="dash-kpi-sparkline spark-teal">
-                    <svg viewBox="0 0 60 28" fill="none"><path d="M2 18 C 16 12, 28 22, 42 16 C 50 12, 54 8, 58 6" stroke="#2dd4bf" stroke-width="2.5" stroke-linecap="round"/><circle cx="58" cy="6" r="2.5" fill="#2dd4bf"/></svg>
-                  </div>
-                </div>
 
-                <!-- Card 3: Avg. Order Value -->
-                <div class="dash-kpi-card-luxury">
-                  <div class="dash-kpi-icon-box box-purple">💳</div>
-                  <div class="dash-kpi-body">
-                    <div class="dash-kpi-title">Avg. Order Value</div>
-                    <div class="dash-kpi-num">$486.73</div>
-                    <div class="dash-kpi-trend trend-up">
-                      <span>↑ 2.3%</span>
-                      <span class="trend-compare">vs previous period</span>
+                  <!-- Card 2: Total Orders -->
+                  <div class="dash-kpi-card-luxury">
+                    <div class="dash-kpi-icon-box box-mint">🛒</div>
+                    <div class="dash-kpi-body">
+                      <div class="dash-kpi-title">Total Orders</div>
+                      <div class="dash-kpi-num">17,132</div>
+                      <div class="dash-kpi-trend trend-down">
+                        <span>↓ 6.5%</span>
+                        <span class="trend-compare">vs previous period</span>
+                      </div>
+                    </div>
+                    <div class="dash-kpi-sparkline spark-mint">
+                      <svg viewBox="0 0 60 28" fill="none"><path d="M2 18 C 16 12, 28 22, 42 16 C 50 12, 54 8, 58 6" stroke="#2dd4bf" stroke-width="2.5" stroke-linecap="round"/><circle cx="58" cy="6" r="2.5" fill="#2dd4bf"/></svg>
                     </div>
                   </div>
-                  <div class="dash-kpi-sparkline spark-purple">
-                    <svg viewBox="0 0 60 28" fill="none"><path d="M2 22 C 14 20, 24 24, 38 18 C 48 14, 54 8, 58 7" stroke="#c084fc" stroke-width="2.5" stroke-linecap="round"/><circle cx="58" cy="7" r="2.5" fill="#c084fc"/></svg>
-                  </div>
-                </div>
 
-                <!-- Card 4: Total Revenue -->
-                <div class="dash-kpi-card-luxury">
-                  <div class="dash-kpi-icon-box box-rose">📊</div>
-                  <div class="dash-kpi-body">
-                    <div class="dash-kpi-title">Total Revenue</div>
-                    <div class="dash-kpi-num" id="kpiHeroTotalRevenue">$518,210.79</div>
-                    <div class="dash-kpi-trend trend-down" id="kpiHeroRevGrowth">
-                      <span>↓ 55.4%</span>
-                      <span class="trend-compare">vs previous period</span>
+                  <!-- Card 3: Avg. Order Value -->
+                  <div class="dash-kpi-card-luxury">
+                    <div class="dash-kpi-icon-box box-teal">💳</div>
+                    <div class="dash-kpi-body">
+                      <div class="dash-kpi-title">Avg. Order Value</div>
+                      <div class="dash-kpi-num">$486.73</div>
+                      <div class="dash-kpi-trend trend-up">
+                        <span>↑ 2.3%</span>
+                        <span class="trend-compare">vs previous period</span>
+                      </div>
+                    </div>
+                    <div class="dash-kpi-sparkline spark-teal">
+                      <svg viewBox="0 0 60 28" fill="none"><path d="M2 22 C 14 20, 24 24, 38 18 C 48 14, 54 8, 58 7" stroke="#059669" stroke-width="2.5" stroke-linecap="round"/><circle cx="58" cy="7" r="2.5" fill="#10b981"/></svg>
                     </div>
                   </div>
-                  <div class="dash-kpi-sparkline spark-rose">
-                    <svg viewBox="0 0 60 28" fill="none"><path d="M2 20 C 16 14, 28 18, 40 8 C 50 12, 54 6, 58 4" stroke="#fb7185" stroke-width="2.5" stroke-linecap="round"/><circle cx="58" cy="4" r="2.5" fill="#fb7185"/></svg>
+
+                  <!-- Card 4: Total Revenue -->
+                  <div class="dash-kpi-card-luxury">
+                    <div class="dash-kpi-icon-box box-emerald">📊</div>
+                    <div class="dash-kpi-body">
+                      <div class="dash-kpi-title">Total Revenue</div>
+                      <div class="dash-kpi-num" id="kpiHeroTotalRevenue">$518,210.79</div>
+                      <div class="dash-kpi-trend trend-down" id="kpiHeroRevGrowth">
+                        <span>↓ 55.4%</span>
+                        <span class="trend-compare">vs previous period</span>
+                      </div>
+                    </div>
+                    <div class="dash-kpi-sparkline spark-emerald">
+                      <svg viewBox="0 0 60 28" fill="none"><path d="M2 20 C 16 14, 28 18, 40 8 C 50 12, 54 6, 58 4" stroke="#10b981" stroke-width="2.5" stroke-linecap="round"/><circle cx="58" cy="4" r="2.5" fill="#34d399"/></svg>
+                    </div>
                   </div>
-                </div>
               </div>
 
               <!-- Main Hero Analytics: Revenue & Order Trajectory -->
@@ -307,11 +311,11 @@
                 <!-- Bottom Legend matching reference -->
                 <div class="trajectory-legend-bar-luxury">
                   <div class="trajectory-legend-item">
-                    <span class="legend-dot-luxury dot-orange"></span>
+                    <span class="legend-dot-luxury dot-emerald"></span>
                     <span>Revenue (USD)</span>
                   </div>
                   <div class="trajectory-legend-item">
-                    <span class="legend-dot-luxury dot-teal"></span>
+                    <span class="legend-dot-luxury dot-mint"></span>
                     <span>Order Volume</span>
                   </div>
                   <div style="margin-left: auto; font-size: 11.5px; color: var(--text-dim);" id="trajectoryDataStatus">
@@ -502,7 +506,7 @@
                         </div>
                         <div style="text-align: right;">
                           <div style="font-size: 11px; color: var(--text-muted); font-weight: 600;">Estimated 90D CLV</div>
-                          <div style="font-size: 18px; font-weight: 800; color: var(--accent-orange);" id="rfmClvEst">$734</div>
+                          <div style="font-size: 18px; font-weight: 800; color: var(--accent-emerald-bright);" id="rfmClvEst">$734</div>
                         </div>
                       </div>
                     </div>
@@ -641,13 +645,13 @@
                   </div>
 
                   <!-- Instant Inference Output Card -->
-                  <div class="overview-card" style="background: linear-gradient(145deg, #121319 0%, #1a1a24 100%); border-color: rgba(255, 147, 61, 0.3);">
-                    <div style="font-size: 11px; font-weight: 800; letter-spacing: 1px; color: var(--accent-orange); text-transform: uppercase;">Real-Time Inference Output</div>
+                  <div class="overview-card" style="background: linear-gradient(145deg, #09140f 0%, #0d1a14 100%); border-color: rgba(16, 185, 129, 0.3);">
+                    <div style="font-size: 11px; font-weight: 800; letter-spacing: 1px; color: var(--accent-emerald-bright); text-transform: uppercase;">Real-Time Inference Output</div>
                     <div style="font-size: 26px; font-weight: 800; color: #fff; margin: 4px 0 16px 0;" id="simSegOutput">Champions</div>
 
                     <div style="background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: var(--radius-md); padding: 16px; margin-bottom: 12px;">
                       <div style="font-size: 12px; color: var(--text-muted); font-weight: 600;">Predicted 90-Day CLV</div>
-                      <div style="font-size: 26px; font-weight: 800; color: var(--accent-orange);" id="simClvOutput">$685.20</div>
+                      <div style="font-size: 26px; font-weight: 800; color: var(--accent-emerald-bright);" id="simClvOutput">$685.20</div>
                     </div>
 
                     <div style="background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: var(--radius-md); padding: 16px;">
@@ -840,7 +844,7 @@
             </tr>
             <tr>
               <td class="label">Unit Price</td>
-              <td class="val" style="color: var(--accent-orange);">$51.77 USD</td>
+              <td class="val" style="color: var(--accent-emerald-bright);">$51.77 USD</td>
             </tr>
             <tr>
               <td class="label">Catalog Rating</td>
@@ -866,7 +870,7 @@
 
           <div style="margin-top: 20px; padding: 12px; background: rgba(255,255,255,0.03); border: 1px solid var(--border-subtle); border-radius: var(--radius-sm); font-size: 12px; color: var(--text-secondary); display: flex; align-items: center; justify-content: space-between;">
             <span>Target Partition: <code>/retail/raw/products/</code></span>
-            <span style="color: var(--accent-orange); font-weight: 700;">HDFS Verified</span>
+            <span style="color: var(--accent-emerald-bright); font-weight: 700;">HDFS Verified</span>
           </div>
         </div>
       </div>

@@ -5,6 +5,7 @@
  */
 
 document.addEventListener('DOMContentLoaded', () => {
+  initInteractiveGlobe();
   initSpaDashboardNavigation();
   initScrollReveals();
   initMobileNav();
@@ -404,7 +405,7 @@ function renderCustomerProfile(data) {
       <div class="customer-metrics-row">
         <div class="customer-metric-box">
           <div class="customer-metric-lbl">Predicted CLV</div>
-          <div class="customer-metric-num" style="color: var(--accent-orange);">$${clv.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</div>
+          <div class="customer-metric-num" style="color: var(--accent-emerald-bright);">$${clv.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</div>
         </div>
         <div class="customer-metric-box">
           <div class="customer-metric-lbl">Orders Count</div>
@@ -576,16 +577,16 @@ function initDashboardCharts() {
       return;
     }
 
-    // Create linear gradients for area fills
+    // Create linear gradients for area fills - Luxury Web3-Verse Green
     const chartHeight = canvas.clientHeight || 280;
     const revGradient = ctx.createLinearGradient(0, 0, 0, chartHeight);
-    revGradient.addColorStop(0, 'rgba(255, 147, 61, 0.28)');
-    revGradient.addColorStop(0.65, 'rgba(255, 147, 61, 0.05)');
-    revGradient.addColorStop(1, 'rgba(255, 147, 61, 0.0)');
+    revGradient.addColorStop(0, 'rgba(16, 185, 129, 0.28)');
+    revGradient.addColorStop(0.65, 'rgba(16, 185, 129, 0.05)');
+    revGradient.addColorStop(1, 'rgba(16, 185, 129, 0.0)');
 
     const ordGradient = ctx.createLinearGradient(0, 0, 0, chartHeight);
-    ordGradient.addColorStop(0, 'rgba(45, 212, 191, 0.22)');
-    ordGradient.addColorStop(0.65, 'rgba(45, 212, 191, 0.04)');
+    ordGradient.addColorStop(0, 'rgba(45, 212, 191, 0.20)');
+    ordGradient.addColorStop(0.65, 'rgba(45, 212, 191, 0.03)');
     ordGradient.addColorStop(1, 'rgba(45, 212, 191, 0.0)');
 
     trajectoryChartInstance = new Chart(ctx, {
@@ -597,18 +598,18 @@ function initDashboardCharts() {
             label: 'Revenue (USD)',
             data: data.revenue,
             yAxisID: 'yRevenue',
-            borderColor: '#ff933d',
+            borderColor: '#10b981',
             backgroundColor: revGradient,
             borderWidth: 2.5,
             tension: 0.38,
             fill: true,
             pointRadius: data.labels.length > 40 ? 0 : 3.5,
-            pointHoverRadius: 6,
-            pointBackgroundColor: '#ff933d',
-            pointBorderColor: '#121216',
+            pointHoverRadius: 6.5,
+            pointBackgroundColor: '#34d399',
+            pointBorderColor: '#051b11',
             pointBorderWidth: 2,
             pointHoverBorderColor: '#ffffff',
-            pointHoverBorderWidth: 2
+            pointHoverBorderWidth: 2.5
           },
           {
             label: 'Order Volume',
@@ -623,7 +624,7 @@ function initDashboardCharts() {
             pointRadius: data.labels.length > 40 ? 0 : 3,
             pointHoverRadius: 5.5,
             pointBackgroundColor: '#2dd4bf',
-            pointBorderColor: '#121216',
+            pointBorderColor: '#051b11',
             pointBorderWidth: 2,
             pointHoverBorderColor: '#ffffff',
             pointHoverBorderWidth: 2
@@ -646,10 +647,10 @@ function initDashboardCharts() {
             display: false // Using our custom legend matching DashFlow UI
           },
           tooltip: {
-            backgroundColor: 'rgba(17, 18, 23, 0.94)',
+            backgroundColor: 'rgba(5, 18, 12, 0.94)',
             titleColor: '#ffffff',
-            bodyColor: '#e2e8f0',
-            borderColor: 'rgba(255, 255, 255, 0.12)',
+            bodyColor: '#a7f3d0',
+            borderColor: 'rgba(16, 185, 129, 0.3)',
             borderWidth: 1,
             padding: 12,
             boxPadding: 6,
@@ -670,7 +671,7 @@ function initDashboardCharts() {
         scales: {
           x: {
             grid: {
-              color: 'rgba(255, 255, 255, 0.035)',
+              color: 'rgba(16, 185, 129, 0.04)',
               drawBorder: false
             },
             ticks: {
@@ -684,11 +685,11 @@ function initDashboardCharts() {
             type: 'linear',
             position: 'left',
             grid: {
-              color: 'rgba(255, 255, 255, 0.04)',
+              color: 'rgba(16, 185, 129, 0.04)',
               drawBorder: false
             },
             ticks: {
-              color: 'rgba(255, 147, 61, 0.75)',
+              color: 'rgba(52, 211, 153, 0.85)',
               font: { size: 11, weight: '600' },
               callback: function(val) {
                 if (val >= 1000000) return `$${(val / 1000000).toFixed(1)}M`;
@@ -705,7 +706,7 @@ function initDashboardCharts() {
               drawBorder: false
             },
             ticks: {
-              color: 'rgba(45, 212, 191, 0.75)',
+              color: 'rgba(45, 212, 191, 0.8)',
               font: { size: 11, weight: '600' },
               callback: function(val) {
                 if (val >= 1000) return `${(val / 1000).toFixed(1)}k`;
@@ -823,5 +824,250 @@ function initAnchorScroll() {
         });
       }
     });
+  });
+}
+
+/* ==============================================================================
+   9. WEB3-VERSE INTERACTIVE EMERALD WIREFRAME GLOBE (Canvas 3D Mathematics)
+   ============================================================================== */
+function initInteractiveGlobe() {
+  const canvas = document.getElementById('globeCanvas');
+  const container = document.getElementById('globeContainer');
+  if (!canvas || !container) return;
+
+  const ctx = canvas.getContext('2d');
+  if (!ctx) return;
+
+  // Check reduced motion preference
+  const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  let width = container.clientWidth || window.innerWidth;
+  let height = container.clientHeight || 750;
+  let dpr = Math.min(window.devicePixelRatio || 1, 2);
+
+  function resize() {
+    width = container.clientWidth || window.innerWidth;
+    height = container.clientHeight || 750;
+    canvas.width = width * dpr;
+    canvas.height = height * dpr;
+    canvas.style.width = width + 'px';
+    canvas.style.height = height + 'px';
+    ctx.scale(dpr, dpr);
+  }
+  resize();
+  window.addEventListener('resize', resize, { passive: true });
+
+  // Generate 3D wireframe spherical vertices & network connections
+  const numRings = 14;
+  const pointsPerRing = 26;
+  const vertices = [];
+  const radiusRatio = Math.min(width * 0.42, 420);
+
+  for (let i = 0; i < numRings; i++) {
+    const phi = (Math.PI * (i + 0.5)) / numRings; // 0 to PI
+    const ringRadius = Math.sin(phi);
+    const y = Math.cos(phi);
+
+    for (let j = 0; j < pointsPerRing; j++) {
+      const theta = (2 * Math.PI * j) / pointsPerRing;
+      const x = ringRadius * Math.cos(theta);
+      const z = ringRadius * Math.sin(theta);
+      vertices.push({
+        origX: x,
+        origY: y,
+        origZ: z,
+        x: x,
+        y: y,
+        z: z,
+        screenX: 0,
+        screenY: 0,
+        scale: 0,
+        alpha: 0
+      });
+    }
+  }
+
+  // Precompute longitude and latitude connections
+  const edges = [];
+  for (let i = 0; i < numRings; i++) {
+    for (let j = 0; j < pointsPerRing; j++) {
+      const curr = i * pointsPerRing + j;
+      const nextInRing = i * pointsPerRing + ((j + 1) % pointsPerRing);
+      edges.push([curr, nextInRing]);
+
+      if (i < numRings - 1) {
+        const nextRing = (i + 1) * pointsPerRing + j;
+        edges.push([curr, nextRing]);
+      }
+    }
+  }
+
+  // Highlight network node clusters (representing global retail hubs)
+  const hubs = [
+    { ring: 4, index: 6, label: 'London' },
+    { ring: 5, index: 14, label: 'New York' },
+    { ring: 6, index: 21, label: 'Tokyo' },
+    { ring: 7, index: 3, label: 'Frankfurt' },
+    { ring: 5, index: 24, label: 'Singapore' },
+    { ring: 8, index: 11, label: 'Dubai' }
+  ];
+
+  // Rotation and Parallax Physics
+  let rotX = 0.25;
+  let rotY = 0.0;
+  let targetRotSpeedY = prefersReducedMotion ? 0 : 0.0035;
+  let curRotSpeedY = targetRotSpeedY;
+  let pointerX = 0;
+  let pointerY = 0;
+  let targetPointerX = 0;
+  let targetPointerY = 0;
+  let isHovered = false;
+  let animId = null;
+
+  // Window pointer movement for subtle parallax & interactivity
+  window.addEventListener('mousemove', (e) => {
+    const normX = (e.clientX / window.innerWidth) * 2 - 1;
+    const normY = (e.clientY / window.innerHeight) * 2 - 1;
+    targetPointerX = normX * 12; // Subtle 12px max parallax
+    targetPointerY = normY * 10;
+
+    // Detect if cursor is near hero globe
+    if (e.clientY < 650) {
+      isHovered = true;
+      targetRotSpeedY = prefersReducedMotion ? 0 : 0.0065;
+    } else {
+      isHovered = false;
+      targetRotSpeedY = prefersReducedMotion ? 0 : 0.0035;
+    }
+  }, { passive: true });
+
+  window.addEventListener('mouseleave', () => {
+    isHovered = false;
+    targetRotSpeedY = prefersReducedMotion ? 0 : 0.0035;
+    targetPointerX = 0;
+    targetPointerY = 0;
+  });
+
+  // Render loop
+  function draw() {
+    ctx.clearRect(0, 0, width, height);
+
+    // Smooth inertia for mouse parallax and rotation
+    pointerX += (targetPointerX - pointerX) * 0.05;
+    pointerY += (targetPointerY - pointerY) * 0.05;
+    curRotSpeedY += (targetRotSpeedY - curRotSpeedY) * 0.05;
+    rotY += curRotSpeedY;
+
+    // Globe center placement: slightly above the dashboard window for that rising horizon look
+    const cx = width * 0.5 + pointerX;
+    const cy = Math.min(height * 0.56, 380) + pointerY;
+    const currentRadius = Math.min(width * 0.42, 400);
+
+    // 1. Draw Background Emerald Atmosphere behind globe
+    const auraGrad = ctx.createRadialGradient(cx, cy, currentRadius * 0.2, cx, cy, currentRadius * 1.35);
+    auraGrad.addColorStop(0, isHovered ? 'rgba(16, 185, 129, 0.24)' : 'rgba(16, 185, 129, 0.16)');
+    auraGrad.addColorStop(0.45, 'rgba(5, 150, 105, 0.08)');
+    auraGrad.addColorStop(0.8, 'rgba(4, 30, 20, 0.03)');
+    auraGrad.addColorStop(1, 'rgba(4, 8, 6, 0.0)');
+    ctx.fillStyle = auraGrad;
+    ctx.beginPath();
+    ctx.arc(cx, cy, currentRadius * 1.35, 0, Math.PI * 2);
+    ctx.fill();
+
+    // 2. Transform 3D Vertices (Euler Rotation on Y and subtle X)
+    const cosY = Math.cos(rotY);
+    const sinY = Math.sin(rotY);
+    const cosX = Math.cos(rotX);
+    const sinX = Math.sin(rotX);
+
+    for (let i = 0; i < vertices.length; i++) {
+      const v = vertices[i];
+      // Rotate around Y
+      const x1 = v.origX * cosY - v.origZ * sinY;
+      const z1 = v.origZ * cosY + v.origX * sinY;
+      // Rotate around X
+      const y2 = v.origY * cosX - z1 * sinX;
+      const z2 = z1 * cosX + v.origY * sinX;
+
+      v.x = x1;
+      v.y = y2;
+      v.z = z2;
+
+      // Perspective projection
+      const fov = 480;
+      const scale = fov / (fov + z2 * currentRadius * 0.6);
+      v.scale = scale;
+      v.screenX = cx + x1 * currentRadius * scale;
+      v.screenY = cy + y2 * currentRadius * scale;
+      // Depth cue: vertices in front (z2 < 0) are brighter; behind are dimmer
+      v.alpha = Math.max(0.04, Math.min(0.9, (1 - z2) * 0.5));
+    }
+
+    // 3. Draw Connecting Wireframe Edges
+    ctx.lineWidth = 0.9;
+    for (let i = 0; i < edges.length; i++) {
+      const p1 = vertices[edges[i][0]];
+      const p2 = vertices[edges[i][1]];
+
+      // If either point is on the front hemisphere, render line
+      const avgZ = (p1.z + p2.z) * 0.5;
+      if (avgZ < 0.35) {
+        const edgeAlpha = Math.max(0.03, Math.min(0.55, (1 - avgZ) * 0.35));
+        ctx.strokeStyle = `rgba(52, 211, 153, ${edgeAlpha * (isHovered ? 1.35 : 1)})`;
+        ctx.beginPath();
+        ctx.moveTo(p1.screenX, p1.screenY);
+        ctx.lineTo(p2.screenX, p2.screenY);
+        ctx.stroke();
+      }
+    }
+
+    // 4. Draw Vertex Nodes
+    for (let i = 0; i < vertices.length; i++) {
+      const v = vertices[i];
+      if (v.z < 0.25) {
+        ctx.fillStyle = `rgba(16, 185, 129, ${v.alpha})`;
+        ctx.beginPath();
+        const nodeRadius = (v.z < -0.4 ? 2.0 : 1.3) * v.scale;
+        ctx.arc(v.screenX, v.screenY, nodeRadius, 0, Math.PI * 2);
+        ctx.fill();
+      }
+    }
+
+    // 5. Draw Major Retail Intelligence Hub Pulses
+    for (let h = 0; h < hubs.length; h++) {
+      const hubIdx = hubs[h].ring * pointsPerRing + hubs[h].index;
+      if (hubIdx < vertices.length) {
+        const hv = vertices[hubIdx];
+        if (hv.z < 0) { // On visible front side
+          const pulseAlpha = Math.max(0.3, Math.min(1.0, 1 - hv.z));
+          // Outer pulse ring
+          ctx.strokeStyle = `rgba(110, 231, 183, ${pulseAlpha * 0.75})`;
+          ctx.lineWidth = 1.4;
+          ctx.beginPath();
+          ctx.arc(hv.screenX, hv.screenY, 5 * hv.scale, 0, Math.PI * 2);
+          ctx.stroke();
+
+          // Core bright dot
+          ctx.fillStyle = `rgba(255, 255, 255, ${pulseAlpha * 0.9})`;
+          ctx.beginPath();
+          ctx.arc(hv.screenX, hv.screenY, 2.2 * hv.scale, 0, Math.PI * 2);
+          ctx.fill();
+        }
+      }
+    }
+
+    animId = requestAnimationFrame(draw);
+  }
+
+  // Start rendering
+  animId = requestAnimationFrame(draw);
+
+  // Pause rendering when page is hidden to preserve battery/CPU
+  document.addEventListener('visibilitychange', () => {
+    if (document.hidden) {
+      if (animId) cancelAnimationFrame(animId);
+    } else {
+      animId = requestAnimationFrame(draw);
+    }
   });
 }
