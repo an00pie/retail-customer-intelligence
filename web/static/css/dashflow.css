@@ -116,15 +116,15 @@ button, input, select, textarea {
 
 .canvas-aura-top {
   position: absolute;
-  top: -220px;
+  top: -160px;
   left: 50%;
   transform: translateX(-50%);
-  width: 1000px;
-  height: 700px;
+  width: 1400px;
+  height: 850px;
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(16, 185, 129, 0.18) 0%, rgba(5, 150, 105, 0.08) 45%, transparent 75%);
-  filter: blur(90px);
-  animation: pulse-slow 12s ease-in-out infinite alternate;
+  background: radial-gradient(ellipse at center, rgba(16, 185, 129, 0.25) 0%, rgba(5, 150, 105, 0.12) 36%, rgba(3, 15, 10, 0.04) 65%, transparent 80%);
+  filter: blur(85px);
+  animation: pulse-slow 14s ease-in-out infinite alternate;
 }
 
 .canvas-aura-bottom {
@@ -132,22 +132,34 @@ button, input, select, textarea {
   bottom: -280px;
   left: 50%;
   transform: translateX(-50%);
-  width: 1100px;
-  height: 750px;
+  width: 1200px;
+  height: 800px;
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(16, 185, 129, 0.12) 0%, rgba(4, 30, 20, 0.04) 50%, transparent 70%);
+  background: radial-gradient(circle, rgba(16, 185, 129, 0.14) 0%, rgba(4, 30, 20, 0.04) 50%, transparent 70%);
   filter: blur(110px);
 }
 
 .canvas-aura-radial {
   position: absolute;
-  top: 15%;
+  top: 8%;
   left: 50%;
   transform: translateX(-50%);
-  width: 1200px;
-  height: 900px;
-  background: radial-gradient(ellipse at center, rgba(16, 185, 129, 0.09) 0%, rgba(7, 16, 12, 0.02) 50%, transparent 75%);
-  filter: blur(70px);
+  width: 1500px;
+  height: 1000px;
+  background: radial-gradient(ellipse at center, rgba(16, 185, 129, 0.16) 0%, rgba(5, 150, 105, 0.06) 42%, transparent 75%);
+  filter: blur(75px);
+  pointer-events: none;
+}
+
+.canvas-haze {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  height: 700px;
+  background: radial-gradient(circle at 50% 28%, rgba(52, 211, 153, 0.08) 0%, transparent 60%);
+  filter: blur(50px);
   pointer-events: none;
 }
 
@@ -155,35 +167,35 @@ button, input, select, textarea {
   position: absolute;
   inset: 0;
   background-image: 
-    linear-gradient(rgba(16, 185, 129, 0.035) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(16, 185, 129, 0.035) 1px, transparent 1px);
-  background-size: 64px 64px;
-  mask-image: radial-gradient(ellipse 85% 65% at 50% 30%, black 25%, transparent 85%);
-  -webkit-mask-image: radial-gradient(ellipse 85% 65% at 50% 30%, black 25%, transparent 85%);
+    linear-gradient(rgba(16, 185, 129, 0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(16, 185, 129, 0.04) 1px, transparent 1px);
+  background-size: 56px 56px;
+  mask-image: radial-gradient(ellipse 85% 65% at 50% 25%, black 25%, transparent 85%);
+  -webkit-mask-image: radial-gradient(ellipse 85% 65% at 50% 25%, black 25%, transparent 85%);
 }
 
-/* Interactive Background Globe Container */
-.globe-container {
+/* Web3-Verse Interactive 3D Wireframe Globe Stage */
+.hero-globe-stage {
   position: absolute;
   top: 0;
-  left: 0;
+  left: 50%;
+  transform: translateX(-50%);
   width: 100%;
-  height: 100vh;
+  max-width: 1440px;
+  height: 640px;
   pointer-events: none;
-  z-index: 0;
-  overflow: hidden;
+  z-index: 1;
+  overflow: visible;
   display: flex;
   align-items: center;
   justify-content: center;
-  mask-image: linear-gradient(to bottom, black 0%, black 75%, transparent 100%);
-  -webkit-mask-image: linear-gradient(to bottom, black 0%, black 75%, transparent 100%);
 }
 
-.globe-canvas {
+.hero-globe-stage .globe-canvas {
   width: 100%;
   height: 100%;
-  opacity: 0.92;
-  transition: opacity 0.5s ease;
+  opacity: 1;
+  display: block;
 }
 
 @keyframes pulse-slow {
@@ -192,8 +204,9 @@ button, input, select, textarea {
 }
 
 @media (max-width: 768px) {
-  .globe-container {
-    opacity: 0.45;
+  .hero-globe-stage {
+    opacity: 0.65;
+    height: 480px;
   }
 }
 
@@ -210,7 +223,7 @@ button, input, select, textarea {
   margin: 0 auto;
   padding: 0 24px;
   position: relative;
-  z-index: 1;
+  z-index: 2;
 }
 
 /* ==============================================================================
@@ -230,14 +243,20 @@ button, input, select, textarea {
 
 .nav-capsule {
   pointer-events: auto;
-  background: rgba(7, 16, 12, 0.85);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
+  background: rgba(5, 14, 10, 0.88);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
   border-radius: var(--radius-full);
   padding: 6px 8px 6px 14px;
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 10px;
+  box-shadow: 0 16px 45px rgba(0, 0, 0, 0.85), 0 0 0 1px rgba(16, 185, 129, 0.22), 0 0 25px rgba(16, 185, 129, 0.12);
+  max-width: 980px;
+  width: auto;
+  justify-content: space-between;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
   box-shadow: 0 14px 45px rgba(0, 0, 0, 0.8), 0 0 0 1px rgba(16, 185, 129, 0.22), 0 0 25px rgba(16, 185, 129, 0.12);
   max-width: 960px;
   width: auto;
@@ -481,14 +500,21 @@ button, input, select, textarea {
    02. SINGLE DASHBOARD SPA CONTAINER
    ============================================================================== */
 .hero-section {
-  padding-top: 84px;
-  padding-bottom: 24px;
+  padding-top: 104px;
+  padding-bottom: 32px;
   position: relative;
   overflow: hidden;
   text-align: center;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
+  scroll-margin-top: 110px;
+}
+
+.dash-hero-header {
+  position: relative;
+  z-index: 3;
+  margin-bottom: 24px;
 }
 
 .dash-hero-compact-header {
@@ -509,10 +535,21 @@ button, input, select, textarea {
   font-weight: 700;
   letter-spacing: 0.8px;
   text-transform: uppercase;
-  padding: 4px 14px;
+  padding: 5px 15px;
   border-radius: var(--radius-full);
-  margin-bottom: 10px;
-  box-shadow: 0 0 16px rgba(16, 185, 129, 0.12);
+  margin-bottom: 14px;
+  box-shadow: 0 0 20px rgba(16, 185, 129, 0.16);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+.hero-tag-pulse {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #34d399;
+  box-shadow: 0 0 10px #34d399;
+  animation: pulse-slow 1.8s infinite alternate;
 }
 
 .hero-title-compact {
@@ -536,21 +573,22 @@ button, input, select, textarea {
 }
 
 .hero-title {
-  font-size: clamp(38px, 5.8vw, 68px);
+  font-size: clamp(34px, 4.4vw, 56px);
   font-weight: 800;
   letter-spacing: -0.035em;
-  line-height: 1.08;
+  line-height: 1.12;
   color: #ffffff;
-  max-width: 960px;
-  margin: 0 auto 20px;
+  max-width: 920px;
+  margin: 0 auto 16px;
+  text-shadow: 0 4px 28px rgba(0, 0, 0, 0.8);
 }
 
 .hero-subtitle {
-  font-size: clamp(15.5px, 1.8vw, 18.5px);
-  color: var(--text-secondary);
+  font-size: clamp(14px, 1.4vw, 16.5px);
+  color: #94a3b8;
   line-height: 1.6;
   max-width: 720px;
-  margin: 0 auto 36px;
+  margin: 0 auto 28px;
   font-weight: 400;
 }
 
@@ -558,8 +596,8 @@ button, input, select, textarea {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 16px;
-  margin-bottom: 32px;
+  gap: 14px;
+  margin-bottom: 28px;
   flex-wrap: wrap;
 }
 
@@ -572,14 +610,18 @@ button, input, select, textarea {
   flex: 1;
   display: flex;
   flex-direction: column;
+  position: relative;
+  z-index: 3;
 }
 
 .hero-mockup {
-  background: #060e0a;
-  border: 1px solid rgba(16, 185, 129, 0.18);
+  background: rgba(6, 14, 10, 0.82);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid rgba(16, 185, 129, 0.22);
   border-radius: 20px;
   overflow: hidden;
-  box-shadow: 0 24px 70px rgba(0, 0, 0, 0.85), 0 0 50px rgba(16, 185, 129, 0.08);
+  box-shadow: 0 28px 80px rgba(0, 0, 0, 0.9), 0 0 60px rgba(16, 185, 129, 0.12);
   flex: 1;
   display: flex;
   flex-direction: column;
@@ -592,7 +634,9 @@ button, input, select, textarea {
   display: grid;
   grid-template-columns: 240px 1fr;
   min-height: calc(100vh - 130px);
-  background: #060e0a;
+  background: rgba(6, 14, 10, 0.75);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
   text-align: left;
   border-radius: 20px;
   overflow: hidden;
@@ -661,38 +705,55 @@ button, input, select, textarea {
   display: flex;
   align-items: center;
   gap: 12px;
-  padding: 10px 12px;
+  padding: 10px 14px;
   border-radius: var(--radius-sm);
   font-size: 13px;
   font-weight: 500;
   color: var(--text-muted);
-  transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
   cursor: pointer;
   text-decoration: none;
   border: 1px solid transparent;
+  position: relative;
 }
 
 .dash-nav-icon {
-  font-size: 15px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   width: 20px;
+  color: #64748b;
+  transition: color 0.2s ease;
 }
 
 .dash-nav-item:hover {
   color: #ffffff;
   background: rgba(16, 185, 129, 0.06);
-  border-color: rgba(16, 185, 129, 0.16);
-  transform: translateX(2px);
+  border-color: rgba(16, 185, 129, 0.12);
+}
+
+.dash-nav-item:hover .dash-nav-icon {
+  color: #34d399;
 }
 
 .dash-nav-item.active {
-  background: linear-gradient(90deg, rgba(16, 185, 129, 0.20) 0%, rgba(16, 185, 129, 0.04) 100%);
+  background: rgba(16, 185, 129, 0.12);
   color: #ffffff;
-  font-weight: 700;
-  border: 1px solid rgba(16, 185, 129, 0.35);
-  box-shadow: 0 4px 20px rgba(16, 185, 129, 0.16);
+  font-weight: 600;
+  border: 1px solid rgba(16, 185, 129, 0.28);
+  box-shadow: 0 2px 14px rgba(16, 185, 129, 0.12);
+}
+
+.dash-nav-item.active::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 6px;
+  bottom: 6px;
+  width: 3px;
+  border-radius: 0 3px 3px 0;
+  background: #34d399;
+  box-shadow: 0 0 10px #34d399;
 }
 
 .dash-nav-item.active .dash-nav-icon {
@@ -963,8 +1024,10 @@ button, input, select, textarea {
 }
 
 .dash-kpi-card-luxury {
-  background: #111217;
-  border: 1px solid rgba(255, 255, 255, 0.06);
+  background: rgba(13, 24, 18, 0.7);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(16, 185, 129, 0.16);
   border-radius: var(--radius-md);
   padding: 16px 18px;
   display: flex;
@@ -972,31 +1035,33 @@ button, input, select, textarea {
   gap: 14px;
   position: relative;
   overflow: hidden;
-  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.25s ease;
+  transition: transform 0.22s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.22s ease, box-shadow 0.22s ease;
 }
 
 .dash-kpi-card-luxury:hover {
   transform: translateY(-2px);
-  border-color: rgba(255, 255, 255, 0.14);
+  border-color: rgba(52, 211, 153, 0.35);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45), 0 0 20px rgba(16, 185, 129, 0.12);
 }
 
 .dash-kpi-icon-box {
-  width: 42px;
-  height: 42px;
+  width: 40px;
+  height: 40px;
   border-radius: 10px;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 18px;
+  font-size: 16px;
   flex-shrink: 0;
+  border: 1px solid rgba(16, 185, 129, 0.22);
 }
 
-.box-emerald { background: var(--accent-emerald-subtle); color: var(--accent-emerald-bright); }
-.box-orange  { background: var(--accent-emerald-subtle); color: var(--accent-emerald-bright); }
-.box-teal    { background: rgba(45, 212, 191, 0.12); color: #2dd4bf; }
-.box-purple  { background: rgba(168, 85, 247, 0.12); color: #c084fc; }
-.box-rose    { background: rgba(244, 63, 94, 0.12); color: #fb7185; }
-.box-neutral { background: rgba(255, 255, 255, 0.08); color: #e2e8f0; }
+.box-emerald { background: rgba(16, 185, 129, 0.12); color: var(--accent-emerald-bright); }
+.box-orange  { background: rgba(16, 185, 129, 0.12); color: var(--accent-emerald-bright); }
+.box-teal    { background: rgba(45, 212, 191, 0.12); color: #2dd4bf; border-color: rgba(45, 212, 191, 0.24); }
+.box-purple  { background: rgba(16, 185, 129, 0.12); color: var(--accent-emerald-bright); }
+.box-rose    { background: rgba(244, 63, 94, 0.12); color: #fb7185; border-color: rgba(244, 63, 94, 0.24); }
+.box-neutral { background: rgba(255, 255, 255, 0.05); color: #e2e8f0; border-color: rgba(255, 255, 255, 0.1); }
 
 .dash-kpi-body {
   flex: 1;
@@ -2862,4 +2927,47 @@ button, input, select, textarea {
   display: flex;
   flex-direction: column;
   gap: 20px;
+}
+
+/* ==============================================================================
+   SCROLL MARGIN OFFSET (Ensures Top Fixed Capsule Never Overlaps Content)
+   ============================================================================== */
+section,
+.hero-section,
+.overview-section,
+.mining-section,
+.rfm-section,
+.models-section,
+.lookup-section,
+.architecture-section,
+.stack-section,
+.pipeline-section,
+.testimonials-section,
+.pricing-section,
+.faq-section,
+.cta-section,
+[id] {
+  scroll-margin-top: 110px;
+}
+
+/* Custom Emerald Scrollbar for dashboard content */
+.dash-content::-webkit-scrollbar,
+.spa-modal-body::-webkit-scrollbar {
+  width: 6px;
+}
+
+.dash-content::-webkit-scrollbar-track,
+.spa-modal-body::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.2);
+}
+
+.dash-content::-webkit-scrollbar-thumb,
+.spa-modal-body::-webkit-scrollbar-thumb {
+  background: rgba(16, 185, 129, 0.25);
+  border-radius: 4px;
+}
+
+.dash-content::-webkit-scrollbar-thumb:hover,
+.spa-modal-body::-webkit-scrollbar-thumb:hover {
+  background: rgba(52, 211, 153, 0.5);
 }

@@ -715,7 +715,29 @@ function initDashboardCharts() {
             }
           }
         }
-      }
+      },
+      plugins: [{
+        id: 'verticalGuideLine',
+        afterDraw: (chart) => {
+          if (chart.tooltip && chart.tooltip.getActiveElements && chart.tooltip.getActiveElements().length) {
+            const activePoint = chart.tooltip.getActiveElements()[0];
+            const ctx = chart.ctx;
+            const x = activePoint.element.x;
+            const topY = chart.scales.yRevenue ? chart.scales.yRevenue.top : 0;
+            const bottomY = chart.scales.yRevenue ? chart.scales.yRevenue.bottom : chart.height;
+
+            ctx.save();
+            ctx.beginPath();
+            ctx.moveTo(x, topY);
+            ctx.lineTo(x, bottomY);
+            ctx.lineWidth = 1;
+            ctx.strokeStyle = 'rgba(52, 211, 153, 0.45)';
+            ctx.setLineDash([4, 4]);
+            ctx.stroke();
+            ctx.restore();
+          }
+        }
+      }]
     });
   }
 
@@ -816,7 +838,7 @@ function initAnchorScroll() {
       const targetEl = document.querySelector(targetId);
       if (targetEl) {
         e.preventDefault();
-        const navOffset = 90;
+        const navOffset = 110;
         const elPosition = targetEl.getBoundingClientRect().top + window.pageYOffset;
         window.scrollTo({
           top: elPosition - navOffset,
@@ -838,30 +860,28 @@ function initInteractiveGlobe() {
   const ctx = canvas.getContext('2d');
   if (!ctx) return;
 
-  // Check reduced motion preference
   const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   let width = container.clientWidth || window.innerWidth;
-  let height = container.clientHeight || 750;
+  let height = container.clientHeight || 640;
   let dpr = Math.min(window.devicePixelRatio || 1, 2);
 
   function resize() {
     width = container.clientWidth || window.innerWidth;
-    height = container.clientHeight || 750;
+    height = container.clientHeight || 640;
     canvas.width = width * dpr;
     canvas.height = height * dpr;
     canvas.style.width = width + 'px';
     canvas.style.height = height + 'px';
-    ctx.scale(dpr, dpr);
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
   }
   resize();
   window.addEventListener('resize', resize, { passive: true });
 
-  // Generate 3D wireframe spherical vertices & network connections
-  const numRings = 14;
-  const pointsPerRing = 26;
+  // 16 rings x 32 points = 512 vertex sphere
+  const numRings = 16;
+  const pointsPerRing = 32;
   const vertices = [];
-  const radiusRatio = Math.min(width * 0.42, 420);
 
   for (let i = 0; i < numRings; i++) {
     const phi = (Math.PI * (i + 0.5)) / numRings; // 0 to PI
@@ -887,7 +907,7 @@ function initInteractiveGlobe() {
     }
   }
 
-  // Precompute longitude and latitude connections
+  // Precompute edges
   const edges = [];
   for (let i = 0; i < numRings; i++) {
     for (let j = 0; j < pointsPerRing; j++) {
@@ -902,18 +922,27 @@ function initInteractiveGlobe() {
     }
   }
 
-  // Highlight network node clusters (representing global retail hubs)
+  // Commercial retail intelligence hubs
   const hubs = [
-    { ring: 4, index: 6, label: 'London' },
-    { ring: 5, index: 14, label: 'New York' },
-    { ring: 6, index: 21, label: 'Tokyo' },
-    { ring: 7, index: 3, label: 'Frankfurt' },
-    { ring: 5, index: 24, label: 'Singapore' },
-    { ring: 8, index: 11, label: 'Dubai' }
+    { ring: 5, index: 8, label: 'LON' },
+    { ring: 6, index: 18, label: 'NYC' },
+    { ring: 7, index: 28, label: 'TYO' },
+    { ring: 6, index: 11, label: 'FRA' },
+    { ring: 9, index: 2, label: 'SIN' },
+    { ring: 8, index: 14, label: 'DXB' }
+  ];
+
+  // Geodesic transaction arcs between hubs
+  const arcs = [
+    { from: 1, to: 0 }, // NYC -> LON
+    { from: 0, to: 3 }, // LON -> FRA
+    { from: 3, to: 5 }, // FRA -> DXB
+    { from: 5, to: 4 }, // DXB -> SIN
+    { from: 4, to: 2 }  // SIN -> TYO
   ];
 
   // Rotation and Parallax Physics
-  let rotX = 0.25;
+  let rotX = 0.38; // subtle tilt
   let rotY = 0.0;
   let targetRotSpeedY = prefersReducedMotion ? 0 : 0.0035;
   let curRotSpeedY = targetRotSpeedY;
@@ -924,17 +953,15 @@ function initInteractiveGlobe() {
   let isHovered = false;
   let animId = null;
 
-  // Window pointer movement for subtle parallax & interactivity
   window.addEventListener('mousemove', (e) => {
     const normX = (e.clientX / window.innerWidth) * 2 - 1;
     const normY = (e.clientY / window.innerHeight) * 2 - 1;
-    targetPointerX = normX * 12; // Subtle 12px max parallax
-    targetPointerY = normY * 10;
+    targetPointerX = normX * 22;
+    targetPointerY = normY * 14;
 
-    // Detect if cursor is near hero globe
-    if (e.clientY < 650) {
+    if (e.clientY < 600) {
       isHovered = true;
-      targetRotSpeedY = prefersReducedMotion ? 0 : 0.0065;
+      targetRotSpeedY = prefersReducedMotion ? 0 : 0.006;
     } else {
       isHovered = false;
       targetRotSpeedY = prefersReducedMotion ? 0 : 0.0035;
@@ -943,38 +970,43 @@ function initInteractiveGlobe() {
 
   window.addEventListener('mouseleave', () => {
     isHovered = false;
-    targetRotSpeedY = prefersReducedMotion ? 0 : 0.0035;
     targetPointerX = 0;
     targetPointerY = 0;
+    targetRotSpeedY = prefersReducedMotion ? 0 : 0.0035;
   });
 
-  // Render loop
   function draw() {
     ctx.clearRect(0, 0, width, height);
 
-    // Smooth inertia for mouse parallax and rotation
-    pointerX += (targetPointerX - pointerX) * 0.05;
-    pointerY += (targetPointerY - pointerY) * 0.05;
+    pointerX += (targetPointerX - pointerX) * 0.06;
+    pointerY += (targetPointerY - pointerY) * 0.06;
     curRotSpeedY += (targetRotSpeedY - curRotSpeedY) * 0.05;
     rotY += curRotSpeedY;
 
-    // Globe center placement: slightly above the dashboard window for that rising horizon look
+    // Center position of the globe in the hero area
     const cx = width * 0.5 + pointerX;
-    const cy = Math.min(height * 0.56, 380) + pointerY;
-    const currentRadius = Math.min(width * 0.42, 400);
+    const cy = Math.min(height * 0.44, 275) + pointerY;
+    const currentRadius = Math.min(width * 0.40, 335);
 
-    // 1. Draw Background Emerald Atmosphere behind globe
-    const auraGrad = ctx.createRadialGradient(cx, cy, currentRadius * 0.2, cx, cy, currentRadius * 1.35);
-    auraGrad.addColorStop(0, isHovered ? 'rgba(16, 185, 129, 0.24)' : 'rgba(16, 185, 129, 0.16)');
-    auraGrad.addColorStop(0.45, 'rgba(5, 150, 105, 0.08)');
-    auraGrad.addColorStop(0.8, 'rgba(4, 30, 20, 0.03)');
-    auraGrad.addColorStop(1, 'rgba(4, 8, 6, 0.0)');
+    // 1. Radiant Atmospheric Nebula Glow behind Globe
+    const auraGrad = ctx.createRadialGradient(cx, cy, currentRadius * 0.2, cx, cy, currentRadius * 1.45);
+    auraGrad.addColorStop(0, isHovered ? 'rgba(16, 185, 129, 0.32)' : 'rgba(16, 185, 129, 0.22)');
+    auraGrad.addColorStop(0.35, 'rgba(5, 150, 105, 0.12)');
+    auraGrad.addColorStop(0.65, 'rgba(4, 25, 16, 0.04)');
+    auraGrad.addColorStop(1, 'rgba(3, 7, 5, 0.0)');
     ctx.fillStyle = auraGrad;
     ctx.beginPath();
-    ctx.arc(cx, cy, currentRadius * 1.35, 0, Math.PI * 2);
+    ctx.arc(cx, cy, currentRadius * 1.45, 0, Math.PI * 2);
     ctx.fill();
 
-    // 2. Transform 3D Vertices (Euler Rotation on Y and subtle X)
+    // 2. Planetary Limb / Rim Glow
+    ctx.strokeStyle = isHovered ? 'rgba(52, 211, 153, 0.45)' : 'rgba(16, 185, 129, 0.32)';
+    ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    ctx.arc(cx, cy, currentRadius * 1.01, 0, Math.PI * 2);
+    ctx.stroke();
+
+    // 3. Transform Vertices
     const cosY = Math.cos(rotY);
     const sinY = Math.sin(rotY);
     const cosX = Math.cos(rotX);
@@ -982,10 +1014,8 @@ function initInteractiveGlobe() {
 
     for (let i = 0; i < vertices.length; i++) {
       const v = vertices[i];
-      // Rotate around Y
       const x1 = v.origX * cosY - v.origZ * sinY;
       const z1 = v.origZ * cosY + v.origX * sinY;
-      // Rotate around X
       const y2 = v.origY * cosX - z1 * sinX;
       const z2 = z1 * cosX + v.origY * sinX;
 
@@ -993,27 +1023,24 @@ function initInteractiveGlobe() {
       v.y = y2;
       v.z = z2;
 
-      // Perspective projection
-      const fov = 480;
-      const scale = fov / (fov + z2 * currentRadius * 0.6);
+      const fov = 460;
+      const scale = fov / (fov + z2 * currentRadius * 0.55);
       v.scale = scale;
       v.screenX = cx + x1 * currentRadius * scale;
       v.screenY = cy + y2 * currentRadius * scale;
-      // Depth cue: vertices in front (z2 < 0) are brighter; behind are dimmer
-      v.alpha = Math.max(0.04, Math.min(0.9, (1 - z2) * 0.5));
+      v.alpha = Math.max(0.04, Math.min(0.95, (1 - z2) * 0.55));
     }
 
-    // 3. Draw Connecting Wireframe Edges
-    ctx.lineWidth = 0.9;
+    // 4. Draw Connecting Wireframe Edges
+    ctx.lineWidth = 0.95;
     for (let i = 0; i < edges.length; i++) {
       const p1 = vertices[edges[i][0]];
       const p2 = vertices[edges[i][1]];
 
-      // If either point is on the front hemisphere, render line
       const avgZ = (p1.z + p2.z) * 0.5;
-      if (avgZ < 0.35) {
-        const edgeAlpha = Math.max(0.03, Math.min(0.55, (1 - avgZ) * 0.35));
-        ctx.strokeStyle = `rgba(52, 211, 153, ${edgeAlpha * (isHovered ? 1.35 : 1)})`;
+      if (avgZ < 0.45) {
+        const edgeAlpha = Math.max(0.04, Math.min(0.65, (1 - avgZ) * 0.45));
+        ctx.strokeStyle = `rgba(52, 211, 153, ${edgeAlpha * (isHovered ? 1.25 : 1)})`;
         ctx.beginPath();
         ctx.moveTo(p1.screenX, p1.screenY);
         ctx.lineTo(p2.screenX, p2.screenY);
@@ -1021,37 +1048,93 @@ function initInteractiveGlobe() {
       }
     }
 
-    // 4. Draw Vertex Nodes
+    // 5. Draw Geodesic Arcs connecting hubs
+    const now = Date.now();
+    for (let a = 0; a < arcs.length; a++) {
+      const hFrom = hubs[arcs[a].from];
+      const hTo = hubs[arcs[a].to];
+      const vFrom = vertices[hFrom.ring * pointsPerRing + hFrom.index];
+      const vTo = vertices[hTo.ring * pointsPerRing + hTo.index];
+
+      // If at least one point is on front hemisphere
+      if (vFrom && vTo && (vFrom.z < 0.2 || vTo.z < 0.2)) {
+        const midX = (vFrom.screenX + vTo.screenX) * 0.5;
+        const midY = (vFrom.screenY + vTo.screenY) * 0.5 - 28 * vFrom.scale;
+
+        ctx.strokeStyle = 'rgba(110, 231, 183, 0.32)';
+        ctx.lineWidth = 1.2;
+        ctx.setLineDash([3, 4]);
+        ctx.beginPath();
+        ctx.moveTo(vFrom.screenX, vFrom.screenY);
+        ctx.quadraticCurveTo(midX, midY, vTo.screenX, vTo.screenY);
+        ctx.stroke();
+        ctx.setLineDash([]);
+
+        // Animated light packet traveling along the arc
+        const t = (now / 2200 + a * 0.22) % 1;
+        const ptX = (1 - t) * (1 - t) * vFrom.screenX + 2 * (1 - t) * t * midX + t * t * vTo.screenX;
+        const ptY = (1 - t) * (1 - t) * vFrom.screenY + 2 * (1 - t) * t * midY + t * t * vTo.screenY;
+
+        ctx.fillStyle = '#ffffff';
+        ctx.beginPath();
+        ctx.arc(ptX, ptY, 2.2 * vFrom.scale, 0, Math.PI * 2);
+        ctx.fill();
+
+        ctx.fillStyle = 'rgba(52, 211, 153, 0.45)';
+        ctx.beginPath();
+        ctx.arc(ptX, ptY, 5.5 * vFrom.scale, 0, Math.PI * 2);
+        ctx.fill();
+      }
+    }
+
+    // 6. Draw Vertex Nodes
     for (let i = 0; i < vertices.length; i++) {
       const v = vertices[i];
-      if (v.z < 0.25) {
+      if (v.z < 0.3) {
         ctx.fillStyle = `rgba(16, 185, 129, ${v.alpha})`;
         ctx.beginPath();
-        const nodeRadius = (v.z < -0.4 ? 2.0 : 1.3) * v.scale;
+        const nodeRadius = (v.z < -0.4 ? 2.0 : 1.2) * v.scale;
         ctx.arc(v.screenX, v.screenY, nodeRadius, 0, Math.PI * 2);
         ctx.fill();
       }
     }
 
-    // 5. Draw Major Retail Intelligence Hub Pulses
+    // 7. Draw Commercial Hubs with Animated Radar Pulses
+    ctx.font = '600 9px "JetBrains Mono", monospace';
     for (let h = 0; h < hubs.length; h++) {
-      const hubIdx = hubs[h].ring * pointsPerRing + hubs[h].index;
+      const hub = hubs[h];
+      const hubIdx = hub.ring * pointsPerRing + hub.index;
       if (hubIdx < vertices.length) {
         const hv = vertices[hubIdx];
-        if (hv.z < 0) { // On visible front side
-          const pulseAlpha = Math.max(0.3, Math.min(1.0, 1 - hv.z));
-          // Outer pulse ring
-          ctx.strokeStyle = `rgba(110, 231, 183, ${pulseAlpha * 0.75})`;
-          ctx.lineWidth = 1.4;
+        if (hv.z < 0.1) {
+          const depthFade = Math.max(0.3, Math.min(1.0, 1 - hv.z));
+          const wavePhase = (now / 1200 + h * 0.25) % 1;
+          const waveRadius = wavePhase * 16 * hv.scale;
+          const waveAlpha = (1 - wavePhase) * 0.7 * depthFade;
+
+          // Expanding radar pulse
+          ctx.strokeStyle = `rgba(52, 211, 153, ${waveAlpha})`;
+          ctx.lineWidth = 1.3;
+          ctx.beginPath();
+          ctx.arc(hv.screenX, hv.screenY, waveRadius, 0, Math.PI * 2);
+          ctx.stroke();
+
+          // Hub point
+          ctx.fillStyle = `rgba(255, 255, 255, ${depthFade})`;
+          ctx.beginPath();
+          ctx.arc(hv.screenX, hv.screenY, 2.5 * hv.scale, 0, Math.PI * 2);
+          ctx.fill();
+
+          // Outer ring
+          ctx.strokeStyle = `rgba(110, 231, 183, ${depthFade * 0.8})`;
+          ctx.lineWidth = 1.5;
           ctx.beginPath();
           ctx.arc(hv.screenX, hv.screenY, 5 * hv.scale, 0, Math.PI * 2);
           ctx.stroke();
 
-          // Core bright dot
-          ctx.fillStyle = `rgba(255, 255, 255, ${pulseAlpha * 0.9})`;
-          ctx.beginPath();
-          ctx.arc(hv.screenX, hv.screenY, 2.2 * hv.scale, 0, Math.PI * 2);
-          ctx.fill();
+          // Micro label
+          ctx.fillStyle = `rgba(203, 213, 225, ${depthFade * 0.85})`;
+          ctx.fillText(hub.label, hv.screenX + 8, hv.screenY - 5);
         }
       }
     }
@@ -1059,10 +1142,8 @@ function initInteractiveGlobe() {
     animId = requestAnimationFrame(draw);
   }
 
-  // Start rendering
   animId = requestAnimationFrame(draw);
 
-  // Pause rendering when page is hidden to preserve battery/CPU
   document.addEventListener('visibilitychange', () => {
     if (document.hidden) {
       if (animId) cancelAnimationFrame(animId);
