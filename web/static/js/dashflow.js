@@ -577,17 +577,17 @@ function initDashboardCharts() {
       return;
     }
 
-    // Create linear gradients for area fills - Luxury Web3-Verse Green
+    // Create linear gradients for area fills - Radiant Web3-Verse Electric Lime
     const chartHeight = canvas.clientHeight || 280;
     const revGradient = ctx.createLinearGradient(0, 0, 0, chartHeight);
-    revGradient.addColorStop(0, 'rgba(16, 185, 129, 0.28)');
-    revGradient.addColorStop(0.65, 'rgba(16, 185, 129, 0.05)');
-    revGradient.addColorStop(1, 'rgba(16, 185, 129, 0.0)');
+    revGradient.addColorStop(0, 'rgba(167, 251, 95, 0.32)');
+    revGradient.addColorStop(0.65, 'rgba(167, 251, 95, 0.05)');
+    revGradient.addColorStop(1, 'rgba(167, 251, 95, 0.0)');
 
     const ordGradient = ctx.createLinearGradient(0, 0, 0, chartHeight);
-    ordGradient.addColorStop(0, 'rgba(45, 212, 191, 0.20)');
-    ordGradient.addColorStop(0.65, 'rgba(45, 212, 191, 0.03)');
-    ordGradient.addColorStop(1, 'rgba(45, 212, 191, 0.0)');
+    ordGradient.addColorStop(0, 'rgba(82, 246, 67, 0.22)');
+    ordGradient.addColorStop(0.65, 'rgba(82, 246, 67, 0.04)');
+    ordGradient.addColorStop(1, 'rgba(82, 246, 67, 0.0)');
 
     trajectoryChartInstance = new Chart(ctx, {
       type: 'line',
@@ -598,15 +598,15 @@ function initDashboardCharts() {
             label: 'Revenue (USD)',
             data: data.revenue,
             yAxisID: 'yRevenue',
-            borderColor: '#10b981',
+            borderColor: '#a7fb5f',
             backgroundColor: revGradient,
-            borderWidth: 2.5,
+            borderWidth: 2.8,
             tension: 0.38,
             fill: true,
             pointRadius: data.labels.length > 40 ? 0 : 3.5,
             pointHoverRadius: 6.5,
-            pointBackgroundColor: '#34d399',
-            pointBorderColor: '#051b11',
+            pointBackgroundColor: '#bdff73',
+            pointBorderColor: '#030604',
             pointBorderWidth: 2,
             pointHoverBorderColor: '#ffffff',
             pointHoverBorderWidth: 2.5
@@ -615,7 +615,7 @@ function initDashboardCharts() {
             label: 'Order Volume',
             data: data.orders,
             yAxisID: 'yOrders',
-            borderColor: '#2dd4bf',
+            borderColor: '#52f643',
             backgroundColor: ordGradient,
             borderWidth: 2,
             borderDash: [5, 4],
@@ -623,8 +623,8 @@ function initDashboardCharts() {
             fill: true,
             pointRadius: data.labels.length > 40 ? 0 : 3,
             pointHoverRadius: 5.5,
-            pointBackgroundColor: '#2dd4bf',
-            pointBorderColor: '#051b11',
+            pointBackgroundColor: '#52f643',
+            pointBorderColor: '#030604',
             pointBorderWidth: 2,
             pointHoverBorderColor: '#ffffff',
             pointHoverBorderWidth: 2
@@ -865,12 +865,12 @@ function initInteractiveGlobe() {
   const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   let width = container.clientWidth || window.innerWidth;
-  let height = container.clientHeight || 640;
+  let height = container.clientHeight || 720;
   let dpr = Math.min(window.devicePixelRatio || 1, 2);
 
   function resize() {
     width = container.clientWidth || window.innerWidth;
-    height = container.clientHeight || 640;
+    height = container.clientHeight || 720;
     canvas.width = width * dpr;
     canvas.height = height * dpr;
     canvas.style.width = width + 'px';
@@ -880,13 +880,44 @@ function initInteractiveGlobe() {
   resize();
   window.addEventListener('resize', resize, { passive: true });
 
-  // 16 rings x 32 points = 512 vertex sphere
-  const numRings = 16;
-  const pointsPerRing = 32;
-  const vertices = [];
+  // 1. Continent Polygons (lat, lon degrees) for realistic shaded landmasses
+  const CONTINENT_POLYS = [
+    // North America
+    [ [70,-165],[72,-130],[70,-85],[60,-65],[48,-55],[43,-70],[30,-80],[25,-80],[18,-96],[15,-92],[8,-78],[14,-86],[20,-105],[32,-118],[38,-124],[49,-125],[60,-140],[65,-168] ],
+    // South America
+    [ [12,-73],[7,-55],[-3,-36],[-12,-37],[-23,-42],[-34,-53],[-55,-67],[-54,-73],[-40,-73],[-20,-70],[-5,-80],[5,-77] ],
+    // Europe
+    [ [71,28],[68,44],[60,30],[55,38],[46,48],[40,27],[36,22],[36,-5],[43,-9],[48,-4],[54,8],[58,6],[62,5],[70,20] ],
+    // Africa
+    [ [37,10],[32,32],[28,34],[12,44],[10,51],[-5,40],[-26,33],[-34,18],[-34,26],[-18,12],[5,9],[5,-1],[15,-17],[28,-13],[35,-6] ],
+    // Asia
+    [ [76,100],[73,140],[66,170],[58,162],[52,141],[43,132],[38,118],[22,114],[20,107],[10,105],[1,104],[8,77],[22,69],[25,57],[12,44],[30,35],[40,27],[55,38],[58,55],[68,75],[73,80] ],
+    // Australia
+    [ [-12,136],[-12,142],[-24,153],[-37,150],[-38,140],[-35,116],[-22,114],[-15,125] ],
+    // UK
+    [ [58,-5],[58,-2],[51,1],[50,-5],[55,-5] ]
+  ];
+
+  // Map continent polygons to 3D unit sphere coordinates
+  const continentPaths3D = CONTINENT_POLYS.map(poly => {
+    return poly.map(([latDeg, lonDeg]) => {
+      const lat = latDeg * Math.PI / 180;
+      const lon = lonDeg * Math.PI / 180;
+      return {
+        x: Math.cos(lat) * Math.sin(lon),
+        y: Math.sin(lat),
+        z: Math.cos(lat) * Math.cos(lon)
+      };
+    });
+  });
+
+  // 2. Geodesic Sphere Vertices & Triangulated Mesh (22 rings x 44 points)
+  const numRings = 22;
+  const pointsPerRing = 44;
+  const sphereVerts = [];
 
   for (let i = 0; i < numRings; i++) {
-    const phi = (Math.PI * (i + 0.5)) / numRings; // 0 to PI
+    const phi = (Math.PI * (i + 0.5)) / numRings;
     const ringRadius = Math.sin(phi);
     const y = Math.cos(phi);
 
@@ -894,44 +925,46 @@ function initInteractiveGlobe() {
       const theta = (2 * Math.PI * j) / pointsPerRing;
       const x = ringRadius * Math.cos(theta);
       const z = ringRadius * Math.sin(theta);
-      vertices.push({
+      sphereVerts.push({
         origX: x,
         origY: y,
         origZ: z,
         x: x,
         y: y,
         z: z,
-        screenX: 0,
-        screenY: 0,
+        sx: 0,
+        sy: 0,
         scale: 0,
         alpha: 0
       });
     }
   }
 
-  // Precompute edges
+  // Precompute triangulated geodesic edges
   const edges = [];
   for (let i = 0; i < numRings; i++) {
     for (let j = 0; j < pointsPerRing; j++) {
       const curr = i * pointsPerRing + j;
-      const nextInRing = i * pointsPerRing + ((j + 1) % pointsPerRing);
-      edges.push([curr, nextInRing]);
+      const right = i * pointsPerRing + ((j + 1) % pointsPerRing);
+      edges.push([curr, right]);
 
       if (i < numRings - 1) {
-        const nextRing = (i + 1) * pointsPerRing + j;
-        edges.push([curr, nextRing]);
+        const down = (i + 1) * pointsPerRing + j;
+        const diag = (i + 1) * pointsPerRing + ((j + 1) % pointsPerRing);
+        edges.push([curr, down]);
+        edges.push([curr, diag]); // Triangulation!
       }
     }
   }
 
   // Commercial retail intelligence hubs
   const hubs = [
-    { ring: 5, index: 8, label: 'LON' },
-    { ring: 6, index: 18, label: 'NYC' },
-    { ring: 7, index: 28, label: 'TYO' },
-    { ring: 6, index: 11, label: 'FRA' },
-    { ring: 9, index: 2, label: 'SIN' },
-    { ring: 8, index: 14, label: 'DXB' }
+    { ring: 6, index: 12, label: 'LON' },
+    { ring: 7, index: 24, label: 'NYC' },
+    { ring: 8, index: 38, label: 'TYO' },
+    { ring: 7, index: 15, label: 'FRA' },
+    { ring: 12, index: 3, label: 'SIN' },
+    { ring: 10, index: 19, label: 'DXB' }
   ];
 
   // Geodesic transaction arcs between hubs
@@ -944,8 +977,8 @@ function initInteractiveGlobe() {
   ];
 
   // Rotation and Parallax Physics
-  let rotX = 0.38; // subtle tilt
-  let rotY = 0.0;
+  let rotX = -0.42; // Forward tilt so top hemisphere crowns prominently
+  let rotY = -0.60;
   let targetRotSpeedY = prefersReducedMotion ? 0 : 0.0035;
   let curRotSpeedY = targetRotSpeedY;
   let pointerX = 0;
@@ -958,10 +991,10 @@ function initInteractiveGlobe() {
   window.addEventListener('mousemove', (e) => {
     const normX = (e.clientX / window.innerWidth) * 2 - 1;
     const normY = (e.clientY / window.innerHeight) * 2 - 1;
-    targetPointerX = normX * 22;
-    targetPointerY = normY * 14;
+    targetPointerX = normX * 24;
+    targetPointerY = normY * 16;
 
-    if (e.clientY < 600) {
+    if (e.clientY < 680) {
       isHovered = true;
       targetRotSpeedY = prefersReducedMotion ? 0 : 0.006;
     } else {
@@ -977,6 +1010,28 @@ function initInteractiveGlobe() {
     targetRotSpeedY = prefersReducedMotion ? 0 : 0.0035;
   });
 
+  function projectPoint(x, y, z, cx, cy, R) {
+    const cosY = Math.cos(rotY), sinY = Math.sin(rotY);
+    const cosX = Math.cos(rotX), sinX = Math.sin(rotX);
+    // Y rotation
+    const x1 = x * cosY - z * sinY;
+    const z1 = z * cosY + x * sinY;
+    // X rotation
+    const y2 = y * cosX - z1 * sinX;
+    const z2 = z1 * cosX + y * sinX;
+
+    const fov = 650;
+    const scale = fov / (fov + z2 * R * 0.45);
+    return {
+      x: x1,
+      y: y2,
+      z: z2,
+      scale: scale,
+      sx: cx + x1 * R * scale,
+      sy: cy - y2 * R * scale
+    };
+  }
+
   function draw() {
     ctx.clearRect(0, 0, width, height);
 
@@ -985,161 +1040,192 @@ function initInteractiveGlobe() {
     curRotSpeedY += (targetRotSpeedY - curRotSpeedY) * 0.05;
     rotY += curRotSpeedY;
 
-    // Center position of the globe placed behind hero & shifted slightly right
-    const cx = width * 0.52 + pointerX;
-    const cy = Math.min(height * 0.58, 360) + pointerY;
-    const currentRadius = Math.min(width * 0.38, 340);
+    // Center position of the globe (Matching Image 2: prominent, centered, crowning gracefully below title)
+    const cx = width * 0.50 + pointerX;
+    const currentRadius = Math.min(width * 0.44, 430);
+    const cy = Math.min(height * 0.82, 630) + pointerY;
 
-    // 1. Soft Radiant Atmospheric Nebula Glow behind Globe (Restrained, not overpowering)
-    const auraGrad = ctx.createRadialGradient(cx, cy, currentRadius * 0.2, cx, cy, currentRadius * 1.3);
-    auraGrad.addColorStop(0, isHovered ? 'rgba(16, 185, 129, 0.10)' : 'rgba(16, 185, 129, 0.06)');
-    auraGrad.addColorStop(0.45, 'rgba(5, 150, 105, 0.03)');
-    auraGrad.addColorStop(0.8, 'rgba(4, 25, 16, 0.01)');
-    auraGrad.addColorStop(1, 'rgba(3, 7, 5, 0.0)');
+    // 1. Radiant Atmospheric Nebula Glow behind Globe
+    const auraGrad = ctx.createRadialGradient(cx, cy - currentRadius * 0.35, currentRadius * 0.2, cx, cy, currentRadius * 1.35);
+    auraGrad.addColorStop(0, isHovered ? 'rgba(189, 255, 115, 0.35)' : 'rgba(189, 255, 115, 0.25)');
+    auraGrad.addColorStop(0.35, 'rgba(82, 246, 67, 0.16)');
+    auraGrad.addColorStop(0.65, 'rgba(16, 185, 129, 0.05)');
+    auraGrad.addColorStop(1, 'rgba(3, 6, 4, 0.0)');
     ctx.fillStyle = auraGrad;
     ctx.beginPath();
-    ctx.arc(cx, cy, currentRadius * 1.3, 0, Math.PI * 2);
+    ctx.arc(cx, cy, currentRadius * 1.35, 0, Math.PI * 2);
     ctx.fill();
 
-    // 2. Subtle Planetary Limb / Rim Glow
-    ctx.strokeStyle = isHovered ? 'rgba(52, 211, 153, 0.18)' : 'rgba(16, 185, 129, 0.12)';
-    ctx.lineWidth = 0.85;
+    // 2. Base Sphere (Dark Ocean Body)
+    ctx.save();
     ctx.beginPath();
-    ctx.arc(cx, cy, currentRadius * 1.01, 0, Math.PI * 2);
-    ctx.stroke();
+    ctx.arc(cx, cy, currentRadius, 0, Math.PI * 2);
+    const oceanGrad = ctx.createRadialGradient(cx, cy - currentRadius * 0.4, currentRadius * 0.1, cx, cy, currentRadius);
+    oceanGrad.addColorStop(0, '#0a2211');
+    oceanGrad.addColorStop(0.5, '#041308');
+    oceanGrad.addColorStop(1, '#020603');
+    ctx.fillStyle = oceanGrad;
+    ctx.fill();
+    ctx.clip();
 
-    // 3. Transform Vertices
-    const cosY = Math.cos(rotY);
-    const sinY = Math.sin(rotY);
-    const cosX = Math.cos(rotX);
-    const sinX = Math.sin(rotX);
-
-    for (let i = 0; i < vertices.length; i++) {
-      const v = vertices[i];
-      const x1 = v.origX * cosY - v.origZ * sinY;
-      const z1 = v.origZ * cosY + v.origX * sinY;
-      const y2 = v.origY * cosX - z1 * sinX;
-      const z2 = z1 * cosX + v.origY * sinX;
-
-      v.x = x1;
-      v.y = y2;
-      v.z = z2;
-
-      const fov = 500;
-      const scale = fov / (fov + z2 * currentRadius * 0.55);
-      v.scale = scale;
-      v.screenX = cx + x1 * currentRadius * scale;
-      v.screenY = cy + y2 * currentRadius * scale;
-      v.alpha = Math.max(0.02, Math.min(0.35, (1 - z2) * 0.22));
-    }
-
-    // 4. Draw Connecting Wireframe Edges (Quiet, thin, architectural lines)
-    ctx.lineWidth = 0.65;
-    for (let i = 0; i < edges.length; i++) {
-      const p1 = vertices[edges[i][0]];
-      const p2 = vertices[edges[i][1]];
-
-      const avgZ = (p1.z + p2.z) * 0.5;
-      if (avgZ < 0.40) {
-        const edgeAlpha = Math.max(0.02, Math.min(0.20, (1 - avgZ) * 0.16));
-        ctx.strokeStyle = `rgba(52, 211, 153, ${edgeAlpha * (isHovered ? 1.15 : 1)})`;
+    // 3. Shaded Continents (From Image 2: Sage-mint landmasses)
+    continentPaths3D.forEach(path => {
+      const proj = path.map(pt => projectPoint(pt.x, pt.y, pt.z, cx, cy, currentRadius));
+      const frontCount = proj.filter(p => p.z > -0.2).length;
+      if (frontCount > 2) {
         ctx.beginPath();
-        ctx.moveTo(p1.screenX, p1.screenY);
-        ctx.lineTo(p2.screenX, p2.screenY);
+        let started = false;
+        proj.forEach(p => {
+          if (!started) { ctx.moveTo(p.sx, p.sy); started = true; }
+          else { ctx.lineTo(p.sx, p.sy); }
+        });
+        ctx.closePath();
+        ctx.fillStyle = 'rgba(168, 198, 168, 0.85)'; // Shaded sage continent
+        ctx.fill();
+        ctx.strokeStyle = 'rgba(189, 255, 115, 0.35)';
+        ctx.lineWidth = 1.0;
+        ctx.stroke();
+      }
+    });
+
+    // 4. Project Geodesic Vertices
+    sphereVerts.forEach(v => {
+      const p = projectPoint(v.origX, v.origY, v.origZ, cx, cy, currentRadius);
+      v.x = p.x; v.y = p.y; v.z = p.z;
+      v.sx = p.sx; v.sy = p.sy;
+      v.scale = p.scale;
+      v.alpha = Math.max(0.05, Math.min(0.65, (p.z + 0.3) * 0.5));
+    });
+
+    // 5. Draw Triangulated Geodesic Wireframe Mesh
+    ctx.lineWidth = 0.8;
+    for (let i = 0; i < edges.length; i++) {
+      const p1 = sphereVerts[edges[i][0]];
+      const p2 = sphereVerts[edges[i][1]];
+
+      if (p1.z > -0.15 && p2.z > -0.15) {
+        const edgeAlpha = Math.max(0.06, Math.min(0.55, (p1.z + p2.z) * 0.35));
+        ctx.strokeStyle = `rgba(167, 251, 95, ${edgeAlpha * (isHovered ? 1.2 : 1.0)})`;
+        ctx.beginPath();
+        ctx.moveTo(p1.sx, p1.sy);
+        ctx.lineTo(p2.sx, p2.sy);
         ctx.stroke();
       }
     }
 
-    // 5. Draw Geodesic Arcs connecting hubs (Refined, quiet telemetry tracks)
+    // 6. Draw Glowing Geodesic Nodes
+    for (let i = 0; i < sphereVerts.length; i++) {
+      const v = sphereVerts[i];
+      if (v.z > 0.08) {
+        ctx.fillStyle = `rgba(189, 255, 115, ${v.alpha})`;
+        ctx.beginPath();
+        const nodeRadius = (v.z > 0.4 ? 1.5 : 1.0) * v.scale;
+        ctx.arc(v.sx, v.sy, nodeRadius, 0, Math.PI * 2);
+        ctx.fill();
+      }
+    }
+
+    // 7. Draw Geodesic Arcs connecting hubs
     const now = Date.now();
     for (let a = 0; a < arcs.length; a++) {
       const hFrom = hubs[arcs[a].from];
       const hTo = hubs[arcs[a].to];
-      const vFrom = vertices[hFrom.ring * pointsPerRing + hFrom.index];
-      const vTo = vertices[hTo.ring * pointsPerRing + hTo.index];
+      const vFrom = sphereVerts[hFrom.ring * pointsPerRing + hFrom.index];
+      const vTo = sphereVerts[hTo.ring * pointsPerRing + hTo.index];
 
-      // If at least one point is on front hemisphere
-      if (vFrom && vTo && (vFrom.z < 0.25 || vTo.z < 0.25)) {
-        const midX = (vFrom.screenX + vTo.screenX) * 0.5;
-        const midY = (vFrom.screenY + vTo.screenY) * 0.5 - 24 * vFrom.scale;
+      if (vFrom && vTo && (vFrom.z > -0.1 || vTo.z > -0.1)) {
+        const midX = (vFrom.sx + vTo.sx) * 0.5;
+        const midY = (vFrom.sy + vTo.sy) * 0.5 - 28 * vFrom.scale;
 
-        ctx.strokeStyle = 'rgba(110, 231, 183, 0.18)';
-        ctx.lineWidth = 0.9;
+        ctx.strokeStyle = 'rgba(189, 255, 115, 0.40)';
+        ctx.lineWidth = 1.0;
         ctx.setLineDash([3, 4]);
         ctx.beginPath();
-        ctx.moveTo(vFrom.screenX, vFrom.screenY);
-        ctx.quadraticCurveTo(midX, midY, vTo.screenX, vTo.screenY);
+        ctx.moveTo(vFrom.sx, vFrom.sy);
+        ctx.quadraticCurveTo(midX, midY, vTo.sx, vTo.sy);
         ctx.stroke();
         ctx.setLineDash([]);
 
-        // Subtle traveling packet
-        const t = (now / 2600 + a * 0.22) % 1;
-        const ptX = (1 - t) * (1 - t) * vFrom.screenX + 2 * (1 - t) * t * midX + t * t * vTo.screenX;
-        const ptY = (1 - t) * (1 - t) * vFrom.screenY + 2 * (1 - t) * t * midY + t * t * vTo.screenY;
+        // Traveling packet
+        const t = (now / 2400 + a * 0.22) % 1;
+        const ptX = (1 - t) * (1 - t) * vFrom.sx + 2 * (1 - t) * t * midX + t * t * vTo.sx;
+        const ptY = (1 - t) * (1 - t) * vFrom.sy + 2 * (1 - t) * t * midY + t * t * vTo.sy;
 
-        ctx.fillStyle = 'rgba(255, 255, 255, 0.75)';
+        ctx.fillStyle = '#ffffff';
         ctx.beginPath();
-        ctx.arc(ptX, ptY, 1.6 * vFrom.scale, 0, Math.PI * 2);
+        ctx.arc(ptX, ptY, 1.8 * vFrom.scale, 0, Math.PI * 2);
         ctx.fill();
 
-        ctx.fillStyle = 'rgba(52, 211, 153, 0.25)';
+        ctx.fillStyle = 'rgba(167, 251, 95, 0.45)';
         ctx.beginPath();
-        ctx.arc(ptX, ptY, 4.0 * vFrom.scale, 0, Math.PI * 2);
-        ctx.fill();
-      }
-    }
-
-    // 6. Draw Vertex Nodes (Small, delicate points)
-    for (let i = 0; i < vertices.length; i++) {
-      const v = vertices[i];
-      if (v.z < 0.25) {
-        ctx.fillStyle = `rgba(16, 185, 129, ${v.alpha})`;
-        ctx.beginPath();
-        const nodeRadius = (v.z < -0.4 ? 1.4 : 0.9) * v.scale;
-        ctx.arc(v.screenX, v.screenY, nodeRadius, 0, Math.PI * 2);
+        ctx.arc(ptX, ptY, 4.5 * vFrom.scale, 0, Math.PI * 2);
         ctx.fill();
       }
     }
 
-    // 7. Draw Commercial Hubs with Restrained Pulses
-    ctx.font = '500 8.5px "JetBrains Mono", monospace';
+    // 8. Draw Commercial Hubs with Radar Pulses
+    ctx.font = '600 8.5px "JetBrains Mono", monospace';
     for (let h = 0; h < hubs.length; h++) {
       const hub = hubs[h];
       const hubIdx = hub.ring * pointsPerRing + hub.index;
-      if (hubIdx < vertices.length) {
-        const hv = vertices[hubIdx];
-        if (hv.z < 0.08) {
-          const depthFade = Math.max(0.2, Math.min(0.75, (1 - hv.z) * 0.75));
+      if (hubIdx < sphereVerts.length) {
+        const hv = sphereVerts[hubIdx];
+        if (hv.z > 0.0) {
+          const depthFade = Math.max(0.2, Math.min(0.85, (hv.z + 0.2) * 0.85));
           const wavePhase = (now / 1500 + h * 0.25) % 1;
-          const waveRadius = wavePhase * 13 * hv.scale;
-          const waveAlpha = (1 - wavePhase) * 0.45 * depthFade;
+          const waveRadius = wavePhase * 15 * hv.scale;
+          const waveAlpha = (1 - wavePhase) * 0.55 * depthFade;
 
-          // Expanding subtle radar pulse
-          ctx.strokeStyle = `rgba(52, 211, 153, ${waveAlpha})`;
-          ctx.lineWidth = 1.0;
+          ctx.strokeStyle = `rgba(189, 255, 115, ${waveAlpha})`;
+          ctx.lineWidth = 1.2;
           ctx.beginPath();
-          ctx.arc(hv.screenX, hv.screenY, waveRadius, 0, Math.PI * 2);
+          ctx.arc(hv.sx, hv.sy, waveRadius, 0, Math.PI * 2);
           ctx.stroke();
 
-          // Hub point
-          ctx.fillStyle = `rgba(255, 255, 255, ${depthFade * 0.9})`;
+          ctx.fillStyle = '#ffffff';
           ctx.beginPath();
-          ctx.arc(hv.screenX, hv.screenY, 1.8 * hv.scale, 0, Math.PI * 2);
+          ctx.arc(hv.sx, hv.sy, 2.0 * hv.scale, 0, Math.PI * 2);
           ctx.fill();
 
-          // Outer ring
-          ctx.strokeStyle = `rgba(110, 231, 183, ${depthFade * 0.5})`;
-          ctx.lineWidth = 1.0;
-          ctx.beginPath();
-          ctx.arc(hv.screenX, hv.screenY, 3.8 * hv.scale, 0, Math.PI * 2);
-          ctx.stroke();
-
-          // Quiet micro label
-          ctx.fillStyle = `rgba(148, 163, 184, ${depthFade * 0.75})`;
-          ctx.fillText(hub.label, hv.screenX + 7, hv.screenY - 4);
+          ctx.fillStyle = `rgba(189, 255, 115, ${depthFade * 0.9})`;
+          ctx.fillText(hub.label, hv.sx + 8, hv.sy - 4);
         }
       }
     }
+
+    ctx.restore(); // Restore clip
+
+    // 9. BLAZING SOLAR RIM CORONA (The iconic Image 2 feature crowning below title)
+    const startAng = Math.PI * 1.12;
+    const endAng = Math.PI * 1.88;
+
+    // Outer soft lime halo
+    ctx.strokeStyle = 'rgba(167, 251, 95, 0.45)';
+    ctx.lineWidth = 26;
+    ctx.beginPath();
+    ctx.arc(cx, cy, currentRadius * 1.008, startAng, endAng);
+    ctx.stroke();
+
+    // Mid neon lime arc
+    ctx.strokeStyle = 'rgba(189, 255, 115, 0.85)';
+    ctx.lineWidth = 12;
+    ctx.beginPath();
+    ctx.arc(cx, cy, currentRadius * 1.004, startAng, endAng);
+    ctx.stroke();
+
+    // Core radiant white-lime rim
+    ctx.strokeStyle = '#f0fff1';
+    ctx.lineWidth = 4;
+    ctx.beginPath();
+    ctx.arc(cx, cy, currentRadius * 1.001, startAng + 0.08, endAng - 0.08);
+    ctx.stroke();
+
+    // Apex crown highlight
+    ctx.strokeStyle = '#ffffff';
+    ctx.lineWidth = 2.5;
+    ctx.beginPath();
+    ctx.arc(cx, cy, currentRadius * 1.0, Math.PI * 1.38, Math.PI * 1.62);
+    ctx.stroke();
 
     animId = requestAnimationFrame(draw);
   }
