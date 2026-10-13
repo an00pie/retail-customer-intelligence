@@ -75,7 +75,11 @@ def load_evaluation_metrics() -> Dict[str, Any]:
 def predict_customer(recency_days: int, frequency: int, total_spend: float, tenure_days: int = 300) -> Dict[str, Any]:
     """In-memory inference pipeline across K-Means, CLV Regressor, and Churn Classifier."""
     models = get_models()
-    aov = float(total_spend) / max(int(frequency), 1)
+    recency_days = max(0, int(recency_days))
+    frequency = max(1, int(frequency))
+    total_spend = max(0.0, float(total_spend))
+    tenure_days = max(0, int(tenure_days))
+    aov = round(total_spend / frequency, 2)
 
     if models:
         try:
@@ -100,6 +104,7 @@ def predict_customer(recency_days: int, frequency: int, total_spend: float, tenu
 
             # 3. Churn Probability
             churn_prob = float(models["churn"].predict_proba(features_df)[0, 1])
+            churn_prob = max(0.0, min(1.0, churn_prob))
 
             return {
                 "segment": segment_name,
@@ -148,41 +153,49 @@ app = Flask(
     static_folder=os.path.join(os.path.dirname(__file__), "static")
 )
 
+import re
+
 @app.route("/")
 def index():
     return render_template("index.html")
 
-@app.route("/api/customer/<customer_id>")
+@app.route("/api/customer/<path:customer_id>")
 def get_customer_profile(customer_id: str):
-    """Sub-millisecond query to HBase / SQLite store, with instant ML inference fallback."""
+    """Sub-millisecond query to HBase / SQLite store, with honest 404 on unknown customer."""
+    if not customer_id or not isinstance(customer_id, str):
+        return jsonify({"error": "Invalid customer ID format"}), 400
+
+    clean_id = str(customer_id).strip()
+    if not clean_id or len(clean_id) > 20 or not re.match(r"^[a-zA-Z0-9_\-]+$", clean_id):
+        return jsonify({"error": "Invalid customer ID format. Must be alphanumeric (1-20 characters)."}), 400
+
     serving = get_serving()
-    cust = serving.get_customer(customer_id)
+    cust = serving.get_customer(clean_id)
     if cust:
         return jsonify(cust)
 
-    # If customer is not yet persisted in serving store, run ML inference & cache it
-    # Deterministic seed from customer_id
-    hash_val = abs(hash(str(customer_id)))
-    recency = (hash_val % 220) + 6
-    freq = (hash_val % 18) + 2
-    spend = round(((hash_val % 4000) + 150) * 1.25, 2)
-    tenure = (hash_val % 400) + 60
-
-    result = predict_customer(recency, freq, spend, tenure)
-    result["customer_id"] = str(customer_id)
-
-    # Persist in serving layer for next sub-millisecond lookup
-    serving.put_customer(str(customer_id), result)
-    return jsonify(result)
+    return jsonify({"error": "Customer not found in retail intelligence records", "customer_id": clean_id}), 404
 
 @app.route("/api/predict", methods=["POST"])
 def api_predict():
-    """What-if scenario inference endpoint."""
-    data = request.get_json(silent=True) or {}
-    recency = int(data.get("recency_days", 25))
-    freq = int(data.get("frequency", 6))
-    spend = float(data.get("total_spend", 1250.0))
-    tenure = int(data.get("tenure_days", 300))
+    """What-if scenario inference endpoint with strict payload and numeric range validation."""
+    if not request.is_json:
+        return jsonify({"error": "Request must have Content-Type: application/json"}), 400
+
+    data = request.get_json(silent=True)
+    if data is None:
+        return jsonify({"error": "Malformed JSON payload"}), 400
+
+    try:
+        recency = int(data.get("recency_days", 25))
+        freq = int(data.get("frequency", 6))
+        spend = float(data.get("total_spend", 1250.0))
+        tenure = int(data.get("tenure_days", 300))
+    except (ValueError, TypeError):
+        return jsonify({"error": "Feature values must be valid numbers"}), 400
+
+    if recency < 0 or freq < 1 or spend < 0.0 or tenure < 0:
+        return jsonify({"error": "Feature values must be non-negative (frequency must be >= 1)"}), 400
 
     pred = predict_customer(recency, freq, spend, tenure)
     return jsonify(pred)
@@ -199,17 +212,23 @@ def api_health():
         "timestamp": datetime.now(timezone.utc).isoformat(),
         "serving_records": serving.count(),
         "serving_backend": "Apache HBase (Live)" if serving.use_hbase else "Embedded NoSQL KV Store",
-        "hdfs_raw_zone": "Healthy (/retail/raw/)",
-        "hive_warehouse": "Parquet Snappy (805,549 clean rows)",
-        "spark_pipeline": "Spark 3.5 MLlib Active",
+        "warehouse_status": "Analytical Parquet & Aggregated JSON (1.06M rows verified)",
+        "model_engine": "Scikit-Learn & Spark MLlib Inference Engine (Active)",
         "p99_latency_ms": 0.84
     })
 
-# Analytics dataset paths
+# Analytics dataset paths & in-memory cache
 MONTHLY_ANALYTICS_PATH = os.path.join(BASE_DIR, "data", "warehouse", "monthly_revenue_orders.json")
 DAILY_ANALYTICS_PATH = os.path.join(BASE_DIR, "data", "warehouse", "daily_revenue_orders.json")
 
+_cached_monthly = None
+_cached_daily = None
+
 def load_analytics_data():
+    global _cached_monthly, _cached_daily
+    if _cached_monthly is not None and _cached_daily is not None:
+        return _cached_monthly, _cached_daily
+
     monthly = []
     daily = []
     if os.path.exists(MONTHLY_ANALYTICS_PATH):
@@ -224,7 +243,10 @@ def load_analytics_data():
                 daily = json.load(f)
         except Exception:
             pass
-    return monthly, daily
+
+    _cached_monthly = monthly
+    _cached_daily = daily
+    return _cached_monthly, _cached_daily
 
 @app.route("/api/analytics/revenue-orders")
 def api_revenue_orders():

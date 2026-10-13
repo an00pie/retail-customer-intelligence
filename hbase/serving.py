@@ -5,6 +5,7 @@ Supports connection to HBase Thrift service via happybase, with an automatic
 high-performance embedded column-family KV store (SQLite NoSQL) fallback.
 """
 import os
+import json
 import sqlite3
 from datetime import datetime, timezone
 from typing import Dict, Optional
@@ -58,6 +59,7 @@ class CustomerServingLayer:
     def put_customer(self, customer_id: str, data: dict):
         """Insert or update customer profile record."""
         now_iso = datetime.now(timezone.utc).isoformat()
+        tx_json = json.dumps(data.get("transactions", [])) if isinstance(data.get("transactions"), list) else str(data.get("transactions_json", "[]"))
         if self.use_hbase and self.hbase_table:
             row_data = {
                 b"info:segment": str(data.get("segment", "")).encode("utf-8"),
@@ -75,8 +77,9 @@ class CustomerServingLayer:
             cursor.execute("""
                 INSERT OR REPLACE INTO customer_profile (
                     row_key, info_segment, pred_clv, pred_churn_probability,
-                    recency_days, frequency, monetary, tenure_days, avg_order_value, meta_last_updated
-                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                    recency_days, frequency, monetary, tenure_days, avg_order_value,
+                    transactions_json, meta_last_updated
+                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             """, (
                 str(customer_id),
                 data.get("segment"),
@@ -87,52 +90,9 @@ class CustomerServingLayer:
                 float(data.get("monetary", 0.0)),
                 int(data.get("tenure_days", 0)),
                 float(data.get("avg_order_value", 0.0)),
+                tx_json,
                 now_iso
             ))
-            conn.commit()
-            conn.close()
-
-    def put_customers_batch(self, records: list):
-        """High-throughput batch insert for customer records."""
-        now_iso = datetime.now(timezone.utc).isoformat()
-        if self.use_hbase and self.hbase_table:
-            with self.hbase_table.batch() as b:
-                for data in records:
-                    row_key = str(data.get("customer_id", "")).encode("utf-8")
-                    row_data = {
-                        b"info:segment": str(data.get("segment", "")).encode("utf-8"),
-                        b"pred:clv": str(data.get("predicted_clv", 0.0)).encode("utf-8"),
-                        b"pred:churn_probability": str(data.get("churn_probability", 0.0)).encode("utf-8"),
-                        b"info:recency": str(data.get("recency_days", 0)).encode("utf-8"),
-                        b"info:frequency": str(data.get("frequency", 0)).encode("utf-8"),
-                        b"info:monetary": str(data.get("monetary", 0.0)).encode("utf-8"),
-                        b"meta:last_updated": now_iso.encode("utf-8")
-                    }
-                    b.put(row_key, row_data)
-        else:
-            conn = sqlite3.connect(SQLITE_DB_PATH)
-            cursor = conn.cursor()
-            batch_tuples = [
-                (
-                    str(data.get("customer_id")),
-                    data.get("segment"),
-                    float(data.get("predicted_clv", 0.0)),
-                    float(data.get("churn_probability", 0.0)),
-                    int(data.get("recency_days", 0)),
-                    int(data.get("frequency", 0)),
-                    float(data.get("monetary", 0.0)),
-                    int(data.get("tenure_days", 0)),
-                    float(data.get("avg_order_value", 0.0)),
-                    now_iso
-                )
-                for data in records
-            ]
-            cursor.executemany("""
-                INSERT OR REPLACE INTO customer_profile (
-                    row_key, info_segment, pred_clv, pred_churn_probability,
-                    recency_days, frequency, monetary, tenure_days, avg_order_value, meta_last_updated
-                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-            """, batch_tuples)
             conn.commit()
             conn.close()
 
@@ -151,6 +111,7 @@ class CustomerServingLayer:
                 "recency_days": int(row.get(b"info:recency", b"0")),
                 "frequency": int(row.get(b"info:frequency", b"0")),
                 "monetary": float(row.get(b"info:monetary", b"0")),
+                "transactions": [],
                 "last_updated": row.get(b"meta:last_updated", b"").decode("utf-8")
             }
         else:
@@ -162,6 +123,15 @@ class CustomerServingLayer:
             conn.close()
             if not row:
                 return None
+            
+            tx_data = []
+            try:
+                raw_tx = row["transactions_json"] if "transactions_json" in row.keys() else None
+                if raw_tx:
+                    tx_data = json.loads(raw_tx)
+            except Exception:
+                pass
+
             return {
                 "customer_id": row["row_key"],
                 "segment": row["info_segment"],
@@ -172,6 +142,7 @@ class CustomerServingLayer:
                 "monetary": row["monetary"],
                 "tenure_days": row["tenure_days"],
                 "avg_order_value": row["avg_order_value"],
+                "transactions": tx_data,
                 "last_updated": row["meta_last_updated"]
             }
 

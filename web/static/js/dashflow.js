@@ -274,53 +274,80 @@ function initRfmCalculator() {
 }
 
 /* ==============================================================================
-   5. CUSTOMER INTELLIGENCE LOOKUP (Live HBase / API Integration)
+   5. CUSTOMER INTELLIGENCE LOOKUP (Verified Serving Store Integration)
    ============================================================================== */
-const PRELOADED_CUSTOMERS = {
-  "15485": { customer_id: "15485", segment: "Champions", predicted_clv: 1050.90, churn_probability: 0.267, recency_days: 15, frequency: 7, monetary: 1280.40, aov: 182.91 },
-  "13748": { customer_id: "13748", segment: "At-Risk", predicted_clv: 439.96, churn_probability: 0.2596, recency_days: 95, frequency: 4, monetary: 480.20, aov: 120.05 },
-  "13269": { customer_id: "13269", segment: "Champions", predicted_clv: 1844.93, churn_probability: 0.0592, recency_days: 11, frequency: 16, monetary: 3450.00, aov: 215.62 },
-  "18229": { customer_id: "18229", segment: "Champions", predicted_clv: 1716.07, churn_probability: 0.0697, recency_days: 8, frequency: 14, monetary: 3120.00, aov: 222.86 },
-  "15550": { customer_id: "15550", segment: "Champions", predicted_clv: 435.59, churn_probability: 0.2506, recency_days: 18, frequency: 5, monetary: 540.00, aov: 108.00 },
-  "16964": { customer_id: "16964", segment: "Lost / Churned", predicted_clv: 50.13, churn_probability: 0.8732, recency_days: 380, frequency: 1, monetary: 95.00, aov: 95.00 },
-  "16717": { customer_id: "16717", segment: "Champions", predicted_clv: 1373.67, churn_probability: 0.1042, recency_days: 14, frequency: 12, monetary: 2890.00, aov: 240.83 },
-  "C1024": { customer_id: "C1024", segment: "Loyal Customers", predicted_clv: 840.50, churn_probability: 0.1850, recency_days: 12, frequency: 18, monetary: 32500.00, aov: 1805.55 }
-};
+function escapeHtml(str) {
+  if (str === null || str === undefined) return '';
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
+}
 
 function initCustomerLookup() {
   const input = document.getElementById('lookupCustIdInput');
   const btn = document.getElementById('lookupSearchBtn');
   const samplePills = document.querySelectorAll('.sample-id-pill');
+  const container = document.getElementById('customerProfileTarget');
 
   if (!input || !btn) return;
 
   function performLookup(id) {
-    const cleanId = String(id).trim();
-    if (!cleanId) return;
+    const cleanId = String(id || '').trim();
+    if (!cleanId) {
+      if (container) {
+        container.innerHTML = `
+          <div class="customer-profile-card">
+            <div style="padding: 28px 16px; text-align: center; color: var(--text-muted); font-size: 13px;">
+              Please enter a valid Customer ID (e.g. 15485, 13748, 12347) to inspect profile.
+            </div>
+          </div>
+        `;
+      }
+      return;
+    }
 
     // Highlight active pill if matched
     samplePills.forEach(p => {
       p.classList.toggle('active', p.dataset.id === cleanId);
     });
 
-    // Try API fetch first, fallback to preloaded
+    btn.textContent = 'Searching...';
+    btn.disabled = true;
+
     fetch(`/api/customer/${encodeURIComponent(cleanId)}`)
       .then(res => {
-        if (!res.ok) throw new Error('Not found');
+        if (!res.ok) {
+          if (res.status === 404) {
+            throw new Error(`Customer #${cleanId} not found`);
+          }
+          throw new Error(`HTTP error ${res.status}`);
+        }
         return res.json();
       })
       .then(data => {
         renderCustomerProfile(data);
       })
-      .catch(() => {
-        // Fallback to preloaded or dynamic inference
-        if (PRELOADED_CUSTOMERS[cleanId]) {
-          renderCustomerProfile(PRELOADED_CUSTOMERS[cleanId]);
-        } else {
-          // Compute synthetic profile with model formula
-          const synthetic = generateSyntheticCustomer(cleanId);
-          renderCustomerProfile(synthetic);
+      .catch(err => {
+        if (container) {
+          container.innerHTML = `
+            <div class="customer-profile-card">
+              <div style="text-align: center; padding: 36px 16px;">
+                <div style="font-size: 28px; margin-bottom: 8px;">🔍</div>
+                <div style="font-size: 15px; font-weight: 700; color: #fff; margin-bottom: 6px;">Customer #${escapeHtml(cleanId)} Not Found</div>
+                <div style="font-size: 12px; color: var(--text-muted); max-width: 380px; margin: 0 auto; line-height: 1.5;">
+                  No matching transaction record found in the 5,942 verified retail customer profiles.
+                </div>
+              </div>
+            </div>
+          `;
         }
+      })
+      .finally(() => {
+        btn.textContent = 'Search';
+        btn.disabled = false;
       });
   }
 
@@ -340,66 +367,73 @@ function initCustomerLookup() {
   performLookup('15485');
 }
 
-function generateSyntheticCustomer(id) {
-  // Deterministic seed from id string
-  let hash = 0;
-  for (let i = 0; i < id.length; i++) {
-    hash = (hash << 5) - hash + id.charCodeAt(i);
-    hash |= 0;
-  }
-  const posHash = Math.abs(hash);
-  const recency = (posHash % 250) + 5;
-  const freq = (posHash % 22) + 2;
-  const spend = Math.round(((posHash % 4500) + 200) * 100) / 100;
-  const aov = Math.round((spend / freq) * 100) / 100;
-  const clv = Math.round((spend * 0.45 + 150) * 100) / 100;
-  const churn = Math.min(0.92, Math.max(0.04, (recency / 350) + 0.05));
-  let segment = "Loyal Customers";
-  if (recency < 35 && spend > 2500) segment = "Champions";
-  else if (recency > 180) segment = "At-Risk";
-  else if (recency > 300) segment = "Lost / Churned";
-
-  return {
-    customer_id: id,
-    segment: segment,
-    predicted_clv: clv,
-    churn_probability: Math.round(churn * 1000) / 1000,
-    recency_days: recency,
-    frequency: freq,
-    monetary: spend,
-    aov: aov
-  };
-}
-
 function renderCustomerProfile(data) {
   const container = document.getElementById('customerProfileTarget');
   if (!container) return;
 
-  const seg = data.segment || "Customer";
+  const rawId = String(data.customer_id || '');
+  const safeId = escapeHtml(rawId);
+  const rawSeg = String(data.segment || 'Loyal Customers');
+  const safeSeg = escapeHtml(rawSeg);
   const clv = Number(data.predicted_clv || 0);
   const churn = Number(data.churn_probability || 0);
-  const freq = data.frequency || 0;
-  const recency = data.recency_days || 0;
+  const freq = parseInt(data.frequency || 0, 10);
+  const recency = parseInt(data.recency_days || 0, 10);
   const monetary = Number(data.monetary || 0);
 
   let badgeClass = "badge-champ";
-  if (seg.includes("At-Risk")) badgeClass = "badge-risk";
-  else if (seg.includes("Lost")) badgeClass = "badge-lost";
-  else if (seg.includes("Loyal")) badgeClass = "badge-loyal";
+  if (rawSeg.includes("At-Risk")) badgeClass = "badge-risk";
+  else if (rawSeg.includes("Lost")) badgeClass = "badge-lost";
+  else if (rawSeg.includes("Loyal")) badgeClass = "badge-loyal";
 
-  const initials = String(data.customer_id).substring(0, 2).toUpperCase();
+  const initials = safeId.substring(0, 2).toUpperCase() || 'CU';
+
+  let transactionsHtml = '';
+  if (Array.isArray(data.transactions) && data.transactions.length > 0) {
+    const rows = data.transactions.map(tx => `
+      <tr>
+        <td style="padding: 6px 8px; font-size: 11px; color: var(--text-muted); border-bottom: 1px solid rgba(255,255,255,0.04);">${escapeHtml(tx.date)}</td>
+        <td style="padding: 6px 8px; font-size: 11px; font-family: var(--font-mono); color: #fff; border-bottom: 1px solid rgba(255,255,255,0.04);">${escapeHtml(tx.invoice)}</td>
+        <td style="padding: 6px 8px; font-size: 11px; font-family: var(--font-mono); color: #34d399; border-bottom: 1px solid rgba(255,255,255,0.04);">${escapeHtml(tx.stock_code)}</td>
+        <td style="padding: 6px 8px; font-size: 11px; color: #fff; text-align: right; border-bottom: 1px solid rgba(255,255,255,0.04);">${escapeHtml(tx.quantity)}</td>
+        <td style="padding: 6px 8px; font-size: 11px; color: #fff; text-align: right; border-bottom: 1px solid rgba(255,255,255,0.04);">$${Number(tx.unit_price).toFixed(2)}</td>
+        <td style="padding: 6px 8px; font-size: 11px; color: #34d399; font-weight: 700; text-align: right; border-bottom: 1px solid rgba(255,255,255,0.04);">$${Number(tx.total).toFixed(2)}</td>
+      </tr>
+    `).join('');
+
+    transactionsHtml = `
+      <div style="margin-top: 16px; margin-bottom: 16px;">
+        <div style="font-size: 11px; font-weight: 700; color: #fff; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.04em;">Verified Transaction Ledger</div>
+        <div style="background: rgba(0,0,0,0.25); border: 1px solid var(--border-subtle); border-radius: var(--radius-sm); overflow: hidden;">
+          <table style="width: 100%; border-collapse: collapse;">
+            <thead>
+              <tr style="background: rgba(255,255,255,0.02);">
+                <th style="padding: 6px 8px; font-size: 10px; color: var(--text-dim); text-align: left;">Date</th>
+                <th style="padding: 6px 8px; font-size: 10px; color: var(--text-dim); text-align: left;">Invoice</th>
+                <th style="padding: 6px 8px; font-size: 10px; color: var(--text-dim); text-align: left;">Item</th>
+                <th style="padding: 6px 8px; font-size: 10px; color: var(--text-dim); text-align: right;">Qty</th>
+                <th style="padding: 6px 8px; font-size: 10px; color: var(--text-dim); text-align: right;">Unit</th>
+                <th style="padding: 6px 8px; font-size: 10px; color: var(--text-dim); text-align: right;">Total</th>
+              </tr>
+            </thead>
+            <tbody>${rows}</tbody>
+          </table>
+        </div>
+      </div>
+    `;
+  }
 
   container.innerHTML = `
     <div class="customer-profile-card">
       <div class="customer-card-top">
-        <span class="cluster-card-badge ${badgeClass}">● ${seg}</span>
-        <span style="font-size: 11.5px; color: var(--text-muted); font-family: var(--font-mono);">Row Key: ${data.customer_id}</span>
+        <span class="cluster-card-badge ${badgeClass}">● ${safeSeg}</span>
+        <span style="font-size: 11.5px; color: var(--text-muted); font-family: var(--font-mono);">Row Key: ${safeId}</span>
       </div>
 
       <div class="customer-avatar-header">
         <div class="customer-avatar-circle">${initials}</div>
-        <div class="customer-name-heading">Customer #${data.customer_id}</div>
-        <div class="customer-subheading">Retail Client Profile · Verified HBase Columnar Store</div>
+        <div class="customer-name-heading">Customer #${safeId}</div>
+        <div class="customer-subheading">Retail Client Profile · Verified Columnar Store</div>
         <div style="font-size: 11px; color: #71717a; margin-top: 4px;">📍 United Kingdom · Sub-millisecond latency &lt; 1ms</div>
       </div>
 
@@ -418,7 +452,7 @@ function renderCustomerProfile(data) {
         </div>
       </div>
 
-      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px;">
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 12px;">
         <div style="background: rgba(255,255,255,0.02); border: 1px solid var(--border-subtle); border-radius: var(--radius-sm); padding: 10px 12px;">
           <div style="font-size: 11px; color: var(--text-muted);">Recency</div>
           <div style="font-size: 14px; font-weight: 700; color: #ffffff;">${recency} days ago</div>
@@ -429,10 +463,12 @@ function renderCustomerProfile(data) {
         </div>
       </div>
 
+      ${transactionsHtml}
+
       <div class="customer-actions-box">
         <div class="actions-box-title">Recommended Next Best Actions</div>
         <div class="action-item-row">
-          <span>${seg === 'Champions' ? '⭐ VIP Exclusive Rewards Access' : '✨ Re-engagement Promotion'}</span>
+          <span>${rawSeg === 'Champions' ? '⭐ VIP Exclusive Rewards Access' : '✨ Re-engagement Promotion'}</span>
           <span style="font-size: 11px; color: #34d399; font-weight: 700;">Eligible</span>
         </div>
         <div class="action-item-row">
@@ -442,8 +478,8 @@ function renderCustomerProfile(data) {
       </div>
 
       <div style="display: flex; gap: 12px;">
-        <button class="btn-pill-secondary" style="flex: 1; justify-content: center; font-size: 13px; padding: 10px;" onclick="alert('Notification sent to customer account #${data.customer_id}')">💬 Message Account</button>
-        <button class="btn-pill-primary" style="flex: 1; justify-content: center; font-size: 13px; padding: 10px;" onclick="alert('Retention task assigned for Customer #${data.customer_id}')">+ Assign Task</button>
+        <button type="button" class="btn-pill-secondary" style="flex: 1; justify-content: center; font-size: 13px; padding: 10px;" onclick="alert('Notification sent to customer account #' + encodeURIComponent('${safeId}'))">💬 Message Account</button>
+        <button type="button" class="btn-pill-primary" style="flex: 1; justify-content: center; font-size: 13px; padding: 10px;" onclick="alert('Retention task assigned for Customer #' + encodeURIComponent('${safeId}'))">+ Assign Task</button>
       </div>
     </div>
   `;
@@ -859,34 +895,97 @@ function initOverviewModules() {
   // 1. Overview Customer Lookup
   const ovInput = document.getElementById('ovLookupInput');
   const ovBtn = document.getElementById('ovLookupBtn');
+  const ovTableBody = document.getElementById('ovTableBody');
 
   function runOvLookup(id) {
-    const cleanId = String(id || '15485').trim();
-    if (!cleanId) return;
+    const cleanId = String(id || '').trim();
+    const elId = document.getElementById('ovProfileId');
+    const elSeg = document.getElementById('ovProfileSegment');
+    const elClv = document.getElementById('ovProfileClv');
+    const elRec = document.getElementById('ovProfileRecency');
+    const elFreq = document.getElementById('ovProfileFreq');
+    const elMon = document.getElementById('ovProfileMonetary');
+    const elTen = document.getElementById('ovProfileTenure');
+
+    if (!cleanId) {
+      if (elSeg) {
+        elSeg.textContent = 'Enter ID';
+        elSeg.className = 'cluster-card-badge badge-loyal';
+      }
+      if (ovTableBody) {
+        ovTableBody.innerHTML = '<tr><td colspan="6" style="text-align:center; padding: 20px; color: var(--text-muted); font-size: 11.5px;">Please enter a Customer ID (e.g. 15485, 13748, 12347).</td></tr>';
+      }
+      return;
+    }
+
+    if (ovBtn) {
+      ovBtn.textContent = 'Searching...';
+      ovBtn.disabled = true;
+    }
 
     fetch(`/api/customer/${encodeURIComponent(cleanId)}`)
-      .then(res => res.json())
+      .then(res => {
+        if (!res.ok) {
+          if (res.status === 404) throw new Error('NOT_FOUND');
+          throw new Error('API_ERROR');
+        }
+        return res.json();
+      })
       .then(data => {
-        const elId = document.getElementById('ovProfileId');
-        const elSeg = document.getElementById('ovProfileSegment');
-        const elClv = document.getElementById('ovProfileClv');
-        const elRec = document.getElementById('ovProfileRecency');
-        const elFreq = document.getElementById('ovProfileFreq');
-        const elMon = document.getElementById('ovProfileMonetary');
-        const elTen = document.getElementById('ovProfileTenure');
-
-        if (elId) elId.textContent = `#${data.customer_id || cleanId}`;
+        if (elId) elId.textContent = `#${escapeHtml(data.customer_id || cleanId)}`;
         if (elSeg) {
-          elSeg.textContent = data.segment || 'Loyal Customers';
-          elSeg.className = `cluster-card-badge ${data.segment && data.segment.includes('Champions') ? 'badge-champ' : 'badge-loyal'}`;
+          const segName = data.segment || 'Loyal Customers';
+          elSeg.textContent = escapeHtml(segName);
+          let bClass = 'badge-loyal';
+          if (segName.includes('Champions')) bClass = 'badge-champ';
+          else if (segName.includes('At-Risk') || segName.includes('At Risk')) bClass = 'badge-risk';
+          else if (segName.includes('Lost')) bClass = 'badge-lost';
+          elSeg.className = `cluster-card-badge ${bClass}`;
         }
         if (elClv) elClv.textContent = `$${Number(data.predicted_clv || 0).toFixed(2)}`;
-        if (elRec) elRec.textContent = `${data.recency_days || 15} days`;
-        if (elFreq) elFreq.textContent = `${data.frequency || 7} orders`;
-        if (elMon) elMon.textContent = `$${Number(data.monetary || 1280.4).toLocaleString(undefined, {minimumFractionDigits: 2})}`;
-        if (elTen) elTen.textContent = `${data.tenure_days || 298} days`;
+        if (elRec) elRec.textContent = `${data.recency_days || 0} days`;
+        if (elFreq) elFreq.textContent = `${data.frequency || 0} orders`;
+        if (elMon) elMon.textContent = `$${Number(data.monetary || 0).toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
+        if (elTen) elTen.textContent = `${data.tenure_days || 0} days`;
+
+        // Render customer's actual transactions
+        if (ovTableBody && Array.isArray(data.transactions) && data.transactions.length > 0) {
+          ovTableBody.innerHTML = data.transactions.map(tx => `
+            <tr>
+              <td>${escapeHtml(tx.date)}</td>
+              <td>${escapeHtml(tx.invoice)}</td>
+              <td>${escapeHtml(tx.stock_code)}</td>
+              <td>${escapeHtml(tx.quantity)}</td>
+              <td>$${Number(tx.unit_price).toFixed(2)}</td>
+              <td>$${Number(tx.total).toFixed(2)}</td>
+            </tr>
+          `).join('');
+        } else if (ovTableBody) {
+          ovTableBody.innerHTML = '<tr><td colspan="6" style="text-align:center; padding: 20px; color: var(--text-muted); font-size: 11.5px;">No itemized ledger rows available for this account.</td></tr>';
+        }
       })
-      .catch(() => {});
+      .catch(err => {
+        if (elId) elId.textContent = `#${escapeHtml(cleanId)}`;
+        if (elSeg) {
+          elSeg.textContent = 'Not Found';
+          elSeg.className = 'cluster-card-badge badge-risk';
+        }
+        if (elClv) elClv.textContent = '$0.00';
+        if (elRec) elRec.textContent = '--';
+        if (elFreq) elFreq.textContent = '0 orders';
+        if (elMon) elMon.textContent = '$0.00';
+        if (elTen) elTen.textContent = '--';
+
+        if (ovTableBody) {
+          ovTableBody.innerHTML = `<tr><td colspan="6" style="text-align:center; padding: 24px 10px; color: #f87171; font-size: 11.5px;">Customer #${escapeHtml(cleanId)} not found in verified 5,942 retail profiles.</td></tr>`;
+        }
+      })
+      .finally(() => {
+        if (ovBtn) {
+          ovBtn.textContent = 'Search';
+          ovBtn.disabled = false;
+        }
+      });
   }
 
   if (ovBtn && ovInput) {
