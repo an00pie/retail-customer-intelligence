@@ -10,7 +10,7 @@ __pycache__/
 *.so
 
 # Large data directories and scratch files
-data/
+data/raw/
 scratch/
 
 # Spark & local warehouse

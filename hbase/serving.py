@@ -9,7 +9,8 @@ import sqlite3
 from datetime import datetime, timezone
 from typing import Dict, Optional
 
-SQLITE_DB_PATH = "data/serving/customer_profile.db"
+BASE_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+SQLITE_DB_PATH = os.path.join(BASE_DIR, "data", "serving", "customer_profile.db")
 
 class CustomerServingLayer:
     def __init__(self, host: str = "localhost", port: int = 9090):

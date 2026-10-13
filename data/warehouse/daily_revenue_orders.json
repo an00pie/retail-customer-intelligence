@@ -1,0 +1,3626 @@
+[
+  {
+    "day": "2009-12-01",
+    "revenue": 44048.69,
+    "orders": 98,
+    "customers": 91
+  },
+  {
+    "day": "2009-12-02",
+    "revenue": 52941.99,
+    "orders": 110,
+    "customers": 94
+  },
+  {
+    "day": "2009-12-03",
+    "revenue": 67479.08,
+    "orders": 122,
+    "customers": 106
+  },
+  {
+    "day": "2009-12-04",
+    "revenue": 34064.41,
+    "orders": 80,
+    "customers": 76
+  },
+  {
+    "day": "2009-12-05",
+    "revenue": 9803.05,
+    "orders": 30,
+    "customers": 26
+  },
+  {
+    "day": "2009-12-06",
+    "revenue": 24580.72,
+    "orders": 72,
+    "customers": 63
+  },
+  {
+    "day": "2009-12-07",
+    "revenue": 33169.63,
+    "orders": 94,
+    "customers": 77
+  },
+  {
+    "day": "2009-12-08",
+    "revenue": 44804.34,
+    "orders": 102,
+    "customers": 91
+  },
+  {
+    "day": "2009-12-09",
+    "revenue": 31113.6,
+    "orders": 77,
+    "customers": 74
+  },
+  {
+    "day": "2009-12-10",
+    "revenue": 38806.36,
+    "orders": 87,
+    "customers": 82
+  },
+  {
+    "day": "2009-12-11",
+    "revenue": 39415.88,
+    "orders": 65,
+    "customers": 58
+  },
+  {
+    "day": "2009-12-13",
+    "revenue": 21711.46,
+    "orders": 69,
+    "customers": 63
+  },
+  {
+    "day": "2009-12-14",
+    "revenue": 51398.43,
+    "orders": 80,
+    "customers": 69
+  },
+  {
+    "day": "2009-12-15",
+    "revenue": 46914.58,
+    "orders": 94,
+    "customers": 89
+  },
+  {
+    "day": "2009-12-16",
+    "revenue": 37174.0,
+    "orders": 90,
+    "customers": 81
+  },
+  {
+    "day": "2009-12-17",
+    "revenue": 30345.89,
+    "orders": 84,
+    "customers": 77
+  },
+  {
+    "day": "2009-12-18",
+    "revenue": 31680.52,
+    "orders": 61,
+    "customers": 55
+  },
+  {
+    "day": "2009-12-20",
+    "revenue": 11423.33,
+    "orders": 32,
+    "customers": 31
+  },
+  {
+    "day": "2009-12-21",
+    "revenue": 15568.04,
+    "orders": 31,
+    "customers": 30
+  },
+  {
+    "day": "2009-12-22",
+    "revenue": 10702.74,
+    "orders": 21,
+    "customers": 16
+  },
+  {
+    "day": "2009-12-23",
+    "revenue": 9507.42,
+    "orders": 13,
+    "customers": 12
+  },
+  {
+    "day": "2010-01-04",
+    "revenue": 13450.54,
+    "orders": 26,
+    "customers": 22
+  },
+  {
+    "day": "2010-01-05",
+    "revenue": 19136.14,
+    "orders": 33,
+    "customers": 31
+  },
+  {
+    "day": "2010-01-06",
+    "revenue": 8740.69,
+    "orders": 13,
+    "customers": 13
+  },
+  {
+    "day": "2010-01-07",
+    "revenue": 73035.23,
+    "orders": 45,
+    "customers": 41
+  },
+  {
+    "day": "2010-01-08",
+    "revenue": 30317.8,
+    "orders": 44,
+    "customers": 42
+  },
+  {
+    "day": "2010-01-10",
+    "revenue": 23248.08,
+    "orders": 31,
+    "customers": 29
+  },
+  {
+    "day": "2010-01-11",
+    "revenue": 19685.34,
+    "orders": 43,
+    "customers": 37
+  },
+  {
+    "day": "2010-01-12",
+    "revenue": 38903.13,
+    "orders": 36,
+    "customers": 32
+  },
+  {
+    "day": "2010-01-13",
+    "revenue": 12409.99,
+    "orders": 25,
+    "customers": 25
+  },
+  {
+    "day": "2010-01-14",
+    "revenue": 23843.47,
+    "orders": 55,
+    "customers": 47
+  },
+  {
+    "day": "2010-01-15",
+    "revenue": 13507.54,
+    "orders": 44,
+    "customers": 37
+  },
+  {
+    "day": "2010-01-17",
+    "revenue": 17548.29,
+    "orders": 39,
+    "customers": 35
+  },
+  {
+    "day": "2010-01-18",
+    "revenue": 12132.69,
+    "orders": 35,
+    "customers": 32
+  },
+  {
+    "day": "2010-01-19",
+    "revenue": 22011.47,
+    "orders": 45,
+    "customers": 41
+  },
+  {
+    "day": "2010-01-20",
+    "revenue": 13366.46,
+    "orders": 35,
+    "customers": 31
+  },
+  {
+    "day": "2010-01-21",
+    "revenue": 27391.96,
+    "orders": 48,
+    "customers": 47
+  },
+  {
+    "day": "2010-01-22",
+    "revenue": 29374.48,
+    "orders": 42,
+    "customers": 39
+  },
+  {
+    "day": "2010-01-24",
+    "revenue": 15691.72,
+    "orders": 49,
+    "customers": 48
+  },
+  {
+    "day": "2010-01-25",
+    "revenue": 18375.19,
+    "orders": 45,
+    "customers": 44
+  },
+  {
+    "day": "2010-01-26",
+    "revenue": 38647.22,
+    "orders": 81,
+    "customers": 68
+  },
+  {
+    "day": "2010-01-27",
+    "revenue": 23758.02,
+    "orders": 51,
+    "customers": 47
+  },
+  {
+    "day": "2010-01-28",
+    "revenue": 18949.43,
+    "orders": 53,
+    "customers": 48
+  },
+  {
+    "day": "2010-01-29",
+    "revenue": 25427.99,
+    "orders": 45,
+    "customers": 37
+  },
+  {
+    "day": "2010-01-31",
+    "revenue": 18366.19,
+    "orders": 48,
+    "customers": 47
+  },
+  {
+    "day": "2010-02-01",
+    "revenue": 16654.13,
+    "orders": 56,
+    "customers": 49
+  },
+  {
+    "day": "2010-02-02",
+    "revenue": 19715.71,
+    "orders": 41,
+    "customers": 34
+  },
+  {
+    "day": "2010-02-03",
+    "revenue": 17265.55,
+    "orders": 44,
+    "customers": 41
+  },
+  {
+    "day": "2010-02-04",
+    "revenue": 22661.8,
+    "orders": 62,
+    "customers": 52
+  },
+  {
+    "day": "2010-02-05",
+    "revenue": 19507.18,
+    "orders": 38,
+    "customers": 35
+  },
+  {
+    "day": "2010-02-07",
+    "revenue": 17075.3,
+    "orders": 29,
+    "customers": 29
+  },
+  {
+    "day": "2010-02-08",
+    "revenue": 13047.56,
+    "orders": 49,
+    "customers": 45
+  },
+  {
+    "day": "2010-02-09",
+    "revenue": 18445.98,
+    "orders": 51,
+    "customers": 51
+  },
+  {
+    "day": "2010-02-10",
+    "revenue": 6123.39,
+    "orders": 27,
+    "customers": 24
+  },
+  {
+    "day": "2010-02-11",
+    "revenue": 15096.0,
+    "orders": 54,
+    "customers": 48
+  },
+  {
+    "day": "2010-02-12",
+    "revenue": 9742.16,
+    "orders": 28,
+    "customers": 27
+  },
+  {
+    "day": "2010-02-14",
+    "revenue": 17901.06,
+    "orders": 45,
+    "customers": 39
+  },
+  {
+    "day": "2010-02-15",
+    "revenue": 42610.56,
+    "orders": 43,
+    "customers": 35
+  },
+  {
+    "day": "2010-02-16",
+    "revenue": 25728.26,
+    "orders": 58,
+    "customers": 51
+  },
+  {
+    "day": "2010-02-17",
+    "revenue": 26558.73,
+    "orders": 46,
+    "customers": 42
+  },
+  {
+    "day": "2010-02-18",
+    "revenue": 35798.29,
+    "orders": 62,
+    "customers": 58
+  },
+  {
+    "day": "2010-02-19",
+    "revenue": 18961.84,
+    "orders": 34,
+    "customers": 30
+  },
+  {
+    "day": "2010-02-21",
+    "revenue": 11477.91,
+    "orders": 37,
+    "customers": 34
+  },
+  {
+    "day": "2010-02-22",
+    "revenue": 26341.79,
+    "orders": 46,
+    "customers": 41
+  },
+  {
+    "day": "2010-02-23",
+    "revenue": 20896.28,
+    "orders": 44,
+    "customers": 42
+  },
+  {
+    "day": "2010-02-24",
+    "revenue": 30413.86,
+    "orders": 59,
+    "customers": 47
+  },
+  {
+    "day": "2010-02-25",
+    "revenue": 44631.31,
+    "orders": 66,
+    "customers": 55
+  },
+  {
+    "day": "2010-02-26",
+    "revenue": 12799.39,
+    "orders": 32,
+    "customers": 26
+  },
+  {
+    "day": "2010-02-28",
+    "revenue": 16917.02,
+    "orders": 53,
+    "customers": 50
+  },
+  {
+    "day": "2010-03-01",
+    "revenue": 23982.67,
+    "orders": 57,
+    "customers": 49
+  },
+  {
+    "day": "2010-03-02",
+    "revenue": 21707.53,
+    "orders": 52,
+    "customers": 48
+  },
+  {
+    "day": "2010-03-03",
+    "revenue": 31906.24,
+    "orders": 60,
+    "customers": 53
+  },
+  {
+    "day": "2010-03-04",
+    "revenue": 30037.15,
+    "orders": 73,
+    "customers": 67
+  },
+  {
+    "day": "2010-03-05",
+    "revenue": 25509.64,
+    "orders": 59,
+    "customers": 55
+  },
+  {
+    "day": "2010-03-07",
+    "revenue": 19230.27,
+    "orders": 50,
+    "customers": 46
+  },
+  {
+    "day": "2010-03-08",
+    "revenue": 26607.28,
+    "orders": 69,
+    "customers": 66
+  },
+  {
+    "day": "2010-03-09",
+    "revenue": 19701.84,
+    "orders": 53,
+    "customers": 51
+  },
+  {
+    "day": "2010-03-10",
+    "revenue": 23000.19,
+    "orders": 56,
+    "customers": 47
+  },
+  {
+    "day": "2010-03-11",
+    "revenue": 21633.64,
+    "orders": 46,
+    "customers": 39
+  },
+  {
+    "day": "2010-03-12",
+    "revenue": 19146.25,
+    "orders": 35,
+    "customers": 30
+  },
+  {
+    "day": "2010-03-14",
+    "revenue": 9032.7,
+    "orders": 24,
+    "customers": 22
+  },
+  {
+    "day": "2010-03-15",
+    "revenue": 20611.43,
+    "orders": 49,
+    "customers": 41
+  },
+  {
+    "day": "2010-03-16",
+    "revenue": 21152.84,
+    "orders": 43,
+    "customers": 42
+  },
+  {
+    "day": "2010-03-17",
+    "revenue": 29619.48,
+    "orders": 44,
+    "customers": 40
+  },
+  {
+    "day": "2010-03-18",
+    "revenue": 37629.29,
+    "orders": 81,
+    "customers": 70
+  },
+  {
+    "day": "2010-03-19",
+    "revenue": 35397.14,
+    "orders": 52,
+    "customers": 47
+  },
+  {
+    "day": "2010-03-21",
+    "revenue": 20836.18,
+    "orders": 55,
+    "customers": 51
+  },
+  {
+    "day": "2010-03-22",
+    "revenue": 21653.89,
+    "orders": 52,
+    "customers": 49
+  },
+  {
+    "day": "2010-03-23",
+    "revenue": 41914.54,
+    "orders": 65,
+    "customers": 58
+  },
+  {
+    "day": "2010-03-24",
+    "revenue": 26031.36,
+    "orders": 66,
+    "customers": 59
+  },
+  {
+    "day": "2010-03-25",
+    "revenue": 30658.41,
+    "orders": 75,
+    "customers": 67
+  },
+  {
+    "day": "2010-03-26",
+    "revenue": 29889.94,
+    "orders": 56,
+    "customers": 48
+  },
+  {
+    "day": "2010-03-28",
+    "revenue": 22562.62,
+    "orders": 59,
+    "customers": 56
+  },
+  {
+    "day": "2010-03-29",
+    "revenue": 31812.08,
+    "orders": 58,
+    "customers": 41
+  },
+  {
+    "day": "2010-03-30",
+    "revenue": 33648.52,
+    "orders": 68,
+    "customers": 54
+  },
+  {
+    "day": "2010-03-31",
+    "revenue": 24695.87,
+    "orders": 67,
+    "customers": 59
+  },
+  {
+    "day": "2010-04-01",
+    "revenue": 28701.81,
+    "orders": 74,
+    "customers": 72
+  },
+  {
+    "day": "2010-04-06",
+    "revenue": 17982.48,
+    "orders": 53,
+    "customers": 46
+  },
+  {
+    "day": "2010-04-07",
+    "revenue": 32195.35,
+    "orders": 59,
+    "customers": 46
+  },
+  {
+    "day": "2010-04-08",
+    "revenue": 39938.28,
+    "orders": 81,
+    "customers": 70
+  },
+  {
+    "day": "2010-04-09",
+    "revenue": 14707.33,
+    "orders": 35,
+    "customers": 33
+  },
+  {
+    "day": "2010-04-11",
+    "revenue": 19967.32,
+    "orders": 42,
+    "customers": 40
+  },
+  {
+    "day": "2010-04-12",
+    "revenue": 26011.03,
+    "orders": 44,
+    "customers": 37
+  },
+  {
+    "day": "2010-04-13",
+    "revenue": 25795.32,
+    "orders": 49,
+    "customers": 43
+  },
+  {
+    "day": "2010-04-14",
+    "revenue": 27203.98,
+    "orders": 43,
+    "customers": 39
+  },
+  {
+    "day": "2010-04-15",
+    "revenue": 19592.19,
+    "orders": 64,
+    "customers": 57
+  },
+  {
+    "day": "2010-04-16",
+    "revenue": 19416.42,
+    "orders": 38,
+    "customers": 37
+  },
+  {
+    "day": "2010-04-18",
+    "revenue": 24096.88,
+    "orders": 54,
+    "customers": 43
+  },
+  {
+    "day": "2010-04-19",
+    "revenue": 24620.04,
+    "orders": 61,
+    "customers": 44
+  },
+  {
+    "day": "2010-04-20",
+    "revenue": 21323.69,
+    "orders": 62,
+    "customers": 53
+  },
+  {
+    "day": "2010-04-21",
+    "revenue": 25962.71,
+    "orders": 60,
+    "customers": 51
+  },
+  {
+    "day": "2010-04-22",
+    "revenue": 35766.15,
+    "orders": 77,
+    "customers": 67
+  },
+  {
+    "day": "2010-04-23",
+    "revenue": 15124.24,
+    "orders": 52,
+    "customers": 43
+  },
+  {
+    "day": "2010-04-25",
+    "revenue": 16774.12,
+    "orders": 46,
+    "customers": 44
+  },
+  {
+    "day": "2010-04-26",
+    "revenue": 29918.53,
+    "orders": 73,
+    "customers": 66
+  },
+  {
+    "day": "2010-04-27",
+    "revenue": 43801.9,
+    "orders": 74,
+    "customers": 63
+  },
+  {
+    "day": "2010-04-28",
+    "revenue": 31291.74,
+    "orders": 70,
+    "customers": 62
+  },
+  {
+    "day": "2010-04-29",
+    "revenue": 29714.02,
+    "orders": 76,
+    "customers": 71
+  },
+  {
+    "day": "2010-04-30",
+    "revenue": 24703.66,
+    "orders": 42,
+    "customers": 36
+  },
+  {
+    "day": "2010-05-02",
+    "revenue": 12367.83,
+    "orders": 40,
+    "customers": 39
+  },
+  {
+    "day": "2010-05-04",
+    "revenue": 18988.58,
+    "orders": 48,
+    "customers": 43
+  },
+  {
+    "day": "2010-05-05",
+    "revenue": 23642.83,
+    "orders": 66,
+    "customers": 57
+  },
+  {
+    "day": "2010-05-06",
+    "revenue": 51788.06,
+    "orders": 76,
+    "customers": 68
+  },
+  {
+    "day": "2010-05-07",
+    "revenue": 32001.21,
+    "orders": 63,
+    "customers": 48
+  },
+  {
+    "day": "2010-05-09",
+    "revenue": 23143.29,
+    "orders": 62,
+    "customers": 52
+  },
+  {
+    "day": "2010-05-10",
+    "revenue": 26539.18,
+    "orders": 70,
+    "customers": 65
+  },
+  {
+    "day": "2010-05-11",
+    "revenue": 25259.07,
+    "orders": 62,
+    "customers": 59
+  },
+  {
+    "day": "2010-05-12",
+    "revenue": 29794.61,
+    "orders": 64,
+    "customers": 51
+  },
+  {
+    "day": "2010-05-13",
+    "revenue": 39032.8,
+    "orders": 64,
+    "customers": 58
+  },
+  {
+    "day": "2010-05-14",
+    "revenue": 16917.19,
+    "orders": 40,
+    "customers": 36
+  },
+  {
+    "day": "2010-05-16",
+    "revenue": 18478.89,
+    "orders": 44,
+    "customers": 38
+  },
+  {
+    "day": "2010-05-17",
+    "revenue": 23339.74,
+    "orders": 46,
+    "customers": 42
+  },
+  {
+    "day": "2010-05-18",
+    "revenue": 26274.83,
+    "orders": 60,
+    "customers": 51
+  },
+  {
+    "day": "2010-05-19",
+    "revenue": 16710.4,
+    "orders": 58,
+    "customers": 56
+  },
+  {
+    "day": "2010-05-20",
+    "revenue": 25434.03,
+    "orders": 66,
+    "customers": 57
+  },
+  {
+    "day": "2010-05-21",
+    "revenue": 22560.06,
+    "orders": 44,
+    "customers": 39
+  },
+  {
+    "day": "2010-05-23",
+    "revenue": 25155.77,
+    "orders": 48,
+    "customers": 41
+  },
+  {
+    "day": "2010-05-24",
+    "revenue": 33580.34,
+    "orders": 67,
+    "customers": 61
+  },
+  {
+    "day": "2010-05-25",
+    "revenue": 20514.92,
+    "orders": 57,
+    "customers": 52
+  },
+  {
+    "day": "2010-05-26",
+    "revenue": 29627.59,
+    "orders": 69,
+    "customers": 64
+  },
+  {
+    "day": "2010-05-27",
+    "revenue": 29397.36,
+    "orders": 83,
+    "customers": 77
+  },
+  {
+    "day": "2010-05-28",
+    "revenue": 18652.75,
+    "orders": 49,
+    "customers": 43
+  },
+  {
+    "day": "2010-05-30",
+    "revenue": 10784.46,
+    "orders": 31,
+    "customers": 30
+  },
+  {
+    "day": "2010-06-01",
+    "revenue": 13191.66,
+    "orders": 36,
+    "customers": 33
+  },
+  {
+    "day": "2010-06-02",
+    "revenue": 13778.51,
+    "orders": 42,
+    "customers": 38
+  },
+  {
+    "day": "2010-06-03",
+    "revenue": 26787.3,
+    "orders": 62,
+    "customers": 52
+  },
+  {
+    "day": "2010-06-04",
+    "revenue": 11447.73,
+    "orders": 34,
+    "customers": 29
+  },
+  {
+    "day": "2010-06-06",
+    "revenue": 25686.0,
+    "orders": 68,
+    "customers": 62
+  },
+  {
+    "day": "2010-06-07",
+    "revenue": 45828.13,
+    "orders": 99,
+    "customers": 81
+  },
+  {
+    "day": "2010-06-08",
+    "revenue": 48431.52,
+    "orders": 74,
+    "customers": 61
+  },
+  {
+    "day": "2010-06-09",
+    "revenue": 36609.86,
+    "orders": 63,
+    "customers": 59
+  },
+  {
+    "day": "2010-06-10",
+    "revenue": 18089.8,
+    "orders": 62,
+    "customers": 56
+  },
+  {
+    "day": "2010-06-11",
+    "revenue": 30960.89,
+    "orders": 74,
+    "customers": 65
+  },
+  {
+    "day": "2010-06-13",
+    "revenue": 21333.72,
+    "orders": 69,
+    "customers": 61
+  },
+  {
+    "day": "2010-06-14",
+    "revenue": 21388.51,
+    "orders": 51,
+    "customers": 48
+  },
+  {
+    "day": "2010-06-15",
+    "revenue": 26973.08,
+    "orders": 46,
+    "customers": 41
+  },
+  {
+    "day": "2010-06-16",
+    "revenue": 29305.64,
+    "orders": 77,
+    "customers": 65
+  },
+  {
+    "day": "2010-06-17",
+    "revenue": 22812.78,
+    "orders": 69,
+    "customers": 61
+  },
+  {
+    "day": "2010-06-18",
+    "revenue": 17800.34,
+    "orders": 47,
+    "customers": 44
+  },
+  {
+    "day": "2010-06-20",
+    "revenue": 9113.43,
+    "orders": 26,
+    "customers": 26
+  },
+  {
+    "day": "2010-06-21",
+    "revenue": 18246.3,
+    "orders": 43,
+    "customers": 40
+  },
+  {
+    "day": "2010-06-22",
+    "revenue": 12431.13,
+    "orders": 41,
+    "customers": 36
+  },
+  {
+    "day": "2010-06-23",
+    "revenue": 25098.24,
+    "orders": 61,
+    "customers": 54
+  },
+  {
+    "day": "2010-06-24",
+    "revenue": 17268.73,
+    "orders": 47,
+    "customers": 42
+  },
+  {
+    "day": "2010-06-25",
+    "revenue": 12377.64,
+    "orders": 40,
+    "customers": 37
+  },
+  {
+    "day": "2010-06-27",
+    "revenue": 18834.32,
+    "orders": 55,
+    "customers": 52
+  },
+  {
+    "day": "2010-06-28",
+    "revenue": 51270.77,
+    "orders": 68,
+    "customers": 64
+  },
+  {
+    "day": "2010-06-29",
+    "revenue": 32420.64,
+    "orders": 68,
+    "customers": 56
+  },
+  {
+    "day": "2010-06-30",
+    "revenue": 31579.91,
+    "orders": 75,
+    "customers": 67
+  },
+  {
+    "day": "2010-07-01",
+    "revenue": 28965.25,
+    "orders": 81,
+    "customers": 80
+  },
+  {
+    "day": "2010-07-02",
+    "revenue": 16778.23,
+    "orders": 44,
+    "customers": 36
+  },
+  {
+    "day": "2010-07-04",
+    "revenue": 10493.66,
+    "orders": 21,
+    "customers": 20
+  },
+  {
+    "day": "2010-07-05",
+    "revenue": 31069.37,
+    "orders": 81,
+    "customers": 65
+  },
+  {
+    "day": "2010-07-06",
+    "revenue": 19921.23,
+    "orders": 54,
+    "customers": 47
+  },
+  {
+    "day": "2010-07-07",
+    "revenue": 24954.42,
+    "orders": 60,
+    "customers": 56
+  },
+  {
+    "day": "2010-07-08",
+    "revenue": 20020.69,
+    "orders": 65,
+    "customers": 58
+  },
+  {
+    "day": "2010-07-09",
+    "revenue": 33417.54,
+    "orders": 25,
+    "customers": 23
+  },
+  {
+    "day": "2010-07-11",
+    "revenue": 7679.86,
+    "orders": 26,
+    "customers": 24
+  },
+  {
+    "day": "2010-07-12",
+    "revenue": 16259.7,
+    "orders": 47,
+    "customers": 38
+  },
+  {
+    "day": "2010-07-13",
+    "revenue": 17463.76,
+    "orders": 49,
+    "customers": 38
+  },
+  {
+    "day": "2010-07-14",
+    "revenue": 19502.47,
+    "orders": 52,
+    "customers": 47
+  },
+  {
+    "day": "2010-07-15",
+    "revenue": 55987.63,
+    "orders": 78,
+    "customers": 64
+  },
+  {
+    "day": "2010-07-16",
+    "revenue": 21148.11,
+    "orders": 62,
+    "customers": 56
+  },
+  {
+    "day": "2010-07-18",
+    "revenue": 14646.26,
+    "orders": 39,
+    "customers": 37
+  },
+  {
+    "day": "2010-07-19",
+    "revenue": 28646.42,
+    "orders": 56,
+    "customers": 54
+  },
+  {
+    "day": "2010-07-20",
+    "revenue": 23217.99,
+    "orders": 54,
+    "customers": 48
+  },
+  {
+    "day": "2010-07-21",
+    "revenue": 19171.47,
+    "orders": 46,
+    "customers": 42
+  },
+  {
+    "day": "2010-07-22",
+    "revenue": 21672.08,
+    "orders": 61,
+    "customers": 57
+  },
+  {
+    "day": "2010-07-23",
+    "revenue": 23925.32,
+    "orders": 38,
+    "customers": 37
+  },
+  {
+    "day": "2010-07-25",
+    "revenue": 17431.3,
+    "orders": 54,
+    "customers": 51
+  },
+  {
+    "day": "2010-07-26",
+    "revenue": 20346.23,
+    "orders": 52,
+    "customers": 47
+  },
+  {
+    "day": "2010-07-27",
+    "revenue": 28293.86,
+    "orders": 64,
+    "customers": 56
+  },
+  {
+    "day": "2010-07-28",
+    "revenue": 23308.92,
+    "orders": 63,
+    "customers": 60
+  },
+  {
+    "day": "2010-07-29",
+    "revenue": 32923.63,
+    "orders": 65,
+    "customers": 60
+  },
+  {
+    "day": "2010-07-30",
+    "revenue": 14391.34,
+    "orders": 44,
+    "customers": 39
+  },
+  {
+    "day": "2010-08-01",
+    "revenue": 30724.29,
+    "orders": 32,
+    "customers": 27
+  },
+  {
+    "day": "2010-08-02",
+    "revenue": 26390.89,
+    "orders": 57,
+    "customers": 49
+  },
+  {
+    "day": "2010-08-03",
+    "revenue": 22388.16,
+    "orders": 50,
+    "customers": 47
+  },
+  {
+    "day": "2010-08-04",
+    "revenue": 17594.33,
+    "orders": 49,
+    "customers": 47
+  },
+  {
+    "day": "2010-08-05",
+    "revenue": 23247.39,
+    "orders": 51,
+    "customers": 48
+  },
+  {
+    "day": "2010-08-06",
+    "revenue": 14738.6,
+    "orders": 34,
+    "customers": 31
+  },
+  {
+    "day": "2010-08-08",
+    "revenue": 14135.34,
+    "orders": 43,
+    "customers": 41
+  },
+  {
+    "day": "2010-08-09",
+    "revenue": 31355.41,
+    "orders": 49,
+    "customers": 41
+  },
+  {
+    "day": "2010-08-10",
+    "revenue": 28280.39,
+    "orders": 39,
+    "customers": 33
+  },
+  {
+    "day": "2010-08-11",
+    "revenue": 18674.68,
+    "orders": 39,
+    "customers": 35
+  },
+  {
+    "day": "2010-08-12",
+    "revenue": 26131.35,
+    "orders": 71,
+    "customers": 56
+  },
+  {
+    "day": "2010-08-13",
+    "revenue": 15269.89,
+    "orders": 40,
+    "customers": 34
+  },
+  {
+    "day": "2010-08-15",
+    "revenue": 20679.97,
+    "orders": 56,
+    "customers": 52
+  },
+  {
+    "day": "2010-08-16",
+    "revenue": 14341.34,
+    "orders": 34,
+    "customers": 32
+  },
+  {
+    "day": "2010-08-17",
+    "revenue": 28821.02,
+    "orders": 44,
+    "customers": 40
+  },
+  {
+    "day": "2010-08-18",
+    "revenue": 35233.12,
+    "orders": 55,
+    "customers": 47
+  },
+  {
+    "day": "2010-08-19",
+    "revenue": 30741.84,
+    "orders": 67,
+    "customers": 55
+  },
+  {
+    "day": "2010-08-20",
+    "revenue": 23264.37,
+    "orders": 56,
+    "customers": 49
+  },
+  {
+    "day": "2010-08-22",
+    "revenue": 22766.81,
+    "orders": 60,
+    "customers": 51
+  },
+  {
+    "day": "2010-08-23",
+    "revenue": 20665.02,
+    "orders": 44,
+    "customers": 37
+  },
+  {
+    "day": "2010-08-24",
+    "revenue": 26612.19,
+    "orders": 60,
+    "customers": 53
+  },
+  {
+    "day": "2010-08-25",
+    "revenue": 30529.81,
+    "orders": 69,
+    "customers": 62
+  },
+  {
+    "day": "2010-08-26",
+    "revenue": 32072.39,
+    "orders": 70,
+    "customers": 64
+  },
+  {
+    "day": "2010-08-27",
+    "revenue": 12210.79,
+    "orders": 31,
+    "customers": 29
+  },
+  {
+    "day": "2010-08-29",
+    "revenue": 14509.78,
+    "orders": 39,
+    "customers": 36
+  },
+  {
+    "day": "2010-08-31",
+    "revenue": 22863.48,
+    "orders": 54,
+    "customers": 48
+  },
+  {
+    "day": "2010-09-01",
+    "revenue": 20387.01,
+    "orders": 37,
+    "customers": 35
+  },
+  {
+    "day": "2010-09-02",
+    "revenue": 33483.72,
+    "orders": 87,
+    "customers": 77
+  },
+  {
+    "day": "2010-09-03",
+    "revenue": 34775.61,
+    "orders": 54,
+    "customers": 49
+  },
+  {
+    "day": "2010-09-05",
+    "revenue": 12389.65,
+    "orders": 35,
+    "customers": 35
+  },
+  {
+    "day": "2010-09-06",
+    "revenue": 23733.02,
+    "orders": 49,
+    "customers": 41
+  },
+  {
+    "day": "2010-09-07",
+    "revenue": 24407.5,
+    "orders": 49,
+    "customers": 45
+  },
+  {
+    "day": "2010-09-08",
+    "revenue": 16209.63,
+    "orders": 48,
+    "customers": 45
+  },
+  {
+    "day": "2010-09-09",
+    "revenue": 23633.48,
+    "orders": 63,
+    "customers": 59
+  },
+  {
+    "day": "2010-09-10",
+    "revenue": 16023.15,
+    "orders": 43,
+    "customers": 38
+  },
+  {
+    "day": "2010-09-12",
+    "revenue": 15762.29,
+    "orders": 48,
+    "customers": 46
+  },
+  {
+    "day": "2010-09-13",
+    "revenue": 32968.56,
+    "orders": 66,
+    "customers": 52
+  },
+  {
+    "day": "2010-09-14",
+    "revenue": 19756.84,
+    "orders": 62,
+    "customers": 56
+  },
+  {
+    "day": "2010-09-15",
+    "revenue": 33851.05,
+    "orders": 65,
+    "customers": 61
+  },
+  {
+    "day": "2010-09-16",
+    "revenue": 27173.14,
+    "orders": 65,
+    "customers": 51
+  },
+  {
+    "day": "2010-09-17",
+    "revenue": 19548.35,
+    "orders": 45,
+    "customers": 41
+  },
+  {
+    "day": "2010-09-19",
+    "revenue": 22984.34,
+    "orders": 57,
+    "customers": 54
+  },
+  {
+    "day": "2010-09-20",
+    "revenue": 38634.58,
+    "orders": 72,
+    "customers": 59
+  },
+  {
+    "day": "2010-09-21",
+    "revenue": 55151.61,
+    "orders": 100,
+    "customers": 76
+  },
+  {
+    "day": "2010-09-22",
+    "revenue": 27261.12,
+    "orders": 70,
+    "customers": 39
+  },
+  {
+    "day": "2010-09-23",
+    "revenue": 34375.74,
+    "orders": 81,
+    "customers": 72
+  },
+  {
+    "day": "2010-09-24",
+    "revenue": 47160.31,
+    "orders": 55,
+    "customers": 45
+  },
+  {
+    "day": "2010-09-26",
+    "revenue": 21858.47,
+    "orders": 63,
+    "customers": 51
+  },
+  {
+    "day": "2010-09-27",
+    "revenue": 115243.44,
+    "orders": 90,
+    "customers": 69
+  },
+  {
+    "day": "2010-09-28",
+    "revenue": 40204.85,
+    "orders": 109,
+    "customers": 91
+  },
+  {
+    "day": "2010-09-29",
+    "revenue": 36895.79,
+    "orders": 95,
+    "customers": 83
+  },
+  {
+    "day": "2010-09-30",
+    "revenue": 37741.75,
+    "orders": 81,
+    "customers": 74
+  },
+  {
+    "day": "2010-10-01",
+    "revenue": 34597.86,
+    "orders": 64,
+    "customers": 55
+  },
+  {
+    "day": "2010-10-03",
+    "revenue": 38663.81,
+    "orders": 75,
+    "customers": 64
+  },
+  {
+    "day": "2010-10-04",
+    "revenue": 35019.51,
+    "orders": 76,
+    "customers": 72
+  },
+  {
+    "day": "2010-10-05",
+    "revenue": 55162.92,
+    "orders": 116,
+    "customers": 101
+  },
+  {
+    "day": "2010-10-06",
+    "revenue": 30468.72,
+    "orders": 59,
+    "customers": 58
+  },
+  {
+    "day": "2010-10-07",
+    "revenue": 47747.15,
+    "orders": 112,
+    "customers": 92
+  },
+  {
+    "day": "2010-10-08",
+    "revenue": 51889.25,
+    "orders": 65,
+    "customers": 58
+  },
+  {
+    "day": "2010-10-10",
+    "revenue": 23190.78,
+    "orders": 67,
+    "customers": 59
+  },
+  {
+    "day": "2010-10-11",
+    "revenue": 40044.11,
+    "orders": 85,
+    "customers": 78
+  },
+  {
+    "day": "2010-10-12",
+    "revenue": 46646.97,
+    "orders": 104,
+    "customers": 94
+  },
+  {
+    "day": "2010-10-13",
+    "revenue": 51841.53,
+    "orders": 81,
+    "customers": 74
+  },
+  {
+    "day": "2010-10-14",
+    "revenue": 87053.6,
+    "orders": 96,
+    "customers": 81
+  },
+  {
+    "day": "2010-10-15",
+    "revenue": 42504.37,
+    "orders": 95,
+    "customers": 80
+  },
+  {
+    "day": "2010-10-17",
+    "revenue": 31444.71,
+    "orders": 70,
+    "customers": 62
+  },
+  {
+    "day": "2010-10-18",
+    "revenue": 36716.08,
+    "orders": 97,
+    "customers": 90
+  },
+  {
+    "day": "2010-10-19",
+    "revenue": 46626.44,
+    "orders": 73,
+    "customers": 65
+  },
+  {
+    "day": "2010-10-20",
+    "revenue": 43661.16,
+    "orders": 103,
+    "customers": 89
+  },
+  {
+    "day": "2010-10-21",
+    "revenue": 33093.23,
+    "orders": 89,
+    "customers": 76
+  },
+  {
+    "day": "2010-10-22",
+    "revenue": 32940.68,
+    "orders": 77,
+    "customers": 68
+  },
+  {
+    "day": "2010-10-24",
+    "revenue": 28872.3,
+    "orders": 82,
+    "customers": 74
+  },
+  {
+    "day": "2010-10-25",
+    "revenue": 28007.03,
+    "orders": 69,
+    "customers": 63
+  },
+  {
+    "day": "2010-10-26",
+    "revenue": 42670.75,
+    "orders": 98,
+    "customers": 85
+  },
+  {
+    "day": "2010-10-27",
+    "revenue": 30541.15,
+    "orders": 70,
+    "customers": 66
+  },
+  {
+    "day": "2010-10-28",
+    "revenue": 30771.4,
+    "orders": 57,
+    "customers": 52
+  },
+  {
+    "day": "2010-10-29",
+    "revenue": 36158.84,
+    "orders": 71,
+    "customers": 62
+  },
+  {
+    "day": "2010-10-31",
+    "revenue": 30345.65,
+    "orders": 82,
+    "customers": 79
+  },
+  {
+    "day": "2010-11-01",
+    "revenue": 20819.29,
+    "orders": 52,
+    "customers": 47
+  },
+  {
+    "day": "2010-11-02",
+    "revenue": 43000.14,
+    "orders": 86,
+    "customers": 79
+  },
+  {
+    "day": "2010-11-03",
+    "revenue": 42957.23,
+    "orders": 86,
+    "customers": 75
+  },
+  {
+    "day": "2010-11-04",
+    "revenue": 84346.78,
+    "orders": 126,
+    "customers": 104
+  },
+  {
+    "day": "2010-11-05",
+    "revenue": 40980.13,
+    "orders": 65,
+    "customers": 57
+  },
+  {
+    "day": "2010-11-07",
+    "revenue": 31829.1,
+    "orders": 81,
+    "customers": 75
+  },
+  {
+    "day": "2010-11-08",
+    "revenue": 32430.4,
+    "orders": 76,
+    "customers": 67
+  },
+  {
+    "day": "2010-11-09",
+    "revenue": 53303.03,
+    "orders": 113,
+    "customers": 99
+  },
+  {
+    "day": "2010-11-10",
+    "revenue": 73828.15,
+    "orders": 127,
+    "customers": 100
+  },
+  {
+    "day": "2010-11-11",
+    "revenue": 59838.16,
+    "orders": 119,
+    "customers": 99
+  },
+  {
+    "day": "2010-11-12",
+    "revenue": 36207.04,
+    "orders": 99,
+    "customers": 81
+  },
+  {
+    "day": "2010-11-14",
+    "revenue": 28344.41,
+    "orders": 86,
+    "customers": 76
+  },
+  {
+    "day": "2010-11-15",
+    "revenue": 43238.62,
+    "orders": 98,
+    "customers": 83
+  },
+  {
+    "day": "2010-11-16",
+    "revenue": 64020.54,
+    "orders": 106,
+    "customers": 95
+  },
+  {
+    "day": "2010-11-17",
+    "revenue": 45982.43,
+    "orders": 113,
+    "customers": 97
+  },
+  {
+    "day": "2010-11-18",
+    "revenue": 37235.14,
+    "orders": 96,
+    "customers": 91
+  },
+  {
+    "day": "2010-11-19",
+    "revenue": 40229.5,
+    "orders": 100,
+    "customers": 90
+  },
+  {
+    "day": "2010-11-21",
+    "revenue": 32448.6,
+    "orders": 96,
+    "customers": 89
+  },
+  {
+    "day": "2010-11-22",
+    "revenue": 31847.63,
+    "orders": 89,
+    "customers": 80
+  },
+  {
+    "day": "2010-11-23",
+    "revenue": 50010.02,
+    "orders": 128,
+    "customers": 112
+  },
+  {
+    "day": "2010-11-24",
+    "revenue": 41375.81,
+    "orders": 117,
+    "customers": 104
+  },
+  {
+    "day": "2010-11-25",
+    "revenue": 68099.3,
+    "orders": 146,
+    "customers": 133
+  },
+  {
+    "day": "2010-11-26",
+    "revenue": 28995.48,
+    "orders": 78,
+    "customers": 72
+  },
+  {
+    "day": "2010-11-28",
+    "revenue": 27587.26,
+    "orders": 90,
+    "customers": 83
+  },
+  {
+    "day": "2010-11-29",
+    "revenue": 63425.28,
+    "orders": 98,
+    "customers": 89
+  },
+  {
+    "day": "2010-11-30",
+    "revenue": 49956.57,
+    "orders": 116,
+    "customers": 101
+  },
+  {
+    "day": "2010-12-01",
+    "revenue": 92752.98,
+    "orders": 121,
+    "customers": 95
+  },
+  {
+    "day": "2010-12-02",
+    "revenue": 94633.06,
+    "orders": 137,
+    "customers": 99
+  },
+  {
+    "day": "2010-12-03",
+    "revenue": 47843.42,
+    "orders": 57,
+    "customers": 50
+  },
+  {
+    "day": "2010-12-05",
+    "revenue": 63543.2,
+    "orders": 87,
+    "customers": 75
+  },
+  {
+    "day": "2010-12-06",
+    "revenue": 62431.28,
+    "orders": 94,
+    "customers": 82
+  },
+  {
+    "day": "2010-12-07",
+    "revenue": 107590.62,
+    "orders": 71,
+    "customers": 65
+  },
+  {
+    "day": "2010-12-08",
+    "revenue": 78497.64,
+    "orders": 111,
+    "customers": 99
+  },
+  {
+    "day": "2010-12-09",
+    "revenue": 76463.8,
+    "orders": 98,
+    "customers": 90
+  },
+  {
+    "day": "2010-12-10",
+    "revenue": 33650.28,
+    "orders": 72,
+    "customers": 53
+  },
+  {
+    "day": "2010-12-12",
+    "revenue": 17305.77,
+    "orders": 43,
+    "customers": 42
+  },
+  {
+    "day": "2010-12-13",
+    "revenue": 27642.68,
+    "orders": 64,
+    "customers": 59
+  },
+  {
+    "day": "2010-12-14",
+    "revenue": 29322.3,
+    "orders": 81,
+    "customers": 73
+  },
+  {
+    "day": "2010-12-15",
+    "revenue": 30311.72,
+    "orders": 70,
+    "customers": 66
+  },
+  {
+    "day": "2010-12-16",
+    "revenue": 49030.08,
+    "orders": 113,
+    "customers": 98
+  },
+  {
+    "day": "2010-12-17",
+    "revenue": 20046.56,
+    "orders": 55,
+    "customers": 51
+  },
+  {
+    "day": "2010-12-19",
+    "revenue": 7417.39,
+    "orders": 18,
+    "customers": 17
+  },
+  {
+    "day": "2010-12-20",
+    "revenue": 19621.96,
+    "orders": 50,
+    "customers": 41
+  },
+  {
+    "day": "2010-12-21",
+    "revenue": 15951.66,
+    "orders": 27,
+    "customers": 23
+  },
+  {
+    "day": "2010-12-22",
+    "revenue": 4886.52,
+    "orders": 14,
+    "customers": 13
+  },
+  {
+    "day": "2010-12-23",
+    "revenue": 5648.97,
+    "orders": 17,
+    "customers": 15
+  },
+  {
+    "day": "2011-01-04",
+    "revenue": 12125.46,
+    "orders": 35,
+    "customers": 34
+  },
+  {
+    "day": "2011-01-05",
+    "revenue": 28803.63,
+    "orders": 48,
+    "customers": 45
+  },
+  {
+    "day": "2011-01-06",
+    "revenue": 34360.19,
+    "orders": 46,
+    "customers": 45
+  },
+  {
+    "day": "2011-01-07",
+    "revenue": 23797.79,
+    "orders": 47,
+    "customers": 45
+  },
+  {
+    "day": "2011-01-09",
+    "revenue": 15778.2,
+    "orders": 48,
+    "customers": 48
+  },
+  {
+    "day": "2011-01-10",
+    "revenue": 15346.83,
+    "orders": 34,
+    "customers": 32
+  },
+  {
+    "day": "2011-01-11",
+    "revenue": 60268.78,
+    "orders": 53,
+    "customers": 47
+  },
+  {
+    "day": "2011-01-12",
+    "revenue": 17153.94,
+    "orders": 42,
+    "customers": 42
+  },
+  {
+    "day": "2011-01-13",
+    "revenue": 15171.31,
+    "orders": 41,
+    "customers": 41
+  },
+  {
+    "day": "2011-01-14",
+    "revenue": 39532.02,
+    "orders": 38,
+    "customers": 37
+  },
+  {
+    "day": "2011-01-16",
+    "revenue": 7242.06,
+    "orders": 25,
+    "customers": 22
+  },
+  {
+    "day": "2011-01-17",
+    "revenue": 16597.35,
+    "orders": 46,
+    "customers": 45
+  },
+  {
+    "day": "2011-01-18",
+    "revenue": 87589.11,
+    "orders": 32,
+    "customers": 31
+  },
+  {
+    "day": "2011-01-19",
+    "revenue": 21646.78,
+    "orders": 33,
+    "customers": 33
+  },
+  {
+    "day": "2011-01-20",
+    "revenue": 15244.73,
+    "orders": 34,
+    "customers": 30
+  },
+  {
+    "day": "2011-01-21",
+    "revenue": 24279.76,
+    "orders": 34,
+    "customers": 32
+  },
+  {
+    "day": "2011-01-23",
+    "revenue": 10400.25,
+    "orders": 27,
+    "customers": 27
+  },
+  {
+    "day": "2011-01-24",
+    "revenue": 17632.37,
+    "orders": 44,
+    "customers": 43
+  },
+  {
+    "day": "2011-01-25",
+    "revenue": 24119.3,
+    "orders": 59,
+    "customers": 57
+  },
+  {
+    "day": "2011-01-26",
+    "revenue": 17490.82,
+    "orders": 53,
+    "customers": 49
+  },
+  {
+    "day": "2011-01-27",
+    "revenue": 22157.03,
+    "orders": 50,
+    "customers": 50
+  },
+  {
+    "day": "2011-01-28",
+    "revenue": 17273.5,
+    "orders": 37,
+    "customers": 36
+  },
+  {
+    "day": "2011-01-30",
+    "revenue": 6615.75,
+    "orders": 24,
+    "customers": 22
+  },
+  {
+    "day": "2011-01-31",
+    "revenue": 18818.08,
+    "orders": 57,
+    "customers": 50
+  },
+  {
+    "day": "2011-02-01",
+    "revenue": 26376.5,
+    "orders": 58,
+    "customers": 57
+  },
+  {
+    "day": "2011-02-02",
+    "revenue": 17145.23,
+    "orders": 56,
+    "customers": 55
+  },
+  {
+    "day": "2011-02-03",
+    "revenue": 22184.0,
+    "orders": 45,
+    "customers": 44
+  },
+  {
+    "day": "2011-02-04",
+    "revenue": 18114.31,
+    "orders": 45,
+    "customers": 41
+  },
+  {
+    "day": "2011-02-06",
+    "revenue": 3457.11,
+    "orders": 11,
+    "customers": 11
+  },
+  {
+    "day": "2011-02-07",
+    "revenue": 23415.01,
+    "orders": 38,
+    "customers": 35
+  },
+  {
+    "day": "2011-02-08",
+    "revenue": 14168.03,
+    "orders": 38,
+    "customers": 37
+  },
+  {
+    "day": "2011-02-09",
+    "revenue": 11920.78,
+    "orders": 23,
+    "customers": 22
+  },
+  {
+    "day": "2011-02-10",
+    "revenue": 14198.51,
+    "orders": 40,
+    "customers": 39
+  },
+  {
+    "day": "2011-02-11",
+    "revenue": 18599.46,
+    "orders": 38,
+    "customers": 34
+  },
+  {
+    "day": "2011-02-13",
+    "revenue": 5713.63,
+    "orders": 20,
+    "customers": 20
+  },
+  {
+    "day": "2011-02-14",
+    "revenue": 23003.99,
+    "orders": 36,
+    "customers": 36
+  },
+  {
+    "day": "2011-02-15",
+    "revenue": 37784.65,
+    "orders": 53,
+    "customers": 47
+  },
+  {
+    "day": "2011-02-16",
+    "revenue": 23499.22,
+    "orders": 62,
+    "customers": 56
+  },
+  {
+    "day": "2011-02-17",
+    "revenue": 17674.79,
+    "orders": 55,
+    "customers": 50
+  },
+  {
+    "day": "2011-02-18",
+    "revenue": 14463.06,
+    "orders": 35,
+    "customers": 34
+  },
+  {
+    "day": "2011-02-20",
+    "revenue": 9624.69,
+    "orders": 26,
+    "customers": 26
+  },
+  {
+    "day": "2011-02-21",
+    "revenue": 32801.73,
+    "orders": 33,
+    "customers": 31
+  },
+  {
+    "day": "2011-02-22",
+    "revenue": 29160.48,
+    "orders": 50,
+    "customers": 47
+  },
+  {
+    "day": "2011-02-23",
+    "revenue": 19348.07,
+    "orders": 53,
+    "customers": 49
+  },
+  {
+    "day": "2011-02-24",
+    "revenue": 21472.89,
+    "orders": 53,
+    "customers": 52
+  },
+  {
+    "day": "2011-02-25",
+    "revenue": 18377.69,
+    "orders": 45,
+    "customers": 42
+  },
+  {
+    "day": "2011-02-27",
+    "revenue": 9526.5,
+    "orders": 33,
+    "customers": 31
+  },
+  {
+    "day": "2011-02-28",
+    "revenue": 15107.02,
+    "orders": 51,
+    "customers": 49
+  },
+  {
+    "day": "2011-03-01",
+    "revenue": 23631.87,
+    "orders": 56,
+    "customers": 52
+  },
+  {
+    "day": "2011-03-02",
+    "revenue": 18686.99,
+    "orders": 42,
+    "customers": 40
+  },
+  {
+    "day": "2011-03-03",
+    "revenue": 32855.05,
+    "orders": 47,
+    "customers": 46
+  },
+  {
+    "day": "2011-03-04",
+    "revenue": 17322.47,
+    "orders": 45,
+    "customers": 38
+  },
+  {
+    "day": "2011-03-06",
+    "revenue": 9997.42,
+    "orders": 26,
+    "customers": 24
+  },
+  {
+    "day": "2011-03-07",
+    "revenue": 20285.68,
+    "orders": 58,
+    "customers": 49
+  },
+  {
+    "day": "2011-03-08",
+    "revenue": 22230.61,
+    "orders": 44,
+    "customers": 41
+  },
+  {
+    "day": "2011-03-09",
+    "revenue": 20345.87,
+    "orders": 51,
+    "customers": 47
+  },
+  {
+    "day": "2011-03-10",
+    "revenue": 24431.72,
+    "orders": 52,
+    "customers": 46
+  },
+  {
+    "day": "2011-03-11",
+    "revenue": 20896.0,
+    "orders": 48,
+    "customers": 42
+  },
+  {
+    "day": "2011-03-13",
+    "revenue": 4148.12,
+    "orders": 16,
+    "customers": 16
+  },
+  {
+    "day": "2011-03-14",
+    "revenue": 26009.25,
+    "orders": 48,
+    "customers": 41
+  },
+  {
+    "day": "2011-03-15",
+    "revenue": 14936.43,
+    "orders": 41,
+    "customers": 40
+  },
+  {
+    "day": "2011-03-16",
+    "revenue": 21820.66,
+    "orders": 50,
+    "customers": 46
+  },
+  {
+    "day": "2011-03-17",
+    "revenue": 32028.94,
+    "orders": 56,
+    "customers": 51
+  },
+  {
+    "day": "2011-03-18",
+    "revenue": 23398.74,
+    "orders": 52,
+    "customers": 48
+  },
+  {
+    "day": "2011-03-20",
+    "revenue": 20084.8,
+    "orders": 57,
+    "customers": 56
+  },
+  {
+    "day": "2011-03-21",
+    "revenue": 16051.05,
+    "orders": 48,
+    "customers": 47
+  },
+  {
+    "day": "2011-03-22",
+    "revenue": 19064.29,
+    "orders": 41,
+    "customers": 40
+  },
+  {
+    "day": "2011-03-23",
+    "revenue": 21578.8,
+    "orders": 59,
+    "customers": 55
+  },
+  {
+    "day": "2011-03-24",
+    "revenue": 36697.14,
+    "orders": 68,
+    "customers": 63
+  },
+  {
+    "day": "2011-03-25",
+    "revenue": 27302.75,
+    "orders": 52,
+    "customers": 45
+  },
+  {
+    "day": "2011-03-27",
+    "revenue": 9224.4,
+    "orders": 31,
+    "customers": 31
+  },
+  {
+    "day": "2011-03-28",
+    "revenue": 20005.16,
+    "orders": 58,
+    "customers": 52
+  },
+  {
+    "day": "2011-03-29",
+    "revenue": 37190.52,
+    "orders": 50,
+    "customers": 46
+  },
+  {
+    "day": "2011-03-30",
+    "revenue": 29587.42,
+    "orders": 66,
+    "customers": 63
+  },
+  {
+    "day": "2011-03-31",
+    "revenue": 25688.61,
+    "orders": 59,
+    "customers": 57
+  },
+  {
+    "day": "2011-04-01",
+    "revenue": 24586.82,
+    "orders": 68,
+    "customers": 59
+  },
+  {
+    "day": "2011-04-03",
+    "revenue": 6918.5,
+    "orders": 19,
+    "customers": 18
+  },
+  {
+    "day": "2011-04-04",
+    "revenue": 29017.77,
+    "orders": 54,
+    "customers": 49
+  },
+  {
+    "day": "2011-04-05",
+    "revenue": 28759.37,
+    "orders": 46,
+    "customers": 45
+  },
+  {
+    "day": "2011-04-06",
+    "revenue": 12722.32,
+    "orders": 37,
+    "customers": 36
+  },
+  {
+    "day": "2011-04-07",
+    "revenue": 16827.77,
+    "orders": 61,
+    "customers": 57
+  },
+  {
+    "day": "2011-04-08",
+    "revenue": 22720.71,
+    "orders": 65,
+    "customers": 63
+  },
+  {
+    "day": "2011-04-10",
+    "revenue": 9913.98,
+    "orders": 32,
+    "customers": 31
+  },
+  {
+    "day": "2011-04-11",
+    "revenue": 20184.14,
+    "orders": 59,
+    "customers": 54
+  },
+  {
+    "day": "2011-04-12",
+    "revenue": 24023.96,
+    "orders": 60,
+    "customers": 54
+  },
+  {
+    "day": "2011-04-13",
+    "revenue": 24484.42,
+    "orders": 60,
+    "customers": 54
+  },
+  {
+    "day": "2011-04-14",
+    "revenue": 35702.7,
+    "orders": 82,
+    "customers": 75
+  },
+  {
+    "day": "2011-04-15",
+    "revenue": 18021.48,
+    "orders": 41,
+    "customers": 40
+  },
+  {
+    "day": "2011-04-17",
+    "revenue": 12725.5,
+    "orders": 42,
+    "customers": 39
+  },
+  {
+    "day": "2011-04-18",
+    "revenue": 43713.56,
+    "orders": 62,
+    "customers": 56
+  },
+  {
+    "day": "2011-04-19",
+    "revenue": 18853.04,
+    "orders": 53,
+    "customers": 52
+  },
+  {
+    "day": "2011-04-20",
+    "revenue": 25718.95,
+    "orders": 62,
+    "customers": 58
+  },
+  {
+    "day": "2011-04-21",
+    "revenue": 27804.47,
+    "orders": 71,
+    "customers": 64
+  },
+  {
+    "day": "2011-04-26",
+    "revenue": 21584.41,
+    "orders": 59,
+    "customers": 55
+  },
+  {
+    "day": "2011-04-27",
+    "revenue": 23593.2,
+    "orders": 61,
+    "customers": 56
+  },
+  {
+    "day": "2011-04-28",
+    "revenue": 21323.29,
+    "orders": 55,
+    "customers": 49
+  },
+  {
+    "day": "2011-05-01",
+    "revenue": 6973.66,
+    "orders": 18,
+    "customers": 18
+  },
+  {
+    "day": "2011-05-03",
+    "revenue": 28910.41,
+    "orders": 59,
+    "customers": 50
+  },
+  {
+    "day": "2011-05-04",
+    "revenue": 27532.0,
+    "orders": 62,
+    "customers": 55
+  },
+  {
+    "day": "2011-05-05",
+    "revenue": 25232.67,
+    "orders": 82,
+    "customers": 76
+  },
+  {
+    "day": "2011-05-06",
+    "revenue": 30786.7,
+    "orders": 77,
+    "customers": 64
+  },
+  {
+    "day": "2011-05-08",
+    "revenue": 18867.4,
+    "orders": 63,
+    "customers": 58
+  },
+  {
+    "day": "2011-05-09",
+    "revenue": 21624.41,
+    "orders": 63,
+    "customers": 59
+  },
+  {
+    "day": "2011-05-10",
+    "revenue": 29870.7,
+    "orders": 70,
+    "customers": 63
+  },
+  {
+    "day": "2011-05-11",
+    "revenue": 31887.7,
+    "orders": 73,
+    "customers": 56
+  },
+  {
+    "day": "2011-05-12",
+    "revenue": 59901.56,
+    "orders": 84,
+    "customers": 68
+  },
+  {
+    "day": "2011-05-13",
+    "revenue": 25885.83,
+    "orders": 67,
+    "customers": 52
+  },
+  {
+    "day": "2011-05-15",
+    "revenue": 9680.05,
+    "orders": 30,
+    "customers": 29
+  },
+  {
+    "day": "2011-05-16",
+    "revenue": 35706.7,
+    "orders": 64,
+    "customers": 52
+  },
+  {
+    "day": "2011-05-17",
+    "revenue": 46406.09,
+    "orders": 72,
+    "customers": 56
+  },
+  {
+    "day": "2011-05-18",
+    "revenue": 32882.87,
+    "orders": 71,
+    "customers": 62
+  },
+  {
+    "day": "2011-05-19",
+    "revenue": 31553.51,
+    "orders": 92,
+    "customers": 82
+  },
+  {
+    "day": "2011-05-20",
+    "revenue": 25489.66,
+    "orders": 69,
+    "customers": 58
+  },
+  {
+    "day": "2011-05-22",
+    "revenue": 24231.09,
+    "orders": 61,
+    "customers": 57
+  },
+  {
+    "day": "2011-05-23",
+    "revenue": 31307.49,
+    "orders": 64,
+    "customers": 55
+  },
+  {
+    "day": "2011-05-24",
+    "revenue": 32462.48,
+    "orders": 62,
+    "customers": 53
+  },
+  {
+    "day": "2011-05-25",
+    "revenue": 21884.93,
+    "orders": 60,
+    "customers": 52
+  },
+  {
+    "day": "2011-05-26",
+    "revenue": 32764.38,
+    "orders": 61,
+    "customers": 50
+  },
+  {
+    "day": "2011-05-27",
+    "revenue": 21163.32,
+    "orders": 56,
+    "customers": 49
+  },
+  {
+    "day": "2011-05-29",
+    "revenue": 7394.3,
+    "orders": 24,
+    "customers": 20
+  },
+  {
+    "day": "2011-05-31",
+    "revenue": 18194.65,
+    "orders": 51,
+    "customers": 48
+  },
+  {
+    "day": "2011-06-01",
+    "revenue": 15390.89,
+    "orders": 37,
+    "customers": 35
+  },
+  {
+    "day": "2011-06-02",
+    "revenue": 28104.56,
+    "orders": 42,
+    "customers": 33
+  },
+  {
+    "day": "2011-06-03",
+    "revenue": 15042.26,
+    "orders": 41,
+    "customers": 37
+  },
+  {
+    "day": "2011-06-05",
+    "revenue": 25639.54,
+    "orders": 67,
+    "customers": 62
+  },
+  {
+    "day": "2011-06-06",
+    "revenue": 16290.98,
+    "orders": 56,
+    "customers": 54
+  },
+  {
+    "day": "2011-06-07",
+    "revenue": 33908.26,
+    "orders": 71,
+    "customers": 68
+  },
+  {
+    "day": "2011-06-08",
+    "revenue": 30192.13,
+    "orders": 82,
+    "customers": 71
+  },
+  {
+    "day": "2011-06-09",
+    "revenue": 42910.38,
+    "orders": 82,
+    "customers": 76
+  },
+  {
+    "day": "2011-06-10",
+    "revenue": 58245.12,
+    "orders": 44,
+    "customers": 41
+  },
+  {
+    "day": "2011-06-12",
+    "revenue": 12472.21,
+    "orders": 38,
+    "customers": 38
+  },
+  {
+    "day": "2011-06-13",
+    "revenue": 19719.11,
+    "orders": 52,
+    "customers": 49
+  },
+  {
+    "day": "2011-06-14",
+    "revenue": 33334.47,
+    "orders": 52,
+    "customers": 42
+  },
+  {
+    "day": "2011-06-15",
+    "revenue": 45077.54,
+    "orders": 50,
+    "customers": 42
+  },
+  {
+    "day": "2011-06-16",
+    "revenue": 32307.77,
+    "orders": 81,
+    "customers": 74
+  },
+  {
+    "day": "2011-06-17",
+    "revenue": 19059.23,
+    "orders": 46,
+    "customers": 35
+  },
+  {
+    "day": "2011-06-19",
+    "revenue": 22442.18,
+    "orders": 60,
+    "customers": 57
+  },
+  {
+    "day": "2011-06-20",
+    "revenue": 26136.73,
+    "orders": 59,
+    "customers": 49
+  },
+  {
+    "day": "2011-06-21",
+    "revenue": 19850.66,
+    "orders": 48,
+    "customers": 45
+  },
+  {
+    "day": "2011-06-22",
+    "revenue": 21170.42,
+    "orders": 57,
+    "customers": 55
+  },
+  {
+    "day": "2011-06-23",
+    "revenue": 22556.81,
+    "orders": 69,
+    "customers": 64
+  },
+  {
+    "day": "2011-06-24",
+    "revenue": 16021.71,
+    "orders": 45,
+    "customers": 40
+  },
+  {
+    "day": "2011-06-26",
+    "revenue": 7082.49,
+    "orders": 26,
+    "customers": 24
+  },
+  {
+    "day": "2011-06-27",
+    "revenue": 13412.2,
+    "orders": 35,
+    "customers": 31
+  },
+  {
+    "day": "2011-06-28",
+    "revenue": 30532.37,
+    "orders": 49,
+    "customers": 41
+  },
+  {
+    "day": "2011-06-29",
+    "revenue": 12570.63,
+    "orders": 39,
+    "customers": 36
+  },
+  {
+    "day": "2011-06-30",
+    "revenue": 41743.04,
+    "orders": 65,
+    "customers": 55
+  },
+  {
+    "day": "2011-07-01",
+    "revenue": 12189.29,
+    "orders": 42,
+    "customers": 35
+  },
+  {
+    "day": "2011-07-03",
+    "revenue": 6032.39,
+    "orders": 25,
+    "customers": 24
+  },
+  {
+    "day": "2011-07-04",
+    "revenue": 30985.17,
+    "orders": 37,
+    "customers": 32
+  },
+  {
+    "day": "2011-07-05",
+    "revenue": 25992.26,
+    "orders": 64,
+    "customers": 58
+  },
+  {
+    "day": "2011-07-06",
+    "revenue": 22960.48,
+    "orders": 66,
+    "customers": 61
+  },
+  {
+    "day": "2011-07-07",
+    "revenue": 27893.66,
+    "orders": 73,
+    "customers": 67
+  },
+  {
+    "day": "2011-07-08",
+    "revenue": 17558.3,
+    "orders": 46,
+    "customers": 42
+  },
+  {
+    "day": "2011-07-10",
+    "revenue": 5993.87,
+    "orders": 24,
+    "customers": 20
+  },
+  {
+    "day": "2011-07-11",
+    "revenue": 20080.03,
+    "orders": 48,
+    "customers": 43
+  },
+  {
+    "day": "2011-07-12",
+    "revenue": 17948.19,
+    "orders": 45,
+    "customers": 41
+  },
+  {
+    "day": "2011-07-13",
+    "revenue": 19432.85,
+    "orders": 56,
+    "customers": 50
+  },
+  {
+    "day": "2011-07-14",
+    "revenue": 32020.91,
+    "orders": 69,
+    "customers": 61
+  },
+  {
+    "day": "2011-07-15",
+    "revenue": 11857.3,
+    "orders": 37,
+    "customers": 34
+  },
+  {
+    "day": "2011-07-17",
+    "revenue": 16958.6,
+    "orders": 50,
+    "customers": 45
+  },
+  {
+    "day": "2011-07-18",
+    "revenue": 22018.36,
+    "orders": 46,
+    "customers": 45
+  },
+  {
+    "day": "2011-07-19",
+    "revenue": 46599.08,
+    "orders": 62,
+    "customers": 57
+  },
+  {
+    "day": "2011-07-20",
+    "revenue": 27076.97,
+    "orders": 53,
+    "customers": 47
+  },
+  {
+    "day": "2011-07-21",
+    "revenue": 30394.71,
+    "orders": 70,
+    "customers": 59
+  },
+  {
+    "day": "2011-07-22",
+    "revenue": 14633.77,
+    "orders": 37,
+    "customers": 34
+  },
+  {
+    "day": "2011-07-24",
+    "revenue": 26796.92,
+    "orders": 57,
+    "customers": 53
+  },
+  {
+    "day": "2011-07-25",
+    "revenue": 19687.31,
+    "orders": 53,
+    "customers": 49
+  },
+  {
+    "day": "2011-07-26",
+    "revenue": 17293.0,
+    "orders": 46,
+    "customers": 44
+  },
+  {
+    "day": "2011-07-27",
+    "revenue": 22855.32,
+    "orders": 44,
+    "customers": 39
+  },
+  {
+    "day": "2011-07-28",
+    "revenue": 54198.37,
+    "orders": 78,
+    "customers": 68
+  },
+  {
+    "day": "2011-07-29",
+    "revenue": 17240.61,
+    "orders": 62,
+    "customers": 57
+  },
+  {
+    "day": "2011-07-31",
+    "revenue": 33393.29,
+    "orders": 41,
+    "customers": 37
+  },
+  {
+    "day": "2011-08-01",
+    "revenue": 19808.4,
+    "orders": 39,
+    "customers": 35
+  },
+  {
+    "day": "2011-08-02",
+    "revenue": 20277.05,
+    "orders": 41,
+    "customers": 39
+  },
+  {
+    "day": "2011-08-03",
+    "revenue": 26617.77,
+    "orders": 62,
+    "customers": 59
+  },
+  {
+    "day": "2011-08-04",
+    "revenue": 62079.61,
+    "orders": 79,
+    "customers": 76
+  },
+  {
+    "day": "2011-08-05",
+    "revenue": 19825.4,
+    "orders": 52,
+    "customers": 47
+  },
+  {
+    "day": "2011-08-07",
+    "revenue": 7576.96,
+    "orders": 29,
+    "customers": 28
+  },
+  {
+    "day": "2011-08-08",
+    "revenue": 19758.62,
+    "orders": 38,
+    "customers": 38
+  },
+  {
+    "day": "2011-08-09",
+    "revenue": 25957.12,
+    "orders": 40,
+    "customers": 38
+  },
+  {
+    "day": "2011-08-10",
+    "revenue": 19861.56,
+    "orders": 43,
+    "customers": 42
+  },
+  {
+    "day": "2011-08-11",
+    "revenue": 54386.17,
+    "orders": 64,
+    "customers": 58
+  },
+  {
+    "day": "2011-08-12",
+    "revenue": 17970.17,
+    "orders": 46,
+    "customers": 40
+  },
+  {
+    "day": "2011-08-14",
+    "revenue": 5718.57,
+    "orders": 25,
+    "customers": 21
+  },
+  {
+    "day": "2011-08-15",
+    "revenue": 17243.97,
+    "orders": 48,
+    "customers": 46
+  },
+  {
+    "day": "2011-08-16",
+    "revenue": 16077.84,
+    "orders": 50,
+    "customers": 44
+  },
+  {
+    "day": "2011-08-17",
+    "revenue": 48769.64,
+    "orders": 51,
+    "customers": 45
+  },
+  {
+    "day": "2011-08-18",
+    "revenue": 54082.81,
+    "orders": 67,
+    "customers": 64
+  },
+  {
+    "day": "2011-08-19",
+    "revenue": 17339.59,
+    "orders": 55,
+    "customers": 54
+  },
+  {
+    "day": "2011-08-21",
+    "revenue": 14566.84,
+    "orders": 38,
+    "customers": 36
+  },
+  {
+    "day": "2011-08-22",
+    "revenue": 29623.18,
+    "orders": 63,
+    "customers": 57
+  },
+  {
+    "day": "2011-08-23",
+    "revenue": 22399.11,
+    "orders": 60,
+    "customers": 56
+  },
+  {
+    "day": "2011-08-24",
+    "revenue": 38617.01,
+    "orders": 72,
+    "customers": 59
+  },
+  {
+    "day": "2011-08-25",
+    "revenue": 22495.29,
+    "orders": 72,
+    "customers": 68
+  },
+  {
+    "day": "2011-08-26",
+    "revenue": 24111.64,
+    "orders": 44,
+    "customers": 41
+  },
+  {
+    "day": "2011-08-28",
+    "revenue": 10805.03,
+    "orders": 37,
+    "customers": 36
+  },
+  {
+    "day": "2011-08-30",
+    "revenue": 8833.71,
+    "orders": 23,
+    "customers": 23
+  },
+  {
+    "day": "2011-08-31",
+    "revenue": 20540.84,
+    "orders": 42,
+    "customers": 39
+  },
+  {
+    "day": "2011-09-01",
+    "revenue": 37370.15,
+    "orders": 76,
+    "customers": 69
+  },
+  {
+    "day": "2011-09-02",
+    "revenue": 30297.05,
+    "orders": 64,
+    "customers": 58
+  },
+  {
+    "day": "2011-09-04",
+    "revenue": 17005.03,
+    "orders": 49,
+    "customers": 45
+  },
+  {
+    "day": "2011-09-05",
+    "revenue": 35698.7,
+    "orders": 67,
+    "customers": 57
+  },
+  {
+    "day": "2011-09-06",
+    "revenue": 25495.82,
+    "orders": 61,
+    "customers": 54
+  },
+  {
+    "day": "2011-09-07",
+    "revenue": 21967.42,
+    "orders": 46,
+    "customers": 42
+  },
+  {
+    "day": "2011-09-08",
+    "revenue": 23188.3,
+    "orders": 72,
+    "customers": 63
+  },
+  {
+    "day": "2011-09-09",
+    "revenue": 25142.15,
+    "orders": 58,
+    "customers": 52
+  },
+  {
+    "day": "2011-09-11",
+    "revenue": 35511.67,
+    "orders": 75,
+    "customers": 68
+  },
+  {
+    "day": "2011-09-12",
+    "revenue": 27989.4,
+    "orders": 67,
+    "customers": 62
+  },
+  {
+    "day": "2011-09-13",
+    "revenue": 48162.25,
+    "orders": 63,
+    "customers": 61
+  },
+  {
+    "day": "2011-09-14",
+    "revenue": 22027.95,
+    "orders": 65,
+    "customers": 58
+  },
+  {
+    "day": "2011-09-15",
+    "revenue": 71993.67,
+    "orders": 79,
+    "customers": 70
+  },
+  {
+    "day": "2011-09-16",
+    "revenue": 23248.98,
+    "orders": 46,
+    "customers": 44
+  },
+  {
+    "day": "2011-09-18",
+    "revenue": 15745.73,
+    "orders": 27,
+    "customers": 25
+  },
+  {
+    "day": "2011-09-19",
+    "revenue": 46607.22,
+    "orders": 69,
+    "customers": 63
+  },
+  {
+    "day": "2011-09-20",
+    "revenue": 103435.81,
+    "orders": 67,
+    "customers": 53
+  },
+  {
+    "day": "2011-09-21",
+    "revenue": 38503.06,
+    "orders": 67,
+    "customers": 65
+  },
+  {
+    "day": "2011-09-22",
+    "revenue": 57869.36,
+    "orders": 111,
+    "customers": 94
+  },
+  {
+    "day": "2011-09-23",
+    "revenue": 31781.1,
+    "orders": 58,
+    "customers": 56
+  },
+  {
+    "day": "2011-09-25",
+    "revenue": 31372.66,
+    "orders": 75,
+    "customers": 74
+  },
+  {
+    "day": "2011-09-26",
+    "revenue": 29329.84,
+    "orders": 65,
+    "customers": 62
+  },
+  {
+    "day": "2011-09-27",
+    "revenue": 29274.36,
+    "orders": 75,
+    "customers": 67
+  },
+  {
+    "day": "2011-09-28",
+    "revenue": 39057.89,
+    "orders": 80,
+    "customers": 72
+  },
+  {
+    "day": "2011-09-29",
+    "revenue": 44729.37,
+    "orders": 103,
+    "customers": 93
+  },
+  {
+    "day": "2011-09-30",
+    "revenue": 40033.44,
+    "orders": 70,
+    "customers": 60
+  },
+  {
+    "day": "2011-10-02",
+    "revenue": 11582.95,
+    "orders": 34,
+    "customers": 32
+  },
+  {
+    "day": "2011-10-03",
+    "revenue": 62275.95,
+    "orders": 65,
+    "customers": 48
+  },
+  {
+    "day": "2011-10-04",
+    "revenue": 38690.2,
+    "orders": 74,
+    "customers": 65
+  },
+  {
+    "day": "2011-10-05",
+    "revenue": 74108.43,
+    "orders": 94,
+    "customers": 82
+  },
+  {
+    "day": "2011-10-06",
+    "revenue": 60387.8,
+    "orders": 116,
+    "customers": 98
+  },
+  {
+    "day": "2011-10-07",
+    "revenue": 49187.67,
+    "orders": 85,
+    "customers": 74
+  },
+  {
+    "day": "2011-10-09",
+    "revenue": 12466.81,
+    "orders": 38,
+    "customers": 35
+  },
+  {
+    "day": "2011-10-10",
+    "revenue": 43080.32,
+    "orders": 90,
+    "customers": 83
+  },
+  {
+    "day": "2011-10-11",
+    "revenue": 46436.77,
+    "orders": 78,
+    "customers": 69
+  },
+  {
+    "day": "2011-10-12",
+    "revenue": 27731.37,
+    "orders": 82,
+    "customers": 73
+  },
+  {
+    "day": "2011-10-13",
+    "revenue": 33039.18,
+    "orders": 74,
+    "customers": 67
+  },
+  {
+    "day": "2011-10-14",
+    "revenue": 32124.68,
+    "orders": 70,
+    "customers": 61
+  },
+  {
+    "day": "2011-10-16",
+    "revenue": 22010.96,
+    "orders": 35,
+    "customers": 32
+  },
+  {
+    "day": "2011-10-17",
+    "revenue": 47005.24,
+    "orders": 85,
+    "customers": 76
+  },
+  {
+    "day": "2011-10-18",
+    "revenue": 37302.4,
+    "orders": 77,
+    "customers": 73
+  },
+  {
+    "day": "2011-10-19",
+    "revenue": 37333.52,
+    "orders": 77,
+    "customers": 71
+  },
+  {
+    "day": "2011-10-20",
+    "revenue": 61064.06,
+    "orders": 86,
+    "customers": 76
+  },
+  {
+    "day": "2011-10-21",
+    "revenue": 60417.26,
+    "orders": 62,
+    "customers": 56
+  },
+  {
+    "day": "2011-10-23",
+    "revenue": 12339.16,
+    "orders": 42,
+    "customers": 39
+  },
+  {
+    "day": "2011-10-24",
+    "revenue": 39315.28,
+    "orders": 73,
+    "customers": 61
+  },
+  {
+    "day": "2011-10-25",
+    "revenue": 36235.95,
+    "orders": 72,
+    "customers": 65
+  },
+  {
+    "day": "2011-10-26",
+    "revenue": 34435.32,
+    "orders": 92,
+    "customers": 77
+  },
+  {
+    "day": "2011-10-27",
+    "revenue": 55837.14,
+    "orders": 104,
+    "customers": 91
+  },
+  {
+    "day": "2011-10-28",
+    "revenue": 37290.57,
+    "orders": 65,
+    "customers": 60
+  },
+  {
+    "day": "2011-10-30",
+    "revenue": 34571.23,
+    "orders": 96,
+    "customers": 88
+  },
+  {
+    "day": "2011-10-31",
+    "revenue": 33048.57,
+    "orders": 63,
+    "customers": 61
+  },
+  {
+    "day": "2011-11-01",
+    "revenue": 29132.81,
+    "orders": 76,
+    "customers": 74
+  },
+  {
+    "day": "2011-11-02",
+    "revenue": 38734.7,
+    "orders": 83,
+    "customers": 79
+  },
+  {
+    "day": "2011-11-03",
+    "revenue": 60672.11,
+    "orders": 100,
+    "customers": 86
+  },
+  {
+    "day": "2011-11-04",
+    "revenue": 56099.24,
+    "orders": 87,
+    "customers": 73
+  },
+  {
+    "day": "2011-11-06",
+    "revenue": 42941.34,
+    "orders": 101,
+    "customers": 88
+  },
+  {
+    "day": "2011-11-07",
+    "revenue": 28779.24,
+    "orders": 90,
+    "customers": 81
+  },
+  {
+    "day": "2011-11-08",
+    "revenue": 38295.12,
+    "orders": 99,
+    "customers": 95
+  },
+  {
+    "day": "2011-11-09",
+    "revenue": 61489.18,
+    "orders": 118,
+    "customers": 101
+  },
+  {
+    "day": "2011-11-10",
+    "revenue": 70513.29,
+    "orders": 125,
+    "customers": 112
+  },
+  {
+    "day": "2011-11-11",
+    "revenue": 37081.37,
+    "orders": 93,
+    "customers": 87
+  },
+  {
+    "day": "2011-11-13",
+    "revenue": 28607.78,
+    "orders": 83,
+    "customers": 75
+  },
+  {
+    "day": "2011-11-14",
+    "revenue": 58777.71,
+    "orders": 104,
+    "customers": 93
+  },
+  {
+    "day": "2011-11-15",
+    "revenue": 47729.0,
+    "orders": 104,
+    "customers": 93
+  },
+  {
+    "day": "2011-11-16",
+    "revenue": 48439.76,
+    "orders": 124,
+    "customers": 111
+  },
+  {
+    "day": "2011-11-17",
+    "revenue": 55885.3,
+    "orders": 136,
+    "customers": 125
+  },
+  {
+    "day": "2011-11-18",
+    "revenue": 36751.25,
+    "orders": 103,
+    "customers": 98
+  },
+  {
+    "day": "2011-11-20",
+    "revenue": 30190.92,
+    "orders": 98,
+    "customers": 91
+  },
+  {
+    "day": "2011-11-21",
+    "revenue": 45333.13,
+    "orders": 96,
+    "customers": 85
+  },
+  {
+    "day": "2011-11-22",
+    "revenue": 49664.89,
+    "orders": 130,
+    "customers": 120
+  },
+  {
+    "day": "2011-11-23",
+    "revenue": 71979.93,
+    "orders": 130,
+    "customers": 107
+  },
+  {
+    "day": "2011-11-24",
+    "revenue": 38579.11,
+    "orders": 109,
+    "customers": 98
+  },
+  {
+    "day": "2011-11-25",
+    "revenue": 26674.66,
+    "orders": 73,
+    "customers": 69
+  },
+  {
+    "day": "2011-11-27",
+    "revenue": 17300.96,
+    "orders": 56,
+    "customers": 51
+  },
+  {
+    "day": "2011-11-28",
+    "revenue": 51831.67,
+    "orders": 114,
+    "customers": 97
+  },
+  {
+    "day": "2011-11-29",
+    "revenue": 48851.68,
+    "orders": 126,
+    "customers": 109
+  },
+  {
+    "day": "2011-11-30",
+    "revenue": 41481.23,
+    "orders": 99,
+    "customers": 92
+  },
+  {
+    "day": "2011-12-01",
+    "revenue": 44533.99,
+    "orders": 118,
+    "customers": 111
+  },
+  {
+    "day": "2011-12-02",
+    "revenue": 44713.69,
+    "orders": 114,
+    "customers": 95
+  },
+  {
+    "day": "2011-12-04",
+    "revenue": 20375.96,
+    "orders": 62,
+    "customers": 58
+  },
+  {
+    "day": "2011-12-05",
+    "revenue": 58202.21,
+    "orders": 116,
+    "customers": 105
+  },
+  {
+    "day": "2011-12-06",
+    "revenue": 46144.04,
+    "orders": 110,
+    "customers": 103
+  },
+  {
+    "day": "2011-12-07",
+    "revenue": 69354.21,
+    "orders": 104,
+    "customers": 94
+  },
+  {
+    "day": "2011-12-08",
+    "revenue": 50519.41,
+    "orders": 113,
+    "customers": 105
+  },
+  {
+    "day": "2011-12-09",
+    "revenue": 184367.28,
+    "orders": 41,
+    "customers": 35
+  }
+]

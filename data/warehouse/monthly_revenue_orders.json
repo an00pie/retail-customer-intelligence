@@ -1,0 +1,152 @@
+[
+  {
+    "month": "2009-12",
+    "revenue": 686654.16,
+    "orders": 1512,
+    "customers": 955
+  },
+  {
+    "month": "2010-01",
+    "revenue": 557319.06,
+    "orders": 1011,
+    "customers": 720
+  },
+  {
+    "month": "2010-02",
+    "revenue": 506371.07,
+    "orders": 1104,
+    "customers": 772
+  },
+  {
+    "month": "2010-03",
+    "revenue": 699608.99,
+    "orders": 1524,
+    "customers": 1057
+  },
+  {
+    "month": "2010-04",
+    "revenue": 594609.19,
+    "orders": 1329,
+    "customers": 942
+  },
+  {
+    "month": "2010-05",
+    "revenue": 599985.79,
+    "orders": 1377,
+    "customers": 966
+  },
+  {
+    "month": "2010-06",
+    "revenue": 639066.58,
+    "orders": 1497,
+    "customers": 1041
+  },
+  {
+    "month": "2010-07",
+    "revenue": 591636.74,
+    "orders": 1381,
+    "customers": 928
+  },
+  {
+    "month": "2010-08",
+    "revenue": 604242.65,
+    "orders": 1293,
+    "customers": 911
+  },
+  {
+    "month": "2010-09",
+    "revenue": 831615.0,
+    "orders": 1689,
+    "customers": 1145
+  },
+  {
+    "month": "2010-10",
+    "revenue": 1036680.0,
+    "orders": 2133,
+    "customers": 1497
+  },
+  {
+    "month": "2010-11",
+    "revenue": 1172336.04,
+    "orders": 2587,
+    "customers": 1607
+  },
+  {
+    "month": "2010-12",
+    "revenue": 884591.89,
+    "orders": 1400,
+    "customers": 885
+  },
+  {
+    "month": "2011-01",
+    "revenue": 569445.04,
+    "orders": 987,
+    "customers": 741
+  },
+  {
+    "month": "2011-02",
+    "revenue": 447137.35,
+    "orders": 997,
+    "customers": 758
+  },
+  {
+    "month": "2011-03",
+    "revenue": 595500.76,
+    "orders": 1321,
+    "customers": 974
+  },
+  {
+    "month": "2011-04",
+    "revenue": 469200.36,
+    "orders": 1149,
+    "customers": 856
+  },
+  {
+    "month": "2011-05",
+    "revenue": 678594.56,
+    "orders": 1555,
+    "customers": 1056
+  },
+  {
+    "month": "2011-06",
+    "revenue": 661213.69,
+    "orders": 1393,
+    "customers": 991
+  },
+  {
+    "month": "2011-07",
+    "revenue": 600091.01,
+    "orders": 1331,
+    "customers": 949
+  },
+  {
+    "month": "2011-08",
+    "revenue": 645343.9,
+    "orders": 1280,
+    "customers": 935
+  },
+  {
+    "month": "2011-09",
+    "revenue": 952838.38,
+    "orders": 1755,
+    "customers": 1266
+  },
+  {
+    "month": "2011-10",
+    "revenue": 1039318.79,
+    "orders": 1929,
+    "customers": 1364
+  },
+  {
+    "month": "2011-11",
+    "revenue": 1161817.38,
+    "orders": 2657,
+    "customers": 1664
+  },
+  {
+    "month": "2011-12",
+    "revenue": 518210.79,
+    "orders": 778,
+    "customers": 615
+  }
+]
