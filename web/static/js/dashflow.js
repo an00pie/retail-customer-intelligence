@@ -14,6 +14,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initCustomerLookup();
   initWhatIfSimulator();
   initDashboardCharts();
+  initOverviewModules();
   initAnchorScroll();
 });
 
@@ -577,17 +578,17 @@ function initDashboardCharts() {
       return;
     }
 
-    // Create linear gradients for area fills - Radiant Web3-Verse Electric Lime
+    // Create linear gradients for area fills - Luxury Emerald & Cyan
     const chartHeight = canvas.clientHeight || 280;
     const revGradient = ctx.createLinearGradient(0, 0, 0, chartHeight);
-    revGradient.addColorStop(0, 'rgba(167, 251, 95, 0.32)');
-    revGradient.addColorStop(0.65, 'rgba(167, 251, 95, 0.05)');
-    revGradient.addColorStop(1, 'rgba(167, 251, 95, 0.0)');
+    revGradient.addColorStop(0, 'rgba(16, 185, 129, 0.28)');
+    revGradient.addColorStop(0.65, 'rgba(16, 185, 129, 0.04)');
+    revGradient.addColorStop(1, 'rgba(16, 185, 129, 0.0)');
 
     const ordGradient = ctx.createLinearGradient(0, 0, 0, chartHeight);
-    ordGradient.addColorStop(0, 'rgba(82, 246, 67, 0.22)');
-    ordGradient.addColorStop(0.65, 'rgba(82, 246, 67, 0.04)');
-    ordGradient.addColorStop(1, 'rgba(82, 246, 67, 0.0)');
+    ordGradient.addColorStop(0, 'rgba(56, 189, 248, 0.20)');
+    ordGradient.addColorStop(0.65, 'rgba(56, 189, 248, 0.03)');
+    ordGradient.addColorStop(1, 'rgba(56, 189, 248, 0.0)');
 
     trajectoryChartInstance = new Chart(ctx, {
       type: 'line',
@@ -598,15 +599,15 @@ function initDashboardCharts() {
             label: 'Revenue (USD)',
             data: data.revenue,
             yAxisID: 'yRevenue',
-            borderColor: '#a7fb5f',
+            borderColor: '#10B981',
             backgroundColor: revGradient,
             borderWidth: 2.8,
             tension: 0.38,
             fill: true,
             pointRadius: data.labels.length > 40 ? 0 : 3.5,
             pointHoverRadius: 6.5,
-            pointBackgroundColor: '#bdff73',
-            pointBorderColor: '#030604',
+            pointBackgroundColor: '#34D399',
+            pointBorderColor: '#050807',
             pointBorderWidth: 2,
             pointHoverBorderColor: '#ffffff',
             pointHoverBorderWidth: 2.5
@@ -615,7 +616,7 @@ function initDashboardCharts() {
             label: 'Order Volume',
             data: data.orders,
             yAxisID: 'yOrders',
-            borderColor: '#52f643',
+            borderColor: '#38BDF8',
             backgroundColor: ordGradient,
             borderWidth: 2,
             borderDash: [5, 4],
@@ -623,8 +624,8 @@ function initDashboardCharts() {
             fill: true,
             pointRadius: data.labels.length > 40 ? 0 : 3,
             pointHoverRadius: 5.5,
-            pointBackgroundColor: '#52f643',
-            pointBorderColor: '#030604',
+            pointBackgroundColor: '#38BDF8',
+            pointBorderColor: '#050807',
             pointBorderWidth: 2,
             pointHoverBorderColor: '#ffffff',
             pointHoverBorderWidth: 2
@@ -846,6 +847,128 @@ function initAnchorScroll() {
           top: elPosition - navOffset,
           behavior: 'smooth'
         });
+      }
+    });
+  });
+}
+
+/* ==============================================================================
+   8B. DASHBOARD OVERVIEW THREE MODULES (Live Lookup, RFM, & Segmentation Preview)
+   ============================================================================== */
+function initOverviewModules() {
+  // 1. Overview Customer Lookup
+  const ovInput = document.getElementById('ovLookupInput');
+  const ovBtn = document.getElementById('ovLookupBtn');
+
+  function runOvLookup(id) {
+    const cleanId = String(id || '15485').trim();
+    if (!cleanId) return;
+
+    fetch(`/api/customer/${encodeURIComponent(cleanId)}`)
+      .then(res => res.json())
+      .then(data => {
+        const elId = document.getElementById('ovProfileId');
+        const elSeg = document.getElementById('ovProfileSegment');
+        const elClv = document.getElementById('ovProfileClv');
+        const elRec = document.getElementById('ovProfileRecency');
+        const elFreq = document.getElementById('ovProfileFreq');
+        const elMon = document.getElementById('ovProfileMonetary');
+        const elTen = document.getElementById('ovProfileTenure');
+
+        if (elId) elId.textContent = `#${data.customer_id || cleanId}`;
+        if (elSeg) {
+          elSeg.textContent = data.segment || 'Loyal Customers';
+          elSeg.className = `cluster-card-badge ${data.segment && data.segment.includes('Champions') ? 'badge-champ' : 'badge-loyal'}`;
+        }
+        if (elClv) elClv.textContent = `$${Number(data.predicted_clv || 0).toFixed(2)}`;
+        if (elRec) elRec.textContent = `${data.recency_days || 15} days`;
+        if (elFreq) elFreq.textContent = `${data.frequency || 7} orders`;
+        if (elMon) elMon.textContent = `$${Number(data.monetary || 1280.4).toLocaleString(undefined, {minimumFractionDigits: 2})}`;
+        if (elTen) elTen.textContent = `${data.tenure_days || 298} days`;
+      })
+      .catch(() => {});
+  }
+
+  if (ovBtn && ovInput) {
+    ovBtn.addEventListener('click', () => runOvLookup(ovInput.value));
+    ovInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') runOvLookup(ovInput.value);
+    });
+  }
+
+  // 2. Overview RFM Sliders & Calculator
+  const rInput = document.getElementById('ovRfmRecencyInput');
+  const fInput = document.getElementById('ovRfmFreqInput');
+  const mInput = document.getElementById('ovRfmMonetaryInput');
+  const tInput = document.getElementById('ovRfmTenureInput');
+  const calcBtn = document.getElementById('ovCalcRfmBtn');
+
+  function updateOvRfmLabels() {
+    if (rInput) { const el = document.getElementById('ovRfmRecencyVal'); if (el) el.textContent = rInput.value; }
+    if (fInput) { const el = document.getElementById('ovRfmFreqVal'); if (el) el.textContent = fInput.value; }
+    if (mInput) { const el = document.getElementById('ovRfmMonetaryVal'); if (el) el.textContent = mInput.value; }
+    if (tInput) { const el = document.getElementById('ovRfmTenureVal'); if (el) el.textContent = tInput.value; }
+  }
+
+  [rInput, fInput, mInput, tInput].forEach(inp => {
+    if (inp) inp.addEventListener('input', updateOvRfmLabels);
+  });
+
+  if (calcBtn) {
+    calcBtn.addEventListener('click', () => {
+      calcBtn.textContent = 'Calculating...';
+      const payload = {
+        recency_days: parseInt(rInput ? rInput.value : 25),
+        frequency: parseInt(fInput ? fInput.value : 6),
+        total_spend: parseFloat(mInput ? mInput.value : 1250),
+        tenure_days: parseInt(tInput ? tInput.value : 300)
+      };
+
+      fetch('/api/predict', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      })
+      .then(res => res.json())
+      .then(res => {
+        calcBtn.textContent = 'Calculate RFM →';
+        const elSeg = document.getElementById('ovRfmSeg');
+        const elClv = document.getElementById('ovRfmClv');
+        const elChurn = document.getElementById('ovRfmChurn');
+        if (elSeg) elSeg.textContent = res.segment || 'Loyal Customers';
+        if (elClv) elClv.textContent = `$${Number(res.predicted_clv || 0).toFixed(2)}`;
+        if (elChurn) elChurn.textContent = `${(Number(res.churn_probability || 0) * 100).toFixed(1)}%`;
+      })
+      .catch(() => {
+        calcBtn.textContent = 'Calculate RFM →';
+      });
+    });
+  }
+
+  // 3. Overview Cohort Pills Interaction
+  const COHORT_STATS = {
+    'Champions': { count: '1,375 (23.4%)', mon: '$1,420.50', freq: '14.6 orders', rec: '12 days' },
+    'Loyal Customers': { count: '3,452 (38.7%)', mon: '$612.40', freq: '8.2 orders', rec: '28 days' },
+    'At Risk': { count: '1,416 (24.1%)', mon: '$380.20', freq: '3.4 orders', rec: '115 days' },
+    'Hibernating': { count: '811 (13.8%)', mon: '$145.00', freq: '1.2 orders', rec: '290 days' }
+  };
+
+  const cohortPills = document.querySelectorAll('.ov-cohort-pill');
+  cohortPills.forEach(pill => {
+    pill.addEventListener('click', (e) => {
+      cohortPills.forEach(p => p.classList.remove('active'));
+      pill.classList.add('active');
+      const name = pill.querySelector('.ov-cohort-name') ? pill.querySelector('.ov-cohort-name').textContent.trim() : 'Loyal Customers';
+      const stats = COHORT_STATS[name] || COHORT_STATS['Loyal Customers'];
+      const container = document.querySelector('.ov-cluster-insights-list');
+      if (container) {
+        container.innerHTML = `
+          <div style="font-size: 11px; font-weight: 700; color: #ffffff; margin-bottom: 2px;">Cluster Insights (${name})</div>
+          <div class="ov-insight-row"><span>Customer Count</span><strong style="color: #ffffff;">${stats.count}</strong></div>
+          <div class="ov-insight-row"><span>Avg. Monetary Spend</span><strong style="color: #34d399;">${stats.mon}</strong></div>
+          <div class="ov-insight-row"><span>Avg. Frequency</span><strong style="color: #38bdf8;">${stats.freq}</strong></div>
+          <div class="ov-insight-row"><span>Avg. Recency</span><strong style="color: #ffffff;">${stats.rec}</strong></div>
+        `;
       }
     });
   });
