@@ -2651,6 +2651,58 @@ button, input, select, textarea {
   cursor: pointer;
 }
 
+.rfm-slider-row.has-error .rfm-slider-label span.value {
+  color: #fb7185;
+}
+
+.rfm-slider-row.has-error .rfm-slider-input {
+  accent-color: #fb7185;
+  outline: 1px solid rgba(251, 113, 133, 0.6);
+}
+
+.sim-field-error {
+  font-size: 11.5px;
+  color: #fb7185;
+  font-weight: 500;
+  margin-top: 5px;
+  line-height: 1.3;
+  display: none;
+  animation: simErrorFadeIn 0.2s ease;
+}
+
+.sim-num-input {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(16, 185, 129, 0.25);
+  border-radius: 6px;
+  color: #ffffff;
+  padding: 3px 8px;
+  font-size: 13px;
+  font-weight: 700;
+  font-family: var(--font-mono);
+  width: 80px;
+  text-align: right;
+  outline: none;
+  transition: all 0.2s ease;
+}
+
+.sim-num-input:focus {
+  border-color: var(--accent-emerald-bright);
+  background: rgba(16, 185, 129, 0.08);
+  box-shadow: 0 0 10px rgba(16, 185, 129, 0.25);
+}
+
+.rfm-slider-row.has-error .sim-num-input {
+  border-color: rgba(251, 113, 133, 0.7);
+  background: rgba(251, 113, 133, 0.08);
+  color: #fb7185;
+  box-shadow: 0 0 10px rgba(251, 113, 133, 0.2);
+}
+
+@keyframes simErrorFadeIn {
+  from { opacity: 0; transform: translateY(-2px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
 .rfm-result-box {
   background: rgba(255, 255, 255, 0.04);
   border: 1px solid rgba(255, 255, 255, 0.08);

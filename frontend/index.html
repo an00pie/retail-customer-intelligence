@@ -911,36 +911,53 @@
                   <div class="overview-card">
                     <div style="font-size: 16px; font-weight: 800; color: #fff; margin-bottom: 16px;">Adjust Customer Inputs</div>
 
-                    <div class="rfm-slider-row">
+                    <div class="rfm-slider-row" id="simRowRecency">
                       <div class="rfm-slider-label">
-                        <span>Recency (Days since last checkout)</span>
-                        <span class="value" id="simRecencyVal">25 days</span>
+                        <label for="simRecency">Recency (Days since last checkout)</label>
+                        <div style="display: flex; align-items: center; gap: 6px;">
+                          <input type="number" class="sim-num-input" id="simRecency" value="25" min="0" max="730" aria-describedby="simRecencyErr" aria-invalid="false">
+                          <span class="value" id="simRecencyVal">days</span>
+                        </div>
                       </div>
-                      <input type="range" class="rfm-slider-input" id="simRecency" min="1" max="730" value="25" oninput="document.getElementById('simRecencyVal').textContent = this.value + ' days'">
+                      <input type="range" class="rfm-slider-input" id="simRecencySlider" min="0" max="730" value="25" tabindex="-1" aria-hidden="true">
+                      <div class="sim-field-error" id="simRecencyErr" role="alert" aria-live="polite"></div>
                     </div>
 
-                    <div class="rfm-slider-row">
+                    <div class="rfm-slider-row" id="simRowFreq">
                       <div class="rfm-slider-label">
-                        <span>Frequency (Total completed orders)</span>
-                        <span class="value" id="simFreqVal">6 orders</span>
+                        <label for="simFreq">Frequency (Total completed orders)</label>
+                        <div style="display: flex; align-items: center; gap: 6px;">
+                          <input type="number" class="sim-num-input" id="simFreq" value="6" min="1" max="150" aria-describedby="simFreqErr" aria-invalid="false">
+                          <span class="value" id="simFreqVal">orders</span>
+                        </div>
                       </div>
-                      <input type="range" class="rfm-slider-input" id="simFreq" min="1" max="150" value="6" oninput="document.getElementById('simFreqVal').textContent = this.value + ' orders'">
+                      <input type="range" class="rfm-slider-input" id="simFreqSlider" min="1" max="150" value="6" tabindex="-1" aria-hidden="true">
+                      <div class="sim-field-error" id="simFreqErr" role="alert" aria-live="polite"></div>
                     </div>
 
-                    <div class="rfm-slider-row">
+                    <div class="rfm-slider-row" id="simRowSpend">
                       <div class="rfm-slider-label">
-                        <span>Total Historical Spend ($)</span>
-                        <span class="value" id="simSpendVal">$1,250</span>
+                        <label for="simSpend">Total Historical Spend ($)</label>
+                        <div style="display: flex; align-items: center; gap: 6px;">
+                          <span style="color: var(--accent-emerald-bright); font-weight: 700;">$</span>
+                          <input type="number" class="sim-num-input" id="simSpend" value="1250" min="0" max="50000" step="50" aria-describedby="simSpendErr" aria-invalid="false">
+                          <span class="value" id="simSpendVal">USD</span>
+                        </div>
                       </div>
-                      <input type="range" class="rfm-slider-input" id="simSpend" min="20" max="50000" step="50" value="1250" oninput="document.getElementById('simSpendVal').textContent = '$' + Number(this.value).toLocaleString()">
+                      <input type="range" class="rfm-slider-input" id="simSpendSlider" min="0" max="50000" step="50" value="1250" tabindex="-1" aria-hidden="true">
+                      <div class="sim-field-error" id="simSpendErr" role="alert" aria-live="polite"></div>
                     </div>
 
-                    <div class="rfm-slider-row">
+                    <div class="rfm-slider-row" id="simRowTenure">
                       <div class="rfm-slider-label">
-                        <span>Customer Tenure (Days with company)</span>
-                        <span class="value" id="simTenureVal">300 days</span>
+                        <label for="simTenure">Customer Tenure (Days with company)</label>
+                        <div style="display: flex; align-items: center; gap: 6px;">
+                          <input type="number" class="sim-num-input" id="simTenure" value="300" min="0" max="730" aria-describedby="simTenureErr" aria-invalid="false">
+                          <span class="value" id="simTenureVal">days</span>
+                        </div>
                       </div>
-                      <input type="range" class="rfm-slider-input" id="simTenure" min="1" max="730" value="300" oninput="document.getElementById('simTenureVal').textContent = this.value + ' days'">
+                      <input type="range" class="rfm-slider-input" id="simTenureSlider" min="0" max="730" value="300" tabindex="-1" aria-hidden="true">
+                      <div class="sim-field-error" id="simTenureErr" role="alert" aria-live="polite"></div>
                     </div>
                   </div>
 

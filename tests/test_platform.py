@@ -90,10 +90,32 @@ class CustomerPlatformTestCase(unittest.TestCase):
         self.assertEqual(res.status_code, 400)
         self.assertIn("Feature values must be non-negative", json.loads(res.data)["error"])
 
+        # Frequency = 0 rejected (must be >= 1)
+        res = self.app.post("/api/predict", json={"frequency": 0, "recency_days": 10, "total_spend": 100})
+        self.assertEqual(res.status_code, 400)
+        self.assertIn("frequency must be >= 1", json.loads(res.data)["error"])
+
         # Non-JSON content type
         res = self.app.post("/api/predict", data="plain text", content_type="text/plain")
         self.assertEqual(res.status_code, 400)
         self.assertIn("Request must have Content-Type: application/json", json.loads(res.data)["error"])
+
+    def test_boundary_prediction_zero_values(self):
+        """Verify POST /api/predict accepts valid zero values for recency, spend, and tenure with freq >= 1."""
+        payload = {
+            "recency_days": 0,
+            "frequency": 1,
+            "total_spend": 0.0,
+            "tenure_days": 0
+        }
+        res = self.app.post("/api/predict", json=payload)
+        self.assertEqual(res.status_code, 200)
+        data = json.loads(res.data)
+        self.assertIn("segment", data)
+        self.assertEqual(data["recency_days"], 0)
+        self.assertEqual(data["frequency"], 1)
+        self.assertEqual(data["monetary"], 0.0)
+        self.assertEqual(data["tenure_days"], 0)
 
     def test_analytics_revenue_orders(self):
         """Verify trajectory analytics across multiple time aggregations."""

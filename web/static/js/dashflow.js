@@ -549,7 +549,7 @@ function renderCustomerProfile(data) {
 }
 
 /* ==============================================================================
-   6. WHAT-IF SCENARIO SIMULATOR (Live ML Model Client)
+   6. WHAT-IF SCENARIO SIMULATOR (Live ML Model Client with Real-Time Validation)
    ============================================================================== */
 function initWhatIfSimulator() {
   const recInput = document.getElementById('simRecency');
@@ -563,54 +563,212 @@ function initWhatIfSimulator() {
   const clvTarget = document.getElementById('simClvOutput');
   const churnTarget = document.getElementById('simChurnOutput');
 
+  const recVal = document.getElementById('simRecencyVal');
+  const freqVal = document.getElementById('simFreqVal');
+  const spendVal = document.getElementById('simSpendVal');
+  const tenureVal = document.getElementById('simTenureVal');
+
+  const recErr = document.getElementById('simRecencyErr');
+  const freqErr = document.getElementById('simFreqErr');
+  const spendErr = document.getElementById('simSpendErr');
+  const tenureErr = document.getElementById('simTenureErr');
+
+  const recRow = document.getElementById('simRowRecency') || recInput.closest('.rfm-slider-row');
+  const freqRow = document.getElementById('simRowFreq') || freqInput.closest('.rfm-slider-row');
+  const spendRow = document.getElementById('simRowSpend') || spendInput.closest('.rfm-slider-row');
+  const tenureRow = document.getElementById('simRowTenure') || tenureInput.closest('.rfm-slider-row');
+
+  let simDebounceTimer = null;
+  let currentRequestId = 0;
+
+  function validateField(input, row, errEl, label, fieldType) {
+    const rawVal = input.value;
+    // 1. Check empty
+    if (rawVal === null || rawVal === undefined || String(rawVal).trim() === '') {
+      setError(input, row, errEl, `${label} is required and cannot be empty.`);
+      return { valid: false, value: null };
+    }
+
+    const num = Number(rawVal);
+    // 2. Check numeric and finite
+    if (isNaN(num) || !Number.isFinite(num)) {
+      setError(input, row, errEl, `${label} must be a valid finite number.`);
+      return { valid: false, value: null };
+    }
+
+    // 3. Field-specific range & integer checks
+    if (fieldType === 'recency') {
+      if (!Number.isInteger(num)) {
+        setError(input, row, errEl, 'Recency must be an integer count of days.');
+        return { valid: false, value: null };
+      }
+      if (num < 0) {
+        setError(input, row, errEl, 'Recency must be non-negative (>= 0 days).');
+        return { valid: false, value: null };
+      }
+      if (num > 730) {
+        setError(input, row, errEl, 'Recency cannot exceed 730 days (2 years).');
+        return { valid: false, value: null };
+      }
+    } else if (fieldType === 'frequency') {
+      if (!Number.isInteger(num)) {
+        setError(input, row, errEl, 'Frequency must be an integer count of orders.');
+        return { valid: false, value: null };
+      }
+      if (num < 1) {
+        setError(input, row, errEl, 'Frequency must be at least 1 completed order (>= 1).');
+        return { valid: false, value: null };
+      }
+      if (num > 500) {
+        setError(input, row, errEl, 'Frequency cannot exceed 500 orders.');
+        return { valid: false, value: null };
+      }
+    } else if (fieldType === 'spend') {
+      if (num < 0) {
+        setError(input, row, errEl, 'Historical spend must be non-negative ($>= 0.00).');
+        return { valid: false, value: null };
+      }
+      if (num > 500000) {
+        setError(input, row, errEl, 'Historical spend cannot exceed $500,000.');
+        return { valid: false, value: null };
+      }
+    } else if (fieldType === 'tenure') {
+      if (!Number.isInteger(num)) {
+        setError(input, row, errEl, 'Tenure must be an integer count of days.');
+        return { valid: false, value: null };
+      }
+      if (num < 0) {
+        setError(input, row, errEl, 'Tenure must be non-negative (>= 0 days).');
+        return { valid: false, value: null };
+      }
+      if (num > 1000) {
+        setError(input, row, errEl, 'Tenure cannot exceed 1,000 days.');
+        return { valid: false, value: null };
+      }
+    }
+
+    clearError(input, row, errEl);
+    return { valid: true, value: num };
+  }
+
+  function setError(input, row, errEl, message) {
+    input.setAttribute('aria-invalid', 'true');
+    if (row) row.classList.add('has-error');
+    if (errEl) {
+      errEl.textContent = message;
+      errEl.style.display = 'block';
+    }
+  }
+
+  function clearError(input, row, errEl) {
+    input.setAttribute('aria-invalid', 'false');
+    if (row) row.classList.remove('has-error');
+    if (errEl) {
+      errEl.textContent = '';
+      errEl.style.display = 'none';
+    }
+  }
+
+  function updateDisplayLabels(r, f, s, t) {
+    if (recVal) recVal.textContent = r.valid ? `${r.value} days` : '--';
+    if (freqVal) freqVal.textContent = f.valid ? `${f.value} orders` : '--';
+    if (spendVal) spendVal.textContent = s.valid ? `$${Number(s.value).toLocaleString()}` : '--';
+    if (tenureVal) tenureVal.textContent = t.valid ? `${t.value} days` : '--';
+
+    if (r.valid && recSlider) recSlider.value = r.value;
+    if (f.valid && freqSlider) freqSlider.value = f.value;
+    if (s.valid && spendSlider) spendSlider.value = s.value;
+    if (t.valid && tenureSlider) tenureSlider.value = t.value;
+  }
+
   function runSim() {
+    clearTimeout(simDebounceTimer);
+    simDebounceTimer = setTimeout(() => {
+      executeSim();
+    }, 180);
+  }
+
+  function executeSim() {
+    const r = validateField(recInput, recRow, recErr, 'Recency', 'recency');
+    const f = validateField(freqInput, freqRow, freqErr, 'Frequency', 'frequency');
+    const s = validateField(spendInput, spendRow, spendErr, 'Historical Spend', 'spend');
+    const t = validateField(tenureInput, tenureRow, tenureErr, 'Tenure', 'tenure');
+
+    updateDisplayLabels(r, f, s, t);
+
+    // If any input is invalid, immediately block request and show invalid placeholder
+    if (!r.valid || !f.valid || !s.valid || !t.valid) {
+      if (segTarget) segTarget.innerHTML = '<span style="font-size: 16px; color: #fb7185; font-weight: 700;">Invalid Input</span>';
+      if (clvTarget) clvTarget.textContent = '--';
+      if (churnTarget) churnTarget.textContent = '--';
+      return;
+    }
+
     const payload = {
-      recency_days: parseInt(recInput.value, 10),
-      frequency: parseInt(freqInput.value, 10),
-      total_spend: parseFloat(spendInput.value),
-      tenure_days: parseInt(tenureInput.value, 10)
+      recency_days: r.value,
+      frequency: f.value,
+      total_spend: s.value,
+      tenure_days: t.value
     };
+
+    const requestId = ++currentRequestId;
+    if (segTarget) segTarget.style.opacity = '0.5';
 
     fetch('/api/predict', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(payload)
     })
-      .then(res => res.json())
       .then(res => {
-        if (segTarget) segTarget.textContent = res.segment;
+        if (requestId !== currentRequestId) return null;
+        if (!res.ok) {
+          throw new Error(`HTTP ${res.status}`);
+        }
+        return res.json();
+      })
+      .then(res => {
+        if (!res || requestId !== currentRequestId) return;
+        if (segTarget) {
+          segTarget.style.opacity = '1';
+          segTarget.textContent = res.segment;
+        }
         if (clvTarget) clvTarget.textContent = `$${parseFloat(res.predicted_clv).toFixed(2)}`;
         if (churnTarget) {
           churnTarget.textContent = `${(parseFloat(res.churn_probability) * 100).toFixed(1)}%`;
           churnTarget.style.color = res.churn_probability > 0.4 ? '#fb7185' : '#34d399';
         }
       })
-      .catch(() => {
-        // Fallback computation
-        const r = payload.recency_days;
-        const f = payload.frequency;
-        const s = payload.total_spend;
-        let seg = "Loyal Customers";
-        if (r < 30 && (f >= 10 || s > 3000)) seg = "Champions";
-        else if (r > 180) seg = "At-Risk";
-        else if (r > 300) seg = "Lost / Churned";
-
-        const clv = Math.max(0, s * 0.42 + 210 * (1 - r / 600));
-        const churn = Math.min(0.95, Math.max(0.05, (r / 300) * 0.7));
-
-        if (segTarget) segTarget.textContent = seg;
-        if (clvTarget) clvTarget.textContent = `$${clv.toFixed(2)}`;
-        if (churnTarget) {
-          churnTarget.textContent = `${(churn * 100).toFixed(1)}%`;
-          churnTarget.style.color = churn > 0.4 ? '#fb7185' : '#34d399';
+      .catch(err => {
+        if (requestId !== currentRequestId) return;
+        console.warn('[What-If Simulator] Prediction request failed:', err);
+        if (segTarget) {
+          segTarget.style.opacity = '1';
+          segTarget.innerHTML = '<span style="font-size: 15px; color: #fb7185;">Inference Unavailable</span>';
         }
+        if (clvTarget) clvTarget.textContent = '--';
+        if (churnTarget) churnTarget.textContent = '--';
       });
   }
 
+  // Range sliders synchronization
+  const recSlider = document.getElementById('simRecencySlider');
+  const freqSlider = document.getElementById('simFreqSlider');
+  const spendSlider = document.getElementById('simSpendSlider');
+  const tenureSlider = document.getElementById('simTenureSlider');
+
+  if (recSlider) recSlider.addEventListener('input', () => { recInput.value = recSlider.value; runSim(); });
+  if (freqSlider) freqSlider.addEventListener('input', () => { freqInput.value = freqSlider.value; runSim(); });
+  if (spendSlider) spendSlider.addEventListener('input', () => { spendInput.value = spendSlider.value; runSim(); });
+  if (tenureSlider) tenureSlider.addEventListener('input', () => { tenureInput.value = tenureSlider.value; runSim(); });
+
+  // Attach input and change listeners to number inputs
   [recInput, freqInput, spendInput, tenureInput].forEach(inp => {
     inp.addEventListener('input', runSim);
+    inp.addEventListener('change', runSim);
   });
-  runSim();
+
+  // Initial execution
+  executeSim();
 }
 
 /* ==============================================================================

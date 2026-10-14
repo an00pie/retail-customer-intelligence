@@ -143,6 +143,57 @@ def run_e2e_tests(base_url="http://localhost:8501"):
         print(f"  RFM Calculator result -> Segment: {rfm_badge} | CLV: {rfm_clv}")
         results["rfm_calculator"] = (rfm_badge == "Champions")
 
+        print("\n--- Phase 4b: What-If Scenario Simulator Client-Side Validation ---")
+        page.evaluate("() => window.switchDashboardTab('clv')")
+        page.wait_for_timeout(600)
+
+        # 1. Test invalid negative frequency (-5)
+        page.evaluate("""() => {
+            const f = document.getElementById('simFreq');
+            f.value = '-5';
+            f.dispatchEvent(new Event('input'));
+        }""")
+        page.wait_for_timeout(400)
+        freq_invalid = page.locator("#simFreq").get_attribute("aria-invalid")
+        freq_err_text = page.locator("#simFreqErr").text_content()
+        sim_seg_error = page.locator("#simSegOutput").text_content()
+        print(f"  Invalid Frequency -> aria-invalid: {freq_invalid} | Error: '{freq_err_text}' | Output: '{sim_seg_error}'")
+
+        # 2. Test correction with valid boundary inputs (recency=0, spend=0, tenure=0, freq=1)
+        page.evaluate("""() => {
+            const r = document.getElementById('simRecency');
+            const f = document.getElementById('simFreq');
+            const s = document.getElementById('simSpend');
+            const t = document.getElementById('simTenure');
+            r.value = '0';
+            f.value = '1';
+            s.value = '0';
+            t.value = '0';
+            r.dispatchEvent(new Event('input'));
+        }""")
+        page.wait_for_timeout(1000)
+        freq_valid = page.locator("#simFreq").get_attribute("aria-invalid")
+        sim_seg_valid = page.locator("#simSegOutput").text_content()
+        print(f"  Corrected to Valid Boundary -> aria-invalid: {freq_valid} | Segment Output: '{sim_seg_valid}'")
+
+        # 3. Test typical scenario (recency=15, freq=12, spend=4500, tenure=250)
+        page.evaluate("""() => {
+            const r = document.getElementById('simRecency');
+            const f = document.getElementById('simFreq');
+            const s = document.getElementById('simSpend');
+            const t = document.getElementById('simTenure');
+            r.value = '15';
+            f.value = '12';
+            s.value = '4500';
+            t.value = '250';
+            r.dispatchEvent(new Event('input'));
+        }""")
+        page.wait_for_timeout(1200)
+        sim_clv_output = page.locator("#simClvOutput").text_content()
+        print(f"  Scenario Inference Result -> Segment: {page.locator('#simSegOutput').text_content()} | CLV: {sim_clv_output}")
+
+        results["simulator_validation"] = (freq_invalid == "true" and "at least 1" in freq_err_text and freq_valid == "false" and sim_clv_output != "--")
+
         print("\n--- Phase 5: Global Search & Keyboard Routing ---")
         search_input = page.locator("#dashGlobalSearchInput")
         search_input.fill("12364")
