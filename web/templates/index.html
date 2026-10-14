@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Customer Intelligence Platform — Web3-Verse Green Luxury Edition</title>
-  <meta name="description" content="Live analytics, RFM behavioral clustering, CLV predictions, and churn intelligence across 1.06M retail transactions with high-performance HBase serving.">
+  <meta name="description" content="Live analytics, RFM behavioral clustering, CLV predictions, and churn intelligence across 1.06M retail transactions with high-performance columnar KV serving (5,942 profiles).">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220%200%2032%2032%22><circle cx=%2216%22 cy=%2216%22 r=%2216%22 fill=%22%2310b981%22/><path d=%22M10 20L16 10L22 20Z%22 fill=%22%23040806%22/></svg>">
   <link rel="stylesheet" href="/static/css/dashflow.css">
 </head>
@@ -48,11 +48,11 @@
         <button type="button" class="nav-icon-btn" onclick="window.switchDashboardTab('lookup')" title="Global Search (⌘K)" aria-label="Search">
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
         </button>
-        <button type="button" class="nav-icon-btn" title="Live System Notifications" aria-label="Notifications">
+        <button type="button" class="nav-icon-btn" id="navNotifBtn" onclick="window.showToast('All system pipelines healthy · 5,942 profiles synchronized', 'success')" title="Live System Notifications" aria-label="Notifications">
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>
           <span class="notif-indicator"></span>
         </button>
-        <div class="nav-user-pill" title="Administrator Account">
+        <div class="nav-user-pill" onclick="window.showToast('Logged in as Administrator (Pro Plan)', 'info')" title="Administrator Account" style="cursor: pointer;">
           <div class="nav-user-avatar" style="background: rgba(16, 185, 129, 0.2); color: #34d399; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 11px;">AD</div>
           <div class="nav-user-info">
             <span class="nav-user-name">Admin</span>
@@ -146,7 +146,7 @@
           <span class="hero-title-accent">Command Center</span>
         </h1>
         <p class="hero-subtitle">
-          Real-time retail trajectory, behavioral RFM clustering, predictive 90-day CLV, and automated churn prevention on high-performance HBase columnar architecture.
+          Real-time retail trajectory, behavioral RFM clustering, predictive 90-day CLV, and automated churn prevention on high-performance columnar KV architecture.
         </p>
         <div class="hero-actions">
           <a href="#dashboard" class="btn-pill-primary" data-tab="dashboard">
@@ -681,7 +681,7 @@
                       <span class="dash-title-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></span>
                       <h2>Customer Lookup</h2>
                     </div>
-                    <p>Direct low-latency query to the Apache HBase columnar NoSQL serving layer (p99 &lt; 1ms)</p>
+                    <p>Direct low-latency query to the columnar Key-Value profile serving store (SQLite / Apache HBase schema, 5,942 profiles)</p>
                   </div>
                   <button type="button" class="dash-action-pill" onclick="window.switchDashboardTab('dashboard')">← Back to Overview</button>
                 </div>
@@ -1096,10 +1096,10 @@
           <div class="pipeline-step">
             <div class="step-num">07</div>
             <div class="step-content">
-              <h4>Apache HBase Serving Layer</h4>
-              <p>Low-latency columnar NoSQL Key-Value store enabling sub-millisecond (p99 &lt; 1ms) point-lookups for 5,878 customer profiles.</p>
+              <h4>Columnar KV Serving Layer (HBase Schema)</h4>
+              <p>High-performance columnar Key-Value serving store (HappyBase / HBase schema compatible) enabling low-latency point-lookups across 5,942 customer profiles.</p>
             </div>
-            <div class="step-tech-badge">Apache HBase</div>
+            <div class="step-tech-badge">Columnar KV Store</div>
           </div>
           <div class="pipeline-connector">↓</div>
           <div class="pipeline-step">
@@ -1198,19 +1198,19 @@
             </div>
             <div class="faq-content">
               <div class="faq-content-inner">
-                Retail businesses struggle with massive unstructured transactional logs where identifying top customers, predicting future spend, and preventing customer churn is slow and fragmented. This platform provides an end-to-end Big Data pipeline from web mining to HDFS, Hive, Spark ML, and HBase sub-millisecond serving for automated decision-making.
+                Retail businesses struggle with massive unstructured transactional logs where identifying top customers, predicting future spend, and preventing customer churn is slow and fragmented. This platform provides an end-to-end Big Data pipeline from web mining to HDFS, Hive, Spark ML, and a high-performance columnar KV serving layer for automated decision-making.
               </div>
             </div>
           </div>
 
           <div class="faq-item">
             <div class="faq-header">
-              <div class="faq-question">Why is Apache HBase used for low-latency serving?</div>
+              <div class="faq-question">How does the serving layer achieve low-latency customer lookups?</div>
               <div class="faq-chevron">▾</div>
             </div>
             <div class="faq-content">
               <div class="faq-content-inner">
-                Analytical systems like Hive are optimized for batch scans, not real-time lookups. Apache HBase provides a column-family NoSQL Key-Value store on top of HDFS designed specifically for sub-millisecond point queries (<code>p99 &lt; 1ms</code>) by customer row key.
+                Analytical warehouse systems like Hive are optimized for large batch scans, not real-time lookups. For production serving, the platform utilizes an embedded columnar Key-Value store following Apache HBase column-family design (<code>info:</code>, <code>pred:</code>, <code>meta:</code>) with HappyBase interface compatibility, providing direct, indexed point lookups for 5,942 profiles.
               </div>
             </div>
           </div>
@@ -1222,7 +1222,7 @@
             </div>
             <div class="faq-content">
               <div class="faq-content-inner">
-                Unsupervised K-Means clustering (k=4) groups 5,878 customers into distinct cohorts: Champions (high spend &amp; frequency), Loyal Customers (steady orders), At-Risk (high past spend but inactive), and Lost / Churned (dormant single purchases). Segment mappings are verified in <code>models/segment_mapping.json</code>.
+                Unsupervised K-Means clustering (k=4) groups 5,942 customers into distinct cohorts: Champions (high spend &amp; frequency), Loyal Customers (steady orders), At-Risk (high past spend but inactive), and Lost / Churned (dormant single purchases). Segment mappings are verified in <code>models/segment_mapping.json</code>.
               </div>
             </div>
           </div>

@@ -129,6 +129,41 @@ function initSpaDashboardNavigation() {
 
   // Expose switchTab globally
   window.switchDashboardTab = switchTab;
+
+  // Global luxury Toast Notification System
+  window.showToast = function(message, type = 'info') {
+    let container = document.getElementById('toast-container');
+    if (!container) {
+      container = document.createElement('div');
+      container.id = 'toast-container';
+      container.className = 'toast-container';
+      container.setAttribute('aria-live', 'polite');
+      document.body.appendChild(container);
+    }
+    const toast = document.createElement('div');
+    toast.className = `toast-pill toast-${type}`;
+
+    let iconSvg = '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>';
+    if (type === 'success') {
+      iconSvg = '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#34d399" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg>';
+    } else if (type === 'error' || type === 'danger') {
+      iconSvg = '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#f87171" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>';
+    }
+
+    toast.innerHTML = `
+      <span class="toast-icon">${iconSvg}</span>
+      <span class="toast-message">${message}</span>
+      <button type="button" class="toast-close" onclick="this.parentElement.remove()" aria-label="Dismiss">✕</button>
+    `;
+    container.appendChild(toast);
+
+    setTimeout(() => {
+      toast.classList.add('toast-fade-out');
+      setTimeout(() => {
+        if (toast.parentElement) toast.remove();
+      }, 350);
+    }, 4000);
+  };
 }
 
 /* ==============================================================================
@@ -506,8 +541,8 @@ function renderCustomerProfile(data) {
       </div>
 
       <div style="display: flex; gap: 12px;">
-        <button type="button" class="btn-pill-secondary" style="flex: 1; justify-content: center; font-size: 13px; padding: 10px;" onclick="alert('Notification sent to customer account #' + encodeURIComponent('${safeId}'))">💬 Message Account</button>
-        <button type="button" class="btn-pill-primary" style="flex: 1; justify-content: center; font-size: 13px; padding: 10px;" onclick="alert('Retention task assigned for Customer #' + encodeURIComponent('${safeId}'))">+ Assign Task</button>
+        <button type="button" class="btn-pill-secondary" style="flex: 1; justify-content: center; font-size: 13px; padding: 10px;" onclick="window.showToast('Notification sent to customer account #' + encodeURIComponent('${safeId}'), 'success')">💬 Message Account</button>
+        <button type="button" class="btn-pill-primary" style="flex: 1; justify-content: center; font-size: 13px; padding: 10px;" onclick="window.showToast('Retention task assigned for Customer #' + encodeURIComponent('${safeId}'), 'success')">+ Assign Task</button>
       </div>
     </div>
   `;

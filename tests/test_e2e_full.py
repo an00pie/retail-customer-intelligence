@@ -59,7 +59,8 @@ def run_e2e_tests(base_url="http://localhost:8501"):
         console_errors = []
         page.on("console", lambda msg: console_errors.append(msg.text) if msg.type == "error" else None)
         page.goto(base_url, wait_until="domcontentloaded")
-        page.wait_for_timeout(1500)
+        page.wait_for_timeout(1000)
+        page.wait_for_selector("#kpiTotalCustomers", state="visible", timeout=20000)
 
         print("\n--- Phase 2: KPI & Chart Period Filtering ---")
         # Check initial KPI values
@@ -165,6 +166,13 @@ def run_e2e_tests(base_url="http://localhost:8501"):
         arch_closed = not page.locator("#modal-architecture").evaluate("el => el.classList.contains('open')")
         print(f"  Architecture Modal Open: {arch_open} | Close: {arch_closed}")
         results["modals"] = (arch_open and arch_closed)
+
+        print("\n--- Phase 6b: In-App Toast System Verification ---")
+        page.locator("#navNotifBtn").click()
+        page.wait_for_selector(".toast-pill", timeout=6000)
+        toast_text = page.locator(".toast-message").text_content()
+        print(f"  Toast Triggered via Bell: '{toast_text}'")
+        results["toast_notifications"] = ("5,942 profiles synchronized" in toast_text)
 
         print("\n--- Phase 7: Console Errors Audit ---")
         print(f"  Total Console Errors: {len(console_errors)}")
