@@ -1114,6 +1114,7 @@ button, input, select, textarea {
 }
 
 .dash-ov-card {
+  min-width: 0;
   background: rgba(11, 21, 17, 0.65);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
@@ -1174,6 +1175,7 @@ button, input, select, textarea {
 
 .ov-search-input {
   flex: 1;
+  min-width: 0;
   background: rgba(10, 18, 14, 0.85);
   border: 1px solid rgba(16, 185, 129, 0.20);
   border-radius: var(--radius-sm);
@@ -1890,8 +1892,9 @@ button, input, select, textarea {
 
 .trajectory-legend-bar-luxury {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
-  gap: 20px;
+  gap: 12px 20px;
   font-size: 12px;
   font-weight: 600;
   color: var(--text-secondary);
@@ -2876,9 +2879,14 @@ button, input, select, textarea {
 
 .lookup-grid {
   display: grid;
-  grid-template-columns: 1fr 1.25fr;
-  gap: 36px;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.25fr);
+  gap: 24px;
   align-items: start;
+}
+
+#customerProfileTarget {
+  min-width: 0;
+  max-width: 100%;
 }
 
 .lookup-search-card {
@@ -2925,6 +2933,7 @@ button, input, select, textarea {
 
 .lookup-input {
   flex: 1;
+  min-width: 0;
   background: rgba(255, 255, 255, 0.04);
   border: 1px solid rgba(255, 255, 255, 0.15);
   border-radius: var(--radius-full);
@@ -3434,20 +3443,21 @@ button, input, select, textarea {
 }
 
 @media (max-width: 1024px) {
-  .overview-cards-grid {
-    grid-template-columns: 1fr;
+  .overview-cards-grid,
+  .dash-overview-modules-row {
+    grid-template-columns: minmax(0, 1fr);
   }
   .mining-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
   }
   .rfm-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
   }
   .models-split-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
   }
   .lookup-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
   }
   .dash-window {
     grid-template-columns: 1fr;
@@ -3515,10 +3525,18 @@ button, input, select, textarea {
     gap: 12px;
     width: auto;
   }
-  .btn-pill-primary, .btn-pill-secondary {
+  .hero-actions .btn-pill-primary,
+  .hero-actions .btn-pill-secondary {
     width: auto;
     padding: 10px 20px;
     justify-content: center;
+  }
+  .nav-cta-btn {
+    display: none !important;
+  }
+  .nav-capsule {
+    max-width: calc(100vw - 24px);
+    box-sizing: border-box;
   }
   .customer-metrics-row {
     grid-template-columns: 1fr;
@@ -3536,6 +3554,21 @@ button, input, select, textarea {
   .period-pill {
     padding: 4px 8px;
     font-size: 10px;
+  }
+  .model-card-box {
+    padding: 22px 18px;
+  }
+  .model-metrics-row {
+    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+    gap: 8px;
+  }
+  .dash-action-pill,
+  .sample-id-pill,
+  .period-pill {
+    min-height: 36px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
   }
 }
 
@@ -3559,7 +3592,8 @@ button, input, select, textarea {
     width: 100%;
     gap: 10px;
   }
-  .btn-pill-primary, .btn-pill-secondary {
+  .hero-actions .btn-pill-primary,
+  .hero-actions .btn-pill-secondary {
     width: 100%;
     padding: 10px 18px;
     font-size: 13px;
@@ -3578,11 +3612,89 @@ button, input, select, textarea {
   .nav-brand-title {
     display: none;
   }
+  .nav-user-info,
+  .nav-user-pill svg {
+    display: none;
+  }
+  .nav-user-pill {
+    padding: 4px;
+  }
   .dash-kpi-card-luxury {
     padding: 12px 14px;
   }
   .dash-kpi-sparkline {
     display: none;
+  }
+  .dash-ov-card {
+    padding: 12px 10px;
+    min-width: 0;
+  }
+  .ov-table-wrapper {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  .lookup-search-card,
+  .customer-profile-card {
+    padding: 14px 10px;
+    min-width: 0;
+  }
+  .customer-tx-table-container {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    width: 100%;
+    max-width: 100%;
+  }
+  .model-card-box {
+    padding: 16px 12px;
+  }
+  .model-metrics-row {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+  .rfm-interactive-card {
+    padding: 16px 14px;
+  }
+  .rfm-pillar-card {
+    padding: 14px 12px;
+  }
+  .spa-modal-overlay {
+    padding: 12px 8px;
+  }
+  .spa-modal-dialog {
+    max-height: 92vh;
+    border-radius: var(--radius-lg);
+  }
+  .spa-modal-header {
+    padding: 12px 14px;
+  }
+  .spa-modal-body {
+    padding: 14px 12px;
+  }
+}
+
+@media (max-width: 360px) {
+  .lookup-search-card,
+  .customer-profile-card {
+    padding: 10px 6px;
+    min-width: 0;
+  }
+  .dash-ov-card {
+    padding: 10px 6px;
+    min-width: 0;
+  }
+  .rfm-interactive-card {
+    padding: 10px 6px;
+  }
+  .rfm-pillar-card {
+    padding: 10px 6px;
+  }
+  .dash-content {
+    padding: 8px;
+  }
+  .dash-header-bar {
+    padding: 10px 6px;
   }
 }
 
