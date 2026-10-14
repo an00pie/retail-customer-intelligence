@@ -1067,6 +1067,10 @@ function initOverviewModules() {
     ovInput.addEventListener('keydown', (e) => {
       if (e.key === 'Enter') runOvLookup(ovInput.value);
     });
+    // Auto-hydrate initial profile from live API
+    if (ovInput.value) {
+      runOvLookup(ovInput.value);
+    }
   }
 
   // 2. Overview RFM Sliders & Calculator
