@@ -265,12 +265,13 @@
             <main class="dash-content">
               <!-- Top Navigation Search & Actions Bar (Matching reference) -->
               <div class="dash-top-bar">
-                <div class="dash-search-container" onclick="window.switchDashboardTab('lookup')">
+                <div class="dash-search-container" id="dashGlobalSearchContainer">
                   <span class="dash-search-icon">
                     <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
                   </span>
-                  <input type="text" class="dash-search-input" placeholder="Search customer ID, segment, or keyword..." readonly>
+                  <input type="text" class="dash-search-input" id="dashGlobalSearchInput" placeholder="Search customer ID (e.g. 15485) or view (rfm, clv, churn)..." autocomplete="off">
                   <span class="dash-search-shortcut">⌘ K</span>
+                  <div class="dash-search-dropdown" id="dashSearchDropdown" style="display: none;"></div>
                 </div>
                 <div class="dash-top-actions">
                   <div class="dash-date-pill">
@@ -330,10 +331,10 @@
                     </div>
                     <div class="dash-kpi-body">
                       <div class="dash-kpi-title">Total Customers</div>
-                      <div class="dash-kpi-num">8,914,210</div>
-                      <div class="dash-kpi-trend trend-up">
-                        <span>↑ 14.2%</span>
-                        <span class="trend-compare">vs previous period</span>
+                      <div class="dash-kpi-num" id="kpiTotalCustomers">5,942</div>
+                      <div class="dash-kpi-trend trend-up" id="kpiCustomersGrowth">
+                        <span>● Verified</span>
+                        <span class="trend-compare">1.06M txns analyzed</span>
                       </div>
                     </div>
                     <div class="dash-kpi-sparkline spark-emerald">
@@ -350,8 +351,8 @@
                     </div>
                     <div class="dash-kpi-body">
                       <div class="dash-kpi-title">Total Orders</div>
-                      <div class="dash-kpi-num">17,132</div>
-                      <div class="dash-kpi-trend trend-down">
+                      <div class="dash-kpi-num" id="kpiTotalOrders">17,132</div>
+                      <div class="dash-kpi-trend trend-down" id="kpiOrdersGrowth">
                         <span>↓ 6.5%</span>
                         <span class="trend-compare">vs previous period</span>
                       </div>
@@ -370,8 +371,8 @@
                     </div>
                     <div class="dash-kpi-body">
                       <div class="dash-kpi-title">Avg. Order Value</div>
-                      <div class="dash-kpi-num">$486.73</div>
-                      <div class="dash-kpi-trend trend-up">
+                      <div class="dash-kpi-num" id="kpiAvgOrderValue">$486.73</div>
+                      <div class="dash-kpi-trend trend-up" id="kpiAovGrowth">
                         <span>↑ 2.3%</span>
                         <span class="trend-compare">vs previous period</span>
                       </div>
@@ -390,9 +391,9 @@
                     </div>
                     <div class="dash-kpi-body">
                       <div class="dash-kpi-title">Total Revenue</div>
-                      <div class="dash-kpi-num" id="kpiHeroTotalRevenue">$518,210.79</div>
-                      <div class="dash-kpi-trend trend-down" id="kpiHeroRevGrowth">
-                        <span>↓ 55.4%</span>
+                      <div class="dash-kpi-num" id="kpiTotalRevenue">$8,338,712.01</div>
+                      <div class="dash-kpi-trend trend-up" id="kpiRevenueGrowth">
+                        <span>↑ 14.2%</span>
                         <span class="trend-compare">vs previous period</span>
                       </div>
                     </div>
@@ -691,19 +692,18 @@
                     <div>
                       <div style="font-size: 16px; font-weight: 800; color: #fff;">Find Customer Profile</div>
                       <div style="font-size: 12.5px; color: var(--text-muted); margin-top: 4px;">
-                        Select a verified sample customer or enter any ID from the 5,878 profile store:
+                        Select a verified sample customer or enter any ID from the 5,942 profile store:
                       </div>
                     </div>
 
                     <div class="quick-customer-pills">
-                      <span class="sample-id-pill active" data-id="15485">#15485</span>
-                      <span class="sample-id-pill" data-id="13748">#13748</span>
-                      <span class="sample-id-pill" data-id="13269">#13269</span>
-                      <span class="sample-id-pill" data-id="18229">#18229</span>
-                      <span class="sample-id-pill" data-id="15550">#15550</span>
-                      <span class="sample-id-pill" data-id="16964">#16964</span>
-                      <span class="sample-id-pill" data-id="16717">#16717</span>
-                      <span class="sample-id-pill" data-id="C1024">#C1024</span>
+                      <span class="sample-id-pill active" data-id="15485" title="Champions">#15485 (Champ)</span>
+                      <span class="sample-id-pill" data-id="13748" title="At-Risk">#13748 (At-Risk)</span>
+                      <span class="sample-id-pill" data-id="12364" title="Loyal Customers">#12364 (Loyal)</span>
+                      <span class="sample-id-pill" data-id="16964" title="Lost / Churned">#16964 (Lost)</span>
+                      <span class="sample-id-pill" data-id="13269" title="Top Spending Champion">#13269</span>
+                      <span class="sample-id-pill" data-id="18229" title="High Frequency Champion">#18229</span>
+                      <span class="sample-id-pill" data-id="99999" title="Non-existent test ID">#99999 (404)</span>
                     </div>
 
                     <div class="search-input-wrapper">
@@ -824,7 +824,7 @@
                       <span class="dash-title-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg></span>
                       <h2>Customer Segmentation (K-Means k=4)</h2>
                     </div>
-                    <p>Unsupervised clustering partitioning 5,878 customers into actionable behavioral cohorts</p>
+                    <p>Unsupervised clustering partitioning 5,942 verified customers into actionable behavioral cohorts</p>
                   </div>
                   <button type="button" class="dash-action-pill" onclick="window.switchDashboardTab('dashboard')">← Back to Overview</button>
                 </div>
@@ -838,10 +838,10 @@
                       High-velocity, top-spending customers who buy frequently and visited very recently. Prime ambassadors for premium tiers.
                     </p>
                     <div style="display: flex; flex-direction: column; gap: 8px; margin-top: auto;">
-                      <div class="cluster-stat-row"><span class="k">Mean Recency</span><span class="v">24.8 days</span></div>
-                      <div class="cluster-stat-row"><span class="k">Mean Frequency</span><span class="v">20.0 orders</span></div>
-                      <div class="cluster-stat-row"><span class="k">Mean Spend</span><span class="v">$11,466</span></div>
-                      <div class="cluster-stat-row"><span class="k">Cohort Size</span><span class="v">1,117 accounts</span></div>
+                      <div class="cluster-stat-row"><span class="k">Mean Recency</span><span class="v">24.9 days</span></div>
+                      <div class="cluster-stat-row"><span class="k">Mean Frequency</span><span class="v">23.1 orders</span></div>
+                      <div class="cluster-stat-row"><span class="k">Mean Spend</span><span class="v">$10,053.19</span></div>
+                      <div class="cluster-stat-row"><span class="k">Cohort Size</span><span class="v">1,242 accounts (20.9%)</span></div>
                     </div>
                   </div>
 
@@ -853,10 +853,10 @@
                       Steady regular buyers with recent purchases and moderate spend. Highly responsive to cross-selling and volume incentives.
                     </p>
                     <div style="display: flex; flex-direction: column; gap: 8px; margin-top: auto;">
-                      <div class="cluster-stat-row"><span class="k">Mean Recency</span><span class="v">27.6 days</span></div>
-                      <div class="cluster-stat-row"><span class="k">Mean Frequency</span><span class="v">3.0 orders</span></div>
-                      <div class="cluster-stat-row"><span class="k">Mean Spend</span><span class="v">$855</span></div>
-                      <div class="cluster-stat-row"><span class="k">Cohort Size</span><span class="v">2,112 accounts</span></div>
+                      <div class="cluster-stat-row"><span class="k">Mean Recency</span><span class="v">26.5 days</span></div>
+                      <div class="cluster-stat-row"><span class="k">Mean Frequency</span><span class="v">3.3 orders</span></div>
+                      <div class="cluster-stat-row"><span class="k">Mean Spend</span><span class="v">$784.29</span></div>
+                      <div class="cluster-stat-row"><span class="k">Cohort Size</span><span class="v">1,187 accounts (20.0%)</span></div>
                     </div>
                   </div>
 
@@ -868,10 +868,10 @@
                       Historically valuable accounts with substantial past spend that haven't purchased in over 6 months. Urgent retention needed.
                     </p>
                     <div style="display: flex; flex-direction: column; gap: 8px; margin-top: auto;">
-                      <div class="cluster-stat-row"><span class="k">Mean Recency</span><span class="v">210.7 days</span></div>
-                      <div class="cluster-stat-row"><span class="k">Mean Frequency</span><span class="v">5.4 orders</span></div>
-                      <div class="cluster-stat-row"><span class="k">Mean Spend</span><span class="v">$2,148</span></div>
-                      <div class="cluster-stat-row"><span class="k">Cohort Size</span><span class="v">1,478 accounts</span></div>
+                      <div class="cluster-stat-row"><span class="k">Mean Recency</span><span class="v">219.3 days</span></div>
+                      <div class="cluster-stat-row"><span class="k">Mean Frequency</span><span class="v">6.1 orders</span></div>
+                      <div class="cluster-stat-row"><span class="k">Mean Spend</span><span class="v">$1,831.35</span></div>
+                      <div class="cluster-stat-row"><span class="k">Cohort Size</span><span class="v">1,476 accounts (24.8%)</span></div>
                     </div>
                   </div>
 
@@ -883,10 +883,10 @@
                       Single-order accounts dormant for over a year with minimal lifetime spend. Low candidate for direct sales outreach.
                     </p>
                     <div style="display: flex; flex-direction: column; gap: 8px; margin-top: auto;">
-                      <div class="cluster-stat-row"><span class="k">Mean Recency</span><span class="v">393.0 days</span></div>
-                      <div class="cluster-stat-row"><span class="k">Mean Frequency</span><span class="v">1.4 orders</span></div>
-                      <div class="cluster-stat-row"><span class="k">Mean Spend</span><span class="v">$346</span></div>
-                      <div class="cluster-stat-row"><span class="k">Cohort Size</span><span class="v">1,171 accounts</span></div>
+                      <div class="cluster-stat-row"><span class="k">Mean Recency</span><span class="v">399.4 days</span></div>
+                      <div class="cluster-stat-row"><span class="k">Mean Frequency</span><span class="v">1.6 orders</span></div>
+                      <div class="cluster-stat-row"><span class="k">Mean Spend</span><span class="v">$305.52</span></div>
+                      <div class="cluster-stat-row"><span class="k">Cohort Size</span><span class="v">2,037 accounts (34.3%)</span></div>
                     </div>
                   </div>
                 </div>

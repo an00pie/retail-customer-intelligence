@@ -7,6 +7,7 @@
 document.addEventListener('DOMContentLoaded', () => {
   initInteractiveGlobe();
   initSpaDashboardNavigation();
+  initGlobalSearch();
   initScrollReveals();
   initMobileNav();
   initFaqAccordion();
@@ -217,6 +218,8 @@ function initRfmCalculator() {
 
   if (!rSlider || !fSlider || !mSlider) return;
 
+  let rfmDebounceTimer = null;
+
   function recalculate() {
     const recency = parseInt(rSlider.value, 10);
     const freq = parseInt(fSlider.value, 10);
@@ -226,15 +229,16 @@ function initRfmCalculator() {
     if (fVal) fVal.textContent = `${freq} orders`;
     if (mVal) mVal.textContent = `$${monetary.toLocaleString()}`;
 
-    // Scoring heuristics based on actual model thresholds:
-    // Cluster 2 (Champions): Recency ~ 24, Freq ~ 20, Spend ~ $11,466
-    // Cluster 0 (Loyal): Recency ~ 27, Freq ~ 3, Spend ~ $855
-    // Cluster 3 (At-Risk): Recency ~ 210, Freq ~ 5, Spend ~ $2,148
-    // Cluster 1 (Lost): Recency ~ 393, Freq ~ 1.4, Spend ~ $346
+    // Composite score
+    const rScore = Math.max(1, Math.min(5, Math.ceil(5 - (recency / 100))));
+    const fScore = Math.max(1, Math.min(5, Math.ceil(freq / 5)));
+    const mScore = Math.max(1, Math.min(5, Math.ceil(monetary / 1000)));
 
+    if (scoreBadge) scoreBadge.textContent = `RFM: ${rScore}-${fScore}-${mScore}`;
+
+    // Initial heuristic state while waiting for API
     let segment = "Loyal Customers";
     let badgeClass = "badge-loyal";
-
     if (recency < 60 && (freq >= 12 || monetary >= 5000)) {
       segment = "Champions";
       badgeClass = "badge-champ";
@@ -244,27 +248,51 @@ function initRfmCalculator() {
     } else if (recency > 250) {
       segment = "Lost / Churned";
       badgeClass = "badge-lost";
-    } else {
-      segment = "Loyal Customers";
-      badgeClass = "badge-loyal";
     }
-
-    // CLV Estimate formula derived from model linear term approximation
-    const aov = monetary / Math.max(freq, 1);
-    const tenureFactor = 300 / 365;
-    const estClv = Math.max(50, (aov * freq * 0.45 * (1 - recency / 800)) + 120);
-
-    // Composite score
-    const rScore = Math.max(1, Math.min(5, Math.ceil(5 - (recency / 100))));
-    const fScore = Math.max(1, Math.min(5, Math.ceil(freq / 5)));
-    const mScore = Math.max(1, Math.min(5, Math.ceil(monetary / 1000)));
-
-    if (scoreBadge) scoreBadge.textContent = `RFM: ${rScore}-${fScore}-${mScore}`;
     if (segmentBadge) {
       segmentBadge.textContent = segment;
       segmentBadge.className = `cluster-card-badge ${badgeClass}`;
     }
-    if (clvEst) clvEst.textContent = `$${Math.round(estClv).toLocaleString()}`;
+
+    // Call live backend ML pipeline with debounce
+    clearTimeout(rfmDebounceTimer);
+    rfmDebounceTimer = setTimeout(() => {
+      fetch('/api/predict', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          recency_days: recency,
+          frequency: freq,
+          total_spend: monetary,
+          tenure_days: 300
+        })
+      })
+      .then(res => {
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        return res.json();
+      })
+      .then(data => {
+        if (data && data.segment) {
+          if (segmentBadge) {
+            segmentBadge.textContent = data.segment;
+            let bClass = 'badge-loyal';
+            if (data.segment.includes('Champions')) bClass = 'badge-champ';
+            else if (data.segment.includes('At-Risk')) bClass = 'badge-risk';
+            else if (data.segment.includes('Lost')) bClass = 'badge-lost';
+            segmentBadge.className = `cluster-card-badge ${bClass}`;
+          }
+          if (clvEst && data.predicted_clv !== undefined) {
+            clvEst.textContent = `$${Math.round(data.predicted_clv).toLocaleString()}`;
+          }
+        }
+      })
+      .catch(err => {
+        // Fallback approximation
+        const aov = monetary / Math.max(freq, 1);
+        const est = Math.max(50, (aov * freq * 0.45 * (1 - recency / 800)) + 120);
+        if (clvEst) clvEst.textContent = `$${Math.round(est).toLocaleString()}`;
+      });
+    }, 150);
   }
 
   rSlider.addEventListener('input', recalculate);
@@ -573,7 +601,18 @@ function initDashboardCharts() {
   const elKpiOrdGrowth    = document.getElementById('kpiOrdersGrowth');
   const elKpiAov          = document.getElementById('kpiAvgOrderValue');
   const elKpiAovGrowth    = document.getElementById('kpiAovGrowth');
+  const elKpiCustomers    = document.getElementById('kpiTotalCustomers');
   const elDataStatus      = document.getElementById('trajectoryDataStatus');
+
+  // Populate verified customer count from live health endpoint
+  fetch('/api/health')
+    .then(res => res.json())
+    .then(health => {
+      if (elKpiCustomers && health && health.serving_records) {
+        elKpiCustomers.textContent = formatNumber(health.serving_records);
+      }
+    })
+    .catch(() => {});
 
   function formatCurrency(val) {
     return new Intl.NumberFormat('en-US', {
@@ -1046,10 +1085,10 @@ function initOverviewModules() {
 
   // 3. Overview Cohort Pills Interaction
   const COHORT_STATS = {
-    'Champions': { count: '1,375 (23.4%)', mon: '$1,420.50', freq: '14.6 orders', rec: '12 days' },
-    'Loyal Customers': { count: '3,452 (38.7%)', mon: '$612.40', freq: '8.2 orders', rec: '28 days' },
-    'At Risk': { count: '1,416 (24.1%)', mon: '$380.20', freq: '3.4 orders', rec: '115 days' },
-    'Hibernating': { count: '811 (13.8%)', mon: '$145.00', freq: '1.2 orders', rec: '290 days' }
+    'Champions': { count: '1,242 (20.9%)', mon: '$10,053.19', freq: '23.1 orders', rec: '24.9 days' },
+    'Loyal Customers': { count: '1,187 (20.0%)', mon: '$784.29', freq: '3.3 orders', rec: '26.5 days' },
+    'At Risk': { count: '1,476 (24.8%)', mon: '$1,831.35', freq: '6.1 orders', rec: '219.3 days' },
+    'Hibernating': { count: '2,037 (34.3%)', mon: '$305.52', freq: '1.6 orders', rec: '399.4 days' }
   };
 
   const cohortPills = document.querySelectorAll('.ov-cohort-pill');
@@ -1462,3 +1501,151 @@ function initInteractiveGlobe() {
     }
   });
 }
+
+/* ==============================================================================
+   10. GLOBAL SEARCH & KEYBOARD NAVIGATION (⌘K / Ctrl+K & Customer Routing)
+   ============================================================================== */
+function initGlobalSearch() {
+  const container = document.getElementById('dashGlobalSearchContainer');
+  const input = document.getElementById('dashGlobalSearchInput');
+  const dropdown = document.getElementById('dashSearchDropdown');
+  if (!container || !input) return;
+
+  const NAV_TARGETS = [
+    { label: 'Dashboard Overview', tab: 'dashboard', desc: 'Command center, KPIs & Trajectory', keywords: ['dash', 'overview', 'home', 'kpi', 'revenue', 'orders'] },
+    { label: 'Customer Lookup', tab: 'lookup', desc: 'Direct HBase columnar customer ledger', keywords: ['lookup', 'customer', 'search', 'account', 'profile', 'find', 'tx', 'invoice'] },
+    { label: 'RFM Analytics & Calculator', tab: 'rfm', desc: 'Recency, Frequency, Monetary scoring', keywords: ['rfm', 'calc', 'calculator', 'recency', 'frequency', 'monetary'] },
+    { label: 'Customer Segmentation', tab: 'segmentation', desc: 'K-Means clustering & behavioral cohorts', keywords: ['segment', 'cohort', 'cluster', 'kmeans', 'champions', 'loyal', 'at-risk'] },
+    { label: 'CLV Scenario Simulator', tab: 'clv', desc: 'Gradient Boosting CLV prediction', keywords: ['clv', 'lifetime', 'forecast', 'simulate', 'whatif', 'value', 'spend'] },
+    { label: 'Churn Risk ML', tab: 'churn', desc: 'Random Forest churn classifier', keywords: ['churn', 'risk', 'lapse', 'dormancy', 'classifier'] },
+    { label: 'Big Data Architecture', tab: 'architecture', desc: 'HDFS, Hive, Spark & HBase pipeline', keywords: ['arch', 'architecture', 'hdfs', 'hive', 'spark', 'hbase', 'pipeline'] },
+    { label: 'Data Mining Catalog', tab: 'mining', desc: 'Automated catalog web scraper', keywords: ['mining', 'scrape', 'scraper', 'spider', 'catalog', 'products'] },
+    { label: 'Technical FAQ & Docs', tab: 'faq', desc: 'Platform specifications & architecture Q&A', keywords: ['faq', 'docs', 'help', 'specs', 'question'] }
+  ];
+
+  function openDropdown(itemsHtml) {
+    if (!dropdown) return;
+    dropdown.innerHTML = itemsHtml;
+    dropdown.style.display = 'block';
+  }
+
+  function closeDropdown() {
+    if (dropdown) dropdown.style.display = 'none';
+  }
+
+  function handleQuery(q) {
+    const query = String(q || '').trim();
+    if (!query) {
+      closeDropdown();
+      return;
+    }
+
+    const isNumeric = /^[0-9]+$/.test(query);
+    if (isNumeric) {
+      openDropdown(`
+        <div class="dash-search-result-item" data-action="lookup" data-id="${escapeHtml(query)}">
+          <div class="dash-search-result-icon">🔍</div>
+          <div>
+            <div class="dash-search-result-title">Look up Customer #${escapeHtml(query)}</div>
+            <div class="dash-search-result-sub">Query verified NoSQL columnar serving store (Press Enter)</div>
+          </div>
+          <span class="dash-search-result-enter">↵ Enter</span>
+        </div>
+      `);
+      return;
+    }
+
+    const lower = query.toLowerCase();
+    const matches = NAV_TARGETS.filter(t => 
+      t.label.toLowerCase().includes(lower) || 
+      t.keywords.some(k => k.includes(lower))
+    );
+
+    if (matches.length > 0) {
+      const html = matches.slice(0, 5).map(m => `
+        <div class="dash-search-result-item" data-action="navigate" data-tab="${escapeHtml(m.tab)}">
+          <div class="dash-search-result-icon">⚡</div>
+          <div>
+            <div class="dash-search-result-title">${escapeHtml(m.label)}</div>
+            <div class="dash-search-result-sub">${escapeHtml(m.desc)}</div>
+          </div>
+          <span class="dash-search-result-enter">Jump →</span>
+        </div>
+      `).join('');
+      openDropdown(html);
+    } else {
+      openDropdown(`
+        <div class="dash-search-result-empty">
+          No matching views or profiles for "<strong>${escapeHtml(query)}</strong>". Try customer ID (e.g. 15485) or "rfm", "clv", "churn", "architecture".
+        </div>
+      `);
+    }
+  }
+
+  input.addEventListener('input', (e) => handleQuery(e.target.value));
+
+  input.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') {
+      const q = input.value.trim();
+      if (!q) return;
+      if (/^[0-9]+$/.test(q)) {
+        closeDropdown();
+        window.switchDashboardTab('lookup');
+        const lookupInput = document.getElementById('lookupCustIdInput');
+        const lookupBtn = document.getElementById('lookupSearchBtn');
+        if (lookupInput) lookupInput.value = q;
+        if (lookupBtn) lookupBtn.click();
+      } else {
+        const lower = q.toLowerCase();
+        const match = NAV_TARGETS.find(t => 
+          t.label.toLowerCase().includes(lower) || 
+          t.keywords.some(k => k.includes(lower))
+        );
+        if (match) {
+          closeDropdown();
+          window.switchDashboardTab(match.tab);
+        }
+      }
+    } else if (e.key === 'Escape') {
+      closeDropdown();
+    }
+  });
+
+  if (dropdown) {
+    dropdown.addEventListener('click', (e) => {
+      const item = e.target.closest('.dash-search-result-item');
+      if (!item) return;
+      const action = item.dataset.action;
+      if (action === 'lookup') {
+        const id = item.dataset.id;
+        closeDropdown();
+        window.switchDashboardTab('lookup');
+        const lookupInput = document.getElementById('lookupCustIdInput');
+        const lookupBtn = document.getElementById('lookupSearchBtn');
+        if (lookupInput) lookupInput.value = id;
+        if (lookupBtn) lookupBtn.click();
+      } else if (action === 'navigate') {
+        const tab = item.dataset.tab;
+        closeDropdown();
+        window.switchDashboardTab(tab);
+      }
+    });
+  }
+
+  // Close dropdown on outside click
+  document.addEventListener('click', (e) => {
+    if (!container.contains(e.target)) {
+      closeDropdown();
+    }
+  });
+
+  // Global keyboard shortcut ⌘K / Ctrl+K
+  document.addEventListener('keydown', (e) => {
+    if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
+      e.preventDefault();
+      input.focus();
+      input.select();
+    }
+  });
+}
+

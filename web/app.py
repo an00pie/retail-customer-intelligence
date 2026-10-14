@@ -199,10 +199,15 @@ def api_predict():
         return jsonify({"error": "Malformed JSON payload"}), 400
 
     try:
-        recency = int(data.get("recency_days", 25))
-        freq = int(data.get("frequency", 6))
-        spend = float(data.get("total_spend", 1250.0))
-        tenure = int(data.get("tenure_days", 300))
+        recency_val = data.get("recency_days") if "recency_days" in data else data.get("recency", 25)
+        freq_val = data.get("frequency") if "frequency" in data else data.get("freq", 6)
+        spend_val = data.get("total_spend") if "total_spend" in data else data.get("monetary", 1250.0)
+        tenure_val = data.get("tenure_days") if "tenure_days" in data else data.get("tenure", 300)
+
+        recency = int(recency_val)
+        freq = int(freq_val)
+        spend = float(spend_val)
+        tenure = int(tenure_val)
     except (ValueError, TypeError):
         return jsonify({"error": "Feature values must be valid numbers"}), 400
 

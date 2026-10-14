@@ -106,6 +106,46 @@ class CustomerPlatformTestCase(unittest.TestCase):
             self.assertGreater(len(data["labels"]), 0)
             self.assertGreater(data["total_revenue"], 0)
 
+    def test_prediction_feature_aliases(self):
+        """Verify POST /api/predict correctly parses alternate parameter aliases (recency, monetary, freq)."""
+        payload = {
+            "recency": 15,
+            "freq": 12,
+            "monetary": 4500.0,
+            "tenure": 250
+        }
+        response = self.app.post("/api/predict", json=payload)
+        self.assertEqual(response.status_code, 200)
+        data = json.loads(response.data)
+        self.assertEqual(data["recency_days"], 15)
+        self.assertEqual(data["frequency"], 12)
+        self.assertEqual(data["monetary"], 4500.0)
+        self.assertEqual(data["tenure_days"], 250)
+        self.assertEqual(data["segment"], "Champions")
+
+    def test_multi_segment_customer_lookup(self):
+        """Verify looking up customers from all 4 known segments in the database."""
+        test_accounts = {
+            "15485": "Champions",
+            "13748": "At-Risk",
+            "12364": "Loyal Customers",
+            "16964": "Lost / Churned"
+        }
+        for cust_id, expected_seg in test_accounts.items():
+            res = self.app.get(f"/api/customer/{cust_id}")
+            self.assertEqual(res.status_code, 200, f"Customer {cust_id} failed")
+            profile = json.loads(res.data)
+            self.assertEqual(profile["customer_id"], cust_id)
+            self.assertEqual(profile["segment"], expected_seg)
+            self.assertGreaterEqual(profile["churn_probability"], 0.0)
+            self.assertLessEqual(profile["churn_probability"], 1.0)
+
+    def test_cors_headers(self):
+        """Verify CORS headers are present on API responses."""
+        res = self.app.get("/api/health")
+        self.assertEqual(res.headers.get("Access-Control-Allow-Origin"), "*")
+        self.assertIn("GET", res.headers.get("Access-Control-Allow-Methods", ""))
+
     def test_evaluation_metrics_api(self):
         """Verify model evaluation benchmark metrics endpoint."""
         res = self.app.get("/api/metrics")
