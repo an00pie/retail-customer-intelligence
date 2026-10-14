@@ -70,14 +70,20 @@ def run_e2e_tests(base_url="http://localhost:8501"):
         
         # Test period pill 7D
         page.locator('button.period-pill[data-period="7d"]').click()
-        page.wait_for_timeout(1000)
+        try:
+            page.wait_for_function("() => document.getElementById('kpiTotalOrders').textContent !== '17,132'", timeout=12000)
+        except Exception:
+            page.wait_for_timeout(3000)
         kpi_orders_7d = page.locator("#kpiTotalOrders").text_content()
         kpi_rev_7d = page.locator("#kpiTotalRevenue").text_content()
         print(f"  After 7D switch -> Orders: {kpi_orders_7d} | Rev: {kpi_rev_7d}")
         
         # Test period pill All
         page.locator('button.period-pill[data-period="all"]').click()
-        page.wait_for_timeout(1000)
+        try:
+            page.wait_for_function(f"() => document.getElementById('kpiTotalOrders').textContent !== '{kpi_orders_7d}'", timeout=12000)
+        except Exception:
+            page.wait_for_timeout(3000)
         kpi_orders_all = page.locator("#kpiTotalOrders").text_content()
         kpi_rev_all = page.locator("#kpiTotalRevenue").text_content()
         print(f"  After All switch -> Orders: {kpi_orders_all} | Rev: {kpi_rev_all}")
@@ -87,12 +93,15 @@ def run_e2e_tests(base_url="http://localhost:8501"):
         print("\n--- Phase 3: Customer Lookup & Ledger Audit ---")
         # Switch to Lookup tab
         page.evaluate("() => window.switchDashboardTab('lookup')")
-        page.wait_for_timeout(600)
+        page.wait_for_timeout(800)
+
+        # Ensure search button is ready
+        page.locator("#lookupSearchBtn:not([disabled])").wait_for(timeout=20000)
 
         # Lookup 15485 (Champions)
         page.fill("#lookupCustIdInput", "15485")
         page.click("#lookupSearchBtn")
-        page.wait_for_timeout(1200)
+        page.locator("#lookupSearchBtn:not([disabled])").wait_for(timeout=20000)
         card_text_15485 = page.locator("#customerProfileTarget").text_content()
         has_champ = "Champions" in card_text_15485
         print(f"  Lookup #15485 -> Segment 'Champions' Found: {has_champ}")
@@ -100,7 +109,7 @@ def run_e2e_tests(base_url="http://localhost:8501"):
         # Lookup 13748 (At-Risk)
         page.fill("#lookupCustIdInput", "13748")
         page.click("#lookupSearchBtn")
-        page.wait_for_timeout(1200)
+        page.locator("#lookupSearchBtn:not([disabled])").wait_for(timeout=20000)
         card_text_13748 = page.locator("#customerProfileTarget").text_content()
         has_risk = "At-Risk" in card_text_13748
         print(f"  Lookup #13748 -> Segment 'At-Risk' Found: {has_risk}")
@@ -108,7 +117,7 @@ def run_e2e_tests(base_url="http://localhost:8501"):
         # Lookup 99999 (Honest 404 Not Found)
         page.fill("#lookupCustIdInput", "99999")
         page.click("#lookupSearchBtn")
-        page.wait_for_timeout(1200)
+        page.locator("#lookupSearchBtn:not([disabled])").wait_for(timeout=20000)
         card_text_99999 = page.locator("#customerProfileTarget").text_content()
         has_not_found = "Not Found" in card_text_99999
         print(f"  Lookup #99999 -> Honest 'Not Found' State: {has_not_found}")
