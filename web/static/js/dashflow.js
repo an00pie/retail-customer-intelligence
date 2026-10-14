@@ -93,12 +93,19 @@ function initSpaDashboardNavigation() {
     }
   });
 
-  // Global modal opener/closer
+  // Global modal opener/closer with focus management
+  window.lastFocusedElement = null;
+
   window.openSpaModal = function(modalName) {
     const modal = document.getElementById(`modal-${modalName}`);
     if (modal) {
+      window.lastFocusedElement = document.activeElement;
       modal.classList.add('open');
       document.body.style.overflow = 'hidden';
+      const closeBtn = modal.querySelector('.spa-modal-close-btn');
+      if (closeBtn) {
+        setTimeout(() => closeBtn.focus(), 280);
+      }
     }
   };
 
@@ -110,6 +117,10 @@ function initSpaDashboardNavigation() {
       document.querySelectorAll('.spa-modal-overlay').forEach(m => m.classList.remove('open'));
     }
     document.body.style.overflow = '';
+    if (window.lastFocusedElement && typeof window.lastFocusedElement.focus === 'function') {
+      window.lastFocusedElement.focus();
+      window.lastFocusedElement = null;
+    }
   };
 
   // Close modals on overlay backdrop click or Escape key
@@ -225,11 +236,23 @@ function initFaqAccordion() {
   faqItems.forEach(item => {
     const header = item.querySelector('.faq-header');
     if (!header) return;
-    header.addEventListener('click', () => {
+    function toggleFaq() {
       const isOpen = item.classList.contains('active');
-      faqItems.forEach(other => other.classList.remove('active'));
+      faqItems.forEach(other => {
+        other.classList.remove('active');
+        const otherH = other.querySelector('.faq-header');
+        if (otherH) otherH.setAttribute('aria-expanded', 'false');
+      });
       if (!isOpen) {
         item.classList.add('active');
+        header.setAttribute('aria-expanded', 'true');
+      }
+    }
+    header.addEventListener('click', toggleFaq);
+    header.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        toggleFaq();
       }
     });
   });

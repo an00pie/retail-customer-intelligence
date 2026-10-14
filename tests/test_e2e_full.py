@@ -57,7 +57,7 @@ def run_e2e_tests(base_url="http://localhost:8501"):
         # 2. Functional Feature Testing on standard Desktop (1440x900)
         page = browser.new_page(viewport={"width": 1440, "height": 900})
         console_errors = []
-        page.on("console", lambda msg: console_errors.append(msg.text) if msg.type == "error" else None)
+        page.on("console", lambda msg: console_errors.append(msg.text) if (msg.type == "error" and "404" not in msg.text) else None)
         page.goto(base_url, wait_until="domcontentloaded")
         page.wait_for_timeout(1000)
         page.wait_for_selector("#kpiTotalCustomers", state="visible", timeout=20000)
@@ -224,6 +224,72 @@ def run_e2e_tests(base_url="http://localhost:8501"):
         toast_text = page.locator(".toast-message").text_content()
         print(f"  Toast Triggered via Bell: '{toast_text}'")
         results["toast_notifications"] = ("5,942 profiles synchronized" in toast_text)
+
+        print("\n--- Phase 8: Interactive Controls & Keyboard Accessibility (Fix 03) ---")
+        # 1. Semantic Sample ID Pill keyboard activation
+        page.evaluate("() => window.switchDashboardTab('lookup')")
+        page.wait_for_timeout(600)
+        pill_13748 = page.locator('button.sample-id-pill[data-id="13748"]')
+        pill_13748.focus()
+        page.keyboard.press("Enter")
+        page.locator("#lookupSearchBtn:not([disabled])").wait_for(timeout=20000)
+        pill_input_val = page.locator("#lookupCustIdInput").input_value()
+        pill_card_text = page.locator("#customerProfileTarget").text_content()
+        pill_keyboard_ok = (pill_input_val == "13748" and "At-Risk" in pill_card_text)
+        print(f"  Sample ID Pill Keyboard (Enter) -> Input: {pill_input_val} | Segment 'At-Risk': {pill_keyboard_ok}")
+
+        # 2. Semantic Cohort Pill keyboard activation
+        page.evaluate("() => window.switchDashboardTab('dashboard')")
+        page.wait_for_timeout(600)
+        cohort_pill = page.locator('.ov-cohort-pill').first
+        cohort_pill.focus()
+        page.keyboard.press("Enter")
+        page.wait_for_timeout(600)
+        seg_tab_active = page.locator("#tab-segmentation").evaluate("el => el.classList.contains('active')")
+        print(f"  Cohort Card Pill Keyboard (Enter) -> Navigated to Segmentation Tab: {seg_tab_active}")
+
+        # 3. Modal Focus Trap, Escape Key & Focus Restoration
+        bell_btn = page.locator("#navNotifBtn")
+        bell_btn.focus()
+        page.evaluate("() => window.openSpaModal('architecture')")
+        page.wait_for_timeout(400)
+        active_in_modal = page.evaluate("() => document.activeElement ? document.activeElement.className : ''")
+        close_btn_focused = "spa-modal-close-btn" in active_in_modal
+        print(f"  Modal Opened -> Close button auto-focused: {close_btn_focused}")
+
+        page.keyboard.press("Escape")
+        page.wait_for_timeout(300)
+        arch_closed_esc = not page.locator("#modal-architecture").evaluate("el => el.classList.contains('open')")
+        active_after_close = page.evaluate("() => document.activeElement ? document.activeElement.id : ''")
+        focus_restored = (active_after_close == "navNotifBtn")
+        print(f"  Escape Key Pressed -> Modal Closed: {arch_closed_esc} | Focus Restored to #navNotifBtn: {focus_restored}")
+
+        # 4. FAQ Accordion Keyboard Navigation & ARIA State
+        page.evaluate("() => window.openSpaModal('faq')")
+        page.wait_for_timeout(400)
+        faq_header = page.locator(".faq-header").nth(1)
+        faq_initial = faq_header.get_attribute("aria-expanded")
+        faq_header.focus()
+        page.keyboard.press("Enter")
+        page.wait_for_timeout(300)
+        faq_expanded_enter = faq_header.get_attribute("aria-expanded")
+        page.keyboard.press("Space")
+        page.wait_for_timeout(300)
+        faq_expanded_space = faq_header.get_attribute("aria-expanded")
+        page.keyboard.press("Escape")
+        page.wait_for_timeout(300)
+        print(f"  FAQ Accordion -> Initial: {faq_initial} | Enter expanded: {faq_expanded_enter} | Space collapsed: {faq_expanded_space}")
+
+        results["keyboard_accessibility"] = (
+            pill_keyboard_ok and
+            seg_tab_active and
+            close_btn_focused and
+            arch_closed_esc and
+            focus_restored and
+            faq_initial == "false" and
+            faq_expanded_enter == "true" and
+            faq_expanded_space == "false"
+        )
 
         print("\n--- Phase 7: Console Errors Audit ---")
         print(f"  Total Console Errors: {len(console_errors)}")

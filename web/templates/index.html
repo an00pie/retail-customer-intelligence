@@ -52,7 +52,7 @@
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>
           <span class="notif-indicator"></span>
         </button>
-        <div class="nav-user-pill" onclick="window.showToast('Logged in as Administrator (Pro Plan)', 'info')" title="Administrator Account" style="cursor: pointer;">
+        <div class="nav-user-pill" role="button" tabindex="0" onclick="window.showToast('Logged in as Administrator (Pro Plan)', 'info')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();window.showToast('Logged in as Administrator (Pro Plan)', 'info');}" title="Administrator Account" style="cursor: pointer;">
           <div class="nav-user-avatar" style="background: rgba(16, 185, 129, 0.2); color: #34d399; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 11px;">AD</div>
           <div class="nav-user-info">
             <span class="nav-user-name">Admin</span>
@@ -630,22 +630,22 @@
                   </div>
 
                   <div class="ov-cohorts-grid">
-                    <div class="ov-cohort-pill" onclick="window.switchDashboardTab('segmentation')">
+                    <button type="button" class="ov-cohort-pill" onclick="window.switchDashboardTab('segmentation')">
                       <span class="ov-cohort-name">Champions</span>
                       <span class="ov-cohort-pct" style="color: #34d399;">23.4%</span>
-                    </div>
-                    <div class="ov-cohort-pill active" onclick="window.switchDashboardTab('segmentation')">
+                    </button>
+                    <button type="button" class="ov-cohort-pill active" onclick="window.switchDashboardTab('segmentation')">
                       <span class="ov-cohort-name">Loyal Customers</span>
                       <span class="ov-cohort-pct" style="color: #38bdf8;">38.7%</span>
-                    </div>
-                    <div class="ov-cohort-pill" onclick="window.switchDashboardTab('segmentation')">
+                    </button>
+                    <button type="button" class="ov-cohort-pill" onclick="window.switchDashboardTab('segmentation')">
                       <span class="ov-cohort-name">At Risk</span>
                       <span class="ov-cohort-pct" style="color: #f59e0b;">24.1%</span>
-                    </div>
-                    <div class="ov-cohort-pill" onclick="window.switchDashboardTab('segmentation')">
+                    </button>
+                    <button type="button" class="ov-cohort-pill" onclick="window.switchDashboardTab('segmentation')">
                       <span class="ov-cohort-name">Hibernating</span>
                       <span class="ov-cohort-pct" style="color: #c084fc;">13.8%</span>
-                    </div>
+                    </button>
                   </div>
 
                   <div class="ov-cluster-insights-list">
@@ -697,13 +697,13 @@
                     </div>
 
                     <div class="quick-customer-pills">
-                      <span class="sample-id-pill active" data-id="15485" title="Champions">#15485 (Champ)</span>
-                      <span class="sample-id-pill" data-id="13748" title="At-Risk">#13748 (At-Risk)</span>
-                      <span class="sample-id-pill" data-id="12364" title="Loyal Customers">#12364 (Loyal)</span>
-                      <span class="sample-id-pill" data-id="16964" title="Lost / Churned">#16964 (Lost)</span>
-                      <span class="sample-id-pill" data-id="13269" title="Top Spending Champion">#13269</span>
-                      <span class="sample-id-pill" data-id="18229" title="High Frequency Champion">#18229</span>
-                      <span class="sample-id-pill" data-id="99999" title="Non-existent test ID">#99999 (404)</span>
+                      <button type="button" class="sample-id-pill active" data-id="15485" title="Champions">#15485 (Champ)</button>
+                      <button type="button" class="sample-id-pill" data-id="13748" title="At-Risk">#13748 (At-Risk)</button>
+                      <button type="button" class="sample-id-pill" data-id="12364" title="Loyal Customers">#12364 (Loyal)</button>
+                      <button type="button" class="sample-id-pill" data-id="16964" title="Lost / Churned">#16964 (Lost)</button>
+                      <button type="button" class="sample-id-pill" data-id="13269" title="Top Spending Champion">#13269</button>
+                      <button type="button" class="sample-id-pill" data-id="18229" title="High Frequency Champion">#18229</button>
+                      <button type="button" class="sample-id-pill" data-id="99999" title="Non-existent test ID">#99999 (404)</button>
                     </div>
 
                     <div class="search-input-wrapper">
@@ -1209,10 +1209,10 @@
       <div class="spa-modal-body">
         <div class="faq-accordion-wrap" style="margin: 0; max-width: 100%;">
           <div class="faq-item active">
-            <div class="faq-header">
-              <div class="faq-question">What problem does the Customer Intelligence Platform solve?</div>
-              <div class="faq-chevron">▾</div>
-            </div>
+            <button type="button" class="faq-header" aria-expanded="true">
+              <span class="faq-question">What problem does the Customer Intelligence Platform solve?</span>
+              <span class="faq-chevron" aria-hidden="true">▾</span>
+            </button>
             <div class="faq-content">
               <div class="faq-content-inner">
                 Retail businesses struggle with massive unstructured transactional logs where identifying top customers, predicting future spend, and preventing customer churn is slow and fragmented. This platform provides an end-to-end Big Data pipeline from web mining to HDFS, Hive, Spark ML, and a high-performance columnar KV serving layer for automated decision-making.
@@ -1221,10 +1221,10 @@
           </div>
 
           <div class="faq-item">
-            <div class="faq-header">
-              <div class="faq-question">How does the serving layer achieve low-latency customer lookups?</div>
-              <div class="faq-chevron">▾</div>
-            </div>
+            <button type="button" class="faq-header" aria-expanded="false">
+              <span class="faq-question">How does the serving layer achieve low-latency customer lookups?</span>
+              <span class="faq-chevron" aria-hidden="true">▾</span>
+            </button>
             <div class="faq-content">
               <div class="faq-content-inner">
                 Analytical warehouse systems like Hive are optimized for large batch scans, not real-time lookups. For production serving, the platform utilizes an embedded columnar Key-Value store following Apache HBase column-family design (<code>info:</code>, <code>pred:</code>, <code>meta:</code>) with HappyBase interface compatibility, providing direct, indexed point lookups for 5,942 profiles.
@@ -1233,10 +1233,10 @@
           </div>
 
           <div class="faq-item">
-            <div class="faq-header">
-              <div class="faq-question">How does customer segmentation with K-Means work?</div>
-              <div class="faq-chevron">▾</div>
-            </div>
+            <button type="button" class="faq-header" aria-expanded="false">
+              <span class="faq-question">How does customer segmentation with K-Means work?</span>
+              <span class="faq-chevron" aria-hidden="true">▾</span>
+            </button>
             <div class="faq-content">
               <div class="faq-content-inner">
                 Unsupervised K-Means clustering (k=4) groups 5,942 customers into distinct cohorts: Champions (high spend &amp; frequency), Loyal Customers (steady orders), At-Risk (high past spend but inactive), and Lost / Churned (dormant single purchases). Segment mappings are verified in <code>models/segment_mapping.json</code>.

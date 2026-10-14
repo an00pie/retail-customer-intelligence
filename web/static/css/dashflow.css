@@ -3825,3 +3825,40 @@ section,
     transform: translateY(0) scale(1);
   }
 }
+
+/* ==============================================================================
+   ACCESSIBILITY & KEYBOARD FOCUS STATES
+   ============================================================================== */
+:focus-visible {
+  outline: 2px solid var(--accent-emerald-bright) !important;
+  outline-offset: 2px !important;
+  box-shadow: 0 0 12px rgba(52, 211, 153, 0.45) !important;
+}
+
+button.sample-id-pill {
+  font-family: inherit;
+  line-height: inherit;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+button.ov-cohort-pill {
+  font-family: inherit;
+  text-align: left;
+  width: 100%;
+}
+
+button.faq-header {
+  width: 100%;
+  background: transparent;
+  border: none;
+  font-family: inherit;
+  text-align: left;
+}
+
+.nav-user-pill:focus-visible {
+  outline: 2px solid var(--accent-emerald-bright) !important;
+  outline-offset: 2px !important;
+}
+
