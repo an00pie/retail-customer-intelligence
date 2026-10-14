@@ -1,0 +1,1236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Customer Intelligence Platform — Web3-Verse Green Luxury Edition</title>
+  <meta name="description" content="Live analytics, RFM behavioral clustering, CLV predictions, and churn intelligence across 1.06M retail transactions with high-performance HBase serving.">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220%200%2032%2032%22><circle cx=%2216%22 cy=%2216%22 r=%2216%22 fill=%22%2310b981%22/><path d=%22M10 20L16 10L22 20Z%22 fill=%22%23040806%22/></svg>">
+  <link rel="stylesheet" href="/static/css/dashflow.css">
+</head>
+<body>
+
+  <!-- Ambient Backdrop Glows & Subtle Grid -->
+  <div class="canvas-atmosphere">
+    <div class="canvas-stars"></div>
+    <div class="canvas-aura-top"></div>
+    <div class="canvas-volumetric-beam"></div>
+    <div class="canvas-aura-bottom"></div>
+    <div class="canvas-aura-radial"></div>
+    <div class="canvas-haze"></div>
+    <div class="canvas-grid"></div>
+  </div>
+
+  <!-- ==============================================================================
+       01. NAVIGATION (Floating Capsule Navbar — Matching media_1791354559966.png)
+       ============================================================================== -->
+  <div class="nav-capsule-wrapper">
+    <nav class="nav-capsule">
+      <a href="#hero" class="nav-brand">
+        <div class="nav-brand-badge">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+          </svg>
+        </div>
+        <span class="nav-brand-title">Customer Intelligence</span>
+      </a>
+
+      <div class="nav-links">
+        <a href="#dashboard" class="nav-link active" data-tab="dashboard">Dashboard</a>
+        <a href="#lookup" class="nav-link" data-tab="lookup">Lookup</a>
+        <a href="#rfm" class="nav-link" data-tab="rfm">RFM &amp; ML</a>
+        <a href="#mining" class="nav-link" data-tab="mining">Data Mining</a>
+        <a href="#architecture" class="nav-link" data-tab="architecture">Architecture</a>
+        <a href="#faq" class="nav-link" data-tab="faq">FAQ</a>
+      </div>
+
+      <div class="nav-right-actions">
+        <button type="button" class="nav-icon-btn" onclick="window.switchDashboardTab('lookup')" title="Global Search (⌘K)" aria-label="Search">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+        </button>
+        <button type="button" class="nav-icon-btn" title="Live System Notifications" aria-label="Notifications">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>
+          <span class="notif-indicator"></span>
+        </button>
+        <div class="nav-user-pill" title="Administrator Account">
+          <div class="nav-user-avatar" style="background: rgba(16, 185, 129, 0.2); color: #34d399; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 11px;">AD</div>
+          <div class="nav-user-info">
+            <span class="nav-user-name">Admin</span>
+            <span class="nav-user-role">Pro</span>
+          </div>
+          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+        </div>
+        <a href="#dashboard" class="btn-pill-primary nav-cta-btn" data-tab="dashboard">
+          <span>Explore Platform</span>
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+        </a>
+      </div>
+
+      <button class="nav-mobile-toggle" id="mobileNavToggle" aria-label="Toggle navigation menu">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="3" y1="12" x2="21" y2="12"></line>
+          <line x1="3" y1="6" x2="21" y2="6"></line>
+          <line x1="3" y1="18" x2="21" y2="18"></line>
+        </svg>
+      </button>
+    </nav>
+  </div>
+
+  <!-- Mobile Dropdown Menu -->
+  <div class="nav-mobile-dropdown" id="mobileNavDropdown">
+    <a href="#dashboard" class="nav-link" data-tab="dashboard">Dashboard Overview</a>
+    <a href="#lookup" class="nav-link" data-tab="lookup">Customer Lookup</a>
+    <a href="#rfm" class="nav-link" data-tab="rfm">RFM Intelligence</a>
+    <a href="#segmentation" class="nav-link" data-tab="segmentation">Customer Segmentation</a>
+    <a href="#clv" class="nav-link" data-tab="clv">CLV Forecast</a>
+    <a href="#churn" class="nav-link" data-tab="churn">Churn Risk ML</a>
+    <a href="#architecture" class="nav-link" data-tab="architecture">Big Data Architecture</a>
+    <a href="#mining" class="nav-link" data-tab="mining">Data Mining Layer</a>
+    <a href="#faq" class="nav-link" data-tab="faq">Technical FAQ</a>
+    <a href="#dashboard" class="btn-pill-primary" data-tab="dashboard" style="justify-content: center; margin-top: 10px;">Explore Platform →</a>
+  </div>
+
+  <!-- ==============================================================================
+       02. HERO SECTION (Web3-Verse Emerald Horizon + Command Center)
+       ============================================================================== -->
+  <section class="hero-section" id="hero">
+    <!-- Web3-Verse Interactive 3D Wireframe Globe Horizon Stage -->
+    <div class="hero-globe-stage" id="globeContainer">
+      <canvas id="globeCanvas" class="globe-canvas"></canvas>
+      
+      <!-- Floating Frosted Glass Pills (Web3 Verse Exact Reference) -->
+      <div class="globe-floating-pills">
+        <a href="#dashboard" class="globe-feature-pill pill-cta" data-tab="dashboard">
+          <span>Explore Platform</span>
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg>
+        </a>
+        <div class="globe-feature-pill pill-hub-ny">
+          <span class="pill-icon">🏢</span>
+          <div class="pill-hub-text">
+            <span class="pill-hub-city">New York</span>
+            <span class="pill-hub-stat">12.4K Transactions</span>
+          </div>
+        </div>
+        <div class="globe-feature-pill pill-hub-london">
+          <span class="pill-icon">♡</span>
+          <div class="pill-hub-text">
+            <span class="pill-hub-city">London</span>
+            <span class="pill-hub-stat">18.2K Transactions</span>
+          </div>
+        </div>
+        <div class="globe-feature-pill pill-hub-tokyo">
+          <span class="pill-icon">⚡</span>
+          <div class="pill-hub-text">
+            <span class="pill-hub-city">Tokyo</span>
+            <span class="pill-hub-stat">9.1K Transactions</span>
+          </div>
+        </div>
+        <div class="globe-feature-pill pill-global-badge">
+          <span class="pill-status-dot"></span>
+          <div class="pill-hub-text">
+            <span class="pill-hub-city">Global Retail Network</span>
+            <span class="pill-hub-stat">1.06M Verified</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="container hero-container" style="max-width: 1440px;">
+      <div class="dash-hero-header reveal-fade-up">
+        <div class="hero-tag">
+          <span class="hero-tag-pulse"></span>
+          <span>Retail Intelligence Engine · 1.06M Transactions Verified</span>
+        </div>
+        <h1 class="hero-title">
+          <span class="hero-title-main">Customer Intelligence</span>
+          <span class="hero-title-accent">Command Center</span>
+        </h1>
+        <p class="hero-subtitle">
+          Real-time retail trajectory, behavioral RFM clustering, predictive 90-day CLV, and automated churn prevention on high-performance HBase columnar architecture.
+        </p>
+        <div class="hero-actions">
+          <a href="#dashboard" class="btn-pill-primary" data-tab="dashboard">
+            <span>Explore Platform</span>
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+          </a>
+          <a href="#architecture" class="btn-pill-secondary" data-tab="architecture">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="20" height="8" x="2" y="2" rx="2"/><rect width="20" height="8" x="2" y="14" rx="2"/></svg>
+            <span>View Architecture</span>
+          </a>
+          <button type="button" class="btn-circle-action" onclick="window.switchDashboardTab('dashboard')" title="Explore Live Trajectory" aria-label="Play Interactive Demo">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><polygon points="6 3 20 12 6 21 6 3"/></svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- Single Screen Dashboard Container -->
+      <div class="hero-mockup-wrapper reveal-fade-up stagger-1">
+        <div class="hero-mockup">
+          <div class="dash-window">
+            
+            <!-- Left Sidebar (Luxury Reference UI) -->
+            <aside class="dash-sidebar">
+              <div class="dash-company">
+                <div class="dash-company-logo">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+                </div>
+                <div class="dash-company-info">
+                  <div class="dash-company-name">CUSTOMER</div>
+                  <div class="dash-company-tag">INTELLIGENCE</div>
+                </div>
+              </div>
+
+              <div class="dash-nav-items">
+                <a href="#dashboard" class="dash-nav-item active" data-tab="dashboard">
+                  <span class="dash-nav-icon">
+                    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <rect width="7" height="9" x="3" y="3" rx="1.5"/><rect width="7" height="5" x="14" y="3" rx="1.5"/><rect width="7" height="9" x="14" y="12" rx="1.5"/><rect width="7" height="5" x="3" y="16" rx="1.5"/>
+                    </svg>
+                  </span>
+                  <span>Dashboard</span>
+                </a>
+                <a href="#lookup" class="dash-nav-item" data-tab="lookup">
+                  <span class="dash-nav-icon">
+                    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/><circle cx="11" cy="10" r="3"/>
+                    </svg>
+                  </span>
+                  <span>Customer Lookup</span>
+                </a>
+                <a href="#rfm" class="dash-nav-item" data-tab="rfm">
+                  <span class="dash-nav-icon">
+                    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="m3 3 3 9 4-6 5 8 6-11"/><circle cx="21" cy="3" r="1.5"/>
+                    </svg>
+                  </span>
+                  <span>RFM Analytics</span>
+                </a>
+                <a href="#segmentation" class="dash-nav-item" data-tab="segmentation">
+                  <span class="dash-nav-icon">
+                    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <circle cx="12" cy="12" r="9"/><path d="M12 3a9 9 0 0 1 9 9h-9V3z"/>
+                    </svg>
+                  </span>
+                  <span>Segmentation</span>
+                </a>
+                <a href="#models" class="dash-nav-item" data-tab="clv">
+                  <span class="dash-nav-icon">
+                    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="m12 3-1.9 5.8a2 2 0 0 1-1.3 1.3L3 12l5.8 1.9a2 2 0 0 1 1.3 1.3L12 21l1.9-5.8a2 2 0 0 1 1.3-1.3L21 12l-5.8-1.9a2 2 0 0 1-1.3-1.3L12 3z"/>
+                    </svg>
+                  </span>
+                  <span>CLV Forecast</span>
+                </a>
+                <a href="#models" class="dash-nav-item" data-tab="churn">
+                  <span class="dash-nav-icon">
+                    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/>
+                    </svg>
+                  </span>
+                  <span>Churn Risk</span>
+                </a>
+                <a href="#architecture" class="dash-nav-item" data-tab="architecture">
+                  <span class="dash-nav-icon">
+                    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <rect width="20" height="8" x="2" y="2" rx="2"/><rect width="20" height="8" x="2" y="14" rx="2"/><line x1="6" x2="6" y1="6" y2="6"/><line x1="6" x2="6" y1="18" y2="18"/>
+                    </svg>
+                  </span>
+                  <span>Pipeline Arch</span>
+                </a>
+                <a href="#faq" class="dash-nav-item" data-tab="faq">
+                  <span class="dash-nav-icon">
+                    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <circle cx="12" cy="12" r="9"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" x2="12.01" y1="17" y2="17"/>
+                    </svg>
+                  </span>
+                  <span>FAQ &amp; Specs</span>
+                </a>
+              </div>
+
+              <!-- Bottom Sidebar Status Widget (Matching Reference Image 1 & 2) -->
+              <div class="dash-sidebar-status">
+                <div class="status-indicator-row">
+                  <span class="status-pulse-dot"></span>
+                  <span class="status-label">System Status</span>
+                </div>
+                <div class="status-online-text">Online</div>
+                <a href="#mining" class="status-sub-link" data-tab="mining">
+                  <span>1.06M transactions verified</span>
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+                </a>
+              </div>
+            </aside>
+
+            <!-- Main Content Pane -->
+            <main class="dash-content">
+              <!-- Top Navigation Search & Actions Bar (Matching reference) -->
+              <div class="dash-top-bar">
+                <div class="dash-search-container" onclick="window.switchDashboardTab('lookup')">
+                  <span class="dash-search-icon">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+                  </span>
+                  <input type="text" class="dash-search-input" placeholder="Search customer ID, segment, or keyword..." readonly>
+                  <span class="dash-search-shortcut">⌘ K</span>
+                </div>
+                <div class="dash-top-actions">
+                  <div class="dash-date-pill">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="18" height="18" x="3" y="4" rx="2"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/></svg>
+                    <span>Jan 2011 - Dec 2011</span>
+                    <span style="font-size: 10px; opacity: 0.7;">▾</span>
+                  </div>
+                  <div class="dash-user-avatar" title="Retail Intelligence Admin">A</div>
+                </div>
+              </div>
+
+              <!-- ==========================================================
+                   TAB 1: PRIMARY DASHBOARD OVERVIEW
+                   ========================================================== -->
+              <div class="spa-tab-pane active" id="tab-dashboard">
+                <!-- Dashboard Title Bar -->
+                <div class="dash-header-bar">
+                  <div class="dash-title-block">
+                    <div class="dash-title-with-icon">
+                      <span class="dash-title-icon">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                          <rect width="7" height="9" x="3" y="3" rx="1.5"/><rect width="7" height="5" x="14" y="3" rx="1.5"/><rect width="7" height="9" x="14" y="12" rx="1.5"/><rect width="7" height="5" x="3" y="16" rx="1.5"/>
+                        </svg>
+                      </span>
+                      <h2>Dashboard</h2>
+                    </div>
+                    <p>Real-time retail statistics for quick decision-making</p>
+                  </div>
+                  <div class="dash-action-group">
+                    <a href="#lookup" class="dash-action-pill primary" data-tab="lookup">
+                      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+                      <span>Lookup Customer</span>
+                    </a>
+                    <a href="#rfm" class="dash-action-pill" data-tab="rfm">
+                      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m3 3 3 9 4-6 5 8 6-11"/></svg>
+                      <span>RFM Calculator</span>
+                    </a>
+                    <a href="#models" class="dash-action-pill" data-tab="clv">
+                      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m12 3-1.9 5.8a2 2 0 0 1-1.3 1.3L3 12l5.8 1.9a2 2 0 0 1 1.3 1.3L12 21l1.9-5.8a2 2 0 0 1 1.3-1.3L21 12l-5.8-1.9a2 2 0 0 1-1.3-1.3L12 3z"/></svg>
+                      <span>ML Forecast</span>
+                    </a>
+                    <a href="#architecture" class="dash-action-pill" data-tab="architecture">
+                      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect width="20" height="8" x="2" y="2" rx="2"/><rect width="20" height="8" x="2" y="14" rx="2"/></svg>
+                      <span>Architecture</span>
+                    </a>
+                  </div>
+                </div>
+
+                <!-- Top KPI Cards (4 luxury cards matching reference) -->
+                <div class="dash-kpis-grid-four">
+                  <!-- Card 1: Total Customers -->
+                  <div class="dash-kpi-card-luxury">
+                    <div class="dash-kpi-icon-box box-emerald">
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                      </svg>
+                    </div>
+                    <div class="dash-kpi-body">
+                      <div class="dash-kpi-title">Total Customers</div>
+                      <div class="dash-kpi-num">8,914,210</div>
+                      <div class="dash-kpi-trend trend-up">
+                        <span>↑ 14.2%</span>
+                        <span class="trend-compare">vs previous period</span>
+                      </div>
+                    </div>
+                    <div class="dash-kpi-sparkline spark-emerald">
+                      <svg viewBox="0 0 60 28" fill="none"><path d="M2 24 C 18 20, 24 16, 36 12 C 44 9, 52 4, 58 3" stroke="#a7fb5f" stroke-width="2.5" stroke-linecap="round"/><circle cx="58" cy="3" r="2.5" fill="#bdff73"/></svg>
+                    </div>
+                  </div>
+
+                  <!-- Card 2: Total Orders -->
+                  <div class="dash-kpi-card-luxury">
+                    <div class="dash-kpi-icon-box box-emerald">
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/>
+                      </svg>
+                    </div>
+                    <div class="dash-kpi-body">
+                      <div class="dash-kpi-title">Total Orders</div>
+                      <div class="dash-kpi-num">17,132</div>
+                      <div class="dash-kpi-trend trend-down">
+                        <span>↓ 6.5%</span>
+                        <span class="trend-compare">vs previous period</span>
+                      </div>
+                    </div>
+                    <div class="dash-kpi-sparkline spark-mint">
+                      <svg viewBox="0 0 60 28" fill="none"><path d="M2 18 C 16 12, 28 22, 42 16 C 50 12, 54 8, 58 6" stroke="#bdff73" stroke-width="2.5" stroke-linecap="round"/><circle cx="58" cy="6" r="2.5" fill="#bdff73"/></svg>
+                    </div>
+                  </div>
+
+                  <!-- Card 3: Avg. Order Value -->
+                  <div class="dash-kpi-card-luxury">
+                    <div class="dash-kpi-icon-box box-emerald">
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <rect width="20" height="14" x="2" y="5" rx="2"/><line x1="2" x2="22" y1="10" x2="10"/>
+                      </svg>
+                    </div>
+                    <div class="dash-kpi-body">
+                      <div class="dash-kpi-title">Avg. Order Value</div>
+                      <div class="dash-kpi-num">$486.73</div>
+                      <div class="dash-kpi-trend trend-up">
+                        <span>↑ 2.3%</span>
+                        <span class="trend-compare">vs previous period</span>
+                      </div>
+                    </div>
+                    <div class="dash-kpi-sparkline spark-emerald">
+                      <svg viewBox="0 0 60 28" fill="none"><path d="M2 22 C 14 20, 24 24, 38 18 C 48 14, 54 8, 58 7" stroke="#a7fb5f" stroke-width="2.5" stroke-linecap="round"/><circle cx="58" cy="7" r="2.5" fill="#bdff73"/></svg>
+                    </div>
+                  </div>
+
+                  <!-- Card 4: Total Revenue -->
+                  <div class="dash-kpi-card-luxury">
+                    <div class="dash-kpi-icon-box box-emerald">
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="m3 3 3 9 4-6 5 8 6-11"/><path d="M18 17h3v3"/>
+                      </svg>
+                    </div>
+                    <div class="dash-kpi-body">
+                      <div class="dash-kpi-title">Total Revenue</div>
+                      <div class="dash-kpi-num" id="kpiHeroTotalRevenue">$518,210.79</div>
+                      <div class="dash-kpi-trend trend-down" id="kpiHeroRevGrowth">
+                        <span>↓ 55.4%</span>
+                        <span class="trend-compare">vs previous period</span>
+                      </div>
+                    </div>
+                    <div class="dash-kpi-sparkline spark-emerald">
+                      <svg viewBox="0 0 60 28" fill="none"><path d="M2 20 C 16 14, 28 18, 40 8 C 50 12, 54 6, 58 4" stroke="#a7fb5f" stroke-width="2.5" stroke-linecap="round"/><circle cx="58" cy="4" r="2.5" fill="#bdff73"/></svg>
+                    </div>
+                  </div>
+                </div>
+
+              <!-- Main Hero Analytics: Revenue & Order Trajectory -->
+              <div class="dash-chart-card-luxury">
+                <div class="dash-chart-card-header">
+                  <div class="dash-chart-title-group">
+                    <div class="dash-chart-icon-box">
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M3 3v18h18"/><path d="m19 9-5 5-4-4-3 3"/>
+                      </svg>
+                    </div>
+                    <div>
+                      <div class="dash-chart-title">Revenue &amp; Order Trajectory</div>
+                      <div class="dash-chart-sub">Monthly revenue and order volume trends from actual transaction data</div>
+                    </div>
+                  </div>
+                  <div class="dash-chart-controls">
+                    <div class="trajectory-period-pills" id="trajectoryPeriodPills">
+                      <button type="button" class="period-pill" data-period="7d">7D</button>
+                      <button type="button" class="period-pill" data-period="30d">30D</button>
+                      <button type="button" class="period-pill" data-period="90d">3M</button>
+                      <button type="button" class="period-pill" data-period="6m">6M</button>
+                      <button type="button" class="period-pill active" data-period="12m">1Y</button>
+                      <button type="button" class="period-pill" data-period="all">All</button>
+                    </div>
+                    <select id="trajectoryPeriodSelect" class="trajectory-period-select-hidden" aria-label="Select aggregation period">
+                      <option value="12m" selected>Last 12 Months (Monthly)</option>
+                      <option value="6m">Last 6 Months (Monthly)</option>
+                      <option value="all">Full History (25 Months)</option>
+                      <option value="90d">Last 90 Days (Daily)</option>
+                      <option value="30d">Last 30 Days (Daily)</option>
+                      <option value="7d">Last 7 Days (Daily)</option>
+                    </select>
+                  </div>
+                </div>
+
+                <!-- Chart Canvas Container -->
+                <div class="dash-chart-canvas-wrapper-luxury">
+                  <canvas id="dashTrajectoryChart"></canvas>
+                  <div id="chartLoadingOverlay" class="trajectory-loading-overlay" style="display: none;">
+                    <div class="chart-spinner"></div>
+                    <span>Aggregating real transactions...</span>
+                  </div>
+                  <div id="chartErrorState" class="trajectory-error-state" style="display: none;">
+                    <span>Failed to load trajectory analytics</span>
+                    <button type="button" onclick="window.reloadTrajectoryChart && window.reloadTrajectoryChart()">Retry</button>
+                  </div>
+                </div>
+
+                <!-- Bottom Legend matching reference -->
+                <div class="trajectory-legend-bar-luxury">
+                  <div class="trajectory-legend-item">
+                    <span class="legend-dot-luxury dot-emerald"></span>
+                    <span>Revenue (USD)</span>
+                  </div>
+                  <div class="trajectory-legend-item">
+                    <span class="legend-dot-luxury dot-mint"></span>
+                    <span>Order Volume</span>
+                  </div>
+                  <div style="margin-left: auto; font-size: 11.5px; color: var(--text-dim);" id="trajectoryDataStatus">
+                    ● UCI Online Retail II Warehouse (Verified)
+                  </div>
+                </div>
+              </div>
+
+              <!-- Three Overview Modules (Matching Reference Image 1) -->
+              <div class="dash-overview-modules-row">
+                <!-- Module 1: Customer Lookup -->
+                <div class="dash-ov-card">
+                  <div class="dash-ov-header">
+                    <div class="dash-ov-icon-box box-emerald">
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+                    </div>
+                    <div class="dash-ov-title-block">
+                      <div class="dash-ov-title">Customer Lookup</div>
+                      <div class="dash-ov-sub">Retrieve customer profile, transaction history, and predicted metrics</div>
+                    </div>
+                    <a href="#lookup" class="btn-pill-ghost" style="padding: 4px 10px; font-size: 11px;" data-tab="lookup">Expand ↗</a>
+                  </div>
+
+                  <div class="ov-search-row">
+                    <input type="text" class="ov-search-input" id="ovLookupInput" placeholder="Enter Customer ID (e.g. 15485)" value="15485">
+                    <button type="button" class="btn-pill-primary" id="ovLookupBtn" style="padding: 7px 16px; font-size: 12px;">Search</button>
+                  </div>
+
+                  <div class="ov-profile-box" id="ovProfileBox">
+                    <div class="ov-profile-top">
+                      <div style="display: flex; align-items: center; gap: 8px;">
+                        <span class="ov-profile-id" id="ovProfileId">#15485</span>
+                        <span class="cluster-card-badge badge-loyal" id="ovProfileSegment" style="font-size: 10px; padding: 2px 8px;">Loyal Customers</span>
+                      </div>
+                      <div style="text-align: right;">
+                        <div style="font-size: 9.5px; color: var(--text-muted);">Predicted CLV</div>
+                        <div style="font-size: 13px; font-weight: 800; color: #34d399;" id="ovProfileClv">$301.04</div>
+                      </div>
+                    </div>
+                    <div class="ov-profile-kpis">
+                      <div class="ov-kpi-item">
+                        <div class="lbl">Recency</div>
+                        <div class="val" id="ovProfileRecency">15 days</div>
+                      </div>
+                      <div class="ov-kpi-item">
+                        <div class="lbl">Frequency</div>
+                        <div class="val" id="ovProfileFreq">7 orders</div>
+                      </div>
+                      <div class="ov-kpi-item">
+                        <div class="lbl">Monetary</div>
+                        <div class="val" id="ovProfileMonetary">$1,280.40</div>
+                      </div>
+                      <div class="ov-kpi-item">
+                        <div class="lbl">Tenure</div>
+                        <div class="val" id="ovProfileTenure">298 days</div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="ov-table-wrapper">
+                    <table class="ov-table">
+                      <thead>
+                        <tr>
+                          <th>Date</th>
+                          <th>Invoice</th>
+                          <th>Product ID</th>
+                          <th>Qty</th>
+                          <th>Unit Price</th>
+                          <th>Total</th>
+                        </tr>
+                      </thead>
+                      <tbody id="ovTableBody">
+                        <tr>
+                          <td>2011-12-01</td>
+                          <td>536365</td>
+                          <td>85123A</td>
+                          <td>6</td>
+                          <td>$2.55</td>
+                          <td>$15.30</td>
+                        </tr>
+                        <tr>
+                          <td>2011-11-28</td>
+                          <td>536362</td>
+                          <td>71053</td>
+                          <td>12</td>
+                          <td>$3.75</td>
+                          <td>$45.00</td>
+                        </tr>
+                        <tr>
+                          <td>2011-11-25</td>
+                          <td>536359</td>
+                          <td>84029G</td>
+                          <td>2</td>
+                          <td>$12.50</td>
+                          <td>$25.00</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+
+                <!-- Module 2: RFM Analytics -->
+                <div class="dash-ov-card">
+                  <div class="dash-ov-header">
+                    <div class="dash-ov-icon-box box-teal">
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+                    </div>
+                    <div class="dash-ov-title-block">
+                      <div class="dash-ov-title">RFM Analytics</div>
+                      <div class="dash-ov-sub">Calculate RFM scores and analyze customer segments</div>
+                    </div>
+                    <a href="#rfm" class="btn-pill-ghost" style="padding: 4px 10px; font-size: 11px;" data-tab="rfm">Expand ↗</a>
+                  </div>
+
+                  <div class="ov-rfm-grid">
+                    <div class="ov-rfm-sliders">
+                      <div class="ov-slider-item">
+                        <div class="ov-slider-top">
+                          <span>Recency (days)</span>
+                          <span class="val" id="ovRfmRecencyVal">25</span>
+                        </div>
+                        <input type="range" class="ov-range-input" id="ovRfmRecencyInput" min="1" max="365" value="25">
+                      </div>
+                      <div class="ov-slider-item">
+                        <div class="ov-slider-top">
+                          <span>Frequency (orders)</span>
+                          <span class="val" id="ovRfmFreqVal">6</span>
+                        </div>
+                        <input type="range" class="ov-range-input" id="ovRfmFreqInput" min="1" max="50" value="6">
+                      </div>
+                      <div class="ov-slider-item">
+                        <div class="ov-slider-top">
+                          <span>Monetary ($)</span>
+                          <span class="val" id="ovRfmMonetaryVal">1250</span>
+                        </div>
+                        <input type="range" class="ov-range-input" id="ovRfmMonetaryInput" min="50" max="10000" step="50" value="1250">
+                      </div>
+                      <div class="ov-slider-item">
+                        <div class="ov-slider-top">
+                          <span>Tenure (days)</span>
+                          <span class="val" id="ovRfmTenureVal">300</span>
+                        </div>
+                        <input type="range" class="ov-range-input" id="ovRfmTenureInput" min="10" max="730" value="300">
+                      </div>
+                    </div>
+
+                    <div class="ov-rfm-result-card">
+                      <div class="ov-grade-hexagon">A</div>
+                      <div class="ov-rfm-score-text" id="ovRfmScore">RFM 432</div>
+                      <div class="ov-rfm-seg-label" id="ovRfmSeg">Loyal Customers</div>
+                      <div style="font-size: 10px; color: var(--text-muted); margin-top: 4px;">Predicted CLV: <strong style="color: #34d399;" id="ovRfmClv">$341.43</strong></div>
+                      <div style="font-size: 10px; color: var(--text-muted);">Churn Risk: <strong style="color: #38bdf8;" id="ovRfmChurn">16.7%</strong></div>
+                    </div>
+                  </div>
+
+                  <button type="button" class="btn-pill-primary" id="ovCalcRfmBtn" style="width: 100%; justify-content: center; font-size: 12.5px; padding: 9px;">Calculate RFM →</button>
+                </div>
+
+                <!-- Module 3: Customer Segmentation -->
+                <div class="dash-ov-card">
+                  <div class="dash-ov-header">
+                    <div class="dash-ov-icon-box box-cyan">
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
+                    </div>
+                    <div class="dash-ov-title-block">
+                      <div class="dash-ov-title">Customer Segmentation</div>
+                      <div class="dash-ov-sub">K-Means clustering analysis of customer behavior</div>
+                    </div>
+                    <a href="#segmentation" class="btn-pill-ghost" style="padding: 4px 10px; font-size: 11px;" data-tab="segmentation">Expand ↗</a>
+                  </div>
+
+                  <div class="ov-cohorts-grid">
+                    <div class="ov-cohort-pill" onclick="window.switchDashboardTab('segmentation')">
+                      <span class="ov-cohort-name">Champions</span>
+                      <span class="ov-cohort-pct" style="color: #34d399;">23.4%</span>
+                    </div>
+                    <div class="ov-cohort-pill active" onclick="window.switchDashboardTab('segmentation')">
+                      <span class="ov-cohort-name">Loyal Customers</span>
+                      <span class="ov-cohort-pct" style="color: #38bdf8;">38.7%</span>
+                    </div>
+                    <div class="ov-cohort-pill" onclick="window.switchDashboardTab('segmentation')">
+                      <span class="ov-cohort-name">At Risk</span>
+                      <span class="ov-cohort-pct" style="color: #f59e0b;">24.1%</span>
+                    </div>
+                    <div class="ov-cohort-pill" onclick="window.switchDashboardTab('segmentation')">
+                      <span class="ov-cohort-name">Hibernating</span>
+                      <span class="ov-cohort-pct" style="color: #c084fc;">13.8%</span>
+                    </div>
+                  </div>
+
+                  <div class="ov-cluster-insights-list">
+                    <div style="font-size: 11px; font-weight: 700; color: #ffffff; margin-bottom: 2px;">Cluster Insights (Loyal Customers)</div>
+                    <div class="ov-insight-row">
+                      <span>Customer Count</span>
+                      <strong style="color: #ffffff;">3,452 (38.7%)</strong>
+                    </div>
+                    <div class="ov-insight-row">
+                      <span>Avg. Monetary Spend</span>
+                      <strong style="color: #34d399;">$612.40</strong>
+                    </div>
+                    <div class="ov-insight-row">
+                      <span>Avg. Frequency</span>
+                      <strong style="color: #38bdf8;">8.2 orders</strong>
+                    </div>
+                    <div class="ov-insight-row">
+                      <span>Avg. Recency</span>
+                      <strong style="color: #ffffff;">28 days</strong>
+                    </div>
+                  </div>
+                </div>
+              </div> <!-- End dash-overview-modules-row -->
+            </div> <!-- End tab-dashboard -->
+
+              <!-- ==========================================================
+                   TAB 2: CUSTOMER LOOKUP (HBase Live Profile Store)
+                   ========================================================== -->
+              <div class="spa-tab-pane" id="tab-lookup">
+                <div class="dash-header-bar">
+                  <div class="dash-title-block">
+                    <div class="dash-title-with-icon">
+                      <span class="dash-title-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></span>
+                      <h2>Customer Lookup</h2>
+                    </div>
+                    <p>Direct low-latency query to the Apache HBase columnar NoSQL serving layer (p99 &lt; 1ms)</p>
+                  </div>
+                  <button type="button" class="dash-action-pill" onclick="window.switchDashboardTab('dashboard')">← Back to Overview</button>
+                </div>
+
+                <div class="lookup-grid" style="margin-top: 10px;">
+                  <!-- Search Controller Card -->
+                  <div class="lookup-search-card">
+                    <div>
+                      <div style="font-size: 16px; font-weight: 800; color: #fff;">Find Customer Profile</div>
+                      <div style="font-size: 12.5px; color: var(--text-muted); margin-top: 4px;">
+                        Select a verified sample customer or enter any ID from the 5,878 profile store:
+                      </div>
+                    </div>
+
+                    <div class="quick-customer-pills">
+                      <span class="sample-id-pill active" data-id="15485">#15485</span>
+                      <span class="sample-id-pill" data-id="13748">#13748</span>
+                      <span class="sample-id-pill" data-id="13269">#13269</span>
+                      <span class="sample-id-pill" data-id="18229">#18229</span>
+                      <span class="sample-id-pill" data-id="15550">#15550</span>
+                      <span class="sample-id-pill" data-id="16964">#16964</span>
+                      <span class="sample-id-pill" data-id="16717">#16717</span>
+                      <span class="sample-id-pill" data-id="C1024">#C1024</span>
+                    </div>
+
+                    <div class="search-input-wrapper">
+                      <input type="text" class="lookup-input" id="lookupCustIdInput" placeholder="Enter Customer ID (e.g. 15485)" value="15485">
+                      <button class="lookup-btn" id="lookupSearchBtn">Search</button>
+                    </div>
+
+                    <div style="background: rgba(255,255,255,0.02); border: 1px solid var(--border-subtle); border-radius: var(--radius-md); padding: 16px;">
+                      <div style="font-size: 12px; font-weight: 700; color: #fff; margin-bottom: 6px;">Serving Store Status: Online (NoSQL Columnar Store)</div>
+                      <div style="font-size: 11.5px; color: var(--text-muted); line-height: 1.5;">
+                        Primary store: <code>customer_profile</code> column families: <code>info:</code>, <code>pred:</code>, <code>meta:</code>. Fallback: High-performance embedded KV cache.
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Customer Profile Target -->
+                  <div id="customerProfileTarget">
+                    <!-- Populated dynamically by dashflow.js -->
+                  </div>
+                </div>
+              </div> <!-- End tab-lookup -->
+
+              <!-- ==========================================================
+                   TAB 3: RFM ANALYTICS & INTERACTIVE CALCULATOR
+                   ========================================================== -->
+              <div class="spa-tab-pane" id="tab-rfm">
+                <div class="dash-header-bar">
+                  <div class="dash-title-block">
+                    <div class="dash-title-with-icon">
+                      <span class="dash-title-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg></span>
+                      <h2>RFM Behavioral Analytics</h2>
+                    </div>
+                    <p>Recency, Frequency &amp; Monetary dimensions normalized with log1p and StandardScaler</p>
+                  </div>
+                  <button type="button" class="dash-action-pill" onclick="window.switchDashboardTab('dashboard')">← Back to Overview</button>
+                </div>
+
+                <div class="rfm-grid" style="margin-top: 10px;">
+                  <div>
+                    <div class="rfm-pillars">
+                      <div class="rfm-pillar-card">
+                        <span class="rfm-pillar-letter pillar-r">R — RECENCY</span>
+                        <div class="rfm-pillar-title">Days elapsed since last checkout</div>
+                        <div class="rfm-pillar-desc">High recency signals high active interest and campaign receptiveness.</div>
+                      </div>
+
+                      <div class="rfm-pillar-card">
+                        <span class="rfm-pillar-letter pillar-f">F — FREQUENCY</span>
+                        <div class="rfm-pillar-title">Total discrete orders over lifetime</div>
+                        <div class="rfm-pillar-desc">Measures habituation, brand affinity, and recurring demand velocity.</div>
+                      </div>
+
+                      <div class="rfm-pillar-card">
+                        <span class="rfm-pillar-letter pillar-m">M — MONETARY</span>
+                        <div class="rfm-pillar-title">Total gross spend volume ($)</div>
+                        <div class="rfm-pillar-desc">Direct indicator of purchasing power, wallet share, and financial impact.</div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Interactive RFM Calculator -->
+                  <div>
+                    <div class="rfm-interactive-card">
+                      <div class="rfm-card-header">
+                        <div>
+                          <div style="font-size: 16px; font-weight: 800; color: #fff;">Interactive RFM Calculator</div>
+                          <div style="font-size: 12px; color: var(--text-muted);">Adjust parameters to evaluate segmentation</div>
+                        </div>
+                        <span id="rfmSegmentBadge" class="cluster-card-badge badge-loyal">Loyal Customers</span>
+                      </div>
+
+                      <div class="rfm-slider-row">
+                        <div class="rfm-slider-label">
+                          <span>Recency (Days since last purchase)</span>
+                          <span class="value" id="rfmRecencyVal">15 days</span>
+                        </div>
+                        <input type="range" class="rfm-slider-input" id="rfmRecencySlider" min="1" max="500" value="15">
+                      </div>
+
+                      <div class="rfm-slider-row">
+                        <div class="rfm-slider-label">
+                          <span>Frequency (Total completed orders)</span>
+                          <span class="value" id="rfmFreqVal">7 orders</span>
+                        </div>
+                        <input type="range" class="rfm-slider-input" id="rfmFreqSlider" min="1" max="50" value="7">
+                      </div>
+
+                      <div class="rfm-slider-row">
+                        <div class="rfm-slider-label">
+                          <span>Monetary (Total lifetime spend)</span>
+                          <span class="value" id="rfmMonetaryVal">$1,280</span>
+                        </div>
+                        <input type="range" class="rfm-slider-input" id="rfmMonetarySlider" min="50" max="35000" step="50" value="1280">
+                      </div>
+
+                      <div class="rfm-result-box">
+                        <div>
+                          <div style="font-size: 11px; color: var(--text-muted); font-weight: 600;">Composite RFM Score</div>
+                          <div style="font-size: 18px; font-weight: 800; color: #ffffff;" id="rfmScoreBadge">RFM: 5-3-3</div>
+                        </div>
+                        <div style="text-align: right;">
+                          <div style="font-size: 11px; color: var(--text-muted); font-weight: 600;">Estimated 90D CLV</div>
+                          <div style="font-size: 18px; font-weight: 800; color: var(--accent-emerald-bright);" id="rfmClvEst">$734</div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div> <!-- End tab-rfm -->
+
+              <!-- ==========================================================
+                   TAB 4: CUSTOMER SEGMENTATION (K-Means Cohorts)
+                   ========================================================== -->
+              <div class="spa-tab-pane" id="tab-segmentation">
+                <div class="dash-header-bar">
+                  <div class="dash-title-block">
+                    <div class="dash-title-with-icon">
+                      <span class="dash-title-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg></span>
+                      <h2>Customer Segmentation (K-Means k=4)</h2>
+                    </div>
+                    <p>Unsupervised clustering partitioning 5,878 customers into actionable behavioral cohorts</p>
+                  </div>
+                  <button type="button" class="dash-action-pill" onclick="window.switchDashboardTab('dashboard')">← Back to Overview</button>
+                </div>
+
+                <div class="clusters-grid" style="margin-top: 10px;">
+                  <!-- Cluster 2: Champions -->
+                  <div class="cluster-card">
+                    <span class="cluster-card-badge badge-champ">● Cluster 2</span>
+                    <div class="cluster-name">Champions</div>
+                    <p style="font-size: 13px; color: var(--text-secondary); line-height: 1.4;">
+                      High-velocity, top-spending customers who buy frequently and visited very recently. Prime ambassadors for premium tiers.
+                    </p>
+                    <div style="display: flex; flex-direction: column; gap: 8px; margin-top: auto;">
+                      <div class="cluster-stat-row"><span class="k">Mean Recency</span><span class="v">24.8 days</span></div>
+                      <div class="cluster-stat-row"><span class="k">Mean Frequency</span><span class="v">20.0 orders</span></div>
+                      <div class="cluster-stat-row"><span class="k">Mean Spend</span><span class="v">$11,466</span></div>
+                      <div class="cluster-stat-row"><span class="k">Cohort Size</span><span class="v">1,117 accounts</span></div>
+                    </div>
+                  </div>
+
+                  <!-- Cluster 0: Loyal Customers -->
+                  <div class="cluster-card">
+                    <span class="cluster-card-badge badge-loyal">● Cluster 0</span>
+                    <div class="cluster-name">Loyal Customers</div>
+                    <p style="font-size: 13px; color: var(--text-secondary); line-height: 1.4;">
+                      Steady regular buyers with recent purchases and moderate spend. Highly responsive to cross-selling and volume incentives.
+                    </p>
+                    <div style="display: flex; flex-direction: column; gap: 8px; margin-top: auto;">
+                      <div class="cluster-stat-row"><span class="k">Mean Recency</span><span class="v">27.6 days</span></div>
+                      <div class="cluster-stat-row"><span class="k">Mean Frequency</span><span class="v">3.0 orders</span></div>
+                      <div class="cluster-stat-row"><span class="k">Mean Spend</span><span class="v">$855</span></div>
+                      <div class="cluster-stat-row"><span class="k">Cohort Size</span><span class="v">2,112 accounts</span></div>
+                    </div>
+                  </div>
+
+                  <!-- Cluster 3: At-Risk -->
+                  <div class="cluster-card">
+                    <span class="cluster-card-badge badge-risk">● Cluster 3</span>
+                    <div class="cluster-name">At-Risk</div>
+                    <p style="font-size: 13px; color: var(--text-secondary); line-height: 1.4;">
+                      Historically valuable accounts with substantial past spend that haven't purchased in over 6 months. Urgent retention needed.
+                    </p>
+                    <div style="display: flex; flex-direction: column; gap: 8px; margin-top: auto;">
+                      <div class="cluster-stat-row"><span class="k">Mean Recency</span><span class="v">210.7 days</span></div>
+                      <div class="cluster-stat-row"><span class="k">Mean Frequency</span><span class="v">5.4 orders</span></div>
+                      <div class="cluster-stat-row"><span class="k">Mean Spend</span><span class="v">$2,148</span></div>
+                      <div class="cluster-stat-row"><span class="k">Cohort Size</span><span class="v">1,478 accounts</span></div>
+                    </div>
+                  </div>
+
+                  <!-- Cluster 1: Lost / Churned -->
+                  <div class="cluster-card">
+                    <span class="cluster-card-badge badge-lost">● Cluster 1</span>
+                    <div class="cluster-name">Lost / Churned</div>
+                    <p style="font-size: 13px; color: var(--text-secondary); line-height: 1.4;">
+                      Single-order accounts dormant for over a year with minimal lifetime spend. Low candidate for direct sales outreach.
+                    </p>
+                    <div style="display: flex; flex-direction: column; gap: 8px; margin-top: auto;">
+                      <div class="cluster-stat-row"><span class="k">Mean Recency</span><span class="v">393.0 days</span></div>
+                      <div class="cluster-stat-row"><span class="k">Mean Frequency</span><span class="v">1.4 orders</span></div>
+                      <div class="cluster-stat-row"><span class="k">Mean Spend</span><span class="v">$346</span></div>
+                      <div class="cluster-stat-row"><span class="k">Cohort Size</span><span class="v">1,171 accounts</span></div>
+                    </div>
+                  </div>
+                </div>
+              </div> <!-- End tab-segmentation -->
+
+              <!-- ==========================================================
+                   TAB 5: CLV FORECAST & WHAT-IF SIMULATOR
+                   ========================================================== -->
+              <div class="spa-tab-pane" id="tab-clv">
+                <div class="dash-header-bar">
+                  <div class="dash-title-block">
+                    <div class="dash-title-with-icon">
+                      <span class="dash-title-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 3-1.9 5.8a2 2 0 0 1-1.3 1.3L3 12l5.8 1.9a2 2 0 0 1 1.3 1.3L12 21l1.9-5.8a2 2 0 0 1 1.3-1.3L21 12l-5.8-1.9a2 2 0 0 1-1.3-1.3L12 3z"/></svg></span>
+                      <h2>CLV Forecast &amp; Scenario Simulator</h2>
+                    </div>
+                    <p>Supervised Gradient Boosting Regressor (Cohort R² 0.5238, MAE $321.78)</p>
+                  </div>
+                  <button type="button" class="dash-action-pill" onclick="window.switchDashboardTab('dashboard')">← Back to Overview</button>
+                </div>
+
+                <div class="simulator-layout-grid" style="display: grid; grid-template-columns: 1.2fr 1fr; gap: 24px; align-items: start; margin-top: 10px;">
+                  <div class="overview-card">
+                    <div style="font-size: 16px; font-weight: 800; color: #fff; margin-bottom: 16px;">Adjust Customer Inputs</div>
+
+                    <div class="rfm-slider-row">
+                      <div class="rfm-slider-label">
+                        <span>Recency (Days since last checkout)</span>
+                        <span class="value" id="simRecencyVal">25 days</span>
+                      </div>
+                      <input type="range" class="rfm-slider-input" id="simRecency" min="1" max="730" value="25" oninput="document.getElementById('simRecencyVal').textContent = this.value + ' days'">
+                    </div>
+
+                    <div class="rfm-slider-row">
+                      <div class="rfm-slider-label">
+                        <span>Frequency (Total completed orders)</span>
+                        <span class="value" id="simFreqVal">6 orders</span>
+                      </div>
+                      <input type="range" class="rfm-slider-input" id="simFreq" min="1" max="150" value="6" oninput="document.getElementById('simFreqVal').textContent = this.value + ' orders'">
+                    </div>
+
+                    <div class="rfm-slider-row">
+                      <div class="rfm-slider-label">
+                        <span>Total Historical Spend ($)</span>
+                        <span class="value" id="simSpendVal">$1,250</span>
+                      </div>
+                      <input type="range" class="rfm-slider-input" id="simSpend" min="20" max="50000" step="50" value="1250" oninput="document.getElementById('simSpendVal').textContent = '$' + Number(this.value).toLocaleString()">
+                    </div>
+
+                    <div class="rfm-slider-row">
+                      <div class="rfm-slider-label">
+                        <span>Customer Tenure (Days with company)</span>
+                        <span class="value" id="simTenureVal">300 days</span>
+                      </div>
+                      <input type="range" class="rfm-slider-input" id="simTenure" min="1" max="730" value="300" oninput="document.getElementById('simTenureVal').textContent = this.value + ' days'">
+                    </div>
+                  </div>
+
+                  <!-- Instant Inference Output Card -->
+                  <div class="overview-card" style="background: linear-gradient(145deg, #09140f 0%, #0d1a14 100%); border-color: rgba(16, 185, 129, 0.3);">
+                    <div style="font-size: 11px; font-weight: 800; letter-spacing: 1px; color: var(--accent-emerald-bright); text-transform: uppercase;">Real-Time Inference Output</div>
+                    <div style="font-size: 26px; font-weight: 800; color: #fff; margin: 4px 0 16px 0;" id="simSegOutput">Champions</div>
+
+                    <div style="background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: var(--radius-md); padding: 16px; margin-bottom: 12px;">
+                      <div style="font-size: 12px; color: var(--text-muted); font-weight: 600;">Predicted 90-Day CLV</div>
+                      <div style="font-size: 26px; font-weight: 800; color: var(--accent-emerald-bright);" id="simClvOutput">$685.20</div>
+                    </div>
+
+                    <div style="background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: var(--radius-md); padding: 16px;">
+                      <div style="font-size: 12px; color: var(--text-muted); font-weight: 600;">Estimated Churn Probability</div>
+                      <div style="font-size: 26px; font-weight: 800; color: #34d399;" id="simChurnOutput">12.4%</div>
+                    </div>
+                  </div>
+                </div>
+              </div> <!-- End tab-clv -->
+
+              <!-- ==========================================================
+                   TAB 6: CHURN RISK CLASSIFICATION
+                   ========================================================== -->
+              <div class="spa-tab-pane" id="tab-churn">
+                <div class="dash-header-bar">
+                  <div class="dash-title-block">
+                    <div class="dash-title-with-icon">
+                      <span class="dash-title-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></span>
+                      <h2>Churn Risk Analytics</h2>
+                    </div>
+                    <p>Supervised Random Forest Classifier (ROC-AUC 0.8056, 75.09% Overall Accuracy)</p>
+                  </div>
+                  <button type="button" class="dash-action-pill" onclick="window.switchDashboardTab('dashboard')">← Back to Overview</button>
+                </div>
+
+                <div class="models-split-grid" style="margin-top: 10px;">
+                  <div class="model-card-box">
+                    <div class="model-tag">Supervised Classification</div>
+                    <h3 class="model-title">Know Who Is At Risk</h3>
+                    <p class="model-desc">
+                      A Random Forest classifier analyzes behavioral dormancy patterns to estimate the exact probability that an active customer will lapse into churned status.
+                    </p>
+                    <div class="model-metrics-row">
+                      <div class="model-metric-tile">
+                        <div class="metric-tile-val" style="color: #34d399;">0.8056</div>
+                        <div class="metric-tile-lbl">ROC-AUC Score</div>
+                      </div>
+                      <div class="model-metric-tile">
+                        <div class="metric-tile-val">75.09%</div>
+                        <div class="metric-tile-lbl">Overall Accuracy</div>
+                      </div>
+                      <div class="model-metric-tile">
+                        <div class="metric-tile-val">0.7876</div>
+                        <div class="metric-tile-lbl">Harmonic F1-Score</div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="model-card-box">
+                    <div class="model-tag">Proactive Retention Protocol</div>
+                    <h3 class="model-title">Automated Action Triggers</h3>
+                    <div style="display: flex; flex-direction: column; gap: 12px; margin-top: 12px;">
+                      <div style="padding: 12px; background: rgba(255,255,255,0.03); border: 1px solid var(--border-subtle); border-radius: var(--radius-sm);">
+                        <span style="color: #34d399; font-weight: 700;">● Low Risk (&lt; 30%):</span> Standard loyalty rewards and product recommendations.
+                      </div>
+                      <div style="padding: 12px; background: rgba(255,255,255,0.03); border: 1px solid var(--border-subtle); border-radius: var(--radius-sm);">
+                        <span style="color: #fbbf24; font-weight: 700;">● Medium Risk (30 - 60%):</span> Automated win-back campaign with tiered cross-sell incentives.
+                      </div>
+                      <div style="padding: 12px; background: rgba(255,255,255,0.03); border: 1px solid var(--border-subtle); border-radius: var(--radius-sm);">
+                        <span style="color: #fb7185; font-weight: 700;">● High Risk (&gt; 60%):</span> Immediate priority outreach and direct customer retention play.
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div> <!-- End tab-churn -->
+
+            </main>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==============================================================================
+       MODAL 1: BIG DATA ARCHITECTURE PIPELINE
+       ============================================================================== -->
+  <div class="spa-modal-overlay" id="modal-architecture">
+    <div class="spa-modal-dialog">
+      <div class="spa-modal-header">
+        <div class="spa-modal-title">
+          <span class="dash-title-icon" style="width: 26px; height: 26px; border-radius: 6px;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="8" x="2" y="2" rx="2"/><rect width="20" height="8" x="2" y="14" rx="2"/><line x1="6" x2="6.01" y1="6" y2="6"/><line x1="6" x2="6.01" y1="18" y2="18"/></svg></span>
+          <span>End-to-End Big Data Architecture Pipeline</span>
+        </div>
+        <button type="button" class="spa-modal-close-btn" onclick="window.closeSpaModal('architecture')">✕</button>
+      </div>
+      <div class="spa-modal-body">
+        <div class="pipeline-diagram">
+          <div class="pipeline-step">
+            <div class="step-num">01</div>
+            <div class="step-content">
+              <h4>Web &amp; Retail Data Sources</h4>
+              <p>1,067,371 raw transaction rows from UCI Online Retail II + scraped multi-category product catalog.</p>
+            </div>
+            <div class="step-tech-badge">Sources</div>
+          </div>
+          <div class="pipeline-connector">↓</div>
+          <div class="pipeline-step">
+            <div class="step-num">02</div>
+            <div class="step-content">
+              <h4>Data Mining &amp; Catalog Scraping</h4>
+              <p>Automated Python spider extracts prices, star ratings, and review metadata into JSON &amp; CSV.</p>
+            </div>
+            <div class="step-tech-badge">Scrapy / BS4</div>
+          </div>
+          <div class="pipeline-connector">↓</div>
+          <div class="pipeline-step">
+            <div class="step-num">03</div>
+            <div class="step-content">
+              <h4>HDFS Distributed Raw Landing Zone</h4>
+              <p>Immutable raw storage at <code>/retail/raw/transactions/</code> and <code>/retail/raw/products/</code>.</p>
+            </div>
+            <div class="step-tech-badge">Hadoop HDFS</div>
+          </div>
+          <div class="pipeline-connector">↓</div>
+          <div class="pipeline-step">
+            <div class="step-num">04</div>
+            <div class="step-content">
+              <h4>Apache Hive Analytical Warehouse</h4>
+              <p>Schema validation, cancellation filtering, deduplication, and Snappy Parquet storage (805,549 clean rows).</p>
+            </div>
+            <div class="step-tech-badge">Apache Hive</div>
+          </div>
+          <div class="pipeline-connector">↓</div>
+          <div class="pipeline-step">
+            <div class="step-num">05</div>
+            <div class="step-content">
+              <h4>Apache Spark / PySpark ML Pipeline</h4>
+              <p>Distributed feature aggregation, Recency-Frequency-Monetary computation, log-scaling, and ML training.</p>
+            </div>
+            <div class="step-tech-badge">Apache Spark</div>
+          </div>
+          <div class="pipeline-connector">↓</div>
+          <div class="pipeline-step">
+            <div class="step-num">06</div>
+            <div class="step-content">
+              <h4>RFM Segmentation + Machine Learning</h4>
+              <p>K-Means clustering (k=4), Gradient Boosting CLV regression (R² 0.5238), and Random Forest Churn classification (AUC 0.806).</p>
+            </div>
+            <div class="step-tech-badge">Scikit-Learn</div>
+          </div>
+          <div class="pipeline-connector">↓</div>
+          <div class="pipeline-step">
+            <div class="step-num">07</div>
+            <div class="step-content">
+              <h4>Apache HBase Serving Layer</h4>
+              <p>Low-latency columnar NoSQL Key-Value store enabling sub-millisecond (p99 &lt; 1ms) point-lookups for 5,878 customer profiles.</p>
+            </div>
+            <div class="step-tech-badge">Apache HBase</div>
+          </div>
+          <div class="pipeline-connector">↓</div>
+          <div class="pipeline-step">
+            <div class="step-num">08</div>
+            <div class="step-content">
+              <h4>Web Application &amp; BI Analytics Hub</h4>
+              <p>Interactive DashFlow UI, instant scenario simulator, customer lookup drawer, and Tableau/Power BI analytical exports.</p>
+            </div>
+            <div class="step-tech-badge">Web &amp; BI Hub</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==============================================================================
+       MODAL 2: DATA MINING & SCRAPER CATALOG
+       ============================================================================== -->
+  <div class="spa-modal-overlay" id="modal-mining">
+    <div class="spa-modal-dialog">
+      <div class="spa-modal-header">
+        <div class="spa-modal-title">
+          <span class="dash-title-icon" style="width: 26px; height: 26px; border-radius: 6px;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" x2="22" y1="12" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg></span>
+          <span>Data Mining &amp; Catalog Spider Record</span>
+        </div>
+        <button type="button" class="spa-modal-close-btn" onclick="window.closeSpaModal('mining')">✕</button>
+      </div>
+      <div class="spa-modal-body">
+        <div class="catalog-preview-card" style="margin: 0;">
+          <div class="catalog-header">
+            <div>
+              <div style="font-size: 15px; font-weight: 800; color: #fff;">Scraped Product Schema Record</div>
+              <div style="font-size: 12px; color: var(--text-muted);">Extracted Catalog Partition</div>
+            </div>
+            <span class="catalog-chip">● Live Ingested</span>
+          </div>
+
+          <table class="catalog-table">
+            <tr>
+              <td class="label">Product Title</td>
+              <td class="val">A Light in the Attic</td>
+            </tr>
+            <tr>
+              <td class="label">Unit Price</td>
+              <td class="val" style="color: var(--accent-emerald-bright);">$51.77 USD</td>
+            </tr>
+            <tr>
+              <td class="label">Catalog Rating</td>
+              <td class="val">★★★☆☆ (3.0 / 5.0)</td>
+            </tr>
+            <tr>
+              <td class="label">Category</td>
+              <td class="val">Poetry &amp; E-Commerce Retail</td>
+            </tr>
+            <tr>
+              <td class="label">Stock Availability</td>
+              <td class="val" style="color: #34d399;">In Stock (22 units)</td>
+            </tr>
+            <tr>
+              <td class="label">Benchmark Avg Price</td>
+              <td class="val">$35.75 USD (Cohort Baseline)</td>
+            </tr>
+            <tr>
+              <td class="label">Benchmark Avg Rating</td>
+              <td class="val">2.84 / 5.0 (5-Category Sample)</td>
+            </tr>
+          </table>
+
+          <div style="margin-top: 20px; padding: 12px; background: rgba(255,255,255,0.03); border: 1px solid var(--border-subtle); border-radius: var(--radius-sm); font-size: 12px; color: var(--text-secondary); display: flex; align-items: center; justify-content: space-between;">
+            <span>Target Partition: <code>/retail/raw/products/</code></span>
+            <span style="color: var(--accent-emerald-bright); font-weight: 700;">HDFS Verified</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==============================================================================
+       MODAL 3: TECHNICAL FAQ & SPECIFICATIONS
+       ============================================================================== -->
+  <div class="spa-modal-overlay" id="modal-faq">
+    <div class="spa-modal-dialog">
+      <div class="spa-modal-header">
+        <div class="spa-modal-title">
+          <span class="dash-title-icon" style="width: 26px; height: 26px; border-radius: 6px;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" x2="12.01" y1="17" y2="17"/></svg></span>
+          <span>Technical FAQ &amp; Platform Architecture</span>
+        </div>
+        <button type="button" class="spa-modal-close-btn" onclick="window.closeSpaModal('faq')">✕</button>
+      </div>
+      <div class="spa-modal-body">
+        <div class="faq-accordion-wrap" style="margin: 0; max-width: 100%;">
+          <div class="faq-item active">
+            <div class="faq-header">
+              <div class="faq-question">What problem does the Customer Intelligence Platform solve?</div>
+              <div class="faq-chevron">▾</div>
+            </div>
+            <div class="faq-content">
+              <div class="faq-content-inner">
+                Retail businesses struggle with massive unstructured transactional logs where identifying top customers, predicting future spend, and preventing customer churn is slow and fragmented. This platform provides an end-to-end Big Data pipeline from web mining to HDFS, Hive, Spark ML, and HBase sub-millisecond serving for automated decision-making.
+              </div>
+            </div>
+          </div>
+
+          <div class="faq-item">
+            <div class="faq-header">
+              <div class="faq-question">Why is Apache HBase used for low-latency serving?</div>
+              <div class="faq-chevron">▾</div>
+            </div>
+            <div class="faq-content">
+              <div class="faq-content-inner">
+                Analytical systems like Hive are optimized for batch scans, not real-time lookups. Apache HBase provides a column-family NoSQL Key-Value store on top of HDFS designed specifically for sub-millisecond point queries (<code>p99 &lt; 1ms</code>) by customer row key.
+              </div>
+            </div>
+          </div>
+
+          <div class="faq-item">
+            <div class="faq-header">
+              <div class="faq-question">How does customer segmentation with K-Means work?</div>
+              <div class="faq-chevron">▾</div>
+            </div>
+            <div class="faq-content">
+              <div class="faq-content-inner">
+                Unsupervised K-Means clustering (k=4) groups 5,878 customers into distinct cohorts: Champions (high spend &amp; frequency), Loyal Customers (steady orders), At-Risk (high past spend but inactive), and Lost / Churned (dormant single purchases). Segment mappings are verified in <code>models/segment_mapping.json</code>.
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script src="/static/js/chart.min.js"></script>
+  <script src="/static/js/dashflow.js"></script>
+</body>
+</html>

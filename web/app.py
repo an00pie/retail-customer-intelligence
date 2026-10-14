@@ -155,8 +155,17 @@ app = Flask(
 
 import re
 
-@app.route("/")
+@app.after_request
+def add_cors_headers(response):
+    response.headers["Access-Control-Allow-Origin"] = "*"
+    response.headers["Access-Control-Allow-Methods"] = "GET, POST, OPTIONS, HEAD"
+    response.headers["Access-Control-Allow-Headers"] = "Content-Type, Authorization, X-Requested-With"
+    return response
+
+@app.route("/", methods=["GET", "OPTIONS"])
 def index():
+    if request.method == "OPTIONS":
+        return "", 200
     return render_template("index.html")
 
 @app.route("/api/customer/<path:customer_id>")
@@ -176,9 +185,12 @@ def get_customer_profile(customer_id: str):
 
     return jsonify({"error": "Customer not found in retail intelligence records", "customer_id": clean_id}), 404
 
-@app.route("/api/predict", methods=["POST"])
+@app.route("/api/predict", methods=["POST", "OPTIONS"])
 def api_predict():
     """What-if scenario inference endpoint with strict payload and numeric range validation."""
+    if request.method == "OPTIONS":
+        return "", 200
+
     if not request.is_json:
         return jsonify({"error": "Request must have Content-Type: application/json"}), 400
 
