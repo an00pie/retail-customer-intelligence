@@ -176,5 +176,55 @@ class CustomerPlatformTestCase(unittest.TestCase):
         self.assertIn("clv_regression", data)
         self.assertIn("churn_classification", data)
 
+    def test_customer_csv_export_valid(self):
+        """Verify GET /api/customer/15485/export/csv returns valid CSV ledger with correct headers."""
+        res = self.app.get("/api/customer/15485/export/csv")
+        self.assertEqual(res.status_code, 200)
+        self.assertIn("text/csv", res.headers.get("Content-Type", ""))
+        self.assertIn('attachment; filename="customer_15485_ledger.csv"', res.headers.get("Content-Disposition", ""))
+        csv_text = res.data.decode("utf-8")
+        self.assertTrue(csv_text.startswith("\ufeffDate,Invoice,StockCode,Quantity,UnitPrice,Total,CustomerID,Segment"))
+        self.assertIn("15485", csv_text)
+        self.assertIn("Champions", csv_text)
+        # Check rows count (header + transactions)
+        rows = [r for r in csv_text.strip().split("\n") if r.strip()]
+        self.assertGreaterEqual(len(rows), 2)
+
+    def test_customer_csv_export_404(self):
+        """Verify GET /api/customer/99999999/export/csv returns honest 404 for unknown customer."""
+        res = self.app.get("/api/customer/99999999/export/csv")
+        self.assertEqual(res.status_code, 404)
+        data = json.loads(res.data)
+        self.assertIn("error", data)
+
+    def test_segments_csv_export(self):
+        """Verify GET /api/analytics/segments/export/csv returns all 4 K-Means cohorts."""
+        res = self.app.get("/api/analytics/segments/export/csv")
+        self.assertEqual(res.status_code, 200)
+        self.assertIn("text/csv", res.headers.get("Content-Type", ""))
+        self.assertIn('customer_segmentation_cohorts_summary.csv', res.headers.get("Content-Disposition", ""))
+        csv_text = res.data.decode("utf-8")
+        self.assertIn("ClusterID,SegmentName,MeanRecencyDays", csv_text)
+        self.assertIn("Champions", csv_text)
+        self.assertIn("Loyal Customers", csv_text)
+        self.assertIn("At-Risk", csv_text)
+        self.assertIn("Lost / Churned", csv_text)
+        rows = [r for r in csv_text.strip().split("\n") if r.strip()]
+        self.assertEqual(len(rows), 5)  # Header + 4 clusters
+
+    def test_csv_formula_sanitization(self):
+        """Verify formula characters are escaped with leading quote while numbers remain unaffected."""
+        from web.app import sanitize_csv_value
+        # Numbers should not be altered
+        self.assertEqual(sanitize_csv_value(50.25), 50.25)
+        self.assertEqual(sanitize_csv_value(-12.5), -12.5)
+        self.assertEqual(sanitize_csv_value("100"), "100")
+        self.assertEqual(sanitize_csv_value("-450"), "-450")
+        # Formula injection strings should be neutralized
+        self.assertEqual(sanitize_csv_value("=1+1"), "'=1+1")
+        self.assertEqual(sanitize_csv_value("@SUM(A1:A10)"), "'@SUM(A1:A10)")
+        self.assertEqual(sanitize_csv_value("+cmd|' /C calc'!A0"), "'+cmd|' /C calc'!A0")
+        self.assertEqual(sanitize_csv_value("-not-a-number"), "'-not-a-number")
+
 if __name__ == "__main__":
     unittest.main()

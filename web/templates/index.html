@@ -287,6 +287,21 @@
                    TAB 1: PRIMARY DASHBOARD OVERVIEW
                    ========================================================== -->
               <div class="spa-tab-pane active" id="tab-dashboard">
+                <!-- Dedicated Print-Only Executive Header -->
+                <div class="print-only-header">
+                  <div style="display: flex; justify-content: space-between; align-items: flex-end;">
+                    <div>
+                      <h1 style="font-size: 18pt; font-weight: 800; color: #064e3b; margin-bottom: 4px;">Retail Customer Intelligence Platform</h1>
+                      <p style="font-size: 9.5pt; color: #4b5563;">Big Data-Driven CLV Prediction &amp; RFM Segmentation — Executive Performance Report</p>
+                    </div>
+                    <div style="text-align: right; font-size: 8.5pt; color: #6b7280; line-height: 1.4;">
+                      <div>Serving Store: Columnar KV NoSQL (5,942 Accounts)</div>
+                      <div>Warehouse Analytics: 1.06M Transactions Verified</div>
+                      <div>Report Date: <span class="print-date-target">2026-10-15</span></div>
+                    </div>
+                  </div>
+                </div>
+
                 <!-- Dashboard Title Bar -->
                 <div class="dash-header-bar">
                   <div class="dash-title-block">
@@ -317,6 +332,10 @@
                       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect width="20" height="8" x="2" y="2" rx="2"/><rect width="20" height="8" x="2" y="14" rx="2"/></svg>
                       <span>Architecture</span>
                     </a>
+                    <button type="button" class="dash-action-pill" id="dashPrintReportBtn" onclick="window.printReport()" title="Print Executive BI Report" aria-label="Print Executive Report">
+                      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect width="12" height="8" x="6" y="14"/></svg>
+                      <span>Print Report</span>
+                    </button>
                   </div>
                 </div>
 
@@ -826,7 +845,13 @@
                     </div>
                     <p>Unsupervised clustering partitioning 5,942 verified customers into actionable behavioral cohorts</p>
                   </div>
-                  <button type="button" class="dash-action-pill" onclick="window.switchDashboardTab('dashboard')">← Back to Overview</button>
+                  <div style="display: flex; gap: 8px; align-items: center;">
+                    <button type="button" class="dash-action-pill" id="exportSegmentsCsvBtn" onclick="window.exportSegmentsCsv()" title="Export Segmentation Cohorts to CSV" aria-label="Export Segmentation Cohorts to CSV">
+                      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" y2="3"/></svg>
+                      <span>Export Cohorts (CSV)</span>
+                    </button>
+                    <button type="button" class="dash-action-pill" onclick="window.switchDashboardTab('dashboard')">← Back to Overview</button>
+                  </div>
                 </div>
 
                 <div class="clusters-grid" style="margin-top: 10px;">

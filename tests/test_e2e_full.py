@@ -291,6 +291,100 @@ def run_e2e_tests(base_url="http://localhost:8501"):
             faq_expanded_space == "false"
         )
 
+        print("\n--- Phase 9: Data Export, Reporting & Print Media (Fix 04) ---")
+        # 1. Segment Cohort CSV Export
+        page.evaluate("() => window.switchDashboardTab('segmentation')")
+        page.wait_for_timeout(500)
+        with page.expect_download() as seg_dl_info:
+            page.locator("#exportSegmentsCsvBtn").click()
+        seg_dl = seg_dl_info.value
+        seg_filename = seg_dl.suggested_filename
+        seg_path = seg_dl.path()
+        with open(seg_path, "r", encoding="utf-8") as f:
+            seg_csv = f.read()
+        seg_lines = [r for r in seg_csv.strip().split("\n") if r.strip()]
+        seg_dl_ok = (
+            seg_filename == "customer_segmentation_cohorts_summary.csv" and
+            len(seg_lines) == 5 and
+            "Champions" in seg_csv and
+            "Loyal Customers" in seg_csv
+        )
+        print(f"  Segment CSV Export -> Filename: '{seg_filename}' | Rows: {len(seg_lines)} | Verified: {seg_dl_ok}")
+
+        # 2. Customer Ledger CSV Export
+        page.evaluate("() => window.switchDashboardTab('lookup')")
+        page.wait_for_timeout(500)
+        page.locator("#lookupSearchBtn:not([disabled])").wait_for(timeout=10000)
+        curr_cust_id = page.locator("#lookupCustIdInput").input_value().strip() or "15485"
+        with page.expect_download() as cust_dl_info:
+            page.locator("#exportCustomerCsvBtn").click()
+        cust_dl = cust_dl_info.value
+        cust_filename = cust_dl.suggested_filename
+        cust_path = cust_dl.path()
+        with open(cust_path, "r", encoding="utf-8") as f:
+            cust_csv = f.read()
+        cust_lines = [r for r in cust_csv.strip().split("\n") if r.strip()]
+        cust_dl_ok = (
+            f"customer_{curr_cust_id}_ledger.csv" in cust_filename and
+            len(cust_lines) >= 2 and
+            curr_cust_id in cust_csv
+        )
+        print(f"  Customer Ledger CSV -> Filename: '{cust_filename}' | Rows: {len(cust_lines)} | Verified: {cust_dl_ok}")
+
+        # 3. Customer Profile Summary CSV Export
+        with page.expect_download() as prof_dl_info:
+            page.locator("#exportCustomerProfileBtn").click()
+        prof_dl = prof_dl_info.value
+        prof_filename = prof_dl.suggested_filename
+        prof_path = prof_dl.path()
+        with open(prof_path, "r", encoding="utf-8") as f:
+            prof_csv = f.read()
+        prof_dl_ok = (
+            f"customer_{curr_cust_id}_profile.csv" in prof_filename and
+            "CustomerID,Segment,RecencyDays" in prof_csv and
+            curr_cust_id in prof_csv
+        )
+        print(f"  Customer Profile CSV -> Filename: '{prof_filename}' | Verified: {prof_dl_ok}")
+
+        # 4. Print Media Stylesheet Verification
+        page.emulate_media(media="print")
+        nav_print_display = page.locator(".nav-capsule-wrapper").evaluate("el => window.getComputedStyle(el).display")
+        hdr_print_display = page.locator(".print-only-header").evaluate("el => window.getComputedStyle(el).display")
+        page.emulate_media(media="screen")
+        hdr_screen_display = page.locator(".print-only-header").evaluate("el => window.getComputedStyle(el).display")
+        print_styles_ok = (
+            nav_print_display == "none" and
+            hdr_print_display == "block" and
+            hdr_screen_display == "none"
+        )
+        print(f"  Print Media Styles -> Nav Hidden: {nav_print_display == 'none'} | Print Header Visible: {hdr_print_display == 'block'} | Screen Header Hidden: {hdr_screen_display == 'none'}")
+
+        # 5. Modal Focus Trapping Verification
+        page.evaluate("() => window.openSpaModal('architecture')")
+        close_btn = page.locator("#modal-architecture .spa-modal-close-btn")
+        close_btn.wait_for(state="visible", timeout=5000)
+        close_btn.focus()
+        page.wait_for_timeout(200)
+        page.keyboard.press("Tab")
+        active_trap_forward = page.evaluate("() => document.activeElement ? document.activeElement.className : ''")
+        page.keyboard.press("Shift+Tab")
+        active_trap_backward = page.evaluate("() => document.activeElement ? document.activeElement.className : ''")
+        page.keyboard.press("Escape")
+        page.wait_for_timeout(300)
+        focus_trap_ok = (
+            "spa-modal-close-btn" in active_trap_forward and
+            "spa-modal-close-btn" in active_trap_backward
+        )
+        print(f"  Modal Focus Trap -> Forward Tab: '{active_trap_forward}' | Backward Shift+Tab: '{active_trap_backward}' | Trapped: {focus_trap_ok}")
+
+        results["data_export_and_reporting"] = (
+            seg_dl_ok and
+            cust_dl_ok and
+            prof_dl_ok and
+            print_styles_ok and
+            focus_trap_ok
+        )
+
         print("\n--- Phase 7: Console Errors Audit ---")
         print(f"  Total Console Errors: {len(console_errors)}")
         if console_errors:

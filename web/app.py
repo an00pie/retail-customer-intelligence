@@ -145,7 +145,23 @@ def predict_customer(recency_days: int, frequency: int, total_spend: float, tenu
 # ------------------------------------------------------------------------------
 # Flask Application Setup
 # ------------------------------------------------------------------------------
-from flask import Flask, render_template, jsonify, request, send_from_directory
+import io
+import csv
+from flask import Flask, render_template, jsonify, request, send_from_directory, Response
+
+def sanitize_csv_value(val):
+    """Mitigate CSV formula injection while preserving legitimate numeric data."""
+    if val is None:
+        return ""
+    s = str(val)
+    try:
+        float(s)
+        return val
+    except ValueError:
+        pass
+    if s and s[0] in ("=", "+", "-", "@", "\t", "\r"):
+        return "'" + s
+    return val
 
 app = Flask(
     __name__,
@@ -184,6 +200,62 @@ def get_customer_profile(customer_id: str):
         return jsonify(cust)
 
     return jsonify({"error": "Customer not found in retail intelligence records", "customer_id": clean_id}), 404
+
+@app.route("/api/customer/<path:customer_id>/export/csv")
+def export_customer_csv(customer_id: str):
+    """Generates an RFC 4180-compliant CSV export for a customer's verified transactions and profile metrics."""
+    if not customer_id or not isinstance(customer_id, str):
+        return jsonify({"error": "Invalid customer ID format"}), 400
+
+    clean_id = str(customer_id).strip()
+    if not clean_id or len(clean_id) > 20 or not re.match(r"^[a-zA-Z0-9_\-]+$", clean_id):
+        return jsonify({"error": "Invalid customer ID format"}), 400
+
+    serving = get_serving()
+    cust = serving.get_customer(clean_id)
+    if not cust:
+        return jsonify({"error": "Customer not found in retail intelligence records", "customer_id": clean_id}), 404
+
+    output = io.StringIO()
+    writer = csv.writer(output)
+    txs = cust.get("transactions", [])
+    if txs and len(txs) > 0:
+        writer.writerow(["Date", "Invoice", "StockCode", "Quantity", "UnitPrice", "Total", "CustomerID", "Segment"])
+        for tx in txs:
+            writer.writerow([
+                sanitize_csv_value(tx.get("date", "")),
+                sanitize_csv_value(tx.get("invoice", "")),
+                sanitize_csv_value(tx.get("stock_code", "")),
+                sanitize_csv_value(tx.get("quantity", 0)),
+                sanitize_csv_value(tx.get("unit_price", 0.0)),
+                sanitize_csv_value(tx.get("total", 0.0)),
+                sanitize_csv_value(cust.get("customer_id", clean_id)),
+                sanitize_csv_value(cust.get("segment", ""))
+            ])
+    else:
+        writer.writerow(["CustomerID", "Segment", "RecencyDays", "Frequency", "TotalSpend", "TenureDays", "AvgOrderValue", "PredictedCLV", "ChurnProbability"])
+        writer.writerow([
+            sanitize_csv_value(cust.get("customer_id", clean_id)),
+            sanitize_csv_value(cust.get("segment", "")),
+            sanitize_csv_value(cust.get("recency_days", 0)),
+            sanitize_csv_value(cust.get("frequency", 0)),
+            sanitize_csv_value(cust.get("monetary", 0.0)),
+            sanitize_csv_value(cust.get("tenure_days", 0)),
+            sanitize_csv_value(cust.get("avg_order_value", 0.0)),
+            sanitize_csv_value(cust.get("predicted_clv", 0.0)),
+            sanitize_csv_value(cust.get("churn_probability", 0.0))
+        ])
+
+    csv_data = "\ufeff" + output.getvalue()
+    filename = f"customer_{clean_id}_ledger.csv"
+    return Response(
+        csv_data,
+        mimetype="text/csv",
+        headers={
+            "Content-Disposition": f'attachment; filename="{filename}"',
+            "Access-Control-Allow-Origin": "*"
+        }
+    )
 
 @app.route("/api/predict", methods=["POST", "OPTIONS"])
 def api_predict():
@@ -366,6 +438,40 @@ def api_revenue_orders():
         "headline_growth": headline_growth,
         "headline_period_text": headline_period_text
     })
+
+@app.route("/api/analytics/segments/export/csv")
+def export_segments_csv():
+    """Generates an RFC 4180-compliant CSV export summarizing the 4 K-Means behavioral cohorts."""
+    output = io.StringIO()
+    writer = csv.writer(output)
+    writer.writerow([
+        "ClusterID",
+        "SegmentName",
+        "MeanRecencyDays",
+        "MeanFrequencyOrders",
+        "MeanSpendUSD",
+        "CohortSizeAccounts",
+        "CohortSharePct",
+        "TargetStrategy"
+    ])
+    cohorts = [
+        ["Cluster 2", "Champions", 24.9, 23.1, 10053.19, 1242, "20.9%", "VIP Exclusive Rewards Access & Ambassador Tier"],
+        ["Cluster 0", "Loyal Customers", 26.5, 3.3, 784.29, 1187, "20.0%", "Steady regular cross-selling & volume bundle incentives"],
+        ["Cluster 3", "At-Risk", 219.3, 6.1, 1831.35, 1476, "24.8%", "Urgent retention outreach & personalized win-back promotions"],
+        ["Cluster 1", "Lost / Churned", 399.4, 1.6, 305.52, 2037, "34.3%", "Automated low-cost email reactivation campaign"]
+    ]
+    for row in cohorts:
+        writer.writerow([sanitize_csv_value(col) for col in row])
+
+    csv_data = "\ufeff" + output.getvalue()
+    return Response(
+        csv_data,
+        mimetype="text/csv",
+        headers={
+            "Content-Disposition": 'attachment; filename="customer_segmentation_cohorts_summary.csv"',
+            "Access-Control-Allow-Origin": "*"
+        }
+    )
 
 
 # ------------------------------------------------------------------------------

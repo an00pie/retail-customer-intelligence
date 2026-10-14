@@ -135,8 +135,156 @@ function initSpaDashboardNavigation() {
   document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape') {
       window.closeSpaModal();
+      return;
+    }
+    if (e.key === 'Tab') {
+      const openModal = document.querySelector('.spa-modal-overlay.open');
+      if (!openModal) return;
+
+      const focusable = openModal.querySelectorAll(
+        'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+      );
+      if (focusable.length === 0) return;
+
+      const firstEl = focusable[0];
+      const lastEl = focusable[focusable.length - 1];
+
+      if (!openModal.contains(document.activeElement)) {
+        e.preventDefault();
+        firstEl.focus();
+        return;
+      }
+
+      if (e.shiftKey) {
+        if (document.activeElement === firstEl) {
+          e.preventDefault();
+          lastEl.focus();
+        }
+      } else {
+        if (document.activeElement === lastEl) {
+          e.preventDefault();
+          firstEl.focus();
+        }
+      }
     }
   });
+
+  // RFC 4180 CSV cell escaping with formula injection protection
+  window.escapeCsvCell = function(val) {
+    if (val === null || val === undefined) return '';
+    let str = String(val);
+    const isNumeric = typeof val === 'number' || (!isNaN(Number(str)) && str.trim() !== '');
+    if (!isNumeric && /^[=+\-@\t\r]/.test(str)) {
+      str = "'" + str;
+    }
+    if (/[",\n\r]/.test(str)) {
+      str = '"' + str.replace(/"/g, '""') + '"';
+    }
+    return str;
+  };
+
+  window.triggerCsvDownload = function(filename, csvContent) {
+    const blob = new Blob(['\uFEFF' + csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.setAttribute('download', filename);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    setTimeout(() => URL.revokeObjectURL(url), 500);
+  };
+
+  window.currentCustomerProfile = null;
+
+  window.exportCustomerLedgerCsv = function() {
+    const profile = window.currentCustomerProfile;
+    if (!profile) {
+      window.showToast('No customer profile currently loaded for export.', 'error');
+      return;
+    }
+    const custId = profile.customer_id || 'unknown';
+    const txs = Array.isArray(profile.transactions) ? profile.transactions : [];
+    if (txs.length === 0) {
+      window.showToast(`No verified transaction records to export for Customer #${custId}.`, 'info');
+      return;
+    }
+    const headers = ['Date', 'Invoice', 'StockCode', 'Quantity', 'UnitPrice', 'Total', 'CustomerID', 'Segment'];
+    const rows = txs.map(tx => [
+      tx.date,
+      tx.invoice,
+      tx.stock_code,
+      tx.quantity,
+      Number(tx.unit_price).toFixed(2),
+      Number(tx.total).toFixed(2),
+      custId,
+      profile.segment || ''
+    ].map(window.escapeCsvCell).join(','));
+
+    const csvData = headers.map(window.escapeCsvCell).join(',') + '\r\n' + rows.join('\r\n');
+    window.triggerCsvDownload(`customer_${custId}_ledger.csv`, csvData);
+    window.showToast(`Exported ${txs.length} transactions for Customer #${custId} (CSV)`, 'success');
+  };
+
+  window.exportCustomerProfileCsv = function() {
+    const profile = window.currentCustomerProfile;
+    if (!profile) {
+      window.showToast('No customer profile currently loaded for export.', 'error');
+      return;
+    }
+    const custId = profile.customer_id || 'unknown';
+    const headers = [
+      'CustomerID', 'Segment', 'RecencyDays', 'Frequency', 'TotalSpend',
+      'TenureDays', 'AvgOrderValue', 'PredictedCLV', 'ChurnProbability',
+      'ServingStore', 'LastUpdated'
+    ];
+    const row = [
+      custId,
+      profile.segment || '',
+      profile.recency_days || 0,
+      profile.frequency || 0,
+      Number(profile.monetary || 0).toFixed(2),
+      profile.tenure_days || 0,
+      Number(profile.avg_order_value || 0).toFixed(2),
+      Number(profile.predicted_clv || 0).toFixed(2),
+      Number(profile.churn_probability || 0).toFixed(4),
+      'Columnar KV Serving Store (HBase Schema)',
+      profile.last_updated || new Date().toISOString()
+    ].map(window.escapeCsvCell).join(',');
+
+    const csvData = headers.map(window.escapeCsvCell).join(',') + '\r\n' + row;
+    window.triggerCsvDownload(`customer_${custId}_profile.csv`, csvData);
+    window.showToast(`Customer #${custId} profile summary exported (CSV)`, 'success');
+  };
+
+  window.exportSegmentsCsv = function() {
+    const headers = [
+      'ClusterID', 'SegmentName', 'MeanRecencyDays', 'MeanFrequencyOrders',
+      'MeanSpendUSD', 'CohortSizeAccounts', 'CohortSharePct', 'TargetStrategy'
+    ];
+    const cohorts = [
+      ['Cluster 2', 'Champions', 24.9, 23.1, 10053.19, 1242, '20.9%', 'VIP Exclusive Rewards Access & Ambassador Tier'],
+      ['Cluster 0', 'Loyal Customers', 26.5, 3.3, 784.29, 1187, '20.0%', 'Steady regular cross-selling & volume bundle incentives'],
+      ['Cluster 3', 'At-Risk', 219.3, 6.1, 1831.35, 1476, '24.8%', 'Urgent retention outreach & personalized win-back promotions'],
+      ['Cluster 1', 'Lost / Churned', 399.4, 1.6, 305.52, 2037, '34.3%', 'Automated low-cost email reactivation campaign']
+    ];
+    const rows = cohorts.map(c => c.map(window.escapeCsvCell).join(','));
+    const csvData = headers.map(window.escapeCsvCell).join(',') + '\r\n' + rows.join('\r\n');
+    window.triggerCsvDownload('customer_segmentation_cohorts_summary.csv', csvData);
+    window.showToast('Exported 4 behavioral segmentation cohorts to CSV', 'success');
+  };
+
+  window.printReport = function() {
+    const dateTargets = document.querySelectorAll('.print-date-target');
+    const nowStr = new Date().toLocaleDateString('en-US', {
+      year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit'
+    });
+    dateTargets.forEach(el => el.textContent = nowStr);
+    window.showToast('Opening Executive Print Preview...', 'info');
+    setTimeout(() => {
+      window.print();
+    }, 300);
+  };
 
   // Expose switchTab globally
   window.switchDashboardTab = switchTab;
@@ -454,6 +602,7 @@ function initCustomerLookup() {
 }
 
 function renderCustomerProfile(data) {
+  window.currentCustomerProfile = data;
   const container = document.getElementById('customerProfileTarget');
   if (!container) return;
 
@@ -489,7 +638,13 @@ function renderCustomerProfile(data) {
 
     transactionsHtml = `
       <div style="margin-top: 16px; margin-bottom: 16px;">
-        <div style="font-size: 11px; font-weight: 700; color: #fff; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.04em;">Verified Transaction Ledger</div>
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+          <div style="font-size: 11px; font-weight: 700; color: #fff; text-transform: uppercase; letter-spacing: 0.04em;">Verified Transaction Ledger</div>
+          <button type="button" class="btn-pill-secondary" id="exportCustomerCsvBtn" onclick="window.exportCustomerLedgerCsv()" style="padding: 4px 10px; font-size: 11px; gap: 5px;" title="Export Transaction Ledger to CSV" aria-label="Export Transaction Ledger to CSV">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" y2="3"/></svg>
+            <span>Export CSV</span>
+          </button>
+        </div>
         <div style="background: rgba(0,0,0,0.25); border: 1px solid var(--border-subtle); border-radius: var(--radius-sm); overflow: hidden;">
           <table style="width: 100%; border-collapse: collapse;">
             <thead>
@@ -563,9 +718,10 @@ function renderCustomerProfile(data) {
         </div>
       </div>
 
-      <div style="display: flex; gap: 12px;">
-        <button type="button" class="btn-pill-secondary" style="flex: 1; justify-content: center; font-size: 13px; padding: 10px;" onclick="window.showToast('Notification sent to customer account #' + encodeURIComponent('${safeId}'), 'success')">💬 Message Account</button>
-        <button type="button" class="btn-pill-primary" style="flex: 1; justify-content: center; font-size: 13px; padding: 10px;" onclick="window.showToast('Retention task assigned for Customer #' + encodeURIComponent('${safeId}'), 'success')">+ Assign Task</button>
+      <div style="display: flex; gap: 10px;">
+        <button type="button" class="btn-pill-secondary" id="exportCustomerProfileBtn" style="flex: 1; justify-content: center; font-size: 12px; padding: 10px;" onclick="window.exportCustomerProfileCsv()" title="Export Customer Profile (CSV)" aria-label="Export Customer Profile CSV">📥 Export Profile</button>
+        <button type="button" class="btn-pill-secondary" style="flex: 1; justify-content: center; font-size: 12px; padding: 10px;" onclick="window.showToast('Notification sent to customer account #' + encodeURIComponent('${safeId}'), 'success')">💬 Message</button>
+        <button type="button" class="btn-pill-primary" style="flex: 1; justify-content: center; font-size: 12px; padding: 10px;" onclick="window.showToast('Retention task assigned for Customer #' + encodeURIComponent('${safeId}'), 'success')">+ Assign Task</button>
       </div>
     </div>
   `;
