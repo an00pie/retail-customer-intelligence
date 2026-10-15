@@ -1307,7 +1307,9 @@ function initDashboardCharts() {
     });
   }
 
+  let trajectorySeq = 0;
   function fetchTrajectory(period = '12m') {
+    const currentSeq = ++trajectorySeq;
     if (loadingOverlay) loadingOverlay.style.display = 'flex';
     if (errorState) errorState.style.display = 'none';
 
@@ -1317,6 +1319,7 @@ function initDashboardCharts() {
         return res.json();
       })
       .then(data => {
+        if (currentSeq !== trajectorySeq) return;
         if (loadingOverlay) loadingOverlay.style.display = 'none';
 
         // Update Headline / Hero Revenue
@@ -1346,6 +1349,7 @@ function initDashboardCharts() {
         renderChart(data);
       })
       .catch(err => {
+        if (currentSeq !== trajectorySeq) return;
         console.error('Error loading trajectory data:', err);
         if (loadingOverlay) loadingOverlay.style.display = 'none';
         if (errorState) errorState.style.display = 'flex';

@@ -58,8 +58,8 @@ def run_e2e_tests(base_url="http://localhost:8501"):
         page = browser.new_page(viewport={"width": 1440, "height": 900})
         console_errors = []
         page.on("console", lambda msg: console_errors.append(msg.text) if (msg.type == "error" and "404" not in msg.text) else None)
-        page.goto(base_url, wait_until="domcontentloaded")
-        page.wait_for_timeout(1000)
+        page.goto(base_url, wait_until="networkidle")
+        page.wait_for_timeout(500)
         page.wait_for_selector("#kpiTotalCustomers", state="visible", timeout=20000)
 
         print("\n--- Phase 2: KPI & Chart Period Filtering ---")
