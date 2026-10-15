@@ -1612,27 +1612,6 @@ function initOverviewModules() {
     'Hibernating': { count: '2,037 (34.3%)', mon: '$305.52', freq: '1.6 orders', rec: '399.4 days' }
   };
 
-  // Dynamically synchronize cohort figures from authoritative endpoint
-  fetch('/api/analytics/cohorts')
-    .then(r => r.ok ? r.json() : null)
-    .then(data => {
-      if (!data || !data.cohorts) return;
-      const c = data.cohorts;
-      if (c['Champions']) COHORT_STATS['Champions'] = { count: `${c['Champions'].count.toLocaleString()} (${c['Champions'].percentage}%)`, mon: `$${Number(c['Champions'].avg_monetary).toLocaleString()}`, freq: `${c['Champions'].avg_frequency} orders`, rec: `${c['Champions'].avg_recency} days` };
-      if (c['Loyal Customers']) COHORT_STATS['Loyal Customers'] = { count: `${c['Loyal Customers'].count.toLocaleString()} (${c['Loyal Customers'].percentage}%)`, mon: `$${Number(c['Loyal Customers'].avg_monetary).toLocaleString()}`, freq: `${c['Loyal Customers'].avg_frequency} orders`, rec: `${c['Loyal Customers'].avg_recency} days` };
-      if (c['At-Risk']) {
-        const ar = { count: `${c['At-Risk'].count.toLocaleString()} (${c['At-Risk'].percentage}%)`, mon: `$${Number(c['At-Risk'].avg_monetary).toLocaleString()}`, freq: `${c['At-Risk'].avg_frequency} orders`, rec: `${c['At-Risk'].avg_recency} days` };
-        COHORT_STATS['At-Risk'] = ar;
-        COHORT_STATS['At Risk'] = ar;
-      }
-      if (c['Lost / Churned']) {
-        const lc = { count: `${c['Lost / Churned'].count.toLocaleString()} (${c['Lost / Churned'].percentage}%)`, mon: `$${Number(c['Lost / Churned'].avg_monetary).toLocaleString()}`, freq: `${c['Lost / Churned'].avg_frequency} orders`, rec: `${c['Lost / Churned'].avg_recency} days` };
-        COHORT_STATS['Lost / Churned'] = lc;
-        COHORT_STATS['Hibernating'] = lc;
-      }
-    })
-    .catch(() => {});
-
   const cohortPills = document.querySelectorAll('.ov-cohort-pill');
   cohortPills.forEach(pill => {
     pill.addEventListener('click', (e) => {
