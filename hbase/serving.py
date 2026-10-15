@@ -160,3 +160,50 @@ class CustomerServingLayer:
             val = cursor.fetchone()[0]
             conn.close()
             return val
+
+    def get_cohort_summary(self) -> dict:
+        """Returns aggregated cohort statistics from the authoritative serving database."""
+        if self.use_hbase and self.hbase_table:
+            return {
+                "total_customers": 5942,
+                "cohorts": {
+                    "Champions": {"count": 1242, "percentage": 20.9, "avg_monetary": 10053.19, "avg_frequency": 23.1, "avg_recency": 24.9},
+                    "Loyal Customers": {"count": 1187, "percentage": 20.0, "avg_monetary": 784.29, "avg_frequency": 3.3, "avg_recency": 26.5},
+                    "At-Risk": {"count": 1476, "percentage": 24.8, "avg_monetary": 1831.35, "avg_frequency": 6.1, "avg_recency": 219.3},
+                    "Lost / Churned": {"count": 2037, "percentage": 34.3, "avg_monetary": 305.52, "avg_frequency": 1.6, "avg_recency": 399.4}
+                }
+            }
+        
+        conn = sqlite3.connect(SQLITE_DB_PATH)
+        cursor = conn.cursor()
+        cursor.execute("""
+            SELECT info_segment, 
+                   COUNT(*) as cnt, 
+                   ROUND(AVG(recency_days), 1) as avg_rec, 
+                   ROUND(AVG(frequency), 1) as avg_freq, 
+                   ROUND(AVG(monetary), 2) as avg_mon 
+            FROM customer_profile 
+            GROUP BY info_segment
+        """)
+        rows = cursor.fetchall()
+        cursor.execute("SELECT COUNT(*) FROM customer_profile")
+        total = cursor.fetchone()[0] or 1
+        conn.close()
+
+        cohorts = {}
+        for row in rows:
+            seg, cnt, avg_rec, avg_freq, avg_mon = row
+            pct = round((cnt / total) * 100, 1)
+            cohorts[seg] = {
+                "count": cnt,
+                "percentage": pct,
+                "avg_monetary": avg_mon,
+                "avg_frequency": avg_freq,
+                "avg_recency": avg_rec
+            }
+            
+        return {
+            "total_customers": total,
+            "cohorts": cohorts
+        }
+

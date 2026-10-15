@@ -439,6 +439,12 @@ def api_revenue_orders():
         "headline_period_text": headline_period_text
     })
 
+@app.route("/api/analytics/cohorts")
+def api_cohorts():
+    """Returns aggregated cohort statistics from the authoritative customer profile store."""
+    serving = get_serving()
+    return jsonify(serving.get_cohort_summary())
+
 @app.route("/api/analytics/segments/export/csv")
 def export_segments_csv():
     """Generates an RFC 4180-compliant CSV export summarizing the 4 K-Means behavioral cohorts."""
@@ -454,14 +460,29 @@ def export_segments_csv():
         "CohortSharePct",
         "TargetStrategy"
     ])
-    cohorts = [
-        ["Cluster 2", "Champions", 24.9, 23.1, 10053.19, 1242, "20.9%", "VIP Exclusive Rewards Access & Ambassador Tier"],
-        ["Cluster 0", "Loyal Customers", 26.5, 3.3, 784.29, 1187, "20.0%", "Steady regular cross-selling & volume bundle incentives"],
-        ["Cluster 3", "At-Risk", 219.3, 6.1, 1831.35, 1476, "24.8%", "Urgent retention outreach & personalized win-back promotions"],
-        ["Cluster 1", "Lost / Churned", 399.4, 1.6, 305.52, 2037, "34.3%", "Automated low-cost email reactivation campaign"]
+    
+    summary = get_serving().get_cohort_summary()
+    cohort_data = summary.get("cohorts", {})
+    
+    cluster_metadata = [
+        ("Cluster 2", "Champions", "VIP Exclusive Rewards Access & Ambassador Tier"),
+        ("Cluster 0", "Loyal Customers", "Steady regular cross-selling & volume bundle incentives"),
+        ("Cluster 3", "At-Risk", "Urgent retention outreach & personalized win-back promotions"),
+        ("Cluster 1", "Lost / Churned", "Automated low-cost email reactivation campaign")
     ]
-    for row in cohorts:
-        writer.writerow([sanitize_csv_value(col) for col in row])
+    
+    for cid, sname, strat in cluster_metadata:
+        stats = cohort_data.get(sname, {})
+        writer.writerow([
+            sanitize_csv_value(cid),
+            sanitize_csv_value(sname),
+            sanitize_csv_value(stats.get("avg_recency", 0.0)),
+            sanitize_csv_value(stats.get("avg_frequency", 0.0)),
+            sanitize_csv_value(stats.get("avg_monetary", 0.0)),
+            sanitize_csv_value(stats.get("count", 0)),
+            sanitize_csv_value(f"{stats.get('percentage', 0.0)}%"),
+            sanitize_csv_value(strat)
+        ])
 
     csv_data = "\ufeff" + output.getvalue()
     return Response(

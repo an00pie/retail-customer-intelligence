@@ -226,5 +226,24 @@ class CustomerPlatformTestCase(unittest.TestCase):
         self.assertEqual(sanitize_csv_value("+cmd|' /C calc'!A0"), "'+cmd|' /C calc'!A0")
         self.assertEqual(sanitize_csv_value("-not-a-number"), "'-not-a-number")
 
+    def test_authoritative_cohort_counts(self):
+        """Verify calculated cohort metrics match authoritative customer records (1,187 Loyal Customers out of 5,942 total)."""
+        res = self.app.get("/api/analytics/cohorts")
+        self.assertEqual(res.status_code, 200)
+        data = json.loads(res.data)
+        self.assertEqual(data["total_customers"], 5942)
+        cohorts = data["cohorts"]
+        self.assertEqual(cohorts["Loyal Customers"]["count"], 1187)
+        self.assertEqual(cohorts["Loyal Customers"]["percentage"], 20.0)
+        self.assertEqual(cohorts["Champions"]["count"], 1242)
+        self.assertEqual(cohorts["Champions"]["percentage"], 20.9)
+        self.assertEqual(cohorts["At-Risk"]["count"], 1476)
+        self.assertEqual(cohorts["At-Risk"]["percentage"], 24.8)
+        self.assertEqual(cohorts["Lost / Churned"]["count"], 2037)
+        self.assertEqual(cohorts["Lost / Churned"]["percentage"], 34.3)
+        # Assert the sum of counts equals total_customers
+        total_calculated = sum(c["count"] for c in cohorts.values())
+        self.assertEqual(total_calculated, 5942)
+
 if __name__ == "__main__":
     unittest.main()

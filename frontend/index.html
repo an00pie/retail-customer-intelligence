@@ -37,11 +37,10 @@
 
       <div class="nav-links">
         <a href="#dashboard" class="nav-link active" data-tab="dashboard">Dashboard</a>
-        <a href="#lookup" class="nav-link" data-tab="lookup">Lookup</a>
-        <a href="#rfm" class="nav-link" data-tab="rfm">RFM &amp; ML</a>
-        <a href="#mining" class="nav-link" data-tab="mining">Data Mining</a>
-        <a href="#architecture" class="nav-link" data-tab="architecture">Architecture</a>
-        <a href="#faq" class="nav-link" data-tab="faq">FAQ</a>
+        <a href="#lookup" class="nav-link" data-tab="lookup">Customer Lookup</a>
+        <a href="#segmentation" class="nav-link" data-tab="segmentation">Segmentation</a>
+        <a href="#churn" class="nav-link" data-tab="churn">CLV &amp; Churn</a>
+        <a href="#clv" class="nav-link" data-tab="clv">Simulator</a>
       </div>
 
       <div class="nav-right-actions">
@@ -52,6 +51,12 @@
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>
           <span class="notif-indicator"></span>
         </button>
+        <button type="button" class="nav-icon-btn" onclick="window.openSpaModal('architectureModal')" title="System Architecture & Pipelines" aria-label="Architecture">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="20" height="8" x="2" y="2" rx="2"/><rect width="20" height="8" x="2" y="14" rx="2"/></svg>
+        </button>
+        <button type="button" class="nav-icon-btn" onclick="window.switchDashboardTab('faq')" title="Technical FAQ & Specs" aria-label="FAQ">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+        </button>
         <div class="nav-user-pill" role="button" tabindex="0" onclick="window.showToast('Logged in as Administrator (Pro Plan)', 'info')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();window.showToast('Logged in as Administrator (Pro Plan)', 'info');}" title="Administrator Account" style="cursor: pointer;">
           <div class="nav-user-avatar" style="background: rgba(16, 185, 129, 0.2); color: #34d399; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 11px;">AD</div>
           <div class="nav-user-info">
@@ -60,10 +65,6 @@
           </div>
           <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
         </div>
-        <a href="#dashboard" class="btn-pill-primary nav-cta-btn" data-tab="dashboard">
-          <span>Explore Platform</span>
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
-        </a>
       </div>
 
       <button class="nav-mobile-toggle" id="mobileNavToggle" aria-label="Toggle navigation menu">
@@ -80,86 +81,78 @@
   <div class="nav-mobile-dropdown" id="mobileNavDropdown">
     <a href="#dashboard" class="nav-link" data-tab="dashboard">Dashboard Overview</a>
     <a href="#lookup" class="nav-link" data-tab="lookup">Customer Lookup</a>
-    <a href="#rfm" class="nav-link" data-tab="rfm">RFM Intelligence</a>
-    <a href="#segmentation" class="nav-link" data-tab="segmentation">Customer Segmentation</a>
-    <a href="#clv" class="nav-link" data-tab="clv">CLV Forecast</a>
-    <a href="#churn" class="nav-link" data-tab="churn">Churn Risk ML</a>
+    <a href="#segmentation" class="nav-link" data-tab="segmentation">Segmentation</a>
+    <a href="#churn" class="nav-link" data-tab="churn">CLV &amp; Churn</a>
+    <a href="#clv" class="nav-link" data-tab="clv">Simulator</a>
+    <div style="height: 1px; background: rgba(16, 185, 129, 0.15); margin: 8px 0;"></div>
     <a href="#architecture" class="nav-link" data-tab="architecture">Big Data Architecture</a>
-    <a href="#mining" class="nav-link" data-tab="mining">Data Mining Layer</a>
     <a href="#faq" class="nav-link" data-tab="faq">Technical FAQ</a>
-    <a href="#dashboard" class="btn-pill-primary" data-tab="dashboard" style="justify-content: center; margin-top: 10px;">Explore Platform →</a>
   </div>
 
   <!-- ==============================================================================
        02. HERO SECTION (Web3-Verse Emerald Horizon + Command Center)
        ============================================================================== -->
   <section class="hero-section" id="hero">
-    <!-- Web3-Verse Interactive 3D Wireframe Globe Horizon Stage -->
-    <div class="hero-globe-stage" id="globeContainer">
-      <canvas id="globeCanvas" class="globe-canvas"></canvas>
-      
-      <!-- Floating Frosted Glass Pills (Web3 Verse Exact Reference) -->
-      <div class="globe-floating-pills">
-        <a href="#dashboard" class="globe-feature-pill pill-cta" data-tab="dashboard">
-          <span>Explore Platform</span>
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg>
-        </a>
-        <div class="globe-feature-pill pill-hub-ny">
-          <span class="pill-icon">🏢</span>
-          <div class="pill-hub-text">
-            <span class="pill-hub-city">New York</span>
-            <span class="pill-hub-stat">12.4K Transactions</span>
-          </div>
-        </div>
-        <div class="globe-feature-pill pill-hub-london">
-          <span class="pill-icon">♡</span>
-          <div class="pill-hub-text">
-            <span class="pill-hub-city">London</span>
-            <span class="pill-hub-stat">18.2K Transactions</span>
-          </div>
-        </div>
-        <div class="globe-feature-pill pill-hub-tokyo">
-          <span class="pill-icon">⚡</span>
-          <div class="pill-hub-text">
-            <span class="pill-hub-city">Tokyo</span>
-            <span class="pill-hub-stat">9.1K Transactions</span>
-          </div>
-        </div>
-        <div class="globe-feature-pill pill-global-badge">
-          <span class="pill-status-dot"></span>
-          <div class="pill-hub-text">
-            <span class="pill-hub-city">Global Retail Network</span>
-            <span class="pill-hub-stat">1.06M Verified</span>
-          </div>
-        </div>
-      </div>
-    </div>
-
     <div class="container hero-container" style="max-width: 1440px;">
-      <div class="dash-hero-header reveal-fade-up">
-        <div class="hero-tag">
-          <span class="hero-tag-pulse"></span>
-          <span>Retail Intelligence Engine · 1.06M Transactions Verified</span>
+      <!-- Hero 2-Column Split: Left Text + Right 3D Globe Visual -->
+      <div class="hero-stage-split">
+        <div class="dash-hero-header reveal-fade-up">
+          <div class="hero-tag">
+            <span class="hero-tag-pulse"></span>
+            <span>Retail Intelligence Engine · 1.06M Transactions Verified</span>
+          </div>
+          <h1 class="hero-title">
+            <span class="hero-title-main">Customer Intelligence</span>
+            <span class="hero-title-accent">Command Center</span>
+          </h1>
+          <p class="hero-subtitle">
+            Real-time retail trajectory, behavioral RFM clustering, predictive 90-day CLV, and automated churn prevention on high-performance columnar KV architecture.
+          </p>
+          <div class="hero-actions">
+            <a href="#dashboard" class="btn-pill-primary" data-tab="dashboard">
+              <span>Explore Platform</span>
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+            </a>
+            <a href="#architecture" class="btn-pill-secondary" data-tab="architecture">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="20" height="8" x="2" y="2" rx="2"/><rect width="20" height="8" x="2" y="14" rx="2"/></svg>
+              <span>View Architecture</span>
+            </a>
+          </div>
         </div>
-        <h1 class="hero-title">
-          <span class="hero-title-main">Customer Intelligence</span>
-          <span class="hero-title-accent">Command Center</span>
-        </h1>
-        <p class="hero-subtitle">
-          Real-time retail trajectory, behavioral RFM clustering, predictive 90-day CLV, and automated churn prevention on high-performance columnar KV architecture.
-        </p>
-        <div class="hero-actions">
-          <a href="#dashboard" class="btn-pill-primary" data-tab="dashboard">
-            <span>Explore Platform</span>
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
-          </a>
-          <a href="#architecture" class="btn-pill-secondary" data-tab="architecture">
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="20" height="8" x="2" y="2" rx="2"/><rect width="20" height="8" x="2" y="14" rx="2"/></svg>
-            <span>View Architecture</span>
-          </a>
-          <button type="button" class="btn-circle-action" onclick="window.switchDashboardTab('dashboard')" title="Explore Live Trajectory" aria-label="Play Interactive Demo">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><polygon points="6 3 20 12 6 21 6 3"/></svg>
-          </button>
+
+        <!-- Right 3D Wireframe Globe Stage -->
+        <div class="hero-globe-stage" id="globeContainer">
+          <canvas id="globeCanvas" class="globe-canvas"></canvas>
+          <div class="globe-floating-pills">
+            <div class="globe-feature-pill pill-hub-ny">
+              <span class="pill-icon">🏢</span>
+              <div class="pill-hub-text">
+                <span class="pill-hub-city">New York</span>
+                <span class="pill-hub-stat">12.4K Transactions</span>
+              </div>
+            </div>
+            <div class="globe-feature-pill pill-hub-london">
+              <span class="pill-icon">♡</span>
+              <div class="pill-hub-text">
+                <span class="pill-hub-city">London</span>
+                <span class="pill-hub-stat">18.2K Transactions</span>
+              </div>
+            </div>
+            <div class="globe-feature-pill pill-hub-tokyo">
+              <span class="pill-icon">⚡</span>
+              <div class="pill-hub-text">
+                <span class="pill-hub-city">Tokyo</span>
+                <span class="pill-hub-stat">9.1K Transactions</span>
+              </div>
+            </div>
+            <div class="globe-feature-pill pill-global-badge">
+              <span class="pill-status-dot"></span>
+              <div class="pill-hub-text">
+                <span class="pill-hub-city">Global Retail Network</span>
+                <span class="pill-hub-stat">1.06M Verified</span>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -197,14 +190,6 @@
                   </span>
                   <span>Customer Lookup</span>
                 </a>
-                <a href="#rfm" class="dash-nav-item" data-tab="rfm">
-                  <span class="dash-nav-icon">
-                    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                      <path d="m3 3 3 9 4-6 5 8 6-11"/><circle cx="21" cy="3" r="1.5"/>
-                    </svg>
-                  </span>
-                  <span>RFM Analytics</span>
-                </a>
                 <a href="#segmentation" class="dash-nav-item" data-tab="segmentation">
                   <span class="dash-nav-icon">
                     <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -213,21 +198,21 @@
                   </span>
                   <span>Segmentation</span>
                 </a>
-                <a href="#models" class="dash-nav-item" data-tab="clv">
-                  <span class="dash-nav-icon">
-                    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                      <path d="m12 3-1.9 5.8a2 2 0 0 1-1.3 1.3L3 12l5.8 1.9a2 2 0 0 1 1.3 1.3L12 21l1.9-5.8a2 2 0 0 1 1.3-1.3L21 12l-5.8-1.9a2 2 0 0 1-1.3-1.3L12 3z"/>
-                    </svg>
-                  </span>
-                  <span>CLV Forecast</span>
-                </a>
-                <a href="#models" class="dash-nav-item" data-tab="churn">
+                <a href="#churn" class="dash-nav-item" data-tab="churn">
                   <span class="dash-nav-icon">
                     <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                       <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/>
                     </svg>
                   </span>
-                  <span>Churn Risk</span>
+                  <span>CLV &amp; Churn</span>
+                </a>
+                <a href="#clv" class="dash-nav-item" data-tab="clv">
+                  <span class="dash-nav-icon">
+                    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+                    </svg>
+                  </span>
+                  <span>Simulator</span>
                 </a>
                 <a href="#architecture" class="dash-nav-item" data-tab="architecture">
                   <span class="dash-nav-icon">
@@ -651,19 +636,19 @@
                   <div class="ov-cohorts-grid">
                     <button type="button" class="ov-cohort-pill" onclick="window.switchDashboardTab('segmentation')">
                       <span class="ov-cohort-name">Champions</span>
-                      <span class="ov-cohort-pct" style="color: #34d399;">23.4%</span>
+                      <span class="ov-cohort-pct" style="color: #34d399;">20.9%</span>
                     </button>
                     <button type="button" class="ov-cohort-pill active" onclick="window.switchDashboardTab('segmentation')">
                       <span class="ov-cohort-name">Loyal Customers</span>
-                      <span class="ov-cohort-pct" style="color: #38bdf8;">38.7%</span>
+                      <span class="ov-cohort-pct" style="color: #38bdf8;">20.0%</span>
                     </button>
                     <button type="button" class="ov-cohort-pill" onclick="window.switchDashboardTab('segmentation')">
-                      <span class="ov-cohort-name">At Risk</span>
-                      <span class="ov-cohort-pct" style="color: #f59e0b;">24.1%</span>
+                      <span class="ov-cohort-name">At-Risk</span>
+                      <span class="ov-cohort-pct" style="color: #f59e0b;">24.8%</span>
                     </button>
                     <button type="button" class="ov-cohort-pill" onclick="window.switchDashboardTab('segmentation')">
-                      <span class="ov-cohort-name">Hibernating</span>
-                      <span class="ov-cohort-pct" style="color: #c084fc;">13.8%</span>
+                      <span class="ov-cohort-name">Lost / Churned</span>
+                      <span class="ov-cohort-pct" style="color: #c084fc;">34.3%</span>
                     </button>
                   </div>
 
@@ -671,19 +656,19 @@
                     <div style="font-size: 11px; font-weight: 700; color: #ffffff; margin-bottom: 2px;">Cluster Insights (Loyal Customers)</div>
                     <div class="ov-insight-row">
                       <span>Customer Count</span>
-                      <strong style="color: #ffffff;">3,452 (38.7%)</strong>
+                      <strong style="color: #ffffff;">1,187 (20.0%)</strong>
                     </div>
                     <div class="ov-insight-row">
                       <span>Avg. Monetary Spend</span>
-                      <strong style="color: #34d399;">$612.40</strong>
+                      <strong style="color: #34d399;">$784.29</strong>
                     </div>
                     <div class="ov-insight-row">
                       <span>Avg. Frequency</span>
-                      <strong style="color: #38bdf8;">8.2 orders</strong>
+                      <strong style="color: #38bdf8;">3.3 orders</strong>
                     </div>
                     <div class="ov-insight-row">
                       <span>Avg. Recency</span>
-                      <strong style="color: #ffffff;">28 days</strong>
+                      <strong style="color: #ffffff;">26.5 days</strong>
                     </div>
                   </div>
                 </div>

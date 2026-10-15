@@ -62,34 +62,43 @@ def run_e2e_tests(base_url="http://localhost:8501"):
         page.wait_for_timeout(500)
         page.wait_for_selector("#kpiTotalCustomers", state="visible", timeout=20000)
 
-        print("\n--- Phase 2: KPI & Chart Period Filtering ---")
+        print("\n--- Phase 2: KPI & Chart Period Filtering & API Consistency ---")
         # Check initial KPI values
         kpi_customers = page.locator("#kpiTotalCustomers").text_content()
         kpi_orders = page.locator("#kpiTotalOrders").text_content()
         kpi_rev = page.locator("#kpiTotalRevenue").text_content()
         print(f"  Initial KPIs -> Customers: {kpi_customers} | Orders: {kpi_orders} | Rev: {kpi_rev}")
         
-        # Test period pill 7D
-        page.locator('button.period-pill[data-period="7d"]').click()
+        # Test period pill 7D and compare with actual API response
+        with page.expect_response(lambda r: "period=7d" in r.url) as resp_info:
+            page.locator('button.period-pill[data-period="7d"]').click()
+        resp_7d = resp_info.value
+        data_7d = resp_7d.json()
+        expected_orders_7d = f"{data_7d['total_orders']:,}"
         try:
-            page.wait_for_function("() => document.getElementById('kpiTotalOrders').textContent !== '17,132'", timeout=12000)
+            page.wait_for_function(f"() => document.getElementById('kpiTotalOrders').textContent === '{expected_orders_7d}'", timeout=12000)
         except Exception:
-            page.wait_for_timeout(3000)
+            page.wait_for_timeout(2000)
         kpi_orders_7d = page.locator("#kpiTotalOrders").text_content()
         kpi_rev_7d = page.locator("#kpiTotalRevenue").text_content()
-        print(f"  After 7D switch -> Orders: {kpi_orders_7d} | Rev: {kpi_rev_7d}")
+        print(f"  After 7D switch -> Orders: {kpi_orders_7d} (API Expected: {expected_orders_7d}) | Rev: {kpi_rev_7d}")
         
-        # Test period pill All
+        # Test rapid sequential period switches for stale response protection
         page.locator('button.period-pill[data-period="all"]').click()
+        page.locator('button.period-pill[data-period="30d"]').click()
+        with page.expect_response(lambda r: "period=12m" in r.url) as resp_12m_info:
+            page.locator('button.period-pill[data-period="12m"]').click()
+        resp_12m = resp_12m_info.value
+        data_12m = resp_12m.json()
+        expected_orders_12m = f"{data_12m['total_orders']:,}"
         try:
-            page.wait_for_function(f"() => document.getElementById('kpiTotalOrders').textContent !== '{kpi_orders_7d}'", timeout=12000)
+            page.wait_for_function(f"() => document.getElementById('kpiTotalOrders').textContent === '{expected_orders_12m}'", timeout=12000)
         except Exception:
-            page.wait_for_timeout(3000)
-        kpi_orders_all = page.locator("#kpiTotalOrders").text_content()
-        kpi_rev_all = page.locator("#kpiTotalRevenue").text_content()
-        print(f"  After All switch -> Orders: {kpi_orders_all} | Rev: {kpi_rev_all}")
+            page.wait_for_timeout(2000)
+        kpi_orders_final = page.locator("#kpiTotalOrders").text_content()
+        print(f"  After rapid switches to 12M -> Orders: {kpi_orders_final} (API Expected: {expected_orders_12m})")
 
-        results["kpi_filtering"] = (kpi_orders_7d != kpi_orders_all)
+        results["kpi_filtering"] = (kpi_orders_7d == expected_orders_7d and kpi_orders_final == expected_orders_12m)
 
         print("\n--- Phase 3: Customer Lookup & Ledger Audit ---")
         # Switch to Lookup tab
@@ -115,6 +124,22 @@ def run_e2e_tests(base_url="http://localhost:8501"):
         has_risk = "At-Risk" in card_text_13748
         print(f"  Lookup #13748 -> Segment 'At-Risk' Found: {has_risk}")
 
+        # Check honest Unavailable state for Message and Assign Task buttons
+        btn_msg = page.locator("#customerProfileTarget button:has-text('Message')")
+        btn_task = page.locator("#customerProfileTarget button:has-text('Assign Task')")
+        msg_text = btn_msg.text_content() if btn_msg.count() > 0 else ""
+        task_text = btn_task.text_content() if btn_task.count() > 0 else ""
+        has_unavailable = ("Unavailable" in msg_text and "Unavailable" in task_text)
+        print(f"  Message & Assign Task Honest '(Unavailable)' State: {has_unavailable}")
+        
+        honest_toast = True
+        if btn_msg.count() > 0:
+            btn_msg.click()
+            page.wait_for_timeout(300)
+            toast_text = page.locator("#toast-container .toast-pill").last.text_content() if page.locator("#toast-container .toast-pill").count() > 0 else ""
+            honest_toast = "unavailable" in toast_text.lower()
+            print(f"  Message Action Toast: '{toast_text}' (Honest Unavailable: {honest_toast})")
+
         # Lookup 99999 (Honest 404 Not Found)
         page.fill("#lookupCustIdInput", "99999")
         page.click("#lookupSearchBtn")
@@ -123,7 +148,7 @@ def run_e2e_tests(base_url="http://localhost:8501"):
         has_not_found = "Not Found" in card_text_99999
         print(f"  Lookup #99999 -> Honest 'Not Found' State: {has_not_found}")
 
-        results["customer_lookup"] = (has_champ and has_risk and has_not_found)
+        results["customer_lookup"] = (has_champ and has_risk and has_not_found and has_unavailable and honest_toast)
 
         print("\n--- Phase 4: RFM Interactive Calculator ---")
         page.evaluate("() => window.switchDashboardTab('rfm')")
@@ -384,6 +409,33 @@ def run_e2e_tests(base_url="http://localhost:8501"):
             print_styles_ok and
             focus_trap_ok
         )
+
+        print("\n--- Phase 10: Authoritative Cohorts & Navigation Verification ---")
+        page.evaluate("() => window.switchDashboardTab('dashboard')")
+        page.wait_for_timeout(500)
+        
+        cohort_grid_text = page.locator("#tab-dashboard .ov-cohorts-grid").text_content()
+        has_loyal_pill = "Loyal Customers" in cohort_grid_text and "20.0%" in cohort_grid_text
+        has_champ_pill = "Champions" in cohort_grid_text and "20.9%" in cohort_grid_text
+        print(f"  Overview Cohort Grid Loyal (20.0%): {has_loyal_pill} | Champ (20.9%): {has_champ_pill}")
+
+        ov_text = page.locator("#tab-dashboard .ov-cluster-insights-list").text_content()
+        has_authoritative_loyal = ("1,187" in ov_text and "20.0%" in ov_text) or ("1,242" in ov_text and "20.9%" in ov_text)
+        print(f"  Overview Insights Authoritative Figures: {has_authoritative_loyal}")
+
+        page.evaluate("() => window.switchDashboardTab('segmentation')")
+        page.wait_for_timeout(500)
+        seg_text = page.locator("#tab-segmentation").text_content()
+        has_seg_loyal = "1,187 accounts (20.0%)" in seg_text
+        print(f"  Segmentation Tab Loyal Customers Count (1,187): {has_seg_loyal}")
+
+        nav_texts = [page.locator(f".nav-links .nav-link:nth-child({i})").text_content().strip() for i in range(1, 6)]
+        print(f"  Primary Navigation Links: {nav_texts}")
+        expected_nav = ["Dashboard", "Customer Lookup", "Segmentation", "CLV & Churn", "Simulator"]
+        nav_ok = (nav_texts == expected_nav)
+        print(f"  Primary Navigation Structure Verified: {nav_ok}")
+
+        results["authoritative_cohorts_and_nav"] = (has_loyal_pill and has_champ_pill and has_authoritative_loyal and has_seg_loyal and nav_ok)
 
         print("\n--- Phase 7: Console Errors Audit ---")
         print(f"  Total Console Errors: {len(console_errors)}")
