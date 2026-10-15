@@ -41,6 +41,10 @@ function initSpaDashboardNavigation() {
       allPanes.forEach(pane => pane.classList.remove('active'));
       targetPane.classList.add('active');
 
+      if (typeof window.refreshScrollReveals === 'function') {
+        window.refreshScrollReveals(targetPane);
+      }
+
       // Update active states on sidebar items, nav links, and pills
       document.querySelectorAll('.dash-nav-item, .nav-link, .dash-action-pill').forEach(el => {
         const itemTab = el.getAttribute('data-tab') || (el.getAttribute('href') || '').replace(/^#/, '');
@@ -326,28 +330,129 @@ function initSpaDashboardNavigation() {
 }
 
 /* ==============================================================================
-   1. SCROLL REVEALS (IntersectionObserver)
+   1. SCROLL REVEALS (IntersectionObserver) & ANIMATED METRIC COUNTERS
    ============================================================================== */
+let globalScrollObserver = null;
+
+function animateMetricCounter(element, targetString, duration = 650) {
+  if (!element) return;
+  const target = String(targetString !== undefined ? targetString : element.textContent).trim();
+  if (!target) return;
+
+  // Reduced motion: set target immediately without animation
+  if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    element.textContent = target;
+    return;
+  }
+
+  // Regex to extract prefix (currency/symbol), number (with commas and decimals), and suffix
+  const match = target.match(/^([^\d\-+.]*)([-+]?[\d,]+(?:\.\d+)?)(.*)$/);
+  if (!match) {
+    element.textContent = target;
+    return;
+  }
+
+  const prefix = match[1] || '';
+  const numStr = match[2].replace(/,/g, '');
+  const suffix = match[3] || '';
+  const targetNum = parseFloat(numStr);
+
+  if (isNaN(targetNum)) {
+    element.textContent = target;
+    return;
+  }
+
+  const decimalParts = match[2].split('.');
+  const decimals = decimalParts.length > 1 ? decimalParts[1].length : 0;
+  const hasCommas = match[2].includes(',');
+
+  // Parse current starting value if present and different, else start at 0
+  let startNum = 0;
+  const currentText = (element.textContent || '').trim();
+  const currentMatch = currentText.match(/^([^\d\-+.]*)([-+]?[\d,]+(?:\.\d+)?)(.*)$/);
+  if (currentMatch) {
+    const parsedCurrent = parseFloat(currentMatch[2].replace(/,/g, ''));
+    if (!isNaN(parsedCurrent) && parsedCurrent !== targetNum) {
+      startNum = parsedCurrent;
+    }
+  }
+
+  if (Math.abs(targetNum - startNum) < 0.0001) {
+    element.textContent = target;
+    return;
+  }
+
+  if (element._animRafId) {
+    cancelAnimationFrame(element._animRafId);
+    element._animRafId = null;
+  }
+
+  const startTime = performance.now();
+
+  function step(now) {
+    const elapsed = now - startTime;
+    const progress = Math.min(1, elapsed / duration);
+    // Cubic ease-out curve
+    const eased = 1 - Math.pow(1 - progress, 3);
+    const currentVal = startNum + (targetNum - startNum) * eased;
+
+    if (progress < 1) {
+      const formattedNum = hasCommas
+        ? currentVal.toLocaleString('en-US', { minimumFractionDigits: decimals, maximumFractionDigits: decimals })
+        : currentVal.toFixed(decimals);
+      element.textContent = prefix + formattedNum + suffix;
+      element._animRafId = requestAnimationFrame(step);
+    } else {
+      element.textContent = target;
+      element._animRafId = null;
+    }
+  }
+
+  element._animRafId = requestAnimationFrame(step);
+}
+
 function initScrollReveals() {
+  const isReducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const hasObserver = 'IntersectionObserver' in window;
+
   const revealElements = document.querySelectorAll('.reveal-fade-up');
-  if (!('IntersectionObserver' in window)) {
+  if (!hasObserver || isReducedMotion) {
     revealElements.forEach(el => el.classList.add('revealed'));
     return;
   }
 
-  const observer = new IntersectionObserver((entries, obs) => {
+  globalScrollObserver = new IntersectionObserver((entries, obs) => {
     entries.forEach(entry => {
       if (entry.isIntersecting) {
         entry.target.classList.add('revealed');
         obs.unobserve(entry.target);
+
+        // Animate any metric counter elements inside newly revealed card
+        const kpiNums = entry.target.querySelectorAll('.dash-kpi-num, .metric-tile-val, .customer-metric-num');
+        kpiNums.forEach(numEl => {
+          if (!numEl.dataset.revealedAnimated) {
+            numEl.dataset.revealedAnimated = 'true';
+            animateMetricCounter(numEl, numEl.textContent, 650);
+          }
+        });
       }
     });
   }, {
-    threshold: 0.12,
-    rootMargin: '0px 0px -40px 0px'
+    threshold: 0.08,
+    rootMargin: '0px 0px -30px 0px'
   });
 
-  revealElements.forEach(el => observer.observe(el));
+  revealElements.forEach(el => globalScrollObserver.observe(el));
+
+  window.refreshScrollReveals = function(container) {
+    const root = container || document;
+    const items = root.querySelectorAll('.reveal-fade-up:not(.revealed)');
+    if (isReducedMotion || !globalScrollObserver) {
+      items.forEach(el => el.classList.add('revealed'));
+      return;
+    }
+    items.forEach(el => globalScrollObserver.observe(el));
+  };
 }
 
 /* ==============================================================================
@@ -488,7 +593,7 @@ function initRfmCalculator() {
             segmentBadge.className = `cluster-card-badge ${bClass}`;
           }
           if (clvEst && data.predicted_clv !== undefined) {
-            clvEst.textContent = `$${Math.round(data.predicted_clv).toLocaleString()}`;
+            animateMetricCounter(clvEst, `$${Math.round(data.predicted_clv).toLocaleString()}`, 350);
           }
         }
       })
@@ -680,15 +785,15 @@ function renderCustomerProfile(data) {
       <div class="customer-metrics-row">
         <div class="customer-metric-box">
           <div class="customer-metric-lbl">Predicted CLV</div>
-          <div class="customer-metric-num" style="color: var(--accent-emerald-bright);">$${clv.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</div>
+          <div class="customer-metric-num" id="custProfileClv" style="color: var(--accent-emerald-bright);">$${clv.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</div>
         </div>
         <div class="customer-metric-box">
           <div class="customer-metric-lbl">Orders Count</div>
-          <div class="customer-metric-num">${freq}</div>
+          <div class="customer-metric-num" id="custProfileOrders">${freq}</div>
         </div>
         <div class="customer-metric-box">
           <div class="customer-metric-lbl">Churn Risk</div>
-          <div class="customer-metric-num" style="color: ${churn > 0.4 ? '#fb7185' : '#34d399'};">${(churn * 100).toFixed(1)}%</div>
+          <div class="customer-metric-num" id="custProfileChurn" style="color: ${churn > 0.4 ? '#fb7185' : '#34d399'};">${(churn * 100).toFixed(1)}%</div>
         </div>
       </div>
 
@@ -724,6 +829,13 @@ function renderCustomerProfile(data) {
       </div>
     </div>
   `;
+
+  const clvEl = container.querySelector('#custProfileClv');
+  const ordersEl = container.querySelector('#custProfileOrders');
+  const churnEl = container.querySelector('#custProfileChurn');
+  if (clvEl) animateMetricCounter(clvEl, clvEl.textContent, 500);
+  if (ordersEl) animateMetricCounter(ordersEl, ordersEl.textContent, 500);
+  if (churnEl) animateMetricCounter(churnEl, churnEl.textContent, 500);
 }
 
 /* ==============================================================================
@@ -910,10 +1022,16 @@ function initWhatIfSimulator() {
           segTarget.style.opacity = '1';
           segTarget.textContent = res.segment;
         }
-        if (clvTarget) clvTarget.textContent = `$${parseFloat(res.predicted_clv).toFixed(2)}`;
+        if (clvTarget) animateMetricCounter(clvTarget, `$${parseFloat(res.predicted_clv).toFixed(2)}`, 450);
         if (churnTarget) {
-          churnTarget.textContent = `${(parseFloat(res.churn_probability) * 100).toFixed(1)}%`;
+          animateMetricCounter(churnTarget, `${(parseFloat(res.churn_probability) * 100).toFixed(1)}%`, 450);
           churnTarget.style.color = res.churn_probability > 0.4 ? '#fb7185' : '#34d399';
+        }
+        const infCard = segTarget ? segTarget.closest('.overview-card') : null;
+        if (infCard) {
+          infCard.classList.remove('prediction-pulse');
+          void infCard.offsetWidth;
+          infCard.classList.add('prediction-pulse');
         }
       })
       .catch(err => {
@@ -980,7 +1098,7 @@ function initDashboardCharts() {
     .then(res => res.json())
     .then(health => {
       if (elKpiCustomers && health && health.serving_records) {
-        elKpiCustomers.textContent = formatNumber(health.serving_records);
+        animateMetricCounter(elKpiCustomers, formatNumber(health.serving_records), 550);
       }
     })
     .catch(() => {});
@@ -1202,22 +1320,22 @@ function initDashboardCharts() {
         if (loadingOverlay) loadingOverlay.style.display = 'none';
 
         // Update Headline / Hero Revenue
-        if (elHeadlineRevenue) elHeadlineRevenue.textContent = formatCurrency(data.headline_revenue || data.total_revenue);
+        if (elHeadlineRevenue) animateMetricCounter(elHeadlineRevenue, formatCurrency(data.headline_revenue || data.total_revenue), 550);
         if (elHeadlineGrowth) updateKpiPill(elHeadlineGrowth, data.headline_growth || data.revenue_growth, 'vs previous period');
 
         const heroRev = document.getElementById('kpiHeroTotalRevenue');
         const heroGrowth = document.getElementById('kpiHeroRevGrowth');
-        if (heroRev) heroRev.textContent = formatCurrency(data.headline_revenue || data.total_revenue);
+        if (heroRev) animateMetricCounter(heroRev, formatCurrency(data.headline_revenue || data.total_revenue), 550);
         if (heroGrowth) updateKpiPill(heroGrowth, data.headline_growth || data.revenue_growth, 'vs previous period');
 
         // Update 4 KPI Tiles
-        if (elKpiRevenue) elKpiRevenue.textContent = formatCurrency(data.total_revenue);
+        if (elKpiRevenue) animateMetricCounter(elKpiRevenue, formatCurrency(data.total_revenue), 550);
         if (elKpiRevGrowth) updateKpiPill(elKpiRevGrowth, data.revenue_growth, 'vs previous period');
 
-        if (elKpiOrders) elKpiOrders.textContent = formatNumber(data.total_orders);
+        if (elKpiOrders) animateMetricCounter(elKpiOrders, formatNumber(data.total_orders), 550);
         if (elKpiOrdGrowth) updateKpiPill(elKpiOrdGrowth, data.orders_growth, 'vs previous period');
 
-        if (elKpiAov) elKpiAov.textContent = formatCurrency(data.avg_order_value);
+        if (elKpiAov) animateMetricCounter(elKpiAov, formatCurrency(data.avg_order_value), 550);
         if (elKpiAovGrowth) updateKpiPill(elKpiAovGrowth, data.aov_growth, 'vs previous period');
 
         if (elDataStatus) {

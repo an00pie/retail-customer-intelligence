@@ -1115,21 +1115,23 @@ button, input, select, textarea {
 
 .dash-ov-card {
   min-width: 0;
-  background: rgba(11, 21, 17, 0.65);
+  background: rgba(11, 21, 17, 0.70);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(16, 185, 129, 0.14);
   border-radius: var(--radius-md);
   padding: 18px 20px;
   display: flex;
   flex-direction: column;
   gap: 14px;
-  transition: all 180ms ease;
+  box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.05);
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.25s ease, box-shadow 0.25s ease;
 }
 
 .dash-ov-card:hover {
+  transform: translateY(-2px);
   border-color: rgba(16, 185, 129, 0.32);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5), 0 0 20px rgba(16, 185, 129, 0.08);
+  box-shadow: 0 12px 28px -6px rgba(0, 0, 0, 0.6), 0 0 18px rgba(16, 185, 129, 0.10);
 }
 
 .dash-ov-header {
@@ -1246,16 +1248,46 @@ button, input, select, textarea {
 
 .ov-table th {
   text-align: left;
-  padding: 6px 8px;
+  padding: 8px 10px;
   font-size: 10px;
   color: var(--text-muted);
-  font-weight: 600;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  border-bottom: 1px solid rgba(16, 185, 129, 0.16);
+  background: rgba(16, 185, 129, 0.02);
 }
 
 .ov-table td {
-  padding: 6px 8px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+  padding: 8px 10px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+.ov-table tr:hover td {
+  background: rgba(16, 185, 129, 0.05);
+  color: #ffffff;
+}
+
+/* High-Density Customer Transaction Ledger Table */
+.customer-tx-table-container table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.customer-tx-table-container th {
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  border-bottom: 1px solid rgba(16, 185, 129, 0.18);
+  background: rgba(16, 185, 129, 0.03);
+}
+
+.customer-tx-table-container tbody tr {
+  transition: background 0.15s ease;
+}
+
+.customer-tx-table-container tbody tr:hover td {
+  background: rgba(16, 185, 129, 0.07);
 }
 
 /* Module 2: RFM inside Overview */
@@ -1688,10 +1720,10 @@ button, input, select, textarea {
 }
 
 .dash-kpi-card-luxury {
-  background: rgba(11, 21, 17, 0.65);
+  background: rgba(11, 21, 17, 0.70);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(16, 185, 129, 0.14);
   border-radius: var(--radius-md);
   padding: 16px 18px;
   display: flex;
@@ -1699,13 +1731,14 @@ button, input, select, textarea {
   gap: 14px;
   position: relative;
   overflow: hidden;
-  transition: transform 0.22s cubic-bezier(0.22, 1, 0.36, 1), border-color 0.22s ease, box-shadow 0.22s ease;
+  box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.05);
+  transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.28s ease, box-shadow 0.28s ease;
 }
 
 .dash-kpi-card-luxury:hover {
   transform: translateY(-2px);
-  border-color: rgba(167, 251, 95, 0.38);
-  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.6), 0 0 22px rgba(167, 251, 95, 0.18);
+  border-color: rgba(16, 185, 129, 0.38);
+  box-shadow: 0 12px 28px -6px rgba(0, 0, 0, 0.65), 0 0 20px rgba(16, 185, 129, 0.14);
 }
 
 .dash-kpi-icon-box {
@@ -1793,17 +1826,23 @@ button, input, select, textarea {
 
 /* Luxury Chart Card */
 .dash-chart-card-luxury {
-  background: rgba(11, 21, 17, 0.65);
+  background: rgba(11, 21, 17, 0.70);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(16, 185, 129, 0.14);
   border-radius: var(--radius-md);
   padding: 22px 24px;
   display: flex;
   flex-direction: column;
   gap: 16px;
   position: relative;
-  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.4), 0 0 20px rgba(16, 185, 129, 0.03);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.4), inset 0 1px 0 0 rgba(255, 255, 255, 0.05);
+  transition: border-color 0.28s ease, box-shadow 0.28s ease;
+}
+
+.dash-chart-card-luxury:hover {
+  border-color: rgba(16, 185, 129, 0.28);
+  box-shadow: 0 18px 44px rgba(0, 0, 0, 0.5), 0 0 24px rgba(16, 185, 129, 0.08);
 }
 
 .dash-chart-card-luxury .dash-chart-card-header {
@@ -3381,8 +3420,8 @@ button, input, select, textarea {
    ============================================================================== */
 .reveal-fade-up {
   opacity: 0;
-  transform: translateY(24px);
-  transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1), transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+  transform: translateY(18px);
+  transition: opacity 0.65s cubic-bezier(0.16, 1, 0.3, 1), transform 0.65s cubic-bezier(0.16, 1, 0.3, 1);
   will-change: opacity, transform;
 }
 
@@ -3391,10 +3430,26 @@ button, input, select, textarea {
   transform: translateY(0);
 }
 
-.stagger-1 { transition-delay: 0.1s; }
-.stagger-2 { transition-delay: 0.2s; }
-.stagger-3 { transition-delay: 0.3s; }
-.stagger-4 { transition-delay: 0.4s; }
+.stagger-1 { transition-delay: 0.08s; }
+.stagger-2 { transition-delay: 0.16s; }
+.stagger-3 { transition-delay: 0.24s; }
+.stagger-4 { transition-delay: 0.32s; }
+
+/* Subtle pulse for updated ML inference / prediction */
+@keyframes prediction-fresh {
+  0% {
+    border-color: rgba(52, 211, 153, 0.7);
+    box-shadow: 0 0 20px rgba(16, 185, 129, 0.22);
+  }
+  100% {
+    border-color: rgba(16, 185, 129, 0.22);
+    box-shadow: none;
+  }
+}
+
+.prediction-pulse {
+  animation: prediction-fresh 0.65s cubic-bezier(0.16, 1, 0.3, 1);
+}
 
 /* Reduced motion preference */
 @media (prefers-reduced-motion: reduce) {
@@ -3403,6 +3458,11 @@ button, input, select, textarea {
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
+  }
+  .reveal-fade-up {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
   }
 }
 
