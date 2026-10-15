@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Customer Intelligence Platform — Web3-Verse Green Luxury Edition</title>
+  <title>Customer Intelligence — Retail Analytics</title>
   <meta name="description" content="Live analytics, RFM behavioral clustering, CLV predictions, and churn intelligence across 1.06M retail transactions with high-performance columnar KV serving (5,942 profiles).">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220%200%2032%2032%22><circle cx=%2216%22 cy=%2216%22 r=%2216%22 fill=%22%2310b981%22/><path d=%22M10 20L16 10L22 20Z%22 fill=%22%23040806%22/></svg>">
   <link rel="stylesheet" href="/static/css/dashflow.css">
@@ -25,7 +25,7 @@
        01. NAVIGATION (Floating Capsule Navbar — Matching media_1791354559966.png)
        ============================================================================== -->
   <div class="nav-capsule-wrapper">
-    <nav class="nav-capsule">
+    <nav class="nav-capsule" aria-label="Primary navigation">
       <a href="#hero" class="nav-brand">
         <div class="nav-brand-badge">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
@@ -36,7 +36,7 @@
       </a>
 
       <div class="nav-links">
-        <a href="#dashboard" class="nav-link active" data-tab="dashboard">Dashboard</a>
+        <a href="#dashboard" class="nav-link active" aria-current="page" data-tab="dashboard">Dashboard</a>
         <a href="#lookup" class="nav-link" data-tab="lookup">Customer Lookup</a>
         <a href="#segmentation" class="nav-link" data-tab="segmentation">Segmentation</a>
         <a href="#churn" class="nav-link" data-tab="churn">CLV &amp; Churn</a>
@@ -44,30 +44,16 @@
       </div>
 
       <div class="nav-right-actions">
-        <button type="button" class="nav-icon-btn" onclick="window.switchDashboardTab('lookup')" title="Global Search (⌘K)" aria-label="Search">
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
-        </button>
-        <button type="button" class="nav-icon-btn" id="navNotifBtn" onclick="window.showToast('All system pipelines healthy · 5,942 profiles synchronized', 'success')" title="Live System Notifications" aria-label="Notifications">
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>
-          <span class="notif-indicator"></span>
-        </button>
-        <button type="button" class="nav-icon-btn" onclick="window.openSpaModal('architectureModal')" title="System Architecture & Pipelines" aria-label="Architecture">
+        <button type="button" class="nav-icon-btn" id="navArchitectureBtn" onclick="window.openSpaModal('architecture')" title="System Architecture & Pipelines" aria-label="Architecture">
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="20" height="8" x="2" y="2" rx="2"/><rect width="20" height="8" x="2" y="14" rx="2"/></svg>
         </button>
         <button type="button" class="nav-icon-btn" onclick="window.switchDashboardTab('faq')" title="Technical FAQ & Specs" aria-label="FAQ">
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
         </button>
-        <div class="nav-user-pill" role="button" tabindex="0" onclick="window.showToast('Logged in as Administrator (Pro Plan)', 'info')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();window.showToast('Logged in as Administrator (Pro Plan)', 'info');}" title="Administrator Account" style="cursor: pointer;">
-          <div class="nav-user-avatar" style="background: rgba(16, 185, 129, 0.2); color: #34d399; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 11px;">AD</div>
-          <div class="nav-user-info">
-            <span class="nav-user-name">Admin</span>
-            <span class="nav-user-role">Pro</span>
-          </div>
-          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
-        </div>
+
       </div>
 
-      <button class="nav-mobile-toggle" id="mobileNavToggle" aria-label="Toggle navigation menu">
+      <button class="nav-mobile-toggle" id="mobileNavToggle" aria-expanded="false" aria-controls="mobileNavDropdown" aria-label="Toggle navigation menu">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <line x1="3" y1="12" x2="21" y2="12"></line>
           <line x1="3" y1="6" x2="21" y2="6"></line>
@@ -99,60 +85,26 @@
         <div class="dash-hero-header reveal-fade-up">
           <div class="hero-tag">
             <span class="hero-tag-pulse"></span>
-            <span>Retail Intelligence Engine · 1.06M Transactions Verified</span>
+            <span>Retail customer analytics</span>
           </div>
           <h1 class="hero-title">
             <span class="hero-title-main">Customer Intelligence</span>
             <span class="hero-title-accent">Command Center</span>
           </h1>
           <p class="hero-subtitle">
-            Real-time retail trajectory, behavioral RFM clustering, predictive 90-day CLV, and automated churn prevention on high-performance columnar KV architecture.
+            Understand customer behavior with RFM segmentation, lifetime value predictions, and churn insights.
           </p>
           <div class="hero-actions">
             <a href="#dashboard" class="btn-pill-primary" data-tab="dashboard">
-              <span>Explore Platform</span>
+              <span>Explore Dashboard</span>
               <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
-            </a>
-            <a href="#architecture" class="btn-pill-secondary" data-tab="architecture">
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="20" height="8" x="2" y="2" rx="2"/><rect width="20" height="8" x="2" y="14" rx="2"/></svg>
-              <span>View Architecture</span>
             </a>
           </div>
         </div>
 
         <!-- Right 3D Wireframe Globe Stage -->
         <div class="hero-globe-stage" id="globeContainer">
-          <canvas id="globeCanvas" class="globe-canvas"></canvas>
-          <div class="globe-floating-pills">
-            <div class="globe-feature-pill pill-hub-ny">
-              <span class="pill-icon">🏢</span>
-              <div class="pill-hub-text">
-                <span class="pill-hub-city">New York</span>
-                <span class="pill-hub-stat">12.4K Transactions</span>
-              </div>
-            </div>
-            <div class="globe-feature-pill pill-hub-london">
-              <span class="pill-icon">♡</span>
-              <div class="pill-hub-text">
-                <span class="pill-hub-city">London</span>
-                <span class="pill-hub-stat">18.2K Transactions</span>
-              </div>
-            </div>
-            <div class="globe-feature-pill pill-hub-tokyo">
-              <span class="pill-icon">⚡</span>
-              <div class="pill-hub-text">
-                <span class="pill-hub-city">Tokyo</span>
-                <span class="pill-hub-stat">9.1K Transactions</span>
-              </div>
-            </div>
-            <div class="globe-feature-pill pill-global-badge">
-              <span class="pill-status-dot"></span>
-              <div class="pill-hub-text">
-                <span class="pill-hub-city">Global Retail Network</span>
-                <span class="pill-hub-stat">1.06M Verified</span>
-              </div>
-            </div>
-          </div>
+          <canvas id="globeCanvas" class="globe-canvas" aria-hidden="true"></canvas>
         </div>
       </div>
 
@@ -161,90 +113,6 @@
         <div class="hero-mockup">
           <div class="dash-window">
             
-            <!-- Left Sidebar (Luxury Reference UI) -->
-            <aside class="dash-sidebar">
-              <div class="dash-company">
-                <div class="dash-company-logo">
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
-                </div>
-                <div class="dash-company-info">
-                  <div class="dash-company-name">CUSTOMER</div>
-                  <div class="dash-company-tag">INTELLIGENCE</div>
-                </div>
-              </div>
-
-              <div class="dash-nav-items">
-                <a href="#dashboard" class="dash-nav-item active" data-tab="dashboard">
-                  <span class="dash-nav-icon">
-                    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                      <rect width="7" height="9" x="3" y="3" rx="1.5"/><rect width="7" height="5" x="14" y="3" rx="1.5"/><rect width="7" height="9" x="14" y="12" rx="1.5"/><rect width="7" height="5" x="3" y="16" rx="1.5"/>
-                    </svg>
-                  </span>
-                  <span>Dashboard</span>
-                </a>
-                <a href="#lookup" class="dash-nav-item" data-tab="lookup">
-                  <span class="dash-nav-icon">
-                    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                      <circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/><circle cx="11" cy="10" r="3"/>
-                    </svg>
-                  </span>
-                  <span>Customer Lookup</span>
-                </a>
-                <a href="#segmentation" class="dash-nav-item" data-tab="segmentation">
-                  <span class="dash-nav-icon">
-                    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                      <circle cx="12" cy="12" r="9"/><path d="M12 3a9 9 0 0 1 9 9h-9V3z"/>
-                    </svg>
-                  </span>
-                  <span>Segmentation</span>
-                </a>
-                <a href="#churn" class="dash-nav-item" data-tab="churn">
-                  <span class="dash-nav-icon">
-                    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                      <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/>
-                    </svg>
-                  </span>
-                  <span>CLV &amp; Churn</span>
-                </a>
-                <a href="#clv" class="dash-nav-item" data-tab="clv">
-                  <span class="dash-nav-icon">
-                    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                      <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
-                    </svg>
-                  </span>
-                  <span>Simulator</span>
-                </a>
-                <a href="#architecture" class="dash-nav-item" data-tab="architecture">
-                  <span class="dash-nav-icon">
-                    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                      <rect width="20" height="8" x="2" y="2" rx="2"/><rect width="20" height="8" x="2" y="14" rx="2"/><line x1="6" x2="6" y1="6" y2="6"/><line x1="6" x2="6" y1="18" y2="18"/>
-                    </svg>
-                  </span>
-                  <span>Pipeline Arch</span>
-                </a>
-                <a href="#faq" class="dash-nav-item" data-tab="faq">
-                  <span class="dash-nav-icon">
-                    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                      <circle cx="12" cy="12" r="9"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" x2="12.01" y1="17" y2="17"/>
-                    </svg>
-                  </span>
-                  <span>FAQ &amp; Specs</span>
-                </a>
-              </div>
-
-              <!-- Bottom Sidebar Status Widget (Matching Reference Image 1 & 2) -->
-              <div class="dash-sidebar-status">
-                <div class="status-indicator-row">
-                  <span class="status-pulse-dot"></span>
-                  <span class="status-label">System Status</span>
-                </div>
-                <div class="status-online-text">Online</div>
-                <a href="#mining" class="status-sub-link" data-tab="mining">
-                  <span>1.06M transactions verified</span>
-                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
-                </a>
-              </div>
-            </aside>
 
             <!-- Main Content Pane -->
             <main class="dash-content">
@@ -254,7 +122,7 @@
                   <span class="dash-search-icon">
                     <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
                   </span>
-                  <input type="text" class="dash-search-input" id="dashGlobalSearchInput" placeholder="Search customer ID (e.g. 15485) or view (rfm, clv, churn)..." autocomplete="off">
+                  <input type="text" class="dash-search-input" id="dashGlobalSearchInput" aria-label="Search customers and views" placeholder="Search customer ID (e.g. 15485) or view (rfm, clv, churn)..." autocomplete="off">
                   <span class="dash-search-shortcut">⌘ K</span>
                   <div class="dash-search-dropdown" id="dashSearchDropdown" style="display: none;"></div>
                 </div>
@@ -262,9 +130,8 @@
                   <div class="dash-date-pill">
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="18" height="18" x="3" y="4" rx="2"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/></svg>
                     <span>Jan 2011 - Dec 2011</span>
-                    <span style="font-size: 10px; opacity: 0.7;">▾</span>
+
                   </div>
-                  <div class="dash-user-avatar" title="Retail Intelligence Admin">A</div>
                 </div>
               </div>
 
@@ -301,22 +168,6 @@
                     <p>Real-time retail statistics for quick decision-making</p>
                   </div>
                   <div class="dash-action-group">
-                    <a href="#lookup" class="dash-action-pill primary" data-tab="lookup">
-                      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
-                      <span>Lookup Customer</span>
-                    </a>
-                    <a href="#rfm" class="dash-action-pill" data-tab="rfm">
-                      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m3 3 3 9 4-6 5 8 6-11"/></svg>
-                      <span>RFM Calculator</span>
-                    </a>
-                    <a href="#models" class="dash-action-pill" data-tab="clv">
-                      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m12 3-1.9 5.8a2 2 0 0 1-1.3 1.3L3 12l5.8 1.9a2 2 0 0 1 1.3 1.3L12 21l1.9-5.8a2 2 0 0 1 1.3-1.3L21 12l-5.8-1.9a2 2 0 0 1-1.3-1.3L12 3z"/></svg>
-                      <span>ML Forecast</span>
-                    </a>
-                    <a href="#architecture" class="dash-action-pill" data-tab="architecture">
-                      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect width="20" height="8" x="2" y="2" rx="2"/><rect width="20" height="8" x="2" y="14" rx="2"/></svg>
-                      <span>Architecture</span>
-                    </a>
                     <button type="button" class="dash-action-pill" id="dashPrintReportBtn" onclick="window.printReport()" title="Print Executive BI Report" aria-label="Print Executive Report">
                       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect width="12" height="8" x="6" y="14"/></svg>
                       <span>Print Report</span>
@@ -336,13 +187,9 @@
                     <div class="dash-kpi-body">
                       <div class="dash-kpi-title">Total Customers</div>
                       <div class="dash-kpi-num" id="kpiTotalCustomers">5,942</div>
-                      <div class="dash-kpi-trend trend-up" id="kpiCustomersGrowth">
-                        <span>● Verified</span>
-                        <span class="trend-compare">1.06M txns analyzed</span>
+                      <div class="dash-kpi-trend" id="kpiCustomersGrowth">
+                        <span class="trend-compare">Customer profiles in the serving store</span>
                       </div>
-                    </div>
-                    <div class="dash-kpi-sparkline spark-emerald">
-                      <svg viewBox="0 0 60 28" fill="none"><path d="M2 24 C 18 20, 24 16, 36 12 C 44 9, 52 4, 58 3" stroke="#a7fb5f" stroke-width="2.5" stroke-linecap="round"/><circle cx="58" cy="3" r="2.5" fill="#bdff73"/></svg>
                     </div>
                   </div>
 
@@ -361,9 +208,6 @@
                         <span class="trend-compare">vs previous period</span>
                       </div>
                     </div>
-                    <div class="dash-kpi-sparkline spark-mint">
-                      <svg viewBox="0 0 60 28" fill="none"><path d="M2 18 C 16 12, 28 22, 42 16 C 50 12, 54 8, 58 6" stroke="#bdff73" stroke-width="2.5" stroke-linecap="round"/><circle cx="58" cy="6" r="2.5" fill="#bdff73"/></svg>
-                    </div>
                   </div>
 
                   <!-- Card 3: Avg. Order Value -->
@@ -381,9 +225,6 @@
                         <span class="trend-compare">vs previous period</span>
                       </div>
                     </div>
-                    <div class="dash-kpi-sparkline spark-emerald">
-                      <svg viewBox="0 0 60 28" fill="none"><path d="M2 22 C 14 20, 24 24, 38 18 C 48 14, 54 8, 58 7" stroke="#a7fb5f" stroke-width="2.5" stroke-linecap="round"/><circle cx="58" cy="7" r="2.5" fill="#bdff73"/></svg>
-                    </div>
                   </div>
 
                   <!-- Card 4: Total Revenue -->
@@ -400,9 +241,6 @@
                         <span>↑ 14.2%</span>
                         <span class="trend-compare">vs previous period</span>
                       </div>
-                    </div>
-                    <div class="dash-kpi-sparkline spark-emerald">
-                      <svg viewBox="0 0 60 28" fill="none"><path d="M2 20 C 16 14, 28 18, 40 8 C 50 12, 54 6, 58 4" stroke="#a7fb5f" stroke-width="2.5" stroke-linecap="round"/><circle cx="58" cy="4" r="2.5" fill="#bdff73"/></svg>
                     </div>
                   </div>
                 </div>
@@ -711,7 +549,7 @@
                     </div>
 
                     <div class="search-input-wrapper">
-                      <input type="text" class="lookup-input" id="lookupCustIdInput" placeholder="Enter Customer ID (e.g. 15485)" value="15485">
+                      <input type="text" class="lookup-input" id="lookupCustIdInput" aria-label="Customer ID" placeholder="Enter Customer ID (e.g. 15485)" value="15485">
                       <button class="lookup-btn" id="lookupSearchBtn">Search</button>
                     </div>
 
@@ -742,7 +580,12 @@
                     </div>
                     <p>Recency, Frequency &amp; Monetary dimensions normalized with log1p and StandardScaler</p>
                   </div>
-                  <button type="button" class="dash-action-pill" onclick="window.switchDashboardTab('dashboard')">← Back to Overview</button>
+                  <div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap;">
+                    <a href="#segmentation" class="dash-action-pill" data-tab="segmentation">
+                      <span>← Back to Segmentation</span>
+                    </a>
+                    <button type="button" class="dash-action-pill" onclick="window.switchDashboardTab('dashboard')">← Back to Overview</button>
+                  </div>
                 </div>
 
                 <div class="rfm-grid reveal-fade-up" style="margin-top: 10px;">
@@ -830,7 +673,11 @@
                     </div>
                     <p>Unsupervised clustering partitioning 5,942 verified customers into actionable behavioral cohorts</p>
                   </div>
-                  <div style="display: flex; gap: 8px; align-items: center;">
+                  <div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap;">
+                    <a href="#rfm" class="dash-action-pill" data-tab="rfm">
+                      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m3 3 3 9 4-6 5 8 6-11"/></svg>
+                      <span>RFM Calculator</span>
+                    </a>
                     <button type="button" class="dash-action-pill" id="exportSegmentsCsvBtn" onclick="window.exportSegmentsCsv()" title="Export Segmentation Cohorts to CSV" aria-label="Export Segmentation Cohorts to CSV">
                       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" y2="3"/></svg>
                       <span>Export Cohorts (CSV)</span>

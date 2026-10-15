@@ -48,13 +48,17 @@ function initSpaDashboardNavigation() {
       // Update active states on sidebar items, nav links, and pills
       document.querySelectorAll('.dash-nav-item, .nav-link, .dash-action-pill').forEach(el => {
         const itemTab = el.getAttribute('data-tab') || (el.getAttribute('href') || '').replace(/^#/, '');
-        el.classList.toggle('active', itemTab === tabId);
+        const active = itemTab === (tabId === 'rfm' ? 'segmentation' : tabId);
+        el.classList.toggle('active', active);
+        if (active) el.setAttribute('aria-current', 'page');
+        else el.removeAttribute('aria-current');
       });
 
       // Scroll smoothly to the top of the dashboard content window
       const dashContent = document.querySelector('.dash-content');
       if (dashContent) {
         dashContent.scrollTop = 0;
+        document.querySelector('.hero-mockup-wrapper')?.scrollIntoView({behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth', block: 'start'});
       }
 
       // If switching back to dashboard or chart view, trigger resize to ensure proper rendering
@@ -466,17 +470,28 @@ function initMobileNav() {
   toggleBtn.addEventListener('click', (e) => {
     e.stopPropagation();
     dropdown.classList.toggle('open');
+    toggleBtn.setAttribute('aria-expanded', String(dropdown.classList.contains('open')));
   });
 
   document.addEventListener('click', (e) => {
     if (!dropdown.contains(e.target) && !toggleBtn.contains(e.target)) {
       dropdown.classList.remove('open');
+      toggleBtn.setAttribute('aria-expanded', 'false');
+    }
+  });
+
+  document.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape' && dropdown.classList.contains('open')) {
+      dropdown.classList.remove('open');
+      toggleBtn.setAttribute('aria-expanded', 'false');
+      toggleBtn.focus();
     }
   });
 
   dropdown.querySelectorAll('a').forEach(link => {
     link.addEventListener('click', () => {
       dropdown.classList.remove('open');
+      toggleBtn.setAttribute('aria-expanded', 'false');
     });
   });
 }
@@ -822,7 +837,7 @@ function renderCustomerProfile(data) {
         </div>
       </div>
 
-      <div style="display: flex; gap: 10px;">
+      <div class="customer-profile-actions">
         <button type="button" class="btn-pill-secondary" id="exportCustomerProfileBtn" style="flex: 1; justify-content: center; font-size: 12px; padding: 10px;" onclick="window.exportCustomerProfileCsv()" title="Export Customer Profile (CSV)" aria-label="Export Customer Profile CSV">📥 Export Profile</button>
         <button type="button" class="btn-pill-secondary" style="flex: 1; justify-content: center; font-size: 12px; padding: 10px; opacity: 0.8;" onclick="window.showToast('Messaging integration unavailable: Outbound SMS/Email gateway not configured', 'info')" title="Direct customer messaging gateway not configured">💬 Message <span style="font-size: 10px; opacity: 0.75; margin-left: 3px;">(Unavailable)</span></button>
         <button type="button" class="btn-pill-primary" style="flex: 1; justify-content: center; font-size: 12px; padding: 10px; opacity: 0.8;" onclick="window.showToast('Task assignment unavailable: CRM/Task integration not configured', 'info')" title="CRM/Task assignment integration not configured">+ Assign Task <span style="font-size: 10px; opacity: 0.75; margin-left: 3px;">(Unavailable)</span></button>
@@ -1117,11 +1132,18 @@ function initDashboardCharts() {
 
   function updateKpiPill(element, growth, suffix = 'vs prev') {
     if (!element) return;
+    if (!Number.isFinite(growth)) {
+      element.textContent = 'Comparison unavailable';
+      return;
+    }
     const isPos = growth >= 0;
     const arrow = isPos ? '↑' : '↓';
     const sign = isPos ? '+' : '';
     element.innerHTML = `<span>${arrow}</span> ${sign}${growth.toFixed(1)}% ${suffix}`;
-    if (element.classList.contains('pill-growth') || element.classList.contains('pill-warning')) {
+    if (element.closest('.dash-kpi-card-luxury')) {
+      element.className = `dash-kpi-trend ${isPos ? 'trend-up' : 'trend-down'}`;
+      element.innerHTML = `<span>${arrow} ${sign}${growth.toFixed(1)}%</span><span class="trend-compare">${suffix}</span>`;
+    } else if (element.classList.contains('pill-growth') || element.classList.contains('pill-warning')) {
       element.className = `dash-kpi-pill ${isPos ? 'pill-growth' : 'pill-warning'}`;
     } else {
       element.className = `kpi-tile-sub ${isPos ? '' : 'negative'}`;

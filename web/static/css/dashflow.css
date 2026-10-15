@@ -116,6 +116,7 @@ button, input, select, textarea {
   pointer-events: none;
   z-index: 0;
   overflow: hidden;
+  opacity: .22;
 }
 
 .canvas-aura-top {
@@ -379,15 +380,18 @@ button, input, select, textarea {
    01. FLOATING CAPSULE NAVIGATION (Web3-Verse Emerald Glass Aesthetic)
    ============================================================================== */
 .nav-capsule-wrapper {
-  position: fixed;
-  top: 18px;
+  position: sticky;
+
+  top: 0;
   left: 0;
   right: 0;
   display: flex;
   justify-content: center;
   z-index: 1000;
-  padding: 0 16px;
+
+  padding: 12px 20px;
   pointer-events: none;
+  background: rgba(5, 8, 7, .96);
 }
 
 .nav-capsule {
@@ -395,14 +399,19 @@ button, input, select, textarea {
   background: rgba(7, 16, 12, 0.82);
   backdrop-filter: blur(24px);
   -webkit-backdrop-filter: blur(24px);
-  border-radius: var(--radius-full);
-  padding: 5px 6px 5px 14px;
+
+  border-radius: 12px;
+
+  padding: 8px 12px;
   display: flex;
   align-items: center;
   gap: 12px;
-  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.75), 0 0 0 1px rgba(255, 255, 255, 0.06), 0 0 20px rgba(16, 185, 129, 0.08);
-  max-width: 980px;
-  width: auto;
+
+  box-shadow: none;
+
+  max-width: 1400px;
+
+  width: 100%;
   justify-content: space-between;
   transition: all 0.25s cubic-bezier(0.22, 1, 0.36, 1);
 }
@@ -531,7 +540,9 @@ button, input, select, textarea {
 /* Mobile Menu Dropdown */
 .nav-mobile-dropdown {
   position: fixed;
-  top: 80px;
+  top: 72px;
+  max-height: calc(100dvh - 84px);
+  overflow-y: auto;
   left: 20px;
   right: 20px;
   background: #09140f;
@@ -778,10 +789,11 @@ button, input, select, textarea {
    02. SINGLE DASHBOARD SPA CONTAINER
    ============================================================================== */
 .hero-section {
-  padding-top: 104px;
+  padding-top: 24px;
   padding-bottom: 32px;
   position: relative;
-  overflow: hidden;
+
+  overflow: visible;
   text-align: center;
   min-height: 100vh;
   display: flex;
@@ -792,13 +804,18 @@ button, input, select, textarea {
 /* Hero Stage 2-Column Split: Headline/Text on Left, 3D Globe Visual on Right */
 .hero-stage-split {
   display: grid;
-  grid-template-columns: 1.15fr 0.85fr;
+
+  grid-template-columns: minmax(0, 1.6fr) minmax(0, .8fr);
   align-items: center;
-  gap: 36px;
-  min-height: 440px;
-  margin-bottom: 24px;
+
+  gap: 24px;
+
+  min-height: 250px;
+
+  margin-bottom: 28px;
   position: relative;
   z-index: 3;
+  padding: 0 16px;
 }
 
 @media (min-width: 992px) {
@@ -810,12 +827,17 @@ button, input, select, textarea {
     align-items: flex-start;
     text-align: left;
     margin: 0 0 16px 0;
-  }
+    font-size: clamp(28px, 3vw, 40px);
+  filter: none;
+}
   .hero-stage-split .hero-subtitle {
     text-align: left;
     margin: 0 0 28px 0;
     max-width: 580px;
-  }
+    font-size: 14px;
+  text-shadow: none;
+  font-weight: 400;
+}
   .hero-stage-split .hero-actions {
     justify-content: flex-start;
     margin-bottom: 0;
@@ -826,7 +848,7 @@ button, input, select, textarea {
     left: auto;
     transform: none;
     width: 100%;
-    height: 440px;
+    height: 250px;
   }
 }
 
@@ -856,7 +878,7 @@ button, input, select, textarea {
     left: 50%;
     transform: translateX(-50%);
     width: 100%;
-    height: 340px;
+    height: 200px;
   }
 }
 
@@ -941,10 +963,11 @@ button, input, select, textarea {
 }
 
 .hero-title-accent {
-  background: linear-gradient(135deg, #A7FB5F 0%, #34D399 50%, #10B981 100%);
+  background: linear-gradient(135deg, #6ee7b7, #10b981);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-  filter: drop-shadow(0 0 25px rgba(16, 185, 129, 0.35));
+
+  filter: none;
 }
 
 .hero-subtitle {
@@ -981,12 +1004,15 @@ button, input, select, textarea {
 
 .hero-mockup {
   background: rgba(6, 14, 10, 0.82);
-  backdrop-filter: blur(24px);
-  -webkit-backdrop-filter: blur(24px);
+
+  backdrop-filter: none;
+
+  -webkit-backdrop-filter: none;
   border: 1px solid rgba(16, 185, 129, 0.22);
   border-radius: 20px;
   overflow: hidden;
-  box-shadow: 0 28px 80px rgba(0, 0, 0, 0.9), 0 0 60px rgba(16, 185, 129, 0.12);
+
+  box-shadow: 0 16px 48px rgba(0, 0, 0, .2);
   flex: 1;
   display: flex;
   flex-direction: column;
@@ -997,7 +1023,7 @@ button, input, select, textarea {
    ============================================================================== */
 .dash-window {
   display: grid;
-  grid-template-columns: 240px 1fr;
+  grid-template-columns: minmax(0, 1fr);
   min-height: calc(100vh - 130px);
   background: rgba(6, 14, 10, 0.75);
   backdrop-filter: blur(16px);
@@ -1523,12 +1549,15 @@ button, input, select, textarea {
 
 /* Dashboard Content Area */
 .dash-content {
-  padding: 24px 28px;
-  overflow-y: auto;
+  padding: 28px;
+
+  overflow-y: visible;
   display: flex;
   flex-direction: column;
-  gap: 20px;
+
+  gap: 24px;
   background: radial-gradient(circle at 85% 15%, rgba(16, 185, 129, 0.05) 0%, transparent 60%), #060e0a;
+  min-width: 0;
 }
 
 /* Top Navigation Bar in Content */
@@ -1791,8 +1820,10 @@ button, input, select, textarea {
 /* 4-Column Luxury KPI Grid */
 .dash-kpis-grid-four {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 14px;
+
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+
+  gap: 16px;
 }
 
 .dash-kpi-card-luxury {
@@ -1801,14 +1832,20 @@ button, input, select, textarea {
   -webkit-backdrop-filter: blur(16px);
   border: 1px solid rgba(16, 185, 129, 0.14);
   border-radius: var(--radius-md);
-  padding: 16px 18px;
+
+  padding: 22px;
   display: flex;
-  align-items: center;
+
+  align-items: flex-start;
+
   gap: 14px;
   position: relative;
   overflow: hidden;
-  box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.05);
+
+  box-shadow: none;
   transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.28s ease, box-shadow 0.28s ease;
+  min-width: 0;
+  min-height: 140px;
 }
 
 .dash-kpi-card-luxury:hover {
@@ -1842,28 +1879,35 @@ button, input, select, textarea {
 }
 
 .dash-kpi-title {
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 600;
-  color: var(--text-muted);
+
+  color: var(--text-secondary);
   white-space: nowrap;
 }
 
 .dash-kpi-num {
-  font-size: 20px;
-  font-weight: 800;
+  font-size: clamp(20px, 1.8vw, 26px);
+
+  font-weight: 700;
   color: #ffffff;
   letter-spacing: -0.3px;
-  margin: 3px 0;
+
+  margin: 10px 0;
   white-space: nowrap;
+  font-variant-numeric: tabular-nums;
 }
 
 .dash-kpi-trend {
   font-size: 11px;
-  font-weight: 700;
+
+  font-weight: 500;
   display: inline-flex;
   align-items: center;
   gap: 5px;
-  line-height: 1.25;
+
+  line-height: 1.5;
+  flex-wrap: wrap;
 }
 
 .trend-up {
@@ -1907,12 +1951,14 @@ button, input, select, textarea {
   -webkit-backdrop-filter: blur(16px);
   border: 1px solid rgba(16, 185, 129, 0.14);
   border-radius: var(--radius-md);
-  padding: 22px 24px;
+
+  padding: 24px;
   display: flex;
   flex-direction: column;
   gap: 16px;
   position: relative;
-  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.4), inset 0 1px 0 0 rgba(255, 255, 255, 0.05);
+
+  box-shadow: none;
   transition: border-color 0.28s ease, box-shadow 0.28s ease;
 }
 
@@ -3589,7 +3635,7 @@ button, input, select, textarea {
     grid-template-columns: repeat(2, 1fr);
   }
   .dash-window {
-    grid-template-columns: 210px 1fr;
+    grid-template-columns: minmax(0, 1fr);
   }
   .dash-kpis-grid-four {
     grid-template-columns: repeat(2, 1fr);
@@ -3660,7 +3706,7 @@ button, input, select, textarea {
     --section-spacing: 70px;
   }
   .hero-section {
-    padding-top: 120px;
+    padding-top: 20px;
     padding-bottom: 60px;
   }
   .dash-kpis-grid, .dash-kpis-grid-four {
@@ -3740,7 +3786,7 @@ button, input, select, textarea {
 
 @media (max-width: 480px) {
   .hero-section {
-    padding-top: 96px;
+    padding-top: 16px;
     padding-bottom: 40px;
   }
   .hero-title {
@@ -4322,3 +4368,27 @@ button.faq-header {
   }
 }
 
+
+/* Workspace utilities and responsive editorial introduction. */
+.contextual-tool { margin-bottom: 20px; }
+.customer-profile-actions { display: flex; flex-wrap: wrap; gap: 10px; }
+.customer-profile-actions > button { min-width: 160px; }
+.hero-mockup-wrapper { scroll-margin-top: 100px; }
+:where(a, button, input, select, textarea):focus-visible { outline: 2px solid #6ee7b7; outline-offset: 4px; }
+.dash-kpi-trend .trend-compare { color: var(--text-secondary); font-size: 11px; }
+@media (max-width: 991px) {
+  .hero-stage-split { grid-template-columns: minmax(0, 1fr); min-height: 0; padding: 12px 0; }
+  .hero-stage-split .hero-globe-stage { display: none; }
+  .hero-stage-split .hero-subtitle { max-width: 520px; margin-bottom: 16px; }
+  .hero-actions { margin-bottom: 0; }
+}
+@media (max-width: 480px) {
+  .nav-capsule-wrapper { padding: 8px; }
+  .hero-mockup-wrapper { padding: 0; }
+  .dash-kpi-card-luxury { padding: 20px; min-height: 120px; }
+  .dash-kpi-num { font-size: 24px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; }
+}

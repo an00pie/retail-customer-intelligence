@@ -9,18 +9,22 @@ Tests:
 6. Modal dialogs (Architecture, Mining, FAQ)
 7. Console error tracking & horizontal overflow checks
 """
+import os
 import sys
 import time
 from playwright.sync_api import sync_playwright
 
 VIEWPORTS = [
-    {"name": "Desktop 1440", "width": 1440, "height": 900},
-    {"name": "Laptop 1280",  "width": 1280, "height": 800},
-    {"name": "Tablet 1024",  "width": 1024, "height": 768},
-    {"name": "iPad 768",     "width": 768,  "height": 1024},
-    {"name": "iPhone 14 (390)", "width": 390, "height": 844},
-    {"name": "iPhone SE (375)", "width": 375, "height": 812},
-    {"name": "Compact 320",  "width": 320,  "height": 568}
+    {"name": "UltraWide 1920", "width": 1920, "height": 1080},
+    {"name": "Desktop 1440",   "width": 1440, "height": 900},
+    {"name": "Laptop 1280",    "width": 1280, "height": 800},
+    {"name": "Tablet 1024",    "width": 1024, "height": 768},
+    {"name": "iPad 768",       "width": 768,  "height": 1024},
+    {"name": "Large Mobile 430", "width": 430, "height": 932},
+    {"name": "iPhone 14 (390)",  "width": 390, "height": 844},
+    {"name": "iPhone SE (375)",  "width": 375, "height": 667},
+    {"name": "Android 360",    "width": 360,  "height": 640},
+    {"name": "Compact 320",    "width": 320,  "height": 568}
 ]
 
 def run_e2e_tests(base_url="http://localhost:8501"):
@@ -47,7 +51,18 @@ def run_e2e_tests(base_url="http://localhost:8501"):
             has_overflow = page.evaluate("() => document.documentElement.scrollWidth > window.innerWidth")
             scroll_width = page.evaluate("() => document.documentElement.scrollWidth")
             print(f"  [{vp['name']}] Width: {vp['width']}px | ScrollWidth: {scroll_width}px | Overflow: {has_overflow} | Errors: {len(errors)}")
-            
+
+            # Save screenshot for designated review viewports
+            shot_mapping = {
+                1440: "audit_desktop_1440.png",
+                1280: "audit_laptop_1280.png",
+                390:  "audit_mobile_390.png",
+                320:  "audit_compact_320.png"
+            }
+            if vp["width"] in shot_mapping:
+                shot_path = os.path.join("/Users/jisshajan/.gemini/antigravity/brain/d10b9bcc-95d1-43bc-b8ea-b0b4f604dd54", shot_mapping[vp["width"]])
+                page.screenshot(path=shot_path, full_page=False)
+
             results[f"viewport_{vp['name']}"] = {
                 "overflow": has_overflow,
                 "errors": len(errors)
@@ -99,6 +114,16 @@ def run_e2e_tests(base_url="http://localhost:8501"):
         print(f"  After rapid switches to 12M -> Orders: {kpi_orders_final} (API Expected: {expected_orders_12m})")
 
         results["kpi_filtering"] = (kpi_orders_7d == expected_orders_7d and kpi_orders_final == expected_orders_12m)
+        # Verify the rendered series, not just a changed counter.
+        page.wait_for_function("""expected => {
+            const canvas = document.querySelector('#dashTrajectoryChart');
+            const chart = canvas && Chart.getChart(canvas);
+            return chart && JSON.stringify(chart.data.labels) === JSON.stringify(expected.labels)
+              && JSON.stringify(chart.data.datasets[0].data) === JSON.stringify(expected.revenue)
+              && JSON.stringify(chart.data.datasets[1].data) === JSON.stringify(expected.orders);
+        }""", arg=data_12m, timeout=12000)
+        results["chart_series_match_api"] = True
+
 
         print("\n--- Phase 3: Customer Lookup & Ledger Audit ---")
         # Switch to Lookup tab
@@ -244,11 +269,14 @@ def run_e2e_tests(base_url="http://localhost:8501"):
         results["modals"] = (arch_open and arch_closed)
 
         print("\n--- Phase 6b: In-App Toast System Verification ---")
-        page.locator("#navNotifBtn").click()
+        # Exercise an honest unavailable action instead of the removed mock bell.
+        page.evaluate("() => window.switchDashboardTab('lookup')")
+        page.locator('button.sample-id-pill[data-id="15485"]').click()
+        page.locator("#lookupSearchBtn:not([disabled])").wait_for(timeout=20000)
+        page.get_by_role("button", name="Message", exact=False).click()
         page.wait_for_selector(".toast-pill", timeout=6000)
-        toast_text = page.locator(".toast-message").text_content()
-        print(f"  Toast Triggered via Bell: '{toast_text}'")
-        results["toast_notifications"] = ("5,942 profiles synchronized" in toast_text)
+        toast_text = page.locator(".toast-message").last.text_content()
+        results["toast_notifications"] = ("Messaging integration unavailable" in toast_text)
 
         print("\n--- Phase 8: Interactive Controls & Keyboard Accessibility (Fix 03) ---")
         # 1. Semantic Sample ID Pill keyboard activation
@@ -274,8 +302,8 @@ def run_e2e_tests(base_url="http://localhost:8501"):
         print(f"  Cohort Card Pill Keyboard (Enter) -> Navigated to Segmentation Tab: {seg_tab_active}")
 
         # 3. Modal Focus Trap, Escape Key & Focus Restoration
-        bell_btn = page.locator("#navNotifBtn")
-        bell_btn.focus()
+        architecture_btn = page.locator("#navArchitectureBtn")
+        architecture_btn.focus()
         page.evaluate("() => window.openSpaModal('architecture')")
         page.wait_for_timeout(400)
         active_in_modal = page.evaluate("() => document.activeElement ? document.activeElement.className : ''")
@@ -286,8 +314,8 @@ def run_e2e_tests(base_url="http://localhost:8501"):
         page.wait_for_timeout(300)
         arch_closed_esc = not page.locator("#modal-architecture").evaluate("el => el.classList.contains('open')")
         active_after_close = page.evaluate("() => document.activeElement ? document.activeElement.id : ''")
-        focus_restored = (active_after_close == "navNotifBtn")
-        print(f"  Escape Key Pressed -> Modal Closed: {arch_closed_esc} | Focus Restored to #navNotifBtn: {focus_restored}")
+        focus_restored = (active_after_close == "navArchitectureBtn")
+        print(f"  Escape Key Pressed -> Modal Closed: {arch_closed_esc} | Focus Restored to #navArchitectureBtn: {focus_restored}")
 
         # 4. FAQ Accordion Keyboard Navigation & ARIA State
         page.evaluate("() => window.openSpaModal('faq')")
@@ -455,4 +483,9 @@ def run_e2e_tests(base_url="http://localhost:8501"):
 
 if __name__ == "__main__":
     url = sys.argv[1] if len(sys.argv) > 1 else "http://localhost:8501"
-    run_e2e_tests(url)
+    results = run_e2e_tests(url)
+    failures = [key for key, value in results.items()
+                if value is False or (key == 'console_errors' and value != 0)
+                or (key.startswith('viewport_') and (value['overflow'] or value['errors']))]
+    if failures:
+        raise AssertionError(f"E2E checks failed: {failures}")
