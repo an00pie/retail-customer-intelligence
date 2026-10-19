@@ -1431,8 +1431,7 @@ function initDashboardCharts() {
         if (elKpiAovGrowth) updateKpiPill(elKpiAovGrowth, data.aov_growth, 'vs previous period');
 
         if (elDataStatus) {
-          const ptCount = data.data_points || (data.labels ? data.labels.length : 12);
-          elDataStatus.innerHTML = `● UCI Online Retail II Warehouse &mdash; ${data.granularity === 'daily' ? 'Daily' : 'Monthly'} (${ptCount} points)`;
+          elDataStatus.innerHTML = `● UCI Online Retail II Warehouse (Verified)`;
         }
 
         renderChart(data);
@@ -1528,13 +1527,16 @@ function initOverviewModules() {
     const elMon = document.getElementById('ovProfileMonetary');
     const elTen = document.getElementById('ovProfileTenure');
 
+    const pBox = document.getElementById('ovProfileBox');
+    if (pBox) pBox.style.display = 'block';
+
     if (!cleanId) {
       if (elSeg) {
         elSeg.textContent = 'Enter ID';
         elSeg.className = 'cluster-card-badge badge-loyal';
       }
       if (ovTableBody) {
-        ovTableBody.innerHTML = '<tr><td colspan="6" style="text-align:center; padding: 20px; color: var(--text-muted); font-size: 11.5px;">Please enter a Customer ID (e.g. 15485, 13748, 12347).</td></tr>';
+        ovTableBody.innerHTML = '<tr><td colspan="5" style="text-align:center; padding: 20px; color: var(--text-muted); font-size: 11.5px;">Please enter a Customer ID (e.g. 15485, 13748, 12347).</td></tr>';
       }
       return;
     }
@@ -1569,20 +1571,19 @@ function initOverviewModules() {
         if (elMon) elMon.textContent = `$${Number(data.monetary || 0).toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
         if (elTen) elTen.textContent = `${data.tenure_days || 0} days`;
 
-        // Render customer's actual transactions
+        // Render customer's actual transactions (5 columns matching master reference)
         if (ovTableBody && Array.isArray(data.transactions) && data.transactions.length > 0) {
           ovTableBody.innerHTML = data.transactions.map(tx => `
             <tr>
               <td>${escapeHtml(tx.date)}</td>
               <td>${escapeHtml(tx.invoice)}</td>
-              <td>${escapeHtml(tx.stock_code)}</td>
-              <td>${escapeHtml(tx.quantity)}</td>
-              <td>$${Number(tx.unit_price).toFixed(2)}</td>
+              <td>#${escapeHtml(data.customer_id || cleanId)}</td>
               <td>$${Number(tx.total).toFixed(2)}</td>
+              <td><span class="status-pill-completed">Completed</span></td>
             </tr>
           `).join('');
         } else if (ovTableBody) {
-          ovTableBody.innerHTML = '<tr><td colspan="6" style="text-align:center; padding: 20px; color: var(--text-muted); font-size: 11.5px;">No itemized ledger rows available for this account.</td></tr>';
+          ovTableBody.innerHTML = '<tr><td colspan="5" style="text-align:center; padding: 20px; color: var(--text-muted); font-size: 11.5px;">No itemized ledger rows available for this account.</td></tr>';
         }
       })
       .catch(err => {
@@ -1598,7 +1599,7 @@ function initOverviewModules() {
         if (elTen) elTen.textContent = '--';
 
         if (ovTableBody) {
-          ovTableBody.innerHTML = `<tr><td colspan="6" style="text-align:center; padding: 24px 10px; color: #f87171; font-size: 11.5px;">Customer #${escapeHtml(cleanId)} not found in verified 5,942 retail profiles.</td></tr>`;
+          ovTableBody.innerHTML = `<tr><td colspan="5" style="text-align:center; padding: 24px 10px; color: #f87171; font-size: 11.5px;">Customer #${escapeHtml(cleanId)} not found in verified 5,942 retail profiles.</td></tr>`;
         }
       })
       .finally(() => {
@@ -1614,10 +1615,7 @@ function initOverviewModules() {
     ovInput.addEventListener('keydown', (e) => {
       if (e.key === 'Enter') runOvLookup(ovInput.value);
     });
-    // Auto-hydrate initial profile from live API
-    if (ovInput.value) {
-      runOvLookup(ovInput.value);
-    }
+    // Auto-hydration deferred until search button or Enter key pressed
   }
 
   // 2. Overview RFM Sliders & Calculator

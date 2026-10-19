@@ -34,27 +34,49 @@ export const Navbar: React.FC<NavbarProps> = ({
         <div className="nav-capsule" style={{ maxWidth: '1360px', margin: '0 auto', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '16px' }}>
           
           {/* Brand Logo & Title */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
             <div
               className="nav-brand-badge"
               style={{
-                width: '42px',
-                height: '42px',
+                width: '32px',
+                height: '32px',
                 borderRadius: '50%',
-                background: '#ffffff',
-                color: '#000000',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                fontWeight: 700,
-                fontSize: '18px',
-                boxShadow: '0 4px 14px rgba(0,0,0,0.2)',
+                flexShrink: 0,
               }}
             >
-              $
+              <svg width="30" height="30" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                <circle cx="50" cy="50" r="46" stroke="url(#arcRingGradReact)" stroke-width="4.5" fill="#000000" fillOpacity="0.8"/>
+                <rect x="29" y="52" width="7" height="24" rx="3.5" fill="url(#arcBarGradReact)"/>
+                <rect x="40" y="42" width="7" height="34" rx="3.5" fill="url(#arcBarGradReact)"/>
+                <rect x="51" y="32" width="7" height="44" rx="3.5" fill="url(#arcBarGradReact)"/>
+                <rect x="62" y="22" width="7" height="54" rx="3.5" fill="url(#arcBarGradReact)"/>
+                <path d="M 21 68 C 17 50, 27 28, 56 22 C 72 19, 81 24, 78 32 C 75 41, 52 56, 30 67 C 24 70, 22 70, 21 68 Z" fill="none" stroke="url(#arcSwoopGradReact)" stroke-width="4" strokeLinecap="round"/>
+                <circle cx="77" cy="27" r="3" fill="#ffffff"/>
+                <circle cx="77" cy="27" r="6" fill="#ffffff" fillOpacity="0.5"/>
+                <defs>
+                  <linearGradient id="arcRingGradReact" x1="10" y1="10" x2="90" y2="90" gradientUnits="userSpaceOnUse">
+                    <stop offset="0%" stopColor="#ffffff"/>
+                    <stop offset="60%" stopColor="#888888"/>
+                    <stop offset="100%" stopColor="#333333"/>
+                  </linearGradient>
+                  <linearGradient id="arcBarGradReact" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stopColor="#ffffff"/>
+                    <stop offset="100%" stopColor="#555555"/>
+                  </linearGradient>
+                  <linearGradient id="arcSwoopGradReact" x1="20" y1="70" x2="80" y2="25" gradientUnits="userSpaceOnUse">
+                    <stop offset="0%" stopColor="#333333" stopOpacity="0.3"/>
+                    <stop offset="60%" stopColor="#cccccc"/>
+                    <stop offset="100%" stopColor="#ffffff"/>
+                  </linearGradient>
+                </defs>
+              </svg>
             </div>
-            <span className="nav-brand-title" style={{ fontSize: '14px', fontWeight: 600, color: '#ffffff', letterSpacing: '-0.02em' }}>
-              Customer Intelligence
+            <span className="nav-brand-title" style={{ fontSize: '15px', color: '#ffffff', letterSpacing: '-0.01em' }}>
+              <strong style={{ fontWeight: 800 }}>INSIGHT</strong>
+              <span style={{ fontWeight: 300, opacity: 0.9 }}>.arc</span>
             </span>
           </div>
 

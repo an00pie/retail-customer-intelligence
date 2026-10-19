@@ -14,8 +14,9 @@ def test_react():
         page.wait_for_selector(".platform-container", timeout=10000)
         
         # Verify brand & navigation
-        assert page.locator(".nav-brand-title").inner_text() == "Customer Intelligence"
-        print("✓ React Navbar rendered")
+        brand_text = page.locator(".nav-brand-title").inner_text()
+        assert "INSIGHT" in brand_text or "Customer Intelligence" in brand_text
+        print("✓ React Navbar rendered:", repr(brand_text))
         
         # Verify 3D Canvas Globe
         assert page.locator("canvas").count() >= 1

@@ -31,13 +31,36 @@
        ============================================================================== -->
   <div class="nav-capsule-wrapper">
     <nav class="nav-capsule" aria-label="Primary navigation">
-      <a href="#hero" class="nav-brand">
+      <a href="#hero" class="nav-brand" aria-label="INSIGHT.arc Home">
         <div class="nav-brand-badge">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+          <svg width="26" height="26" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <circle cx="50" cy="50" r="46" stroke="url(#arcRingGradHtml)" stroke-width="4.5" fill="#000000" fill-opacity="0.8"/>
+            <rect x="29" y="52" width="7" height="24" rx="3.5" fill="url(#arcBarGradHtml)"/>
+            <rect x="40" y="42" width="7" height="34" rx="3.5" fill="url(#arcBarGradHtml)"/>
+            <rect x="51" y="32" width="7" height="44" rx="3.5" fill="url(#arcBarGradHtml)"/>
+            <rect x="62" y="22" width="7" height="54" rx="3.5" fill="url(#arcBarGradHtml)"/>
+            <path d="M 21 68 C 17 50, 27 28, 56 22 C 72 19, 81 24, 78 32 C 75 41, 52 56, 30 67 C 24 70, 22 70, 21 68 Z" fill="none" stroke="url(#arcSwoopGradHtml)" stroke-width="4" stroke-linecap="round"/>
+            <circle cx="77" cy="27" r="3" fill="#ffffff"/>
+            <circle cx="77" cy="27" r="6" fill="#ffffff" fill-opacity="0.5"/>
+            <defs>
+              <linearGradient id="arcRingGradHtml" x1="10" y1="10" x2="90" y2="90" gradientUnits="userSpaceOnUse">
+                <stop offset="0%" stop-color="#ffffff"/>
+                <stop offset="60%" stop-color="#888888"/>
+                <stop offset="100%" stop-color="#333333"/>
+              </linearGradient>
+              <linearGradient id="arcBarGradHtml" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#ffffff"/>
+                <stop offset="100%" stop-color="#555555"/>
+              </linearGradient>
+              <linearGradient id="arcSwoopGradHtml" x1="20" y1="70" x2="80" y2="25" gradientUnits="userSpaceOnUse">
+                <stop offset="0%" stop-color="#333333" stop-opacity="0.3"/>
+                <stop offset="60%" stop-color="#cccccc"/>
+                <stop offset="100%" stop-color="#ffffff"/>
+              </linearGradient>
+            </defs>
           </svg>
         </div>
-        <span class="nav-brand-title">Customer Intelligence</span>
+        <span class="nav-brand-title"><strong style="font-weight: 800; letter-spacing: -0.01em; color: #ffffff;">INSIGHT</strong><span style="font-weight: 300; opacity: 0.9; color: #ffffff;">.arc</span></span>
       </a>
 
       <div class="nav-links">
@@ -190,68 +213,246 @@
                 <div class="dash-kpis-grid-four">
                   <!-- Card 1: Total Customers -->
                   <div class="dash-kpi-card-luxury reveal-fade-up stagger-1">
-                    <div class="dash-kpi-icon-box box-white">
-                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>
-                      </svg>
-                    </div>
-                    <div class="dash-kpi-body">
-                      <div class="dash-kpi-title">Total Customers</div>
-                      <div class="dash-kpi-num" id="kpiTotalCustomers">5,942</div>
-                      <div class="dash-kpi-trend" id="kpiCustomersGrowth">
-                        <span class="trend-compare">Customer profiles in the serving store</span>
+                    <div class="dash-kpi-card-header">
+                      <div class="dash-kpi-icon-box box-white">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                          <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                        </svg>
                       </div>
+                      <div class="dash-kpi-title">Total Customers</div>
+                    </div>
+                    <div class="dash-kpi-val-row">
+                      <div class="dash-kpi-num" id="kpiTotalCustomers">5,942</div>
+                      <div class="dash-kpi-sparkline-motif" aria-hidden="true">
+                        <svg width="48" height="26" viewBox="0 0 48 26" fill="none">
+                          <circle cx="3" cy="21" r="1.2" fill="#ffffff" fill-opacity="0.5"/>
+                          <circle cx="3" cy="25" r="1.2" fill="#ffffff" fill-opacity="0.3"/>
+                          <circle cx="9" cy="17" r="1.2" fill="#ffffff" fill-opacity="0.6"/>
+                          <circle cx="9" cy="21" r="1.2" fill="#ffffff" fill-opacity="0.5"/>
+                          <circle cx="9" cy="25" r="1.2" fill="#ffffff" fill-opacity="0.3"/>
+                          <circle cx="15" cy="17" r="1.2" fill="#ffffff" fill-opacity="0.6"/>
+                          <circle cx="15" cy="21" r="1.2" fill="#ffffff" fill-opacity="0.5"/>
+                          <circle cx="15" cy="25" r="1.2" fill="#ffffff" fill-opacity="0.3"/>
+                          <circle cx="21" cy="13" r="1.2" fill="#ffffff" fill-opacity="0.7"/>
+                          <circle cx="21" cy="17" r="1.2" fill="#ffffff" fill-opacity="0.6"/>
+                          <circle cx="21" cy="21" r="1.2" fill="#ffffff" fill-opacity="0.5"/>
+                          <circle cx="21" cy="25" r="1.2" fill="#ffffff" fill-opacity="0.3"/>
+                          <circle cx="27" cy="9" r="1.2" fill="#ffffff" fill-opacity="0.8"/>
+                          <circle cx="27" cy="13" r="1.2" fill="#ffffff" fill-opacity="0.7"/>
+                          <circle cx="27" cy="17" r="1.2" fill="#ffffff" fill-opacity="0.6"/>
+                          <circle cx="27" cy="21" r="1.2" fill="#ffffff" fill-opacity="0.5"/>
+                          <circle cx="27" cy="25" r="1.2" fill="#ffffff" fill-opacity="0.3"/>
+                          <circle cx="33" cy="5" r="1.2" fill="#ffffff" fill-opacity="0.9"/>
+                          <circle cx="33" cy="9" r="1.2" fill="#ffffff" fill-opacity="0.8"/>
+                          <circle cx="33" cy="13" r="1.2" fill="#ffffff" fill-opacity="0.7"/>
+                          <circle cx="33" cy="17" r="1.2" fill="#ffffff" fill-opacity="0.6"/>
+                          <circle cx="33" cy="21" r="1.2" fill="#ffffff" fill-opacity="0.5"/>
+                          <circle cx="33" cy="25" r="1.2" fill="#ffffff" fill-opacity="0.3"/>
+                          <circle cx="39" cy="1" r="1.3" fill="#ffffff"/>
+                          <circle cx="39" cy="5" r="1.2" fill="#ffffff" fill-opacity="0.9"/>
+                          <circle cx="39" cy="9" r="1.2" fill="#ffffff" fill-opacity="0.8"/>
+                          <circle cx="39" cy="13" r="1.2" fill="#ffffff" fill-opacity="0.7"/>
+                          <circle cx="39" cy="17" r="1.2" fill="#ffffff" fill-opacity="0.6"/>
+                          <circle cx="39" cy="21" r="1.2" fill="#ffffff" fill-opacity="0.5"/>
+                          <circle cx="39" cy="25" r="1.2" fill="#ffffff" fill-opacity="0.3"/>
+                          <circle cx="45" cy="1" r="1.3" fill="#ffffff"/>
+                          <circle cx="45" cy="5" r="1.2" fill="#ffffff" fill-opacity="0.9"/>
+                          <circle cx="45" cy="9" r="1.2" fill="#ffffff" fill-opacity="0.8"/>
+                          <circle cx="45" cy="13" r="1.2" fill="#ffffff" fill-opacity="0.7"/>
+                          <circle cx="45" cy="17" r="1.2" fill="#ffffff" fill-opacity="0.6"/>
+                          <circle cx="45" cy="21" r="1.2" fill="#ffffff" fill-opacity="0.5"/>
+                          <circle cx="45" cy="25" r="1.2" fill="#ffffff" fill-opacity="0.3"/>
+                        </svg>
+                      </div>
+                    </div>
+                    <div class="dash-kpi-trend trend-up" id="kpiCustomersGrowth">
+                      <span>↑ +12.4%</span>
+                      <span class="trend-compare">vs previous period</span>
                     </div>
                   </div>
 
                   <!-- Card 2: Total Orders -->
                   <div class="dash-kpi-card-luxury reveal-fade-up stagger-2">
-                    <div class="dash-kpi-icon-box box-white">
-                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/>
-                      </svg>
-                    </div>
-                    <div class="dash-kpi-body">
-                      <div class="dash-kpi-title">Total Orders</div>
-                      <div class="dash-kpi-num" id="kpiTotalOrders">17,132</div>
-                      <div class="dash-kpi-trend trend-down" id="kpiOrdersGrowth">
-                        <span>↓ 6.5%</span>
-                        <span class="trend-compare">vs previous period</span>
+                    <div class="dash-kpi-card-header">
+                      <div class="dash-kpi-icon-box box-white">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                          <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/>
+                        </svg>
                       </div>
+                      <div class="dash-kpi-title">Total Orders</div>
+                    </div>
+                    <div class="dash-kpi-val-row">
+                      <div class="dash-kpi-num" id="kpiTotalOrders">17,132</div>
+                      <div class="dash-kpi-sparkline-motif" aria-hidden="true">
+                        <svg width="48" height="26" viewBox="0 0 48 26" fill="none">
+                          <circle cx="3" cy="9" r="1.2" fill="#ffffff" fill-opacity="0.8"/>
+                          <circle cx="3" cy="13" r="1.2" fill="#ffffff" fill-opacity="0.7"/>
+                          <circle cx="3" cy="17" r="1.2" fill="#ffffff" fill-opacity="0.6"/>
+                          <circle cx="3" cy="21" r="1.2" fill="#ffffff" fill-opacity="0.5"/>
+                          <circle cx="3" cy="25" r="1.2" fill="#ffffff" fill-opacity="0.3"/>
+                          <circle cx="9" cy="13" r="1.2" fill="#ffffff" fill-opacity="0.7"/>
+                          <circle cx="9" cy="17" r="1.2" fill="#ffffff" fill-opacity="0.6"/>
+                          <circle cx="9" cy="21" r="1.2" fill="#ffffff" fill-opacity="0.5"/>
+                          <circle cx="9" cy="25" r="1.2" fill="#ffffff" fill-opacity="0.3"/>
+                          <circle cx="15" cy="5" r="1.2" fill="#ffffff" fill-opacity="0.9"/>
+                          <circle cx="15" cy="9" r="1.2" fill="#ffffff" fill-opacity="0.8"/>
+                          <circle cx="15" cy="13" r="1.2" fill="#ffffff" fill-opacity="0.7"/>
+                          <circle cx="15" cy="17" r="1.2" fill="#ffffff" fill-opacity="0.6"/>
+                          <circle cx="15" cy="21" r="1.2" fill="#ffffff" fill-opacity="0.5"/>
+                          <circle cx="15" cy="25" r="1.2" fill="#ffffff" fill-opacity="0.3"/>
+                          <circle cx="21" cy="9" r="1.2" fill="#ffffff" fill-opacity="0.8"/>
+                          <circle cx="21" cy="13" r="1.2" fill="#ffffff" fill-opacity="0.7"/>
+                          <circle cx="21" cy="17" r="1.2" fill="#ffffff" fill-opacity="0.6"/>
+                          <circle cx="21" cy="21" r="1.2" fill="#ffffff" fill-opacity="0.5"/>
+                          <circle cx="21" cy="25" r="1.2" fill="#ffffff" fill-opacity="0.3"/>
+                          <circle cx="27" cy="13" r="1.2" fill="#ffffff" fill-opacity="0.7"/>
+                          <circle cx="27" cy="17" r="1.2" fill="#ffffff" fill-opacity="0.6"/>
+                          <circle cx="27" cy="21" r="1.2" fill="#ffffff" fill-opacity="0.5"/>
+                          <circle cx="27" cy="25" r="1.2" fill="#ffffff" fill-opacity="0.3"/>
+                          <circle cx="33" cy="9" r="1.2" fill="#ffffff" fill-opacity="0.8"/>
+                          <circle cx="33" cy="13" r="1.2" fill="#ffffff" fill-opacity="0.7"/>
+                          <circle cx="33" cy="17" r="1.2" fill="#ffffff" fill-opacity="0.6"/>
+                          <circle cx="33" cy="21" r="1.2" fill="#ffffff" fill-opacity="0.5"/>
+                          <circle cx="33" cy="25" r="1.2" fill="#ffffff" fill-opacity="0.3"/>
+                          <circle cx="39" cy="13" r="1.2" fill="#ffffff" fill-opacity="0.7"/>
+                          <circle cx="39" cy="17" r="1.2" fill="#ffffff" fill-opacity="0.6"/>
+                          <circle cx="39" cy="21" r="1.2" fill="#ffffff" fill-opacity="0.5"/>
+                          <circle cx="39" cy="25" r="1.2" fill="#ffffff" fill-opacity="0.3"/>
+                          <circle cx="45" cy="17" r="1.2" fill="#ffffff" fill-opacity="0.6"/>
+                          <circle cx="45" cy="21" r="1.2" fill="#ffffff" fill-opacity="0.5"/>
+                          <circle cx="45" cy="25" r="1.2" fill="#ffffff" fill-opacity="0.3"/>
+                        </svg>
+                      </div>
+                    </div>
+                    <div class="dash-kpi-trend trend-down" id="kpiOrdersGrowth">
+                      <span>↓ -6.5%</span>
+                      <span class="trend-compare">vs previous period</span>
                     </div>
                   </div>
 
                   <!-- Card 3: Avg. Order Value -->
                   <div class="dash-kpi-card-luxury reveal-fade-up stagger-3">
-                    <div class="dash-kpi-icon-box box-white">
-                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <rect width="20" height="14" x="2" y="5" rx="2"/><line x1="2" x2="22" y1="10" x2="10"/>
-                      </svg>
-                    </div>
-                    <div class="dash-kpi-body">
-                      <div class="dash-kpi-title">Avg. Order Value</div>
-                      <div class="dash-kpi-num" id="kpiAvgOrderValue">$486.73</div>
-                      <div class="dash-kpi-trend trend-up" id="kpiAovGrowth">
-                        <span>↑ 2.3%</span>
-                        <span class="trend-compare">vs previous period</span>
+                    <div class="dash-kpi-card-header">
+                      <div class="dash-kpi-icon-box box-white">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                          <rect width="20" height="14" x="2" y="5" rx="2"/><line x1="2" x2="22" y1="10" x2="10"/>
+                        </svg>
                       </div>
+                      <div class="dash-kpi-title">Avg. Order Value</div>
+                    </div>
+                    <div class="dash-kpi-val-row">
+                      <div class="dash-kpi-num" id="kpiAvgOrderValue">$486.73</div>
+                      <div class="dash-kpi-sparkline-motif" aria-hidden="true">
+                        <svg width="48" height="26" viewBox="0 0 48 26" fill="none">
+                          <circle cx="3" cy="17" r="1.2" fill="#ffffff" fill-opacity="0.6"/>
+                          <circle cx="3" cy="21" r="1.2" fill="#ffffff" fill-opacity="0.5"/>
+                          <circle cx="3" cy="25" r="1.2" fill="#ffffff" fill-opacity="0.3"/>
+                          <circle cx="9" cy="13" r="1.2" fill="#ffffff" fill-opacity="0.7"/>
+                          <circle cx="9" cy="17" r="1.2" fill="#ffffff" fill-opacity="0.6"/>
+                          <circle cx="9" cy="21" r="1.2" fill="#ffffff" fill-opacity="0.5"/>
+                          <circle cx="9" cy="25" r="1.2" fill="#ffffff" fill-opacity="0.3"/>
+                          <circle cx="15" cy="13" r="1.2" fill="#ffffff" fill-opacity="0.7"/>
+                          <circle cx="15" cy="17" r="1.2" fill="#ffffff" fill-opacity="0.6"/>
+                          <circle cx="15" cy="21" r="1.2" fill="#ffffff" fill-opacity="0.5"/>
+                          <circle cx="15" cy="25" r="1.2" fill="#ffffff" fill-opacity="0.3"/>
+                          <circle cx="21" cy="9" r="1.2" fill="#ffffff" fill-opacity="0.8"/>
+                          <circle cx="21" cy="13" r="1.2" fill="#ffffff" fill-opacity="0.7"/>
+                          <circle cx="21" cy="17" r="1.2" fill="#ffffff" fill-opacity="0.6"/>
+                          <circle cx="21" cy="21" r="1.2" fill="#ffffff" fill-opacity="0.5"/>
+                          <circle cx="21" cy="25" r="1.2" fill="#ffffff" fill-opacity="0.3"/>
+                          <circle cx="27" cy="5" r="1.2" fill="#ffffff" fill-opacity="0.9"/>
+                          <circle cx="27" cy="9" r="1.2" fill="#ffffff" fill-opacity="0.8"/>
+                          <circle cx="27" cy="13" r="1.2" fill="#ffffff" fill-opacity="0.7"/>
+                          <circle cx="27" cy="17" r="1.2" fill="#ffffff" fill-opacity="0.6"/>
+                          <circle cx="27" cy="21" r="1.2" fill="#ffffff" fill-opacity="0.5"/>
+                          <circle cx="27" cy="25" r="1.2" fill="#ffffff" fill-opacity="0.3"/>
+                          <circle cx="33" cy="9" r="1.2" fill="#ffffff" fill-opacity="0.8"/>
+                          <circle cx="33" cy="13" r="1.2" fill="#ffffff" fill-opacity="0.7"/>
+                          <circle cx="33" cy="17" r="1.2" fill="#ffffff" fill-opacity="0.6"/>
+                          <circle cx="33" cy="21" r="1.2" fill="#ffffff" fill-opacity="0.5"/>
+                          <circle cx="33" cy="25" r="1.2" fill="#ffffff" fill-opacity="0.3"/>
+                          <circle cx="39" cy="5" r="1.2" fill="#ffffff" fill-opacity="0.9"/>
+                          <circle cx="39" cy="9" r="1.2" fill="#ffffff" fill-opacity="0.8"/>
+                          <circle cx="39" cy="13" r="1.2" fill="#ffffff" fill-opacity="0.7"/>
+                          <circle cx="39" cy="17" r="1.2" fill="#ffffff" fill-opacity="0.6"/>
+                          <circle cx="39" cy="21" r="1.2" fill="#ffffff" fill-opacity="0.5"/>
+                          <circle cx="39" cy="25" r="1.2" fill="#ffffff" fill-opacity="0.3"/>
+                          <circle cx="45" cy="1" r="1.3" fill="#ffffff"/>
+                          <circle cx="45" cy="5" r="1.2" fill="#ffffff" fill-opacity="0.9"/>
+                          <circle cx="45" cy="9" r="1.2" fill="#ffffff" fill-opacity="0.8"/>
+                          <circle cx="45" cy="13" r="1.2" fill="#ffffff" fill-opacity="0.7"/>
+                          <circle cx="45" cy="17" r="1.2" fill="#ffffff" fill-opacity="0.6"/>
+                          <circle cx="45" cy="21" r="1.2" fill="#ffffff" fill-opacity="0.5"/>
+                          <circle cx="45" cy="25" r="1.2" fill="#ffffff" fill-opacity="0.3"/>
+                        </svg>
+                      </div>
+                    </div>
+                    <div class="dash-kpi-trend trend-up" id="kpiAovGrowth">
+                      <span>↑ +2.3%</span>
+                      <span class="trend-compare">vs previous period</span>
                     </div>
                   </div>
 
                   <!-- Card 4: Total Revenue -->
                   <div class="dash-kpi-card-luxury reveal-fade-up stagger-4">
-                    <div class="dash-kpi-icon-box box-white">
-                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="m3 3 3 9 4-6 5 8 6-11"/><path d="M18 17h3v3"/>
-                      </svg>
-                    </div>
-                    <div class="dash-kpi-body">
-                      <div class="dash-kpi-title">Total Revenue</div>
-                      <div class="dash-kpi-num" id="kpiTotalRevenue">$8,338,712.01</div>
-                      <div class="dash-kpi-trend trend-up" id="kpiRevenueGrowth">
-                        <span>↑ 14.2%</span>
-                        <span class="trend-compare">vs previous period</span>
+                    <div class="dash-kpi-card-header">
+                      <div class="dash-kpi-icon-box box-white">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                          <path d="m3 3 3 9 4-6 5 8 6-11"/><path d="M18 17h3v3"/>
+                        </svg>
                       </div>
+                      <div class="dash-kpi-title">Total Revenue</div>
+                    </div>
+                    <div class="dash-kpi-val-row">
+                      <div class="dash-kpi-num" id="kpiTotalRevenue">$8,338,712.01</div>
+                      <div class="dash-kpi-sparkline-motif" aria-hidden="true">
+                        <svg width="48" height="26" viewBox="0 0 48 26" fill="none">
+                          <circle cx="3" cy="13" r="1.2" fill="#ffffff" fill-opacity="0.7"/>
+                          <circle cx="3" cy="17" r="1.2" fill="#ffffff" fill-opacity="0.6"/>
+                          <circle cx="3" cy="21" r="1.2" fill="#ffffff" fill-opacity="0.5"/>
+                          <circle cx="3" cy="25" r="1.2" fill="#ffffff" fill-opacity="0.3"/>
+                          <circle cx="9" cy="5" r="1.2" fill="#ffffff" fill-opacity="0.9"/>
+                          <circle cx="9" cy="9" r="1.2" fill="#ffffff" fill-opacity="0.8"/>
+                          <circle cx="9" cy="13" r="1.2" fill="#ffffff" fill-opacity="0.7"/>
+                          <circle cx="9" cy="17" r="1.2" fill="#ffffff" fill-opacity="0.6"/>
+                          <circle cx="9" cy="21" r="1.2" fill="#ffffff" fill-opacity="0.5"/>
+                          <circle cx="9" cy="25" r="1.2" fill="#ffffff" fill-opacity="0.3"/>
+                          <circle cx="15" cy="9" r="1.2" fill="#ffffff" fill-opacity="0.8"/>
+                          <circle cx="15" cy="13" r="1.2" fill="#ffffff" fill-opacity="0.7"/>
+                          <circle cx="15" cy="17" r="1.2" fill="#ffffff" fill-opacity="0.6"/>
+                          <circle cx="15" cy="21" r="1.2" fill="#ffffff" fill-opacity="0.5"/>
+                          <circle cx="15" cy="25" r="1.2" fill="#ffffff" fill-opacity="0.3"/>
+                          <circle cx="21" cy="1" r="1.3" fill="#ffffff"/>
+                          <circle cx="21" cy="5" r="1.2" fill="#ffffff" fill-opacity="0.9"/>
+                          <circle cx="21" cy="9" r="1.2" fill="#ffffff" fill-opacity="0.8"/>
+                          <circle cx="21" cy="13" r="1.2" fill="#ffffff" fill-opacity="0.7"/>
+                          <circle cx="21" cy="17" r="1.2" fill="#ffffff" fill-opacity="0.6"/>
+                          <circle cx="21" cy="21" r="1.2" fill="#ffffff" fill-opacity="0.5"/>
+                          <circle cx="21" cy="25" r="1.2" fill="#ffffff" fill-opacity="0.3"/>
+                          <circle cx="27" cy="5" r="1.2" fill="#ffffff" fill-opacity="0.9"/>
+                          <circle cx="27" cy="9" r="1.2" fill="#ffffff" fill-opacity="0.8"/>
+                          <circle cx="27" cy="13" r="1.2" fill="#ffffff" fill-opacity="0.7"/>
+                          <circle cx="27" cy="17" r="1.2" fill="#ffffff" fill-opacity="0.6"/>
+                          <circle cx="27" cy="21" r="1.2" fill="#ffffff" fill-opacity="0.5"/>
+                          <circle cx="27" cy="25" r="1.2" fill="#ffffff" fill-opacity="0.3"/>
+                          <circle cx="33" cy="9" r="1.2" fill="#ffffff" fill-opacity="0.8"/>
+                          <circle cx="33" cy="13" r="1.2" fill="#ffffff" fill-opacity="0.7"/>
+                          <circle cx="33" cy="17" r="1.2" fill="#ffffff" fill-opacity="0.6"/>
+                          <circle cx="33" cy="21" r="1.2" fill="#ffffff" fill-opacity="0.5"/>
+                          <circle cx="33" cy="25" r="1.2" fill="#ffffff" fill-opacity="0.3"/>
+                          <circle cx="39" cy="13" r="1.2" fill="#ffffff" fill-opacity="0.7"/>
+                          <circle cx="39" cy="17" r="1.2" fill="#ffffff" fill-opacity="0.6"/>
+                          <circle cx="39" cy="21" r="1.2" fill="#ffffff" fill-opacity="0.5"/>
+                          <circle cx="39" cy="25" r="1.2" fill="#ffffff" fill-opacity="0.3"/>
+                          <circle cx="45" cy="17" r="1.2" fill="#ffffff" fill-opacity="0.6"/>
+                          <circle cx="45" cy="21" r="1.2" fill="#ffffff" fill-opacity="0.5"/>
+                          <circle cx="45" cy="25" r="1.2" fill="#ffffff" fill-opacity="0.3"/>
+                        </svg>
+                      </div>
+                    </div>
+                    <div class="dash-kpi-trend trend-down" id="kpiRevenueGrowth">
+                      <span>↓ -4.3%</span>
+                      <span class="trend-compare">vs previous period</span>
                     </div>
                   </div>
                 </div>
@@ -321,94 +522,60 @@
 
               <!-- Three Overview Modules (Matching Reference Image 1) -->
               <div class="dash-overview-modules-row reveal-fade-up">
-                <!-- Module 1: Customer Lookup -->
+                <!-- Module 1: Top Customer Segments -->
                 <div class="dash-ov-card">
                   <div class="dash-ov-header">
                     <div class="dash-ov-icon-box box-white">
-                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 2a10 10 0 0 1 10 10h-10z"/></svg>
                     </div>
                     <div class="dash-ov-title-block">
-                      <div class="dash-ov-title">Customer Lookup</div>
-                      <div class="dash-ov-sub">Retrieve customer profile, transaction history, and predicted metrics</div>
+                      <div class="dash-ov-title">Top Customer Segments</div>
+                      <div class="dash-ov-sub">K-Means clustering analysis</div>
                     </div>
-                    <a href="#lookup" class="btn-pill-ghost" style="padding: 4px 10px; font-size: 11px;" data-tab="lookup">Expand ↗</a>
+                    <a href="#segmentation" class="btn-pill-ghost" style="padding: 4px 10px; font-size: 11px;" data-tab="segmentation">Expand ↗</a>
                   </div>
 
-                  <div class="ov-search-row">
-                    <input type="text" class="ov-search-input" id="ovLookupInput" placeholder="Enter Customer ID (e.g. 15485)" value="15485">
-                    <button type="button" class="btn-pill-primary" id="ovLookupBtn" style="padding: 7px 16px; font-size: 12px;">Search</button>
+                  <div class="ov-cohorts-grid">
+                    <button type="button" class="ov-cohort-pill" onclick="window.switchDashboardTab('segmentation')">
+                      <span class="ov-cohort-name">Champions</span>
+                      <div class="ov-cohort-bar-track"><div class="ov-cohort-bar-fill" style="width: 61%;"></div></div>
+                      <span class="ov-cohort-pct" style="color: #ffffff;">20.9%</span>
+                    </button>
+                    <button type="button" class="ov-cohort-pill active" onclick="window.switchDashboardTab('segmentation')">
+                      <span class="ov-cohort-name">Loyal Customers</span>
+                      <div class="ov-cohort-bar-track"><div class="ov-cohort-bar-fill" style="width: 58%;"></div></div>
+                      <span class="ov-cohort-pct" style="color: #d4d4d4;">20.0%</span>
+                    </button>
+                    <button type="button" class="ov-cohort-pill" onclick="window.switchDashboardTab('segmentation')">
+                      <span class="ov-cohort-name">At-Risk</span>
+                      <div class="ov-cohort-bar-track"><div class="ov-cohort-bar-fill" style="width: 72%;"></div></div>
+                      <span class="ov-cohort-pct" style="color: #d4d4d4;">24.8%</span>
+                    </button>
+                    <button type="button" class="ov-cohort-pill" onclick="window.switchDashboardTab('segmentation')">
+                      <span class="ov-cohort-name">Lost / Churned</span>
+                      <div class="ov-cohort-bar-track"><div class="ov-cohort-bar-fill" style="width: 100%;"></div></div>
+                      <span class="ov-cohort-pct" style="color: #a3a3a3;">34.3%</span>
+                    </button>
                   </div>
 
-                  <div class="ov-profile-box" id="ovProfileBox">
-                    <div class="ov-profile-top">
-                      <div style="display: flex; align-items: center; gap: 8px;">
-                        <span class="ov-profile-id" id="ovProfileId">#15485</span>
-                        <span class="cluster-card-badge badge-champ" id="ovProfileSegment" style="font-size: 10px; padding: 2px 8px;">Champions</span>
-                      </div>
-                      <div style="text-align: right;">
-                        <div style="font-size: 9.5px; color: var(--text-muted);">Predicted CLV</div>
-                        <div style="font-size: 13px; font-weight: 800; color: #ffffff;" id="ovProfileClv">$860.13</div>
-                      </div>
+                  <div class="ov-cluster-insights-list" style="margin-top: 12px; padding-top: 10px; border-top: 1px solid rgba(255, 255, 255, 0.06); font-size: 11px;">
+                    <div style="font-size: 11px; font-weight: 700; color: #ffffff; margin-bottom: 4px;">Cluster Insights (Loyal Customers)</div>
+                    <div class="ov-insight-row" style="display: flex; justify-content: space-between; color: #8e9693; margin-bottom: 2px;">
+                      <span>Customer Count</span>
+                      <strong style="color: #ffffff;">1,187 (20.0%)</strong>
                     </div>
-                    <div class="ov-profile-kpis">
-                      <div class="ov-kpi-item">
-                        <div class="lbl">Recency</div>
-                        <div class="val" id="ovProfileRecency">29 days</div>
-                      </div>
-                      <div class="ov-kpi-item">
-                        <div class="lbl">Frequency</div>
-                        <div class="val" id="ovProfileFreq">8 orders</div>
-                      </div>
-                      <div class="ov-kpi-item">
-                        <div class="lbl">Monetary</div>
-                        <div class="val" id="ovProfileMonetary">$5,624.51</div>
-                      </div>
-                      <div class="ov-kpi-item">
-                        <div class="lbl">Tenure</div>
-                        <div class="val" id="ovProfileTenure">737 days</div>
-                      </div>
+                    <div class="ov-insight-row" style="display: flex; justify-content: space-between; color: #8e9693; margin-bottom: 2px;">
+                      <span>Avg. Monetary Spend</span>
+                      <strong style="color: #ffffff;">$784.29</strong>
                     </div>
-                  </div>
-
-                  <div class="ov-table-wrapper">
-                    <table class="ov-table">
-                      <thead>
-                        <tr>
-                          <th>Date</th>
-                          <th>Invoice</th>
-                          <th>Product ID</th>
-                          <th>Qty</th>
-                          <th>Unit Price</th>
-                          <th>Total</th>
-                        </tr>
-                      </thead>
-                      <tbody id="ovTableBody">
-                        <tr>
-                          <td>2011-11-09</td>
-                          <td>575340</td>
-                          <td>22029</td>
-                          <td>12</td>
-                          <td>$0.42</td>
-                          <td>$5.04</td>
-                        </tr>
-                        <tr>
-                          <td>2011-11-09</td>
-                          <td>575340</td>
-                          <td>21507</td>
-                          <td>12</td>
-                          <td>$0.42</td>
-                          <td>$5.04</td>
-                        </tr>
-                        <tr>
-                          <td>2011-11-09</td>
-                          <td>575340</td>
-                          <td>22730</td>
-                          <td>9</td>
-                          <td>$3.75</td>
-                          <td>$33.75</td>
-                        </tr>
-                      </tbody>
-                    </table>
+                    <div class="ov-insight-row" style="display: flex; justify-content: space-between; color: #8e9693; margin-bottom: 2px;">
+                      <span>Avg. Frequency</span>
+                      <strong style="color: #d4d4d4;">3.3 orders</strong>
+                    </div>
+                    <div class="ov-insight-row" style="display: flex; justify-content: space-between; color: #8e9693;">
+                      <span>Avg. Recency</span>
+                      <strong style="color: #ffffff;">26.5 days</strong>
+                    </div>
                   </div>
                 </div>
 
@@ -416,11 +583,11 @@
                 <div class="dash-ov-card">
                   <div class="dash-ov-header">
                     <div class="dash-ov-icon-box box-white">
-                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
                     </div>
                     <div class="dash-ov-title-block">
                       <div class="dash-ov-title">RFM Analytics</div>
-                      <div class="dash-ov-sub">Calculate RFM scores and analyze customer segments</div>
+                      <div class="dash-ov-sub">Customer value and churn risk distribution</div>
                     </div>
                     <a href="#rfm" class="btn-pill-ghost" style="padding: 4px 10px; font-size: 11px;" data-tab="rfm">Expand ↗</a>
                   </div>
@@ -469,56 +636,104 @@
                   <button type="button" class="btn-pill-primary" id="ovCalcRfmBtn" style="width: 100%; justify-content: center; font-size: 12.5px; padding: 9px;">Calculate RFM →</button>
                 </div>
 
-                <!-- Module 3: Customer Segmentation -->
+                <!-- Module 3: Recent Transactions & Customer Dossier -->
                 <div class="dash-ov-card">
                   <div class="dash-ov-header">
                     <div class="dash-ov-icon-box box-white">
-                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
                     </div>
                     <div class="dash-ov-title-block">
-                      <div class="dash-ov-title">Customer Segmentation</div>
-                      <div class="dash-ov-sub">K-Means clustering analysis of customer behavior</div>
+                      <div class="dash-ov-title">Recent Transactions</div>
+                      <div class="dash-ov-sub">Latest 5 transactions from dataset</div>
                     </div>
-                    <a href="#segmentation" class="btn-pill-ghost" style="padding: 4px 10px; font-size: 11px;" data-tab="segmentation">Expand ↗</a>
+                    <a href="#lookup" class="btn-pill-ghost" style="padding: 4px 10px; font-size: 11px;" data-tab="lookup">Expand ↗</a>
                   </div>
 
-                  <div class="ov-cohorts-grid">
-                    <button type="button" class="ov-cohort-pill" onclick="window.switchDashboardTab('segmentation')">
-                      <span class="ov-cohort-name">Champions</span>
-                      <span class="ov-cohort-pct" style="color: #ffffff;">20.9%</span>
-                    </button>
-                    <button type="button" class="ov-cohort-pill active" onclick="window.switchDashboardTab('segmentation')">
-                      <span class="ov-cohort-name">Loyal Customers</span>
-                      <span class="ov-cohort-pct" style="color: #d4d4d4;">20.0%</span>
-                    </button>
-                    <button type="button" class="ov-cohort-pill" onclick="window.switchDashboardTab('segmentation')">
-                      <span class="ov-cohort-name">At-Risk</span>
-                      <span class="ov-cohort-pct" style="color: #d4d4d4;">24.8%</span>
-                    </button>
-                    <button type="button" class="ov-cohort-pill" onclick="window.switchDashboardTab('segmentation')">
-                      <span class="ov-cohort-name">Lost / Churned</span>
-                      <span class="ov-cohort-pct" style="color: #a3a3a3;">34.3%</span>
-                    </button>
+                  <div class="ov-search-row" style="margin-bottom: 10px;">
+                    <input type="text" class="ov-search-input" id="ovLookupInput" placeholder="Enter Customer ID (e.g. 15485)" value="15485">
+                    <button type="button" class="btn-pill-primary" id="ovLookupBtn" style="padding: 7px 16px; font-size: 12px;">Search</button>
                   </div>
 
-                  <div class="ov-cluster-insights-list">
-                    <div style="font-size: 11px; font-weight: 700; color: #ffffff; margin-bottom: 2px;">Cluster Insights (Loyal Customers)</div>
-                    <div class="ov-insight-row">
-                      <span>Customer Count</span>
-                      <strong style="color: #ffffff;">1,187 (20.0%)</strong>
+                  <div class="ov-profile-box" id="ovProfileBox" style="display: none; margin-bottom: 10px;">
+                    <div class="ov-profile-top">
+                      <div style="display: flex; align-items: center; gap: 8px;">
+                        <span class="ov-profile-id" id="ovProfileId">#15485</span>
+                        <span class="cluster-card-badge badge-champ" id="ovProfileSegment" style="font-size: 10px; padding: 2px 8px;">Champions</span>
+                      </div>
+                      <div style="text-align: right;">
+                        <div style="font-size: 9.5px; color: var(--text-muted);">Predicted CLV</div>
+                        <div style="font-size: 13px; font-weight: 800; color: #ffffff;" id="ovProfileClv">$860.13</div>
+                      </div>
                     </div>
-                    <div class="ov-insight-row">
-                      <span>Avg. Monetary Spend</span>
-                      <strong style="color: #ffffff;">$784.29</strong>
+                    <div class="ov-profile-kpis">
+                      <div class="ov-kpi-item">
+                        <div class="lbl">Recency</div>
+                        <div class="val" id="ovProfileRecency">29 days</div>
+                      </div>
+                      <div class="ov-kpi-item">
+                        <div class="lbl">Frequency</div>
+                        <div class="val" id="ovProfileFreq">8 orders</div>
+                      </div>
+                      <div class="ov-kpi-item">
+                        <div class="lbl">Monetary</div>
+                        <div class="val" id="ovProfileMonetary">$5,624.51</div>
+                      </div>
+                      <div class="ov-kpi-item">
+                        <div class="lbl">Tenure</div>
+                        <div class="val" id="ovProfileTenure">737 days</div>
+                      </div>
                     </div>
-                    <div class="ov-insight-row">
-                      <span>Avg. Frequency</span>
-                      <strong style="color: #d4d4d4;">3.3 orders</strong>
-                    </div>
-                    <div class="ov-insight-row">
-                      <span>Avg. Recency</span>
-                      <strong style="color: #ffffff;">26.5 days</strong>
-                    </div>
+                  </div>
+
+                  <div class="ov-table-wrapper">
+                    <table class="ov-table">
+                      <thead>
+                        <tr>
+                          <th>Date</th>
+                          <th>Invoice</th>
+                          <th>Customer</th>
+                          <th>Amount</th>
+                          <th>Status</th>
+                        </tr>
+                      </thead>
+                      <tbody id="ovTableBody">
+                        <tr>
+                          <td>2011-12-09</td>
+                          <td>581483</td>
+                          <td>#15485</td>
+                          <td>$120.40</td>
+                          <td><span class="status-pill-completed">Completed</span></td>
+                        </tr>
+                        <tr>
+                          <td>2011-12-09</td>
+                          <td>581482</td>
+                          <td>#17120</td>
+                          <td>$85.00</td>
+                          <td><span class="status-pill-completed">Completed</span></td>
+                        </tr>
+                        <tr>
+                          <td>2011-12-08</td>
+                          <td>581481</td>
+                          <td>#14322</td>
+                          <td>$56.75</td>
+                          <td><span class="status-pill-completed">Completed</span></td>
+                        </tr>
+                        <tr>
+                          <td>2011-12-08</td>
+                          <td>581480</td>
+                          <td>#16791</td>
+                          <td>$210.30</td>
+                          <td><span class="status-pill-completed">Completed</span></td>
+                        </tr>
+                        <tr>
+                          <td>2011-12-07</td>
+                          <td>581479</td>
+                          <td>#12934</td>
+                          <td>$38.90</td>
+                          <td><span class="status-pill-completed">Completed</span></td>
+                        </tr>
+                      </tbody>
+                    </table>
                   </div>
                 </div>
               </div> <!-- End dash-overview-modules-row -->
