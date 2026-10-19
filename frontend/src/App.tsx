@@ -11,6 +11,7 @@ import { DatasetManagerView } from './features/datasets/DatasetManagerView';
 import { RecommendationsView } from './features/recommendations/RecommendationsView';
 import { AuthModal } from './features/auth/AuthModal';
 import { ArchitectureModal } from './components/modals/ArchitectureModal';
+import { CinematicIntro } from './features/intro/CinematicIntro';
 
 export const App: React.FC = () => {
   const [activeTab, setActiveTab] = useState<string>('dashboard');
@@ -78,6 +79,9 @@ export const App: React.FC = () => {
   return (
     <div className="platform-container" style={{ minHeight: '100vh', background: '#000000', color: '#ffffff', display: 'flex', flexDirection: 'column' }}>
       
+      {/* 10-Second Cinematic Loading Intro */}
+      <CinematicIntro />
+
       {/* Floating Capsule Navbar */}
       <Navbar
         activeTab={activeTab}

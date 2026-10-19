@@ -15,6 +15,19 @@
     <p style="padding: 16px; text-align: center;">Enable JavaScript for live analytics, customer search, and predictions. The existing dashboard content is available below.</p>
   </noscript>
 
+  <!-- ==============================================================================
+       CINEMATIC LOADING INTRO (INSIGHT.arc 10-Second Brand Animation)
+       ============================================================================== -->
+  <div id="cinematicIntroOverlay" class="cinematic-intro-overlay" role="dialog" aria-modal="true" aria-label="INSIGHT.arc Introduction">
+    <div class="cinematic-intro-frame">
+      <video id="cinematicIntroVideo" class="cinematic-intro-video" muted playsinline preload="none" tabindex="-1" data-src="/static/videos/insight_arc_intro.mp4"></video>
+    </div>
+    <div class="cinematic-intro-fallback" id="cinematicIntroFallback" aria-hidden="true">
+      <div class="cinematic-intro-loader"></div>
+    </div>
+    <button type="button" id="cinematicIntroSkip" class="cinematic-intro-skip-btn" aria-label="Skip Introduction">Skip Intro &rarr;</button>
+  </div>
+
   <!-- Ambient Backdrop Glows & Subtle Grid -->
   <div class="canvas-atmosphere" aria-hidden="true">
     <div class="canvas-stars"></div>

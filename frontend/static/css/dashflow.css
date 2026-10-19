@@ -5467,7 +5467,112 @@ button.faq-header {
 }
 @media print {
   .hero-video-backdrop, .hero-stage-split, .canvas-atmosphere, .font-credit,
-  .nav-menu-backdrop, .nav-mobile-dropdown { display: none !important; }
+  .nav-menu-backdrop, .nav-mobile-dropdown, .cinematic-intro-overlay { display: none !important; }
   /* The dashboard is inside hero-section; keep its printable ancestor visible. */
   .hero-section { display: block !important; padding: 0 !important; }
 }
+
+/* ==============================================================================
+   CINEMATIC LOADING INTRO (INSIGHT.arc 10-Second Brand Animation)
+   ============================================================================== */
+.cinematic-intro-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  width: 100dvw;
+  height: 100vh;
+  height: 100dvh;
+  background-color: #000000;
+  z-index: 9999999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  opacity: 1;
+  visibility: visible;
+  transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+  pointer-events: auto;
+}
+
+.cinematic-intro-overlay.intro-fading {
+  opacity: 0 !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+}
+
+.cinematic-intro-frame {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #000000;
+}
+
+.cinematic-intro-video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  background-color: #000000;
+  display: block;
+}
+
+.cinematic-intro-fallback {
+  position: absolute;
+  inset: 0;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  background-color: #000000;
+}
+
+.cinematic-intro-skip-btn {
+  position: absolute;
+  bottom: 28px;
+  right: 28px;
+  z-index: 100;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 9999px;
+  color: #e5e7eb;
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  cursor: pointer;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  transition: all 0.2s ease;
+}
+
+.cinematic-intro-skip-btn:hover {
+  background: rgba(255, 255, 255, 0.16);
+  border-color: rgba(255, 255, 255, 0.4);
+  color: #ffffff;
+  transform: translateY(-1px);
+}
+
+@media (max-width: 640px) {
+  .cinematic-intro-skip-btn {
+    bottom: 20px;
+    right: 20px;
+    padding: 6px 12px;
+    font-size: 11px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cinematic-intro-overlay {
+    display: none !important;
+  }
+}
+

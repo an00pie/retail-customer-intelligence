@@ -5,6 +5,7 @@
  */
 
 document.addEventListener('DOMContentLoaded', () => {
+  initCinematicIntro();
   initInteractiveGlobe();
   initHeroVideo();
   initSpaDashboardNavigation();
@@ -19,6 +20,108 @@ document.addEventListener('DOMContentLoaded', () => {
   initOverviewModules();
   initAnchorScroll();
 });
+
+/* ==============================================================================
+   -1. CINEMATIC LOADING INTRO (INSIGHT.arc 10-Second Brand Animation)
+   ============================================================================== */
+function initCinematicIntro() {
+  const overlay = document.getElementById('cinematicIntroOverlay');
+  const video = document.getElementById('cinematicIntroVideo');
+  const skipBtn = document.getElementById('cinematicIntroSkip');
+  if (!overlay) return;
+
+  const STORAGE_KEY = 'insight_arc_intro_viewed';
+  const INTRO_DURATION_MS = 10000; // Strictly 10 seconds
+
+  let alreadySeen = false;
+  try {
+    alreadySeen = sessionStorage.getItem(STORAGE_KEY) === 'true';
+  } catch (e) {
+    alreadySeen = false;
+  }
+
+  const prefersReducedMotion =
+    window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  if (alreadySeen || prefersReducedMotion) {
+    if (overlay.parentNode) {
+      overlay.parentNode.removeChild(overlay);
+    }
+    return;
+  }
+
+  // Lock scrolling during intro
+  document.documentElement.style.overflow = 'hidden';
+  document.body.style.overflow = 'hidden';
+
+  let completed = false;
+  let timerId = null;
+
+  function finishIntro() {
+    if (completed) return;
+    completed = true;
+
+    if (timerId) {
+      clearTimeout(timerId);
+      timerId = null;
+    }
+
+    try {
+      sessionStorage.setItem(STORAGE_KEY, 'true');
+    } catch (e) {}
+
+    overlay.classList.add('intro-fading');
+    document.documentElement.style.overflow = '';
+    document.body.style.overflow = '';
+
+    setTimeout(() => {
+      if (video) {
+        try {
+          video.pause();
+          video.removeAttribute('src');
+          video.load();
+        } catch (e) {}
+      }
+      if (overlay.parentNode) {
+        overlay.parentNode.removeChild(overlay);
+      }
+      // Re-trigger reveal animations on active pane
+      const activePane =
+        document.querySelector('.spa-tab-pane.active') || document.getElementById('tab-dashboard');
+      if (activePane && typeof window.refreshScrollReveals === 'function') {
+        window.refreshScrollReveals(activePane);
+      }
+    }, 800);
+  }
+
+  // Strictly transition at 10 seconds
+  timerId = setTimeout(finishIntro, INTRO_DURATION_MS);
+
+  if (skipBtn) {
+    skipBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      finishIntro();
+    });
+  }
+
+  if (video) {
+    video.addEventListener('ended', finishIntro, { once: true });
+    video.addEventListener('error', finishIntro, { once: true });
+
+    if (video.dataset && video.dataset.src && !video.src) {
+      video.src = video.dataset.src;
+    }
+
+    const playPromise = video.play();
+    if (playPromise !== undefined) {
+      playPromise.catch((err) => {
+        console.warn('Intro video autoplay was blocked or delayed:', err);
+      });
+    }
+  } else {
+    finishIntro();
+  }
+}
 
 /* ==============================================================================
    0. SPA DASHBOARD VIEW SWITCHER & MODAL DRAWER SYSTEM
