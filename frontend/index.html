@@ -7,11 +7,16 @@
   <meta name="description" content="Live analytics, RFM behavioral clustering, CLV predictions, and churn intelligence across 1.06M retail transactions with high-performance columnar KV serving (5,942 profiles).">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220%200%2032%2032%22><circle cx=%2216%22 cy=%2216%22 r=%2216%22 fill=%22%2310b981%22/><path d=%22M10 20L16 10L22 20Z%22 fill=%22%23040806%22/></svg>">
   <link rel="stylesheet" href="/static/css/dashflow.css">
+  <link rel="stylesheet" href="https://db.onlinewebfonts.com/c/8cb707a9b8a73f8a7403336b861c3074?family=BubbledotICG-FinePos">
 </head>
 <body>
+  <noscript>
+    <style>.spa-tab-pane { display: flex; } .reveal-fade-up { opacity: 1; transform: none; }</style>
+    <p style="padding: 16px; text-align: center;">Enable JavaScript for live analytics, customer search, and predictions. The existing dashboard content is available below.</p>
+  </noscript>
 
   <!-- Ambient Backdrop Glows & Subtle Grid -->
-  <div class="canvas-atmosphere">
+  <div class="canvas-atmosphere" aria-hidden="true">
     <div class="canvas-stars"></div>
     <div class="canvas-aura-top"></div>
     <div class="canvas-volumetric-beam"></div>
@@ -64,13 +69,15 @@
   </div>
 
   <!-- Mobile Dropdown Menu -->
-  <div class="nav-mobile-dropdown" id="mobileNavDropdown">
+  <div class="nav-menu-backdrop" id="mobileNavBackdrop" aria-hidden="true"></div>
+  <div class="nav-mobile-dropdown" id="mobileNavDropdown" role="dialog" aria-modal="true" aria-label="Navigation menu">
+    <button type="button" class="mobile-menu-close" aria-label="Close navigation menu">✕</button>
     <a href="#dashboard" class="nav-link" data-tab="dashboard">Dashboard Overview</a>
     <a href="#lookup" class="nav-link" data-tab="lookup">Customer Lookup</a>
     <a href="#segmentation" class="nav-link" data-tab="segmentation">Segmentation</a>
     <a href="#churn" class="nav-link" data-tab="churn">CLV &amp; Churn</a>
     <a href="#clv" class="nav-link" data-tab="clv">Simulator</a>
-    <div style="height: 1px; background: rgba(16, 185, 129, 0.15); margin: 8px 0;"></div>
+    <div class="mobile-menu-divider"></div>
     <a href="#architecture" class="nav-link" data-tab="architecture">Big Data Architecture</a>
     <a href="#faq" class="nav-link" data-tab="faq">Technical FAQ</a>
   </div>
@@ -79,6 +86,9 @@
        02. HERO SECTION (Web3-Verse Emerald Horizon + Command Center)
        ============================================================================== -->
   <section class="hero-section" id="hero">
+    <div class="hero-video-backdrop" aria-hidden="true">
+      <video id="heroVideo" autoplay muted loop playsinline preload="none" tabindex="-1" data-src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260809_012548_ef22562c-c0ae-4816-ad9d-f8922af4e6a7.mp4"></video>
+    </div>
     <div class="container hero-container" style="max-width: 1440px;">
       <!-- Hero 2-Column Split: Left Text + Right 3D Globe Visual -->
       <div class="hero-stage-split">
@@ -99,6 +109,7 @@
               <span>Explore Dashboard</span>
               <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
             </a>
+            <button type="button" class="hero-motion-control" id="heroMotionToggle" aria-pressed="false" hidden>Pause background</button>
           </div>
         </div>
 
@@ -898,6 +909,7 @@
       </div>
     </div>
   </section>
+  <footer class="font-credit"><a href="https://www.onlinewebfonts.com/fonts">Display font by OnlineWebFonts</a> · CC BY 4.0</footer>
 
   <!-- ==============================================================================
        MODAL 1: BIG DATA ARCHITECTURE PIPELINE

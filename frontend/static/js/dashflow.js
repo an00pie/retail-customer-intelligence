@@ -6,6 +6,7 @@
 
 document.addEventListener('DOMContentLoaded', () => {
   initInteractiveGlobe();
+  initHeroVideo();
   initSpaDashboardNavigation();
   initGlobalSearch();
   initScrollReveals();
@@ -466,34 +467,100 @@ function initMobileNav() {
   const toggleBtn = document.getElementById('mobileNavToggle');
   const dropdown = document.getElementById('mobileNavDropdown');
   if (!toggleBtn || !dropdown) return;
+  const backdrop = document.getElementById('mobileNavBackdrop');
+  const background = document.querySelectorAll('.hero-section, .font-credit, .nav-capsule-wrapper');
+  const desktop = window.matchMedia('(min-width: 1161px)');
+  let previousOverflow = '';
+  function setOpen(open, restoreFocus = true) {
+    if (open === dropdown.classList.contains('open')) return;
+    dropdown.classList.toggle('open', open);
+    backdrop?.classList.toggle('open', open);
+    toggleBtn.setAttribute('aria-expanded', String(open));
+    background.forEach(el => { el.inert = open; });
+    if (open) {
+      previousOverflow = document.body.style.overflow;
+      document.body.style.overflow = 'hidden';
+      dropdown.querySelector('button').focus();
+    } else {
+      document.body.style.overflow = previousOverflow;
+      if (restoreFocus) toggleBtn.focus();
+    }
+  }
 
   toggleBtn.addEventListener('click', (e) => {
     e.stopPropagation();
-    dropdown.classList.toggle('open');
-    toggleBtn.setAttribute('aria-expanded', String(dropdown.classList.contains('open')));
+    setOpen(!dropdown.classList.contains('open'));
+  });
+  dropdown.querySelector('.mobile-menu-close')?.addEventListener('click', () => setOpen(false));
+  desktop.addEventListener('change', () => {
+    if (desktop.matches) setOpen(false, false);
   });
 
   document.addEventListener('click', (e) => {
     if (!dropdown.contains(e.target) && !toggleBtn.contains(e.target)) {
-      dropdown.classList.remove('open');
-      toggleBtn.setAttribute('aria-expanded', 'false');
+      setOpen(false);
     }
   });
 
   document.addEventListener('keydown', (event) => {
     if (event.key === 'Escape' && dropdown.classList.contains('open')) {
-      dropdown.classList.remove('open');
-      toggleBtn.setAttribute('aria-expanded', 'false');
-      toggleBtn.focus();
+      setOpen(false);
+    }
+    if (event.key === 'Tab' && dropdown.classList.contains('open')) {
+      const controls = [...dropdown.querySelectorAll('button, a')];
+      const first = controls[0], last = controls[controls.length - 1];
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault(); last.focus();
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault(); first.focus();
+      }
     }
   });
 
   dropdown.querySelectorAll('a').forEach(link => {
     link.addEventListener('click', () => {
-      dropdown.classList.remove('open');
-      toggleBtn.setAttribute('aria-expanded', 'false');
+      setOpen(false);
     });
   });
+}
+
+// Decorative media never gates the dashboard or loads for reduced-motion/data-saving users.
+function initHeroVideo() {
+  const video = document.getElementById('heroVideo');
+  const button = document.getElementById('heroMotionToggle');
+  if (!video || !button) return;
+  const motion = window.matchMedia('(prefers-reduced-motion: reduce)');
+  const connection = navigator.connection;
+  let inView = true;
+  let pausedByUser = false;
+  let failed = false;
+  function update() {
+    const allowed = !motion.matches && !connection?.saveData;
+    const playing = allowed && !pausedByUser && inView && !document.hidden;
+    document.documentElement.dataset.backgroundPaused = String(!playing);
+    document.dispatchEvent(new Event('backgroundmotionchange'));
+    button.hidden = !allowed;
+    button.textContent = pausedByUser ? 'Play background' : 'Pause background';
+    button.setAttribute('aria-pressed', String(pausedByUser));
+    if (playing && !failed) {
+      if (!video.getAttribute('src')) video.src = video.dataset.src;
+      video.muted = true;
+      video.play().catch(() => { /* Black fallback when autoplay is unavailable. */ });
+    } else video.pause();
+  }
+  video.addEventListener('error', () => { failed = true; video.hidden = true; });
+  button.addEventListener('click', () => { pausedByUser = !pausedByUser; update(); });
+  motion.addEventListener('change', update);
+  connection?.addEventListener('change', update);
+  document.addEventListener('visibilitychange', update);
+  if ('IntersectionObserver' in window) {
+    const observer = new IntersectionObserver(entries => {
+      inView = entries[0].isIntersecting;
+      update();
+    });
+    observer.observe(document.querySelector('.hero-stage-split'));
+  }
+  update();
 }
 
 /* ==============================================================================
@@ -2009,17 +2076,18 @@ function initInteractiveGlobe() {
     ctx.arc(cx, cy, currentRadius * 1.0, Math.PI * 1.38, Math.PI * 1.62);
     ctx.stroke();
 
-    animId = requestAnimationFrame(draw);
+    if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches &&
+        document.documentElement.dataset.backgroundPaused !== 'true') {
+      animId = requestAnimationFrame(draw);
+    }
   }
 
   animId = requestAnimationFrame(draw);
 
-  document.addEventListener('visibilitychange', () => {
-    if (document.hidden) {
-      if (animId) cancelAnimationFrame(animId);
-    } else {
-      animId = requestAnimationFrame(draw);
-    }
+  document.addEventListener('backgroundmotionchange', () => {
+    if (animId) cancelAnimationFrame(animId);
+    // Draw one static frame when motion is disabled, then stop scheduling work.
+    animId = requestAnimationFrame(draw);
   });
 }
 
@@ -2169,4 +2237,3 @@ function initGlobalSearch() {
     }
   });
 }
-
