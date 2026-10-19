@@ -169,6 +169,9 @@ app = Flask(
     static_folder=os.path.join(os.path.dirname(__file__), "static")
 )
 
+from web.api_v1 import api_v1
+app.register_blueprint(api_v1)
+
 import re
 
 @app.after_request
@@ -183,6 +186,27 @@ def index():
     if request.method == "OPTIONS":
         return "", 200
     return render_template("index.html")
+
+@app.route("/app", methods=["GET", "OPTIONS"])
+@app.route("/app.html", methods=["GET", "OPTIONS"])
+def react_workspace():
+    if request.method == "OPTIONS":
+        return "", 200
+    dist_app = os.path.join(BASE_DIR, "frontend", "dist", "app.html")
+    if os.path.exists(dist_app):
+        return send_from_directory(os.path.join(BASE_DIR, "frontend", "dist"), "app.html")
+    frontend_app = os.path.join(BASE_DIR, "frontend", "app.html")
+    if os.path.exists(frontend_app):
+        return send_from_directory(os.path.join(BASE_DIR, "frontend"), "app.html")
+    return render_template("index.html")
+
+@app.route("/assets/<path:filename>")
+def serve_vite_assets(filename):
+    dist_assets = os.path.join(BASE_DIR, "frontend", "dist", "assets")
+    if os.path.exists(os.path.join(dist_assets, filename)):
+        return send_from_directory(dist_assets, filename)
+    return jsonify({"error": "Asset not found"}), 404
+
 
 @app.route("/api/customer/<path:customer_id>")
 def get_customer_profile(customer_id: str):

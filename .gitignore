@@ -26,3 +26,7 @@ derby.log
 
 .vercel
 
+# Frontend / Node
+node_modules/
+dist/
+*.png
