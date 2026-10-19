@@ -1301,16 +1301,16 @@ function initDashboardCharts() {
             display: false // Using our custom legend matching DashFlow UI
           },
           tooltip: {
-            backgroundColor: 'rgba(5, 14, 10, 0.92)',
+            backgroundColor: 'rgba(12, 16, 15, 0.96)',
             titleColor: '#ffffff',
-            bodyColor: '#cbd5e1',
-            borderColor: 'rgba(16, 185, 129, 0.22)',
+            bodyColor: '#d4ded9',
+            borderColor: 'rgba(255, 255, 255, 0.14)',
             borderWidth: 1,
-            padding: 10,
-            boxPadding: 5,
+            padding: 12,
+            boxPadding: 6,
             usePointStyle: true,
-            cornerRadius: 8,
-            titleFont: { size: 11, weight: '700', family: 'Inter, sans-serif' },
+            cornerRadius: 10,
+            titleFont: { size: 12, weight: '700', family: 'Inter, sans-serif' },
             bodyFont: { size: 11, weight: '500', family: 'Inter, sans-serif' },
             callbacks: {
               label: function(context) {
@@ -1326,11 +1326,11 @@ function initDashboardCharts() {
         scales: {
           x: {
             grid: {
-              color: 'rgba(16, 185, 129, 0.04)',
+              color: 'rgba(255, 255, 255, 0.04)',
               drawBorder: false
             },
             ticks: {
-              color: 'rgba(255, 255, 255, 0.45)',
+              color: 'rgba(255, 255, 255, 0.50)',
               font: { size: 11, weight: '600' },
               maxTicksLimit: data.labels.length > 40 ? 10 : 12,
               maxRotation: 0
