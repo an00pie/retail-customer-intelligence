@@ -313,7 +313,7 @@ function initSpaDashboardNavigation() {
 
     let iconSvg = '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>';
     if (type === 'success') {
-      iconSvg = '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#34d399" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg>';
+      iconSvg = '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg>';
     } else if (type === 'error' || type === 'danger') {
       iconSvg = '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#f87171" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>';
     }
@@ -816,10 +816,10 @@ function renderCustomerProfile(data) {
       <tr>
         <td style="padding: 6px 8px; font-size: 11px; color: var(--text-muted); border-bottom: 1px solid rgba(255,255,255,0.04);">${escapeHtml(tx.date)}</td>
         <td style="padding: 6px 8px; font-size: 11px; font-family: var(--font-mono); color: #fff; border-bottom: 1px solid rgba(255,255,255,0.04);">${escapeHtml(tx.invoice)}</td>
-        <td style="padding: 6px 8px; font-size: 11px; font-family: var(--font-mono); color: #34d399; border-bottom: 1px solid rgba(255,255,255,0.04);">${escapeHtml(tx.stock_code)}</td>
+        <td style="padding: 6px 8px; font-size: 11px; font-family: var(--font-mono); color: #d4d4d4; border-bottom: 1px solid rgba(255,255,255,0.04);">${escapeHtml(tx.stock_code)}</td>
         <td style="padding: 6px 8px; font-size: 11px; color: #fff; text-align: right; border-bottom: 1px solid rgba(255,255,255,0.04);">${escapeHtml(tx.quantity)}</td>
         <td style="padding: 6px 8px; font-size: 11px; color: #fff; text-align: right; border-bottom: 1px solid rgba(255,255,255,0.04);">$${Number(tx.unit_price).toFixed(2)}</td>
-        <td style="padding: 6px 8px; font-size: 11px; color: #34d399; font-weight: 700; text-align: right; border-bottom: 1px solid rgba(255,255,255,0.04);">$${Number(tx.total).toFixed(2)}</td>
+        <td style="padding: 6px 8px; font-size: 11px; color: #d4d4d4; font-weight: 700; text-align: right; border-bottom: 1px solid rgba(255,255,255,0.04);">$${Number(tx.total).toFixed(2)}</td>
       </tr>
     `).join('');
 
@@ -867,7 +867,7 @@ function renderCustomerProfile(data) {
       <div class="customer-metrics-row">
         <div class="customer-metric-box">
           <div class="customer-metric-lbl">Predicted CLV</div>
-          <div class="customer-metric-num" id="custProfileClv" style="color: var(--accent-emerald-bright);">$${clv.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</div>
+          <div class="customer-metric-num" id="custProfileClv" style="color: #ffffff;">$${clv.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</div>
         </div>
         <div class="customer-metric-box">
           <div class="customer-metric-lbl">Orders Count</div>
@@ -875,7 +875,7 @@ function renderCustomerProfile(data) {
         </div>
         <div class="customer-metric-box">
           <div class="customer-metric-lbl">Churn Risk</div>
-          <div class="customer-metric-num" id="custProfileChurn" style="color: ${churn > 0.4 ? '#fb7185' : '#34d399'};">${(churn * 100).toFixed(1)}%</div>
+          <div class="customer-metric-num" id="custProfileChurn" style="color: ${churn > 0.4 ? '#fb7185' : '#d4d4d4'};">${(churn * 100).toFixed(1)}%</div>
         </div>
       </div>
 
@@ -896,7 +896,7 @@ function renderCustomerProfile(data) {
         <div class="actions-box-title">Recommended Next Best Actions</div>
         <div class="action-item-row">
           <span>${rawSeg === 'Champions' ? '⭐ VIP Exclusive Rewards Access' : '✨ Re-engagement Promotion'}</span>
-          <span style="font-size: 11px; color: #34d399; font-weight: 700;">Eligible</span>
+          <span style="font-size: 11px; color: #d4d4d4; font-weight: 700;">Eligible</span>
         </div>
         <div class="action-item-row">
           <span>📦 High-AOV Category Cross-Sell Catalog</span>
@@ -1107,7 +1107,7 @@ function initWhatIfSimulator() {
         if (clvTarget) animateMetricCounter(clvTarget, `$${parseFloat(res.predicted_clv).toFixed(2)}`, 450);
         if (churnTarget) {
           animateMetricCounter(churnTarget, `${(parseFloat(res.churn_probability) * 100).toFixed(1)}%`, 450);
-          churnTarget.style.color = res.churn_probability > 0.4 ? '#fb7185' : '#34d399';
+          churnTarget.style.color = res.churn_probability > 0.4 ? '#fb7185' : '#d4d4d4';
         }
         const infCard = segTarget ? segTarget.closest('.overview-card') : null;
         if (infCard) {
@@ -1231,17 +1231,17 @@ function initDashboardCharts() {
       return;
     }
 
-    // Create linear gradients for area fills - Luxury Emerald & Cyan
+    // Create linear gradients for area fills - Monochrome
     const chartHeight = canvas.clientHeight || 280;
     const revGradient = ctx.createLinearGradient(0, 0, 0, chartHeight);
-    revGradient.addColorStop(0, 'rgba(16, 185, 129, 0.28)');
-    revGradient.addColorStop(0.65, 'rgba(16, 185, 129, 0.04)');
-    revGradient.addColorStop(1, 'rgba(16, 185, 129, 0.0)');
+    revGradient.addColorStop(0, 'rgba(255, 255, 255, 0.28)');
+    revGradient.addColorStop(0.65, 'rgba(255, 255, 255, 0.04)');
+    revGradient.addColorStop(1, 'rgba(255, 255, 255, 0.0)');
 
     const ordGradient = ctx.createLinearGradient(0, 0, 0, chartHeight);
-    ordGradient.addColorStop(0, 'rgba(56, 189, 248, 0.20)');
-    ordGradient.addColorStop(0.65, 'rgba(56, 189, 248, 0.03)');
-    ordGradient.addColorStop(1, 'rgba(56, 189, 248, 0.0)');
+    ordGradient.addColorStop(0, 'rgba(128, 128, 128, 0.20)');
+    ordGradient.addColorStop(0.65, 'rgba(128, 128, 128, 0.03)');
+    ordGradient.addColorStop(1, 'rgba(128, 128, 128, 0.0)');
 
     trajectoryChartInstance = new Chart(ctx, {
       type: 'line',
@@ -1252,14 +1252,14 @@ function initDashboardCharts() {
             label: 'Revenue (USD)',
             data: data.revenue,
             yAxisID: 'yRevenue',
-            borderColor: '#10B981',
+            borderColor: '#ffffff',
             backgroundColor: revGradient,
             borderWidth: 2.8,
             tension: 0.38,
             fill: true,
             pointRadius: data.labels.length > 40 ? 0 : 3.5,
             pointHoverRadius: 6.5,
-            pointBackgroundColor: '#34D399',
+            pointBackgroundColor: '#d0d0d0',
             pointBorderColor: '#050807',
             pointBorderWidth: 2,
             pointHoverBorderColor: '#ffffff',
@@ -1269,7 +1269,7 @@ function initDashboardCharts() {
             label: 'Order Volume',
             data: data.orders,
             yAxisID: 'yOrders',
-            borderColor: '#38BDF8',
+            borderColor: '#808080',
             backgroundColor: ordGradient,
             borderWidth: 2,
             borderDash: [5, 4],
@@ -1277,7 +1277,7 @@ function initDashboardCharts() {
             fill: true,
             pointRadius: data.labels.length > 40 ? 0 : 3,
             pointHoverRadius: 5.5,
-            pointBackgroundColor: '#38BDF8',
+            pointBackgroundColor: '#808080',
             pointBorderColor: '#050807',
             pointBorderWidth: 2,
             pointHoverBorderColor: '#ffffff',
@@ -1340,11 +1340,11 @@ function initDashboardCharts() {
             type: 'linear',
             position: 'left',
             grid: {
-              color: 'rgba(16, 185, 129, 0.04)',
+              color: 'rgba(255, 255, 255, 0.04)',
               drawBorder: false
             },
             ticks: {
-              color: 'rgba(52, 211, 153, 0.85)',
+              color: 'rgba(255, 255, 255, 0.85)',
               font: { size: 11, weight: '600' },
               callback: function(val) {
                 if (val >= 1000000) return `$${(val / 1000000).toFixed(1)}M`;
@@ -1361,7 +1361,7 @@ function initDashboardCharts() {
               drawBorder: false
             },
             ticks: {
-              color: 'rgba(45, 212, 191, 0.8)',
+              color: 'rgba(170, 170, 170, 0.8)',
               font: { size: 11, weight: '600' },
               callback: function(val) {
                 if (val >= 1000) return `${(val / 1000).toFixed(1)}k`;
@@ -1386,7 +1386,7 @@ function initDashboardCharts() {
             ctx.moveTo(x, topY);
             ctx.lineTo(x, bottomY);
             ctx.lineWidth = 1;
-            ctx.strokeStyle = 'rgba(52, 211, 153, 0.45)';
+            ctx.strokeStyle = 'rgba(255, 255, 255, 0.45)';
             ctx.setLineDash([4, 4]);
             ctx.stroke();
             ctx.restore();
@@ -1691,8 +1691,8 @@ function initOverviewModules() {
         container.innerHTML = `
           <div style="font-size: 11px; font-weight: 700; color: #ffffff; margin-bottom: 2px;">Cluster Insights (${name})</div>
           <div class="ov-insight-row"><span>Customer Count</span><strong style="color: #ffffff;">${stats.count}</strong></div>
-          <div class="ov-insight-row"><span>Avg. Monetary Spend</span><strong style="color: #34d399;">${stats.mon}</strong></div>
-          <div class="ov-insight-row"><span>Avg. Frequency</span><strong style="color: #38bdf8;">${stats.freq}</strong></div>
+          <div class="ov-insight-row"><span>Avg. Monetary Spend</span><strong style="color: #d4d4d4;">${stats.mon}</strong></div>
+          <div class="ov-insight-row"><span>Avg. Frequency</span><strong style="color: #a3a3a3;">${stats.freq}</strong></div>
           <div class="ov-insight-row"><span>Avg. Recency</span><strong style="color: #ffffff;">${stats.rec}</strong></div>
         `;
       }
@@ -1701,7 +1701,7 @@ function initOverviewModules() {
 }
 
 /* ==============================================================================
-   9. WEB3-VERSE INTERACTIVE EMERALD WIREFRAME GLOBE (Canvas 3D Mathematics)
+   9. RETRO CINEMATIC MONOCHROME WIREFRAME GLOBE (Canvas 3D Mathematics)
    ============================================================================== */
 function initInteractiveGlobe() {
   const canvas = document.getElementById('globeCanvas');
@@ -1714,12 +1714,12 @@ function initInteractiveGlobe() {
   const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   let width = container.clientWidth || window.innerWidth;
-  let height = container.clientHeight || 720;
+  let height = container.clientHeight || 440;
   let dpr = Math.min(window.devicePixelRatio || 1, 2);
 
   function resize() {
     width = container.clientWidth || window.innerWidth;
-    height = container.clientHeight || 720;
+    height = container.clientHeight || 440;
     canvas.width = width * dpr;
     canvas.height = height * dpr;
     canvas.style.width = width + 'px';
@@ -1891,15 +1891,14 @@ function initInteractiveGlobe() {
 
     // Center position of the globe (Matching Image 2: prominent, centered, crowning gracefully below title)
     const cx = width * 0.50 + pointerX;
-    const currentRadius = Math.min(width * 0.44, 430);
-    const cy = Math.min(height * 0.82, 630) + pointerY;
+    const currentRadius = Math.min(width * 0.42, height * 0.46, 260);
+    const cy = height * 0.50 + pointerY;
 
     // 1. Radiant Atmospheric Nebula Glow behind Globe
-    const auraGrad = ctx.createRadialGradient(cx, cy - currentRadius * 0.35, currentRadius * 0.2, cx, cy, currentRadius * 1.35);
-    auraGrad.addColorStop(0, isHovered ? 'rgba(189, 255, 115, 0.35)' : 'rgba(189, 255, 115, 0.25)');
-    auraGrad.addColorStop(0.35, 'rgba(82, 246, 67, 0.16)');
-    auraGrad.addColorStop(0.65, 'rgba(16, 185, 129, 0.05)');
-    auraGrad.addColorStop(1, 'rgba(3, 6, 4, 0.0)');
+    const auraGrad = ctx.createRadialGradient(cx, cy, currentRadius * 0.2, cx, cy, currentRadius * 1.3);
+    auraGrad.addColorStop(0, 'rgba(255, 255, 255, 0.08)');
+    auraGrad.addColorStop(0.45, 'rgba(255, 255, 255, 0.02)');
+    auraGrad.addColorStop(1, 'rgba(0, 0, 0, 0.0)');
     ctx.fillStyle = auraGrad;
     ctx.beginPath();
     ctx.arc(cx, cy, currentRadius * 1.35, 0, Math.PI * 2);
@@ -1910,9 +1909,9 @@ function initInteractiveGlobe() {
     ctx.beginPath();
     ctx.arc(cx, cy, currentRadius, 0, Math.PI * 2);
     const oceanGrad = ctx.createRadialGradient(cx, cy - currentRadius * 0.4, currentRadius * 0.1, cx, cy, currentRadius);
-    oceanGrad.addColorStop(0, '#0a2211');
-    oceanGrad.addColorStop(0.5, '#041308');
-    oceanGrad.addColorStop(1, '#020603');
+    oceanGrad.addColorStop(0, '#101010');
+    oceanGrad.addColorStop(0.6, '#060606');
+    oceanGrad.addColorStop(1, '#000000');
     ctx.fillStyle = oceanGrad;
     ctx.fill();
     ctx.clip();
@@ -1929,9 +1928,9 @@ function initInteractiveGlobe() {
           else { ctx.lineTo(p.sx, p.sy); }
         });
         ctx.closePath();
-        ctx.fillStyle = 'rgba(168, 198, 168, 0.85)'; // Shaded sage continent
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.06)'; // Shaded sage continent
         ctx.fill();
-        ctx.strokeStyle = 'rgba(189, 255, 115, 0.35)';
+        ctx.strokeStyle = 'rgba(255, 255, 255, 0.16)';
         ctx.lineWidth = 1.0;
         ctx.stroke();
       }
@@ -1954,7 +1953,7 @@ function initInteractiveGlobe() {
 
       if (p1.z > -0.15 && p2.z > -0.15) {
         const edgeAlpha = Math.max(0.06, Math.min(0.55, (p1.z + p2.z) * 0.35));
-        ctx.strokeStyle = `rgba(167, 251, 95, ${edgeAlpha * (isHovered ? 1.2 : 1.0)})`;
+        ctx.strokeStyle = `rgba(255, 255, 255, ${edgeAlpha * (isHovered ? 1.15 : 0.95)})`;
         ctx.beginPath();
         ctx.moveTo(p1.sx, p1.sy);
         ctx.lineTo(p2.sx, p2.sy);
@@ -1966,7 +1965,7 @@ function initInteractiveGlobe() {
     for (let i = 0; i < sphereVerts.length; i++) {
       const v = sphereVerts[i];
       if (v.z > 0.08) {
-        ctx.fillStyle = `rgba(189, 255, 115, ${v.alpha})`;
+        ctx.fillStyle = `rgba(255, 255, 255, ${v.alpha})`;
         ctx.beginPath();
         const nodeRadius = (v.z > 0.4 ? 1.5 : 1.0) * v.scale;
         ctx.arc(v.sx, v.sy, nodeRadius, 0, Math.PI * 2);
@@ -1986,7 +1985,7 @@ function initInteractiveGlobe() {
         const midX = (vFrom.sx + vTo.sx) * 0.5;
         const midY = (vFrom.sy + vTo.sy) * 0.5 - 28 * vFrom.scale;
 
-        ctx.strokeStyle = 'rgba(189, 255, 115, 0.40)';
+        ctx.strokeStyle = 'rgba(255, 255, 255, 0.35)';
         ctx.lineWidth = 1.0;
         ctx.setLineDash([3, 4]);
         ctx.beginPath();
@@ -2005,7 +2004,7 @@ function initInteractiveGlobe() {
         ctx.arc(ptX, ptY, 1.8 * vFrom.scale, 0, Math.PI * 2);
         ctx.fill();
 
-        ctx.fillStyle = 'rgba(167, 251, 95, 0.45)';
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.35)';
         ctx.beginPath();
         ctx.arc(ptX, ptY, 4.5 * vFrom.scale, 0, Math.PI * 2);
         ctx.fill();
@@ -2025,7 +2024,7 @@ function initInteractiveGlobe() {
           const waveRadius = wavePhase * 15 * hv.scale;
           const waveAlpha = (1 - wavePhase) * 0.55 * depthFade;
 
-          ctx.strokeStyle = `rgba(189, 255, 115, ${waveAlpha})`;
+          ctx.strokeStyle = `rgba(255, 255, 255, ${waveAlpha})`;
           ctx.lineWidth = 1.2;
           ctx.beginPath();
           ctx.arc(hv.sx, hv.sy, waveRadius, 0, Math.PI * 2);
@@ -2036,7 +2035,7 @@ function initInteractiveGlobe() {
           ctx.arc(hv.sx, hv.sy, 2.0 * hv.scale, 0, Math.PI * 2);
           ctx.fill();
 
-          ctx.fillStyle = `rgba(189, 255, 115, ${depthFade * 0.9})`;
+          ctx.fillStyle = `rgba(255, 255, 255, ${depthFade * 0.9})`;
           ctx.fillText(hub.label, hv.sx + 8, hv.sy - 4);
         }
       }
@@ -2049,21 +2048,21 @@ function initInteractiveGlobe() {
     const endAng = Math.PI * 1.88;
 
     // Outer soft lime halo
-    ctx.strokeStyle = 'rgba(167, 251, 95, 0.45)';
+    ctx.strokeStyle = 'rgba(255, 255, 255, 0.15)';
     ctx.lineWidth = 26;
     ctx.beginPath();
     ctx.arc(cx, cy, currentRadius * 1.008, startAng, endAng);
     ctx.stroke();
 
     // Mid neon lime arc
-    ctx.strokeStyle = 'rgba(189, 255, 115, 0.85)';
+    ctx.strokeStyle = 'rgba(255, 255, 255, 0.35)';
     ctx.lineWidth = 12;
     ctx.beginPath();
     ctx.arc(cx, cy, currentRadius * 1.004, startAng, endAng);
     ctx.stroke();
 
     // Core radiant white-lime rim
-    ctx.strokeStyle = '#f0fff1';
+    ctx.strokeStyle = '#ffffff';
     ctx.lineWidth = 4;
     ctx.beginPath();
     ctx.arc(cx, cy, currentRadius * 1.001, startAng + 0.08, endAng - 0.08);
