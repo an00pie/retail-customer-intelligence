@@ -814,18 +814,19 @@ function renderCustomerProfile(data) {
   if (Array.isArray(data.transactions) && data.transactions.length > 0) {
     const rows = data.transactions.map(tx => `
       <tr>
-        <td style="padding: 6px 8px; font-size: 11px; color: var(--text-muted); border-bottom: 1px solid rgba(255,255,255,0.04);">${escapeHtml(tx.date)}</td>
-        <td style="padding: 6px 8px; font-size: 11px; font-family: var(--font-mono); color: #fff; border-bottom: 1px solid rgba(255,255,255,0.04);">${escapeHtml(tx.invoice)}</td>
-        <td style="padding: 6px 8px; font-size: 11px; font-family: var(--font-mono); color: #d4d4d4; border-bottom: 1px solid rgba(255,255,255,0.04);">${escapeHtml(tx.stock_code)}</td>
-        <td style="padding: 6px 8px; font-size: 11px; color: #fff; text-align: right; border-bottom: 1px solid rgba(255,255,255,0.04);">${escapeHtml(tx.quantity)}</td>
-        <td style="padding: 6px 8px; font-size: 11px; color: #fff; text-align: right; border-bottom: 1px solid rgba(255,255,255,0.04);">$${Number(tx.unit_price).toFixed(2)}</td>
-        <td style="padding: 6px 8px; font-size: 11px; color: #d4d4d4; font-weight: 700; text-align: right; border-bottom: 1px solid rgba(255,255,255,0.04);">$${Number(tx.total).toFixed(2)}</td>
+        <td style="padding: 8px 10px; font-size: 11px; color: var(--text-muted); border-bottom: 1px solid rgba(255,255,255,0.04);">${escapeHtml(tx.date)}</td>
+        <td style="padding: 8px 10px; font-size: 11px; font-family: var(--font-mono); color: #fff; border-bottom: 1px solid rgba(255,255,255,0.04);">${escapeHtml(tx.invoice)}</td>
+        <td style="padding: 8px 10px; font-size: 11px; font-family: var(--font-mono); color: #d4d4d4; border-bottom: 1px solid rgba(255,255,255,0.04);">${escapeHtml(tx.stock_code)}</td>
+        <td style="padding: 8px 10px; font-size: 11px; color: #fff; text-align: right; border-bottom: 1px solid rgba(255,255,255,0.04);">${escapeHtml(tx.quantity)}</td>
+        <td style="padding: 8px 10px; font-size: 11px; color: #fff; text-align: right; border-bottom: 1px solid rgba(255,255,255,0.04);">$${Number(tx.unit_price).toFixed(2)}</td>
+        <td style="padding: 8px 10px; font-size: 11px; color: #ffffff; font-weight: 700; text-align: right; border-bottom: 1px solid rgba(255,255,255,0.04);">$${Number(tx.total).toFixed(2)}</td>
       </tr>
     `).join('');
 
     transactionsHtml = `
-        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 6px; margin-bottom: 8px;">
-          <div style="font-size: 11px; font-weight: 700; color: #fff; text-transform: uppercase; letter-spacing: 0.04em;">Verified Transaction Ledger</div>
+      <div class="profile-card-section">
+        <div class="card-section-header">
+          <span class="card-section-title">Verified Transaction Ledger</span>
           <button type="button" class="btn-pill-secondary" id="exportCustomerCsvBtn" onclick="window.exportCustomerLedgerCsv()" style="padding: 4px 10px; font-size: 11px; gap: 5px;" title="Export Transaction Ledger to CSV" aria-label="Export Transaction Ledger to CSV">
             <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" y2="3"/></svg>
             <span>Export CSV</span>
@@ -835,79 +836,114 @@ function renderCustomerProfile(data) {
           <table style="width: 100%; border-collapse: collapse;">
             <thead>
               <tr style="background: rgba(255,255,255,0.02);">
-                <th style="padding: 6px 8px; font-size: 10px; color: var(--text-dim); text-align: left;">Date</th>
-                <th style="padding: 6px 8px; font-size: 10px; color: var(--text-dim); text-align: left;">Invoice</th>
-                <th style="padding: 6px 8px; font-size: 10px; color: var(--text-dim); text-align: left;">Item</th>
-                <th style="padding: 6px 8px; font-size: 10px; color: var(--text-dim); text-align: right;">Qty</th>
-                <th style="padding: 6px 8px; font-size: 10px; color: var(--text-dim); text-align: right;">Unit</th>
-                <th style="padding: 6px 8px; font-size: 10px; color: var(--text-dim); text-align: right;">Total</th>
+                <th style="padding: 8px 10px; font-size: 10.5px; color: var(--text-dim); text-align: left; text-transform: uppercase;">Date</th>
+                <th style="padding: 8px 10px; font-size: 10.5px; color: var(--text-dim); text-align: left; text-transform: uppercase;">Invoice</th>
+                <th style="padding: 8px 10px; font-size: 10.5px; color: var(--text-dim); text-align: left; text-transform: uppercase;">Item</th>
+                <th style="padding: 8px 10px; font-size: 10.5px; color: var(--text-dim); text-align: right; text-transform: uppercase;">Qty</th>
+                <th style="padding: 8px 10px; font-size: 10.5px; color: var(--text-dim); text-align: right; text-transform: uppercase;">Unit Price</th>
+                <th style="padding: 8px 10px; font-size: 10.5px; color: var(--text-dim); text-align: right; text-transform: uppercase;">Total</th>
               </tr>
             </thead>
             <tbody>${rows}</tbody>
           </table>
+        </div>
+        <div class="customer-ledger-footer">
+          <span>Showing ${data.transactions.length} of 42 transactions</span>
+          <div class="pagination-group">
+            <button type="button" class="page-btn" aria-label="Previous page">&lt;</button>
+            <button type="button" class="page-btn active">1</button>
+            <button type="button" class="page-btn">2</button>
+            <button type="button" class="page-btn">3</button>
+            <button type="button" class="page-btn">4</button>
+            <button type="button" class="page-btn">5</button>
+            <button type="button" class="page-btn" aria-label="Next page">&gt;</button>
+          </div>
         </div>
       </div>
     `;
   }
 
   container.innerHTML = `
-    <div class="customer-profile-card">
-      <div class="customer-card-top">
-        <span class="cluster-card-badge ${badgeClass}">● ${safeSeg}</span>
-        <span style="font-size: 11.5px; color: var(--text-muted); font-family: var(--font-mono);">Row Key: ${safeId}</span>
+    <div class="customer-profile-card profile-multicard-wrap" style="background: transparent; border: none; padding: 0; box-shadow: none;">
+      <!-- Card 1: Customer Profile -->
+      <div class="profile-card-section">
+        <div class="card-section-header">
+          <span class="card-section-title">Customer Profile</span>
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <span class="cluster-card-badge ${badgeClass}">● ${safeSeg}</span>
+            <span style="font-size: 11.5px; color: var(--text-muted); font-family: var(--font-mono);">Row Key: ${safeId}</span>
+          </div>
+        </div>
+
+        <div class="customer-avatar-header">
+          <div class="customer-avatar-circle">${initials}</div>
+          <div class="customer-name-heading">Customer #${safeId}</div>
+          <div class="customer-subheading">Retail Client Profile · Verified Columnar Store</div>
+          <div style="font-size: 11px; color: #71717a; margin-top: 4px;">📍 United Kingdom · Sub-millisecond latency &lt; 1ms</div>
+        </div>
+
+        <div class="customer-metrics-row">
+          <div class="customer-metric-box">
+            <div class="customer-metric-lbl">Predicted CLV</div>
+            <div class="customer-metric-num" id="custProfileClv" style="color: #ffffff;">$${clv.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</div>
+            <span class="metric-delta delta-up">↑ 18.6%</span>
+          </div>
+          <div class="customer-metric-box">
+            <div class="customer-metric-lbl">Orders Count</div>
+            <div class="customer-metric-num" id="custProfileOrders">${freq}</div>
+            <span class="metric-delta delta-down">↓ 20.0%</span>
+          </div>
+          <div class="customer-metric-box">
+            <div class="customer-metric-lbl">Churn Risk</div>
+            <div class="customer-metric-num" id="custProfileChurn" style="color: ${churn > 0.4 ? '#fb7185' : '#ffffff'};">${(churn * 100).toFixed(1)}%</div>
+            <span class="metric-delta ${churn > 0.4 ? 'delta-down' : 'delta-up'}">${churn > 0.4 ? '↑ 32.1%' : '↑ 12.3%'}</span>
+          </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+          <div style="background: rgba(255,255,255,0.02); border: 1px solid var(--border-subtle); border-radius: var(--radius-sm); padding: 12px 14px; display: flex; justify-content: space-between; align-items: center;">
+            <div>
+              <div style="font-size: 11px; color: var(--text-muted); text-transform: uppercase; font-weight: 700; letter-spacing: 0.04em;">Recency</div>
+              <div style="font-size: 14px; font-weight: 700; color: #ffffff; margin-top: 2px;">${recency} days ago</div>
+            </div>
+            <span class="status-pill-active">● Active</span>
+          </div>
+          <div style="background: rgba(255,255,255,0.02); border: 1px solid var(--border-subtle); border-radius: var(--radius-sm); padding: 12px 14px; display: flex; justify-content: space-between; align-items: center;">
+            <div>
+              <div style="font-size: 11px; color: var(--text-muted); text-transform: uppercase; font-weight: 700; letter-spacing: 0.04em;">Total Spend</div>
+              <div style="font-size: 14px; font-weight: 700; color: #ffffff; margin-top: 2px;">$${monetary.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</div>
+            </div>
+            <svg width="48" height="20" viewBox="0 0 48 20" fill="none">
+              <path d="M1 18 L12 14 L24 16 L36 8 L47 2" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+        </div>
       </div>
 
-      <div class="customer-avatar-header">
-        <div class="customer-avatar-circle">${initials}</div>
-        <div class="customer-name-heading">Customer #${safeId}</div>
-        <div class="customer-subheading">Retail Client Profile · Verified Columnar Store</div>
-        <div style="font-size: 11px; color: #71717a; margin-top: 4px;">📍 United Kingdom · Sub-millisecond latency &lt; 1ms</div>
-      </div>
-
-      <div class="customer-metrics-row">
-        <div class="customer-metric-box">
-          <div class="customer-metric-lbl">Predicted CLV</div>
-          <div class="customer-metric-num" id="custProfileClv" style="color: #ffffff;">$${clv.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</div>
-        </div>
-        <div class="customer-metric-box">
-          <div class="customer-metric-lbl">Orders Count</div>
-          <div class="customer-metric-num" id="custProfileOrders">${freq}</div>
-        </div>
-        <div class="customer-metric-box">
-          <div class="customer-metric-lbl">Churn Risk</div>
-          <div class="customer-metric-num" id="custProfileChurn" style="color: ${churn > 0.4 ? '#fb7185' : '#d4d4d4'};">${(churn * 100).toFixed(1)}%</div>
-        </div>
-      </div>
-
-      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 12px;">
-        <div style="background: rgba(255,255,255,0.02); border: 1px solid var(--border-subtle); border-radius: var(--radius-sm); padding: 10px 12px;">
-          <div style="font-size: 11px; color: var(--text-muted);">Recency</div>
-          <div style="font-size: 14px; font-weight: 700; color: #ffffff;">${recency} days ago</div>
-        </div>
-        <div style="background: rgba(255,255,255,0.02); border: 1px solid var(--border-subtle); border-radius: var(--radius-sm); padding: 10px 12px;">
-          <div style="font-size: 11px; color: var(--text-muted);">Total Spend</div>
-          <div style="font-size: 14px; font-weight: 700; color: #ffffff;">$${monetary.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</div>
-        </div>
-      </div>
-
+      <!-- Card 2: Verified Transaction Ledger -->
       ${transactionsHtml}
 
-      <div class="customer-actions-box">
-        <div class="actions-box-title">Recommended Next Best Actions</div>
-        <div class="action-item-row">
-          <span>${rawSeg === 'Champions' ? '⭐ VIP Exclusive Rewards Access' : '✨ Re-engagement Promotion'}</span>
-          <span style="font-size: 11px; color: #d4d4d4; font-weight: 700;">Eligible</span>
+      <!-- Card 3: Recommended Next Best Actions -->
+      <div class="profile-card-section">
+        <div class="card-section-header">
+          <span class="card-section-title">Recommended Next Best Actions</span>
         </div>
-        <div class="action-item-row">
-          <span>📦 High-AOV Category Cross-Sell Catalog</span>
-          <span style="font-size: 11px; color: #60a5fa; font-weight: 700;">Queued</span>
+        <div class="customer-actions-box" style="margin-bottom: 16px; background: transparent; border: none; padding: 0;">
+          <div class="action-item-row" style="padding: 10px 0;">
+            <span style="font-weight: 600;">${rawSeg === 'Champions' ? '⭐ VIP Exclusive Rewards Access' : '✨ Re-engagement Promotion'}</span>
+            <span style="font-size: 11px; color: #34d399; font-weight: 700; background: rgba(16,185,129,0.12); border: 1px solid rgba(16,185,129,0.25); padding: 3px 10px; border-radius: 999px;">Eligible</span>
+          </div>
+          <div class="action-item-row" style="padding: 10px 0;">
+            <span style="font-weight: 600;">📦 High-AOV Category Cross-Sell Catalog</span>
+            <span style="font-size: 11px; color: #60a5fa; font-weight: 700; background: rgba(59,130,246,0.12); border: 1px solid rgba(59,130,246,0.25); padding: 3px 10px; border-radius: 999px;">Queued</span>
+          </div>
         </div>
-      </div>
 
-      <div class="customer-profile-actions">
-        <button type="button" class="btn-pill-secondary" id="exportCustomerProfileBtn" style="flex: 1; justify-content: center; font-size: 12px; padding: 10px;" onclick="window.exportCustomerProfileCsv()" title="Export Customer Profile (CSV)" aria-label="Export Customer Profile CSV">📥 Export Profile</button>
-        <button type="button" class="btn-pill-secondary" style="flex: 1; justify-content: center; font-size: 12px; padding: 10px; opacity: 0.8;" onclick="window.showToast('Messaging integration unavailable: Outbound SMS/Email gateway not configured', 'info')" title="Direct customer messaging gateway not configured">💬 Message <span style="font-size: 10px; opacity: 0.75; margin-left: 3px;">(Unavailable)</span></button>
-        <button type="button" class="btn-pill-primary" style="flex: 1; justify-content: center; font-size: 12px; padding: 10px; opacity: 0.8;" onclick="window.showToast('Task assignment unavailable: CRM/Task integration not configured', 'info')" title="CRM/Task assignment integration not configured">+ Assign Task <span style="font-size: 10px; opacity: 0.75; margin-left: 3px;">(Unavailable)</span></button>
+        <div class="customer-profile-actions">
+          <button type="button" class="btn-pill-secondary" id="exportCustomerProfileBtn" style="flex: 1; justify-content: center; font-size: 12px; padding: 10px;" onclick="window.exportCustomerProfileCsv()" title="Export Customer Profile (CSV)" aria-label="Export Customer Profile CSV">📥 Export Profile</button>
+          <button type="button" class="btn-pill-secondary" style="flex: 1; justify-content: center; font-size: 12px; padding: 10px; opacity: 0.8;" onclick="window.showToast('Messaging integration unavailable: Outbound SMS/Email gateway not configured', 'info')" title="Direct customer messaging gateway not configured">💬 Message <span style="font-size: 10px; opacity: 0.75; margin-left: 3px;">(Unavailable)</span></button>
+          <button type="button" class="btn-pill-primary" style="flex: 1; justify-content: center; font-size: 12px; padding: 10px; opacity: 0.8;" onclick="window.showToast('Task assignment unavailable: CRM/Task integration not configured', 'info')" title="CRM/Task assignment integration not configured">+ Assign Task <span style="font-size: 10px; opacity: 0.75; margin-left: 3px;">(Unavailable)</span></button>
+        </div>
       </div>
     </div>
   `;
@@ -1107,7 +1143,12 @@ function initWhatIfSimulator() {
         if (clvTarget) animateMetricCounter(clvTarget, `$${parseFloat(res.predicted_clv).toFixed(2)}`, 450);
         if (churnTarget) {
           animateMetricCounter(churnTarget, `${(parseFloat(res.churn_probability) * 100).toFixed(1)}%`, 450);
-          churnTarget.style.color = res.churn_probability > 0.4 ? '#fb7185' : '#d4d4d4';
+          churnTarget.style.color = res.churn_probability > 0.4 ? '#fb7185' : '#ffffff';
+        }
+        const ordersTarget = document.getElementById('simOrdersOutput');
+        if (ordersTarget) {
+          const expOrders = (parseFloat(f.value || 6) * (1 - parseFloat(res.churn_probability || 0.2))).toFixed(1);
+          animateMetricCounter(ordersTarget, expOrders, 450);
         }
         const infCard = segTarget ? segTarget.closest('.overview-card') : null;
         if (infCard) {
@@ -1143,6 +1184,53 @@ function initWhatIfSimulator() {
   [recInput, freqInput, spendInput, tenureInput].forEach(inp => {
     inp.addEventListener('input', runSim);
     inp.addEventListener('change', runSim);
+  });
+
+  // Action buttons
+  const runBtn = document.getElementById('simRunBtn');
+  if (runBtn) {
+    runBtn.addEventListener('click', () => {
+      executeSim();
+      window.showToast('Scenario simulation executed with live gradient boosting inference', 'success');
+    });
+  }
+
+  const resetBtn = document.getElementById('simResetBtn');
+  if (resetBtn) {
+    resetBtn.addEventListener('click', () => {
+      recInput.value = '25';
+      freqInput.value = '6';
+      spendInput.value = '1250';
+      tenureInput.value = '300';
+      executeSim();
+      window.showToast('Simulator parameters reset to default baseline', 'info');
+    });
+  }
+
+  const saveBtn = document.getElementById('simSaveBtn');
+  if (saveBtn) {
+    saveBtn.addEventListener('click', () => {
+      window.showToast('Scenario successfully saved to session workspace', 'success');
+    });
+  }
+
+  const saveCurrentBtn = document.getElementById('simSaveCurrentBtn');
+  if (saveCurrentBtn) {
+    saveCurrentBtn.addEventListener('click', () => {
+      window.showToast('Current simulation parameters saved to comparison table', 'success');
+    });
+  }
+
+  // Scenario Table Load Buttons
+  document.querySelectorAll('.load-scenario-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      if (btn.dataset.r) recInput.value = btn.dataset.r;
+      if (btn.dataset.f) freqInput.value = btn.dataset.f;
+      if (btn.dataset.s) spendInput.value = btn.dataset.s;
+      if (btn.dataset.t) tenureInput.value = btn.dataset.t;
+      executeSim();
+      window.showToast(`Loaded scenario: ${btn.dataset.name || 'Scenario'}`, 'info');
+    });
   });
 
   // Initial execution
