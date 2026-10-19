@@ -73,7 +73,7 @@ def run_e2e_tests(base_url="http://localhost:8501"):
         page = browser.new_page(viewport={"width": 1440, "height": 900})
         console_errors = []
         page.on("console", lambda msg: console_errors.append(msg.text) if (msg.type == "error" and "404" not in msg.text) else None)
-        page.goto(base_url, wait_until="networkidle")
+        page.goto(base_url, wait_until="domcontentloaded")
         page.wait_for_timeout(500)
         page.wait_for_selector("#kpiTotalCustomers", state="visible", timeout=20000)
 
@@ -219,9 +219,12 @@ def run_e2e_tests(base_url="http://localhost:8501"):
             f.value = '1';
             s.value = '0';
             t.value = '0';
-            r.dispatchEvent(new Event('input'));
+            [r, f, s, t].forEach(el => el.dispatchEvent(new Event('input')));
         }""")
-        page.wait_for_timeout(1000)
+        try:
+            page.wait_for_function("() => !document.getElementById('simSegOutput')?.textContent?.includes('Invalid Input')", timeout=15000)
+        except Exception:
+            page.wait_for_timeout(2000)
         freq_valid = page.locator("#simFreq").get_attribute("aria-invalid")
         sim_seg_valid = page.locator("#simSegOutput").text_content()
         print(f"  Corrected to Valid Boundary -> aria-invalid: {freq_valid} | Segment Output: '{sim_seg_valid}'")
@@ -236,9 +239,12 @@ def run_e2e_tests(base_url="http://localhost:8501"):
             f.value = '12';
             s.value = '4500';
             t.value = '250';
-            r.dispatchEvent(new Event('input'));
+            [r, f, s, t].forEach(el => el.dispatchEvent(new Event('input')));
         }""")
-        page.wait_for_timeout(1200)
+        try:
+            page.wait_for_function("() => document.getElementById('simClvOutput')?.textContent !== '--'", timeout=15000)
+        except Exception:
+            page.wait_for_timeout(2000)
         sim_clv_output = page.locator("#simClvOutput").text_content()
         print(f"  Scenario Inference Result -> Segment: {page.locator('#simSegOutput').text_content()} | CLV: {sim_clv_output}")
 
@@ -271,9 +277,10 @@ def run_e2e_tests(base_url="http://localhost:8501"):
         print("\n--- Phase 6b: In-App Toast System Verification ---")
         # Exercise an honest unavailable action instead of the removed mock bell.
         page.evaluate("() => window.switchDashboardTab('lookup')")
+        page.wait_for_timeout(600)
         page.locator('button.sample-id-pill[data-id="15485"]').click()
-        page.locator("#lookupSearchBtn:not([disabled])").wait_for(timeout=20000)
-        page.get_by_role("button", name="Message", exact=False).click()
+        page.wait_for_selector("#customerProfileTarget button:has-text('Message')", timeout=20000)
+        page.locator("#customerProfileTarget button:has-text('Message')").click()
         page.wait_for_selector(".toast-pill", timeout=6000)
         toast_text = page.locator(".toast-message").last.text_content()
         results["toast_notifications"] = ("Messaging integration unavailable" in toast_text)
@@ -285,7 +292,10 @@ def run_e2e_tests(base_url="http://localhost:8501"):
         pill_13748 = page.locator('button.sample-id-pill[data-id="13748"]')
         pill_13748.focus()
         page.keyboard.press("Enter")
-        page.locator("#lookupSearchBtn:not([disabled])").wait_for(timeout=20000)
+        try:
+            page.wait_for_function("() => document.getElementById('customerProfileTarget')?.textContent?.includes('At-Risk')", timeout=15000)
+        except Exception:
+            page.wait_for_timeout(2000)
         pill_input_val = page.locator("#lookupCustIdInput").input_value()
         pill_card_text = page.locator("#customerProfileTarget").text_content()
         pill_keyboard_ok = (pill_input_val == "13748" and "At-Risk" in pill_card_text)
