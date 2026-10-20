@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
-import { DashboardKpis, TrajectoryData, CohortSummary } from '../../types';
+import { TrajectoryData, CohortSummary } from '../../types';
 import { DualAxisTrajectoryChart } from '../../components/charts/DualAxisTrajectoryChart';
 import { formatCurrency, formatNumber } from '../../lib/formatters';
 
 interface DashboardViewProps {
-  kpis: DashboardKpis | null;
+  loading: boolean;
+  error: string | null;
+  cohortError: string | null;
   trajectory: TrajectoryData | null;
   cohorts: CohortSummary | null;
   selectedPeriod: string;
@@ -14,7 +16,9 @@ interface DashboardViewProps {
 }
 
 export const DashboardView: React.FC<DashboardViewProps> = ({
-  kpis,
+  loading,
+  error,
+  cohortError,
   trajectory,
   cohorts,
   selectedPeriod,
@@ -34,15 +38,15 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
   const rfmGrade = rfmR < 35 && rfmM > 1000 ? 'A' : (rfmR > 180 ? 'C' : 'B');
   const rfmSeg = rfmR < 35 && (rfmF >= 8 || rfmM >= 2500) ? 'Champions' : (rfmR > 180 ? 'At-Risk' : 'Loyal Customers');
 
-  const cohortList = cohorts?.cohorts || {
-    'Champions': { count: 1241, percentage: 20.9, avg_recency: 24.8, avg_frequency: 20.0, avg_monetary: 11466.0 },
-    'Loyal Customers': { count: 1187, percentage: 20.0, avg_recency: 27.6, avg_frequency: 3.0, avg_monetary: 855.0 },
-    'At-Risk': { count: 1475, percentage: 24.8, avg_recency: 210.7, avg_frequency: 5.4, avg_monetary: 2148.2 },
-    'Lost / Churned': { count: 2038, percentage: 34.3, avg_recency: 393.0, avg_frequency: 1.4, avg_monetary: 346.0 },
-  };
+  const cohortList = cohorts?.cohorts || {};
 
   return (
-    <div className="dash-overview-container" style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+    <div className="insight-view dash-overview-container" style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+      {loading && <p role="status">Loading selected-period trajectory…</p>}
+      {error && <p role="alert">Trajectory unavailable: {error}</p>}
+      {cohortError && <p role="alert">Customer cohorts unavailable: {cohortError}</p>}
+      {!cohorts && !cohortError && <p role="status">Loading customer cohorts…</p>}
+      {trajectory && <p>{trajectory.date_range_label} · Growth comparisons as reported by the API (previous matching period, or latest interval when unavailable).</p>}
       
       {/* 4 KPI Cards Matching Reference */}
       <div className="dash-kpi-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '16px' }}>
@@ -62,7 +66,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
           </div>
           <div className="dash-kpi-val-row">
             <div className="dash-kpi-num">
-              {formatNumber(kpis?.total_customers ?? 5942)}
+              {cohorts ? formatNumber(cohorts.total_profiles) : '—'}
             </div>
             <div className="dash-kpi-sparkline-motif" aria-hidden="true">
               <svg width="48" height="26" viewBox="0 0 48 26" fill="none">
@@ -107,8 +111,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
             </div>
           </div>
           <div className="dash-kpi-trend trend-up">
-            <span>↑ +12.4%</span>
-            <span className="trend-compare">vs previous period</span>
+            <span className="trend-compare">All customer profiles · not period-filtered</span>
           </div>
         </div>
 
@@ -126,7 +129,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
           </div>
           <div className="dash-kpi-val-row">
             <div className="dash-kpi-num">
-              {formatNumber(kpis?.total_orders ?? 17132)}
+              {trajectory ? formatNumber(trajectory.total_orders) : '—'}
             </div>
             <div className="dash-kpi-sparkline-motif" aria-hidden="true">
               <svg width="48" height="26" viewBox="0 0 48 26" fill="none">
@@ -169,9 +172,9 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
               </svg>
             </div>
           </div>
-          <div className="dash-kpi-trend trend-down">
-            <span>↓ -6.5%</span>
-            <span className="trend-compare">vs previous period</span>
+          <div className="dash-kpi-trend">
+            <span>{trajectory ? `${trajectory.orders_growth}%` : '—'}</span>
+            <span className="trend-compare">API comparison</span>
           </div>
         </div>
 
@@ -188,7 +191,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
           </div>
           <div className="dash-kpi-val-row">
             <div className="dash-kpi-num">
-              {formatCurrency(kpis?.average_order_value ?? 486.73)}
+              {trajectory ? formatCurrency(trajectory.avg_order_value) : '—'}
             </div>
             <div className="dash-kpi-sparkline-motif" aria-hidden="true">
               <svg width="48" height="26" viewBox="0 0 48 26" fill="none">
@@ -235,9 +238,9 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
               </svg>
             </div>
           </div>
-          <div className="dash-kpi-trend trend-up">
-            <span>↑ +2.3%</span>
-            <span className="trend-compare">vs previous period</span>
+          <div className="dash-kpi-trend">
+            <span>{trajectory ? `${trajectory.aov_growth}%` : '—'}</span>
+            <span className="trend-compare">API comparison</span>
           </div>
         </div>
 
@@ -253,7 +256,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
           </div>
           <div className="dash-kpi-val-row">
             <div className="dash-kpi-num">
-              {formatCurrency(kpis?.total_revenue ?? 8338712.01)}
+              {trajectory ? formatCurrency(trajectory.total_revenue) : '—'}
             </div>
             <div className="dash-kpi-sparkline-motif" aria-hidden="true">
               <svg width="48" height="26" viewBox="0 0 48 26" fill="none">
@@ -300,19 +303,24 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
               </svg>
             </div>
           </div>
-          <div className="dash-kpi-trend trend-down">
-            <span>↓ -4.3%</span>
-            <span className="trend-compare">vs previous period</span>
+          <div className="dash-kpi-trend">
+            <span>{trajectory ? `${trajectory.revenue_growth}%` : '—'}</span>
+            <span className="trend-compare">API comparison</span>
           </div>
         </div>
       </div>
 
       {/* Trajectory Dual-Axis Chart */}
-      <DualAxisTrajectoryChart
+      {trajectory && trajectory.labels.length > 0 ? <DualAxisTrajectoryChart
         data={trajectory}
         selectedPeriod={selectedPeriod}
         onSelectPeriod={onSelectPeriod}
-      />
+      /> : <section className="insight-panel" aria-label="Transaction trajectory">
+        <div aria-label="Trajectory period">
+          {['7d', '30d', '90d', '6m', '12m', 'all'].map(period => <button key={period} className="btn-pill-ghost" aria-pressed={selectedPeriod === period} onClick={() => onSelectPeriod(period)}>{period.toUpperCase()}</button>)}
+        </div>
+        <p role="status">{loading ? 'Loading transaction trajectory…' : error ? 'Transaction trajectory unavailable.' : 'No trajectory records for this period.'}</p>
+      </section>}
 
       {/* 3 Overview Action Modules (Matching Reference Image) */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '20px' }}>
@@ -344,12 +352,6 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
 
           <div className="ov-cohorts-grid" style={{ margin: '8px 0' }}>
             {Object.entries(cohortList).map(([name, item]) => {
-              const widthMap: Record<string, string> = {
-                'Champions': '61%',
-                'Loyal Customers': '58%',
-                'At-Risk': '72%',
-                'Lost / Churned': '100%',
-              };
               return (
                 <button
                   type="button"
@@ -360,7 +362,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                 >
                   <span className="ov-cohort-name" style={{ width: '110px', textAlign: 'left', fontSize: '12px', color: '#d1d5db' }}>{name}</span>
                   <div className="ov-cohort-bar-track" style={{ flex: 1, margin: '0 12px', height: '7px', background: 'rgba(255,255,255,0.08)', borderRadius: '999px', overflow: 'hidden' }}>
-                    <div className="ov-cohort-bar-fill" style={{ width: widthMap[name] || `${item.percentage * 2.5}%`, height: '100%', background: '#ffffff', borderRadius: '999px' }} />
+                    <div className="ov-cohort-bar-fill" style={{ width: `${item.percentage}%`, height: '100%', background: '#ffffff', borderRadius: '999px' }} />
                   </div>
                   <span className="ov-cohort-pct" style={{ width: '45px', textAlign: 'right', fontFamily: 'var(--font-mono)', fontSize: '12px', fontWeight: 700, color: '#ffffff' }}>{item.percentage}%</span>
                 </button>
@@ -370,7 +372,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
 
           <div style={{ fontSize: '11px', color: '#8e9693', borderTop: '1px solid rgba(255, 255, 255, 0.06)', paddingTop: '10px', display: 'flex', justifyContent: 'space-between' }}>
             <span>Cluster Insights (Loyal Customers)</span>
-            <strong style={{ color: '#fff' }}>1,187 (20.0%)</strong>
+            <strong style={{ color: '#fff' }}>{cohortList['Loyal Customers'] ? `${cohortList['Loyal Customers'].count.toLocaleString()} (${cohortList['Loyal Customers'].percentage}%)` : '—'}</strong>
           </div>
         </div>
 
@@ -459,10 +461,9 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
               <div className="ov-grade-hexagon" style={{ margin: '0 auto 6px', width: '38px', height: '38px', borderRadius: '8px', background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.22)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: 'var(--font-display)', fontSize: '18px', color: '#fff' }}>
                 {rfmGrade}
               </div>
-              <div style={{ fontSize: '13px', fontWeight: 800, color: '#fff', letterSpacing: '0.02em' }}>RFM 432</div>
+              <div style={{ fontSize: '13px', fontWeight: 800, color: '#fff', letterSpacing: '0.02em' }}>Local heuristic preview</div>
               <div style={{ fontSize: '10.5px', color: '#8e9693', margin: '2px 0 6px' }}>{rfmSeg}</div>
-              <div style={{ fontSize: '9.5px', color: '#8e9693' }}>CLV: <strong style={{ color: '#fff' }}>$341.43</strong></div>
-              <div style={{ fontSize: '9.5px', color: '#8e9693' }}>Risk: <strong style={{ color: '#d4d4d4' }}>16.7%</strong></div>
+              <div style={{ fontSize: '9.5px', color: '#8e9693' }}>Open simulator for API CLV and churn predictions.</div>
             </div>
           </div>
 
@@ -490,7 +491,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
               </div>
               <div>
                 <div className="dash-ov-title">Recent Transactions</div>
-                <div style={{ fontSize: '11.5px', color: '#8e9693' }}>Latest 5 transactions from dataset</div>
+                <div style={{ fontSize: '11.5px', color: '#8e9693' }}>Look up a customer to view their verified transaction ledger</div>
               </div>
             </div>
             <button
@@ -522,7 +523,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
             </button>
           </div>
 
-          <div className="ov-table-wrapper" style={{ overflowX: 'auto' }}>
+          <div className="insight-table-scroll ov-table-wrapper" style={{ overflowX: 'auto' }}>
             <table className="ov-table" style={{ width: '100%', fontSize: '11.5px', borderCollapse: 'collapse' }}>
               <thead>
                 <tr style={{ color: '#8e9693', textTransform: 'uppercase', fontSize: '10px', letterSpacing: '0.05em' }}>
@@ -534,41 +535,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                 </tr>
               </thead>
               <tbody style={{ color: '#d1d5db' }}>
-                <tr style={{ borderTop: '1px solid rgba(255,255,255,0.04)' }}>
-                  <td style={{ padding: '8px 4px' }}>2011-12-09</td>
-                  <td style={{ padding: '8px 4px' }}>581483</td>
-                  <td style={{ padding: '8px 4px' }}>#15485</td>
-                  <td style={{ padding: '8px 4px' }}>$120.40</td>
-                  <td style={{ padding: '8px 4px' }}><span className="status-pill-completed">Completed</span></td>
-                </tr>
-                <tr style={{ borderTop: '1px solid rgba(255,255,255,0.04)' }}>
-                  <td style={{ padding: '8px 4px' }}>2011-12-09</td>
-                  <td style={{ padding: '8px 4px' }}>581482</td>
-                  <td style={{ padding: '8px 4px' }}>#17120</td>
-                  <td style={{ padding: '8px 4px' }}>$85.00</td>
-                  <td style={{ padding: '8px 4px' }}><span className="status-pill-completed">Completed</span></td>
-                </tr>
-                <tr style={{ borderTop: '1px solid rgba(255,255,255,0.04)' }}>
-                  <td style={{ padding: '8px 4px' }}>2011-12-08</td>
-                  <td style={{ padding: '8px 4px' }}>581481</td>
-                  <td style={{ padding: '8px 4px' }}>#14322</td>
-                  <td style={{ padding: '8px 4px' }}>$56.75</td>
-                  <td style={{ padding: '8px 4px' }}><span className="status-pill-completed">Completed</span></td>
-                </tr>
-                <tr style={{ borderTop: '1px solid rgba(255,255,255,0.04)' }}>
-                  <td style={{ padding: '8px 4px' }}>2011-12-08</td>
-                  <td style={{ padding: '8px 4px' }}>581480</td>
-                  <td style={{ padding: '8px 4px' }}>#16791</td>
-                  <td style={{ padding: '8px 4px' }}>$210.30</td>
-                  <td style={{ padding: '8px 4px' }}><span className="status-pill-completed">Completed</span></td>
-                </tr>
-                <tr style={{ borderTop: '1px solid rgba(255,255,255,0.04)' }}>
-                  <td style={{ padding: '8px 4px' }}>2011-12-07</td>
-                  <td style={{ padding: '8px 4px' }}>581479</td>
-                  <td style={{ padding: '8px 4px' }}>#12934</td>
-                  <td style={{ padding: '8px 4px' }}>$38.90</td>
-                  <td style={{ padding: '8px 4px' }}><span className="status-pill-completed">Completed</span></td>
-                </tr>
+                <tr><td colSpan={5}>Select Search to load actual customer transactions.</td></tr>
               </tbody>
             </table>
           </div>

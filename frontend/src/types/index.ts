@@ -127,7 +127,7 @@ export interface ModelEvaluationMetrics {
       score: number;
     }>;
   };
-  clv_model: {
+  clv_model?: {
     algorithm: string;
     test_r2: number;
     test_rmse: number;
@@ -135,7 +135,7 @@ export interface ModelEvaluationMetrics {
     features: string[];
     prediction_horizon: string;
   };
-  churn_model: {
+  churn_model?: {
     algorithm: string;
     roc_auc: number;
     f1_score: number;
@@ -143,7 +143,7 @@ export interface ModelEvaluationMetrics {
     features: string[];
     threshold: number;
   };
-  segmentation_model: {
+  segmentation_model?: {
     algorithm: string;
     k_clusters: number;
     segments: string[];

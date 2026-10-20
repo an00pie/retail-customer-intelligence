@@ -3495,9 +3495,163 @@ button, input, select, textarea {
 }
 
 .clv-subnav-btn.active {
-  background: rgba(255, 255, 255, 0.12);
-  border-color: rgba(255, 255, 255, 0.28);
+  background: #ffffff;
+  border-color: #ffffff;
+  color: #000000;
+  font-weight: 800;
+}
+
+/* Bracket card accents */
+.bracket-card {
+  position: relative;
+}
+.bracket-card::before {
+  content: '';
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  width: 10px;
+  height: 10px;
+  border-top: 1.5px solid rgba(255, 255, 255, 0.4);
+  border-left: 1.5px solid rgba(255, 255, 255, 0.4);
+  pointer-events: none;
+  z-index: 2;
+}
+.bracket-card::after {
+  content: '';
+  position: absolute;
+  bottom: 8px;
+  right: 8px;
+  width: 10px;
+  height: 10px;
+  border-bottom: 1.5px solid rgba(255, 255, 255, 0.4);
+  border-right: 1.5px solid rgba(255, 255, 255, 0.4);
+  pointer-events: none;
+  z-index: 2;
+}
+
+/* CLV KPI Cards Refinements */
+.clv-kpi-icon-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.clv-kpi-icon-badge {
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  display: flex;
+  align-items: center;
+  justify-content: center;
   color: #ffffff;
+}
+.clv-kpi-num-row {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 12px;
+}
+.clv-kpi-sparkbars {
+  display: flex;
+  align-items: flex-end;
+  gap: 3px;
+  height: 24px;
+}
+.clv-kpi-sparkbars span {
+  width: 3.5px;
+  background: rgba(255, 255, 255, 0.7);
+  border-radius: 1px;
+}
+.clv-kpi-footer {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 11px;
+  color: #8e9693;
+}
+
+/* Slider tick marks for simulator */
+.sim-slider-ticks {
+  display: flex;
+  justify-content: space-between;
+  padding: 4px 2px 0 2px;
+  font-size: 10px;
+  font-family: var(--font-mono);
+  color: #71717a;
+}
+
+/* Action Trigger rows in CLV & Churn */
+.clv-trigger-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: var(--radius-sm);
+  gap: 16px;
+}
+.clv-trigger-text {
+  font-size: 12px;
+  line-height: 1.4;
+  color: #d4d4d4;
+  flex: 1;
+}
+.clv-trigger-btn {
+  padding: 6px 14px;
+  font-size: 11px;
+  border-radius: 9999px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  color: #ffffff;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.15s ease;
+}
+.clv-trigger-btn:hover {
+  background: rgba(255, 255, 255, 0.12);
+  border-color: rgba(255, 255, 255, 0.35);
+}
+
+/* Next Best Action rows in Customer Lookup */
+.next-action-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 14px;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: var(--radius-sm);
+  gap: 14px;
+  margin-bottom: 8px;
+}
+.next-action-left {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  flex: 1;
+}
+.next-action-icon {
+  font-size: 16px;
+  line-height: 1;
+  margin-top: 2px;
+}
+.next-action-title {
+  font-size: 12.5px;
+  font-weight: 700;
+  color: #ffffff;
+}
+.next-action-desc {
+  font-size: 11px;
+  color: #8e9693;
+  margin-top: 2px;
+}
+.next-action-right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
 
 .clv-two-col {

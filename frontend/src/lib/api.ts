@@ -22,6 +22,13 @@ import {
 
 const API_BASE = '/api/v1';
 
+export class ApiError extends Error {
+  constructor(message: string, public readonly status: number, public readonly endpoint: string, public readonly details?: unknown) {
+    super(message);
+    this.name = 'ApiError';
+  }
+}
+
 class ApiClient {
   private token: string | null = null;
 
@@ -58,25 +65,37 @@ class ApiClient {
       headers['Content-Type'] = 'application/json';
     }
 
-    const res = await fetch(`${API_BASE}${endpoint}`, {
-      ...options,
-      headers,
-    });
-
-    if (!res.ok) {
-      let errorMsg = `HTTP Error ${res.status}`;
-      try {
-        const errJson = await res.json();
-        errorMsg = errJson.error || errJson.message || errorMsg;
-      } catch {
-        // Fallback to text
-        const errText = await res.text();
-        if (errText) errorMsg = errText;
-      }
-      throw new Error(errorMsg);
+    const url = endpoint.startsWith('/api/') ? endpoint : `${API_BASE}${endpoint}`;
+    let res: Response;
+    try {
+      res = await fetch(url, {
+        ...options,
+        headers,
+      });
+    } catch (error) {
+      throw new ApiError('Unable to reach the API. Please retry.', 0, url, error);
     }
+    let text: string;
+    try { text = await res.text(); }
+    catch (error) { throw new ApiError('Unable to read the API response. Please retry.', res.status, url, error); }
+    let body: any;
+    try { body = text ? JSON.parse(text) : null; } catch { body = null; }
+    if (!res.ok) {
+      const message = typeof body?.error === 'string' ? body.error : typeof body?.message === 'string' ? body.message :
+        res.status === 404 ? 'This service is unavailable on the connected backend.' : `API request failed (HTTP ${res.status}).`;
+      throw new ApiError(message, res.status, url, body);
+    }
+    if (body === null && res.status !== 204) throw new ApiError('The API returned an invalid JSON response.', res.status, url);
+    return body as T;
+  }
 
-    return res.json() as Promise<T>;
+  // Only compatible, non-mutating operations may retry a missing v1 route.
+  private async compatible<T>(endpoint: string, legacy: string, options: RequestInit = {}): Promise<T> {
+    try { return await this.request<T>(endpoint, options); }
+    catch (error) {
+      if (!(error instanceof ApiError) || error.status !== 404) throw error;
+      return this.request<T>(legacy, options);
+    }
   }
 
   // --- Auth ---
@@ -116,10 +135,7 @@ class ApiClient {
   }
 
   async getTrajectory(period: string = '12m'): Promise<TrajectoryData> {
-    // Also works with legacy route fallback
-    return this.request<TrajectoryData>(`/dashboard/trajectory?period=${encodeURIComponent(period)}`).catch(() => {
-      return fetch(`/api/analytics/revenue-orders?period=${encodeURIComponent(period)}`).then(r => r.json());
-    });
+    return this.request<TrajectoryData>(`/api/analytics/revenue-orders?period=${encodeURIComponent(period)}`);
   }
 
   // --- Customers & Customer 360 ---
@@ -142,12 +158,12 @@ class ApiClient {
   }
 
   async getCustomer(id: string): Promise<Customer> {
-    return this.request<Customer>(`/customers/${encodeURIComponent(id)}`);
+    return this.compatible<Customer>(`/customers/${encodeURIComponent(id)}`, `/api/customer/${encodeURIComponent(id)}`);
   }
 
   // --- Analytics & Cohorts ---
   async getCohorts(): Promise<CohortSummary> {
-    return this.request<CohortSummary>('/analytics/cohorts');
+    return this.compatible<CohortSummary>('/analytics/cohorts', '/api/analytics/cohorts');
   }
 
   async getRetentionMatrix(): Promise<RetentionMatrixData> {
@@ -156,11 +172,12 @@ class ApiClient {
 
   // --- ML Predictions ---
   async getModelMetrics(): Promise<ModelEvaluationMetrics> {
-    return this.request<ModelEvaluationMetrics>('/predictions/metrics');
+    const result = await this.compatible<ModelEvaluationMetrics | ModelEvaluationMetrics['metrics']>('/predictions/metrics', '/api/metrics');
+    return 'metrics' in result ? result as ModelEvaluationMetrics : { metrics: result };
   }
 
   async predictCustomer(recency_days: number, frequency: number, total_spend: number, tenure_days: number = 300): Promise<PredictionResult> {
-    return this.request<PredictionResult>('/predictions/predict', {
+    return this.compatible<PredictionResult>('/predictions/predict', '/api/predict', {
       method: 'POST',
       body: JSON.stringify({ recency_days, frequency, total_spend, tenure_days }),
     });

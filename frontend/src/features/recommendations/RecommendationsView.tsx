@@ -8,20 +8,23 @@ export const RecommendationsView: React.FC = () => {
   const [selectedPriority, setSelectedPriority] = useState<string>('All');
   const [selectedRec, setSelectedRec] = useState<Recommendation | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
+    let current = true;
     const fetchRecs = async () => {
       setLoading(true);
       try {
         const res = await api.getRecommendations();
-        setRecommendations(res.recommendations || []);
-      } catch (err) {
-        console.error('Failed to load recommendations:', err);
+        if (current) setRecommendations(res.recommendations);
+      } catch (err: any) {
+        if (current) setError(err.message);
       } finally {
-        setLoading(false);
+        if (current) setLoading(false);
       }
     };
     fetchRecs();
+    return () => { current = false; };
   }, []);
 
   const filteredRecs = recommendations.filter((r) => {
@@ -33,7 +36,7 @@ export const RecommendationsView: React.FC = () => {
   const totalAudience = recommendations.reduce((acc, r) => acc + (r.audience_size || 0), 0);
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+    <div className="insight-view" style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
       {/* Header Bar */}
       <div className="dash-header-bar" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '12px' }}>
         <div>
@@ -76,10 +79,10 @@ export const RecommendationsView: React.FC = () => {
             Total Actionable Cohort
           </div>
           <div style={{ fontSize: '22px', fontWeight: 700, color: '#fff', marginTop: '4px' }}>
-            {formatNumber(totalAudience)} Customers
+            {loading || error ? '—' : `${formatNumber(totalAudience)} Customers`}
           </div>
           <div style={{ fontSize: '11px', color: '#525c57', marginTop: '4px' }}>
-            Targeted across 3 strategic playbooks
+            {loading || error ? 'Playbooks unavailable until loaded' : `Targeted across ${recommendations.length} strategic playbooks`}
           </div>
         </div>
 
@@ -88,10 +91,10 @@ export const RecommendationsView: React.FC = () => {
             Est. Recoverable Revenue
           </div>
           <div style={{ fontSize: '22px', fontWeight: 700, color: '#fff', marginTop: '4px' }}>
-            $78,500 – $142,000
+            See individual playbooks
           </div>
           <div style={{ fontSize: '11px', color: '#525c57', marginTop: '4px' }}>
-            Model-projected CLV recovery over 90 days
+            API-reported estimates; no aggregate projection available
           </div>
         </div>
 
@@ -100,21 +103,22 @@ export const RecommendationsView: React.FC = () => {
             Est. Retention Lift
           </div>
           <div style={{ fontSize: '22px', fontWeight: 700, color: '#fff', marginTop: '4px' }}>
-            +6.4% to +14.2%
+            See individual playbooks
           </div>
           <div style={{ fontSize: '11px', color: '#525c57', marginTop: '4px' }}>
-            Based on historical winback response curves
+            API-reported estimates; no aggregate lift available
           </div>
         </div>
       </div>
 
       {/* Recommendation Playbook Cards */}
-      {loading ? (
+      {error ? <p role="alert">Recommendations unavailable: {error}</p> : loading ? (
         <div style={{ padding: '60px 0', textAlign: 'center', color: '#8e9693', fontSize: '13px' }}>
           Loading algorithmic recommendations...
         </div>
       ) : (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+          {filteredRecs.length === 0 && <p>No recommendations match this priority.</p>}
           {filteredRecs.map((rec) => (
             <div
               key={rec.id}

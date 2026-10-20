@@ -927,138 +927,339 @@
 
                 <div class="clusters-grid reveal-fade-up" style="margin-top: 10px;">
                   <!-- Cluster 2: Champions -->
-                  <div class="cluster-card">
-                    <div style="display: flex; justify-content: space-between; align-items: center;">
-                      <span class="cluster-card-badge badge-champ">● Cluster 2</span>
+                  <div class="cluster-card bracket-card">
+                    <div style="display: flex; align-items: flex-start; gap: 12px; margin-bottom: 8px;">
+                      <div style="width: 38px; height: 38px; border-radius: 8px; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12); display: flex; align-items: center; justify-content: center; font-size: 18px; color: #ffffff;">
+                        🏆
+                      </div>
+                      <div>
+                        <span class="cluster-card-badge" style="background: rgba(255,255,255,0.08); color: #d4d4d4; border: 1px solid rgba(255,255,255,0.14); padding: 2px 8px; font-size: 10px; border-radius: 999px;">CLUSTER 2</span>
+                        <div class="cluster-name" style="font-size: 18px; font-weight: 800; color: #ffffff; margin-top: 2px;">
+                          CHAMPIONS
+                        </div>
+                        <div style="font-size: 11px; color: #8e9693;">1,242 customers &nbsp;20.9%</div>
+                      </div>
                     </div>
-                    <div class="cluster-name" style="display: flex; align-items: center; gap: 8px; font-size: 19px;">
-                      <span>🏆</span> Champions
-                    </div>
-                    <p style="font-size: 13px; color: var(--text-secondary); line-height: 1.45;">
-                      High-velocity, top-spending customers who buy frequently and visited very recently. Prime ambassadors for premium tiers.
+                    <p style="font-size: 12px; color: var(--text-secondary); line-height: 1.45; min-height: 48px;">
+                      High-velocity, top-spending customers who buy frequently and visit very recently. Prime ambassadors for premium tiers.
                     </p>
-                    <div class="cluster-histogram-box">
-                      <div class="cluster-histogram-title">Recency vs Monetary Distribution</div>
-                      <svg width="100%" height="36" viewBox="0 0 200 36" fill="none" preserveAspectRatio="none">
-                        <rect x="10" y="22" width="14" height="14" rx="2" fill="rgba(255,255,255,0.18)"/>
-                        <rect x="30" y="16" width="14" height="20" rx="2" fill="rgba(255,255,255,0.30)"/>
-                        <rect x="50" y="10" width="14" height="26" rx="2" fill="rgba(255,255,255,0.50)"/>
-                        <rect x="70" y="5" width="14" height="31" rx="2" fill="rgba(255,255,255,0.75)"/>
-                        <rect x="90" y="1" width="14" height="35" rx="2" fill="#ffffff"/>
-                        <rect x="110" y="7" width="14" height="29" rx="2" fill="rgba(255,255,255,0.65)"/>
-                        <rect x="130" y="14" width="14" height="22" rx="2" fill="rgba(255,255,255,0.38)"/>
-                        <rect x="150" y="20" width="14" height="16" rx="2" fill="rgba(255,255,255,0.22)"/>
-                        <rect x="170" y="26" width="14" height="10" rx="2" fill="rgba(255,255,255,0.12)"/>
+                    <div style="display: flex; flex-direction: column; gap: 6px; margin: 10px 0;">
+                      <div class="cluster-stat-row">
+                        <span class="k" style="display: flex; align-items: center; gap: 6px;">
+                          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                          Mean Recency
+                        </span>
+                        <span class="v" style="font-family: var(--font-mono); font-weight: 700;">24.9 days</span>
+                      </div>
+                      <div class="cluster-stat-row">
+                        <span class="k" style="display: flex; align-items: center; gap: 6px;">
+                          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+                          Mean Frequency
+                        </span>
+                        <span class="v" style="font-family: var(--font-mono); font-weight: 700;">23.1 orders</span>
+                      </div>
+                      <div class="cluster-stat-row">
+                        <span class="k" style="display: flex; align-items: center; gap: 6px;">
+                          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg>
+                          Mean Spend
+                        </span>
+                        <span class="v" style="font-family: var(--font-mono); font-weight: 700; color: #fff;">$10,053.19</span>
+                      </div>
+                      <div class="cluster-stat-row">
+                        <span class="k" style="display: flex; align-items: center; gap: 6px;">
+                          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                          Cohort Size
+                        </span>
+                        <span class="v" style="font-family: var(--font-mono); font-weight: 700;">1,242 (20.9%)</span>
+                      </div>
+                    </div>
+
+                    <!-- Histogram with proper X/Y Axes -->
+                    <div style="background: rgba(0, 0, 0, 0.4); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 6px; padding: 8px 10px; margin: 8px 0;">
+                      <div style="font-size: 9px; font-weight: 700; color: #71717a; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 4px;">RECENCY VS MONETARY DISTRIBUTION</div>
+                      <svg width="100%" height="68" viewBox="0 0 240 68" fill="none" preserveAspectRatio="none">
+                        <!-- Y-Axis -->
+                        <line x1="22" y1="6" x2="22" y2="52" stroke="rgba(255,255,255,0.2)"/>
+                        <path d="M 22 4 L 20 8 L 24 8 Z" fill="rgba(255,255,255,0.3)"/>
+                        <text x="18" y="14" fill="#71717a" font-size="7" text-anchor="end" font-family="monospace">400</text>
+                        <text x="18" y="32" fill="#71717a" font-size="7" text-anchor="end" font-family="monospace">200</text>
+                        <text x="18" y="52" fill="#71717a" font-size="7" text-anchor="end" font-family="monospace">0</text>
+
+                        <!-- X-Axis -->
+                        <line x1="22" y1="52" x2="235" y2="52" stroke="rgba(255,255,255,0.2)"/>
+                        <path d="M 237 52 L 233 50 L 233 54 Z" fill="rgba(255,255,255,0.3)"/>
+
+                        <!-- Bars concentrated at low recency -->
+                        <rect x="28" y="44" width="7" height="8" rx="1" fill="rgba(255,255,255,0.3)"/>
+                        <rect x="38" y="32" width="7" height="20" rx="1" fill="rgba(255,255,255,0.5)"/>
+                        <rect x="48" y="16" width="7" height="36" rx="1" fill="#ffffff"/>
+                        <rect x="58" y="26" width="7" height="26" rx="1" fill="rgba(255,255,255,0.7)"/>
+                        <rect x="68" y="36" width="7" height="16" rx="1" fill="rgba(255,255,255,0.4)"/>
+                        <rect x="78" y="42" width="7" height="10" rx="1" fill="rgba(255,255,255,0.3)"/>
+                        <rect x="88" y="46" width="7" height="6" rx="1" fill="rgba(255,255,255,0.2)"/>
+                        <rect x="98" y="48" width="7" height="4" rx="1" fill="rgba(255,255,255,0.15)"/>
+                        <rect x="108" y="49" width="7" height="3" rx="1" fill="rgba(255,255,255,0.1)"/>
+
+                        <!-- X Ticks -->
+                        <text x="28" y="62" fill="#71717a" font-size="7" text-anchor="middle" font-family="monospace">0</text>
+                        <text x="63" y="62" fill="#71717a" font-size="7" text-anchor="middle" font-family="monospace">50</text>
+                        <text x="98" y="62" fill="#71717a" font-size="7" text-anchor="middle" font-family="monospace">100</text>
+                        <text x="133" y="62" fill="#71717a" font-size="7" text-anchor="middle" font-family="monospace">150</text>
+                        <text x="168" y="62" fill="#71717a" font-size="7" text-anchor="middle" font-family="monospace">200</text>
+                        <text x="203" y="62" fill="#71717a" font-size="7" text-anchor="middle" font-family="monospace">250</text>
+                        <text x="230" y="62" fill="#71717a" font-size="7" text-anchor="middle" font-family="monospace">300</text>
                       </svg>
                     </div>
-                    <div style="display: flex; flex-direction: column; gap: 8px; margin-top: auto;">
-                      <div class="cluster-stat-row"><span class="k">🕒 Mean Recency</span><span class="v">24.9 days</span></div>
-                      <div class="cluster-stat-row"><span class="k">🔄 Mean Frequency</span><span class="v">23.1 orders</span></div>
-                      <div class="cluster-stat-row"><span class="k">💰 Mean Spend</span><span class="v">$10,053.19</span></div>
-                      <div class="cluster-stat-row"><span class="k">👥 Cohort Size</span><span class="v">1,242 accounts (20.9%)</span></div>
-                    </div>
+
                     <button type="button" class="cluster-action-btn" onclick="window.switchDashboardTab('lookup'); if(window.selectSampleCustomer) window.selectSampleCustomer('15485');">View Segment Details →</button>
                   </div>
 
                   <!-- Cluster 0: Loyal Customers -->
-                  <div class="cluster-card">
-                    <div style="display: flex; justify-content: space-between; align-items: center;">
-                      <span class="cluster-card-badge badge-loyal">● Cluster 0</span>
+                  <div class="cluster-card bracket-card">
+                    <div style="display: flex; align-items: flex-start; gap: 12px; margin-bottom: 8px;">
+                      <div style="width: 38px; height: 38px; border-radius: 8px; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12); display: flex; align-items: center; justify-content: center; font-size: 18px; color: #ffffff;">
+                        👥
+                      </div>
+                      <div>
+                        <span class="cluster-card-badge" style="background: rgba(255,255,255,0.08); color: #d4d4d4; border: 1px solid rgba(255,255,255,0.14); padding: 2px 8px; font-size: 10px; border-radius: 999px;">CLUSTER 0</span>
+                        <div class="cluster-name" style="font-size: 18px; font-weight: 800; color: #ffffff; margin-top: 2px;">
+                          LOYAL CUSTOMERS
+                        </div>
+                        <div style="font-size: 11px; color: #8e9693;">1,187 customers &nbsp;20.0%</div>
+                      </div>
                     </div>
-                    <div class="cluster-name" style="display: flex; align-items: center; gap: 8px; font-size: 19px;">
-                      <span>👥</span> Loyal Customers
-                    </div>
-                    <p style="font-size: 13px; color: var(--text-secondary); line-height: 1.45;">
+                    <p style="font-size: 12px; color: var(--text-secondary); line-height: 1.45; min-height: 48px;">
                       Steady regular buyers with recent purchases and moderate spend. Highly responsive to cross-selling and volume incentives.
                     </p>
-                    <div class="cluster-histogram-box">
-                      <div class="cluster-histogram-title">Recency vs Monetary Distribution</div>
-                      <svg width="100%" height="36" viewBox="0 0 200 36" fill="none" preserveAspectRatio="none">
-                        <rect x="10" y="18" width="14" height="18" rx="2" fill="rgba(255,255,255,0.18)"/>
-                        <rect x="30" y="12" width="14" height="24" rx="2" fill="rgba(255,255,255,0.35)"/>
-                        <rect x="50" y="5" width="14" height="31" rx="2" fill="rgba(255,255,255,0.75)"/>
-                        <rect x="70" y="1" width="14" height="35" rx="2" fill="#ffffff"/>
-                        <rect x="90" y="7" width="14" height="29" rx="2" fill="rgba(255,255,255,0.65)"/>
-                        <rect x="110" y="14" width="14" height="22" rx="2" fill="rgba(255,255,255,0.45)"/>
-                        <rect x="130" y="20" width="14" height="16" rx="2" fill="rgba(255,255,255,0.25)"/>
-                        <rect x="150" y="24" width="14" height="12" rx="2" fill="rgba(255,255,255,0.18)"/>
-                        <rect x="170" y="28" width="14" height="8" rx="2" fill="rgba(255,255,255,0.12)"/>
+                    <div style="display: flex; flex-direction: column; gap: 6px; margin: 10px 0;">
+                      <div class="cluster-stat-row">
+                        <span class="k" style="display: flex; align-items: center; gap: 6px;">
+                          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                          Mean Recency
+                        </span>
+                        <span class="v" style="font-family: var(--font-mono); font-weight: 700;">26.5 days</span>
+                      </div>
+                      <div class="cluster-stat-row">
+                        <span class="k" style="display: flex; align-items: center; gap: 6px;">
+                          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+                          Mean Frequency
+                        </span>
+                        <span class="v" style="font-family: var(--font-mono); font-weight: 700;">3.3 orders</span>
+                      </div>
+                      <div class="cluster-stat-row">
+                        <span class="k" style="display: flex; align-items: center; gap: 6px;">
+                          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg>
+                          Mean Spend
+                        </span>
+                        <span class="v" style="font-family: var(--font-mono); font-weight: 700; color: #fff;">$784.29</span>
+                      </div>
+                      <div class="cluster-stat-row">
+                        <span class="k" style="display: flex; align-items: center; gap: 6px;">
+                          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                          Cohort Size
+                        </span>
+                        <span class="v" style="font-family: var(--font-mono); font-weight: 700;">1,187 (20.0%)</span>
+                      </div>
+                    </div>
+
+                    <!-- Histogram -->
+                    <div style="background: rgba(0, 0, 0, 0.4); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 6px; padding: 8px 10px; margin: 8px 0;">
+                      <div style="font-size: 9px; font-weight: 700; color: #71717a; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 4px;">RECENCY VS MONETARY DISTRIBUTION</div>
+                      <svg width="100%" height="68" viewBox="0 0 240 68" fill="none" preserveAspectRatio="none">
+                        <line x1="22" y1="6" x2="22" y2="52" stroke="rgba(255,255,255,0.2)"/>
+                        <path d="M 22 4 L 20 8 L 24 8 Z" fill="rgba(255,255,255,0.3)"/>
+                        <text x="18" y="14" fill="#71717a" font-size="7" text-anchor="end" font-family="monospace">400</text>
+                        <text x="18" y="32" fill="#71717a" font-size="7" text-anchor="end" font-family="monospace">200</text>
+                        <text x="18" y="52" fill="#71717a" font-size="7" text-anchor="end" font-family="monospace">0</text>
+
+                        <line x1="22" y1="52" x2="235" y2="52" stroke="rgba(255,255,255,0.2)"/>
+                        <path d="M 237 52 L 233 50 L 233 54 Z" fill="rgba(255,255,255,0.3)"/>
+
+                        <rect x="35" y="40" width="7" height="12" rx="1" fill="rgba(255,255,255,0.3)"/>
+                        <rect x="45" y="26" width="7" height="26" rx="1" fill="rgba(255,255,255,0.6)"/>
+                        <rect x="55" y="18" width="7" height="34" rx="1" fill="#ffffff"/>
+                        <rect x="65" y="24" width="7" height="28" rx="1" fill="rgba(255,255,255,0.7)"/>
+                        <rect x="75" y="34" width="7" height="18" rx="1" fill="rgba(255,255,255,0.45)"/>
+                        <rect x="85" y="42" width="7" height="10" rx="1" fill="rgba(255,255,255,0.3)"/>
+                        <rect x="95" y="46" width="7" height="6" rx="1" fill="rgba(255,255,255,0.2)"/>
+                        <rect x="105" y="48" width="7" height="4" rx="1" fill="rgba(255,255,255,0.12)"/>
+
+                        <text x="28" y="62" fill="#71717a" font-size="7" text-anchor="middle" font-family="monospace">0</text>
+                        <text x="63" y="62" fill="#71717a" font-size="7" text-anchor="middle" font-family="monospace">50</text>
+                        <text x="98" y="62" fill="#71717a" font-size="7" text-anchor="middle" font-family="monospace">100</text>
+                        <text x="133" y="62" fill="#71717a" font-size="7" text-anchor="middle" font-family="monospace">150</text>
+                        <text x="168" y="62" fill="#71717a" font-size="7" text-anchor="middle" font-family="monospace">200</text>
+                        <text x="203" y="62" fill="#71717a" font-size="7" text-anchor="middle" font-family="monospace">250</text>
+                        <text x="230" y="62" fill="#71717a" font-size="7" text-anchor="middle" font-family="monospace">300</text>
                       </svg>
                     </div>
-                    <div style="display: flex; flex-direction: column; gap: 8px; margin-top: auto;">
-                      <div class="cluster-stat-row"><span class="k">🕒 Mean Recency</span><span class="v">26.5 days</span></div>
-                      <div class="cluster-stat-row"><span class="k">🔄 Mean Frequency</span><span class="v">3.3 orders</span></div>
-                      <div class="cluster-stat-row"><span class="k">💰 Mean Spend</span><span class="v">$784.29</span></div>
-                      <div class="cluster-stat-row"><span class="k">👥 Cohort Size</span><span class="v">1,187 accounts (20.0%)</span></div>
-                    </div>
+
                     <button type="button" class="cluster-action-btn" onclick="window.switchDashboardTab('lookup'); if(window.selectSampleCustomer) window.selectSampleCustomer('12364');">View Segment Details →</button>
                   </div>
 
                   <!-- Cluster 3: At-Risk -->
-                  <div class="cluster-card">
-                    <div style="display: flex; justify-content: space-between; align-items: center;">
-                      <span class="cluster-card-badge badge-risk">● Cluster 3</span>
+                  <div class="cluster-card bracket-card">
+                    <div style="display: flex; align-items: flex-start; gap: 12px; margin-bottom: 8px;">
+                      <div style="width: 38px; height: 38px; border-radius: 8px; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12); display: flex; align-items: center; justify-content: center; font-size: 18px; color: #fbbf24;">
+                        ⚠️
+                      </div>
+                      <div>
+                        <span class="cluster-card-badge" style="background: rgba(251,191,36,0.12); color: #fbbf24; border: 1px solid rgba(251,191,36,0.25); padding: 2px 8px; font-size: 10px; border-radius: 999px;">CLUSTER 3</span>
+                        <div class="cluster-name" style="font-size: 18px; font-weight: 800; color: #ffffff; margin-top: 2px;">
+                          AT-RISK
+                        </div>
+                        <div style="font-size: 11px; color: #8e9693;">1,476 customers &nbsp;24.8%</div>
+                      </div>
                     </div>
-                    <div class="cluster-name" style="display: flex; align-items: center; gap: 8px; font-size: 19px;">
-                      <span>⚠️</span> At-Risk
-                    </div>
-                    <p style="font-size: 13px; color: var(--text-secondary); line-height: 1.45;">
+                    <p style="font-size: 12px; color: var(--text-secondary); line-height: 1.45; min-height: 48px;">
                       Historically valuable accounts with substantial past spend that haven't purchased in over 6 months. Urgent retention needed.
                     </p>
-                    <div class="cluster-histogram-box">
-                      <div class="cluster-histogram-title">Recency vs Monetary Distribution</div>
-                      <svg width="100%" height="36" viewBox="0 0 200 36" fill="none" preserveAspectRatio="none">
-                        <rect x="10" y="28" width="14" height="8" rx="2" fill="rgba(255,255,255,0.12)"/>
-                        <rect x="30" y="24" width="14" height="12" rx="2" fill="rgba(255,255,255,0.18)"/>
-                        <rect x="50" y="18" width="14" height="18" rx="2" fill="rgba(255,255,255,0.30)"/>
-                        <rect x="70" y="12" width="14" height="24" rx="2" fill="rgba(255,255,255,0.50)"/>
-                        <rect x="90" y="6" width="14" height="30" rx="2" fill="rgba(255,255,255,0.75)"/>
-                        <rect x="110" y="1" width="14" height="35" rx="2" fill="#ffffff"/>
-                        <rect x="130" y="8" width="14" height="28" rx="2" fill="rgba(255,255,255,0.60)"/>
-                        <rect x="150" y="16" width="14" height="20" rx="2" fill="rgba(255,255,255,0.35)"/>
-                        <rect x="170" y="23" width="14" height="13" rx="2" fill="rgba(255,255,255,0.18)"/>
+                    <div style="display: flex; flex-direction: column; gap: 6px; margin: 10px 0;">
+                      <div class="cluster-stat-row">
+                        <span class="k" style="display: flex; align-items: center; gap: 6px;">
+                          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                          Mean Recency
+                        </span>
+                        <span class="v" style="font-family: var(--font-mono); font-weight: 700;">219.3 days</span>
+                      </div>
+                      <div class="cluster-stat-row">
+                        <span class="k" style="display: flex; align-items: center; gap: 6px;">
+                          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+                          Mean Frequency
+                        </span>
+                        <span class="v" style="font-family: var(--font-mono); font-weight: 700;">6.1 orders</span>
+                      </div>
+                      <div class="cluster-stat-row">
+                        <span class="k" style="display: flex; align-items: center; gap: 6px;">
+                          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg>
+                          Mean Spend
+                        </span>
+                        <span class="v" style="font-family: var(--font-mono); font-weight: 700; color: #fff;">$1,831.35</span>
+                      </div>
+                      <div class="cluster-stat-row">
+                        <span class="k" style="display: flex; align-items: center; gap: 6px;">
+                          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                          Cohort Size
+                        </span>
+                        <span class="v" style="font-family: var(--font-mono); font-weight: 700;">1,476 (24.8%)</span>
+                      </div>
+                    </div>
+
+                    <!-- Histogram: centered around 200 days -->
+                    <div style="background: rgba(0, 0, 0, 0.4); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 6px; padding: 8px 10px; margin: 8px 0;">
+                      <div style="font-size: 9px; font-weight: 700; color: #71717a; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 4px;">RECENCY VS MONETARY DISTRIBUTION</div>
+                      <svg width="100%" height="68" viewBox="0 0 240 68" fill="none" preserveAspectRatio="none">
+                        <line x1="22" y1="6" x2="22" y2="52" stroke="rgba(255,255,255,0.2)"/>
+                        <path d="M 22 4 L 20 8 L 24 8 Z" fill="rgba(255,255,255,0.3)"/>
+                        <text x="18" y="14" fill="#71717a" font-size="7" text-anchor="end" font-family="monospace">400</text>
+                        <text x="18" y="32" fill="#71717a" font-size="7" text-anchor="end" font-family="monospace">200</text>
+                        <text x="18" y="52" fill="#71717a" font-size="7" text-anchor="end" font-family="monospace">0</text>
+
+                        <line x1="22" y1="52" x2="235" y2="52" stroke="rgba(255,255,255,0.2)"/>
+                        <path d="M 237 52 L 233 50 L 233 54 Z" fill="rgba(255,255,255,0.3)"/>
+
+                        <rect x="95" y="46" width="7" height="6" rx="1" fill="rgba(255,255,255,0.2)"/>
+                        <rect x="105" y="40" width="7" height="12" rx="1" fill="rgba(255,255,255,0.35)"/>
+                        <rect x="115" y="30" width="7" height="22" rx="1" fill="rgba(255,255,255,0.55)"/>
+                        <rect x="125" y="22" width="7" height="30" rx="1" fill="rgba(255,255,255,0.75)"/>
+                        <rect x="135" y="14" width="7" height="38" rx="1" fill="#ffffff"/>
+                        <rect x="145" y="24" width="7" height="28" rx="1" fill="rgba(255,255,255,0.7)"/>
+                        <rect x="155" y="34" width="7" height="18" rx="1" fill="rgba(255,255,255,0.45)"/>
+                        <rect x="165" y="42" width="7" height="10" rx="1" fill="rgba(255,255,255,0.3)"/>
+                        <rect x="175" y="47" width="7" height="5" rx="1" fill="rgba(255,255,255,0.15)"/>
+
+                        <text x="28" y="62" fill="#71717a" font-size="7" text-anchor="middle" font-family="monospace">0</text>
+                        <text x="63" y="62" fill="#71717a" font-size="7" text-anchor="middle" font-family="monospace">50</text>
+                        <text x="98" y="62" fill="#71717a" font-size="7" text-anchor="middle" font-family="monospace">100</text>
+                        <text x="133" y="62" fill="#71717a" font-size="7" text-anchor="middle" font-family="monospace">150</text>
+                        <text x="168" y="62" fill="#71717a" font-size="7" text-anchor="middle" font-family="monospace">200</text>
+                        <text x="203" y="62" fill="#71717a" font-size="7" text-anchor="middle" font-family="monospace">250</text>
+                        <text x="230" y="62" fill="#71717a" font-size="7" text-anchor="middle" font-family="monospace">300</text>
                       </svg>
                     </div>
-                    <div style="display: flex; flex-direction: column; gap: 8px; margin-top: auto;">
-                      <div class="cluster-stat-row"><span class="k">🕒 Mean Recency</span><span class="v">219.3 days</span></div>
-                      <div class="cluster-stat-row"><span class="k">🔄 Mean Frequency</span><span class="v">6.1 orders</span></div>
-                      <div class="cluster-stat-row"><span class="k">💰 Mean Spend</span><span class="v">$1,831.35</span></div>
-                      <div class="cluster-stat-row"><span class="k">👥 Cohort Size</span><span class="v">1,476 accounts (24.8%)</span></div>
-                    </div>
+
                     <button type="button" class="cluster-action-btn" onclick="window.switchDashboardTab('lookup'); if(window.selectSampleCustomer) window.selectSampleCustomer('13748');">View Segment Details →</button>
                   </div>
 
                   <!-- Cluster 1: Lost / Churned -->
-                  <div class="cluster-card">
-                    <div style="display: flex; justify-content: space-between; align-items: center;">
-                      <span class="cluster-card-badge badge-lost">● Cluster 1</span>
+                  <div class="cluster-card bracket-card">
+                    <div style="display: flex; align-items: flex-start; gap: 12px; margin-bottom: 8px;">
+                      <div style="width: 38px; height: 38px; border-radius: 8px; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12); display: flex; align-items: center; justify-content: center; font-size: 18px; color: #fb7185;">
+                        ⊘
+                      </div>
+                      <div>
+                        <span class="cluster-card-badge" style="background: rgba(251,113,133,0.12); color: #fb7185; border: 1px solid rgba(251,113,133,0.25); padding: 2px 8px; font-size: 10px; border-radius: 999px;">CLUSTER 1</span>
+                        <div class="cluster-name" style="font-size: 18px; font-weight: 800; color: #ffffff; margin-top: 2px;">
+                          LOST / CHURNED
+                        </div>
+                        <div style="font-size: 11px; color: #8e9693;">2,037 customers &nbsp;34.3%</div>
+                      </div>
                     </div>
-                    <div class="cluster-name" style="display: flex; align-items: center; gap: 8px; font-size: 19px;">
-                      <span>⊘</span> Lost / Churned
-                    </div>
-                    <p style="font-size: 13px; color: var(--text-secondary); line-height: 1.45;">
+                    <p style="font-size: 12px; color: var(--text-secondary); line-height: 1.45; min-height: 48px;">
                       Single-order accounts dormant for over a year with minimal lifetime spend. Low candidate for direct sales outreach.
                     </p>
-                    <div class="cluster-histogram-box">
-                      <div class="cluster-histogram-title">Recency vs Monetary Distribution</div>
-                      <svg width="100%" height="36" viewBox="0 0 200 36" fill="none" preserveAspectRatio="none">
-                        <rect x="10" y="30" width="14" height="6" rx="2" fill="rgba(255,255,255,0.10)"/>
-                        <rect x="30" y="26" width="14" height="10" rx="2" fill="rgba(255,255,255,0.15)"/>
-                        <rect x="50" y="22" width="14" height="14" rx="2" fill="rgba(255,255,255,0.22)"/>
-                        <rect x="70" y="18" width="14" height="18" rx="2" fill="rgba(255,255,255,0.35)"/>
-                        <rect x="90" y="12" width="14" height="24" rx="2" fill="rgba(255,255,255,0.55)"/>
-                        <rect x="110" y="6" width="14" height="30" rx="2" fill="rgba(255,255,255,0.75)"/>
-                        <rect x="130" y="1" width="14" height="35" rx="2" fill="#ffffff"/>
-                        <rect x="150" y="8" width="14" height="28" rx="2" fill="rgba(255,255,255,0.60)"/>
-                        <rect x="170" y="20" width="14" height="16" rx="2" fill="rgba(255,255,255,0.25)"/>
+                    <div style="display: flex; flex-direction: column; gap: 6px; margin: 10px 0;">
+                      <div class="cluster-stat-row">
+                        <span class="k" style="display: flex; align-items: center; gap: 6px;">
+                          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                          Mean Recency
+                        </span>
+                        <span class="v" style="font-family: var(--font-mono); font-weight: 700;">399.4 days</span>
+                      </div>
+                      <div class="cluster-stat-row">
+                        <span class="k" style="display: flex; align-items: center; gap: 6px;">
+                          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+                          Mean Frequency
+                        </span>
+                        <span class="v" style="font-family: var(--font-mono); font-weight: 700;">1.6 orders</span>
+                      </div>
+                      <div class="cluster-stat-row">
+                        <span class="k" style="display: flex; align-items: center; gap: 6px;">
+                          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg>
+                          Mean Spend
+                        </span>
+                        <span class="v" style="font-family: var(--font-mono); font-weight: 700; color: #fff;">$305.52</span>
+                      </div>
+                      <div class="cluster-stat-row">
+                        <span class="k" style="display: flex; align-items: center; gap: 6px;">
+                          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                          Cohort Size
+                        </span>
+                        <span class="v" style="font-family: var(--font-mono); font-weight: 700;">2,037 (34.3%)</span>
+                      </div>
+                    </div>
+
+                    <!-- Histogram: concentrated at high recency (250-300+ days) -->
+                    <div style="background: rgba(0, 0, 0, 0.4); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 6px; padding: 8px 10px; margin: 8px 0;">
+                      <div style="font-size: 9px; font-weight: 700; color: #71717a; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 4px;">RECENCY VS MONETARY DISTRIBUTION</div>
+                      <svg width="100%" height="68" viewBox="0 0 240 68" fill="none" preserveAspectRatio="none">
+                        <line x1="22" y1="6" x2="22" y2="52" stroke="rgba(255,255,255,0.2)"/>
+                        <path d="M 22 4 L 20 8 L 24 8 Z" fill="rgba(255,255,255,0.3)"/>
+                        <text x="18" y="14" fill="#71717a" font-size="7" text-anchor="end" font-family="monospace">400</text>
+                        <text x="18" y="32" fill="#71717a" font-size="7" text-anchor="end" font-family="monospace">200</text>
+                        <text x="18" y="52" fill="#71717a" font-size="7" text-anchor="end" font-family="monospace">0</text>
+
+                        <line x1="22" y1="52" x2="235" y2="52" stroke="rgba(255,255,255,0.2)"/>
+                        <path d="M 237 52 L 233 50 L 233 54 Z" fill="rgba(255,255,255,0.3)"/>
+
+                        <rect x="155" y="48" width="7" height="4" rx="1" fill="rgba(255,255,255,0.15)"/>
+                        <rect x="165" y="44" width="7" height="8" rx="1" fill="rgba(255,255,255,0.25)"/>
+                        <rect x="175" y="38" width="7" height="14" rx="1" fill="rgba(255,255,255,0.4)"/>
+                        <rect x="185" y="30" width="7" height="22" rx="1" fill="rgba(255,255,255,0.6)"/>
+                        <rect x="195" y="20" width="7" height="32" rx="1" fill="rgba(255,255,255,0.85)"/>
+                        <rect x="205" y="14" width="7" height="38" rx="1" fill="#ffffff"/>
+                        <rect x="215" y="24" width="7" height="28" rx="1" fill="rgba(255,255,255,0.7)"/>
+
+                        <text x="28" y="62" fill="#71717a" font-size="7" text-anchor="middle" font-family="monospace">0</text>
+                        <text x="63" y="62" fill="#71717a" font-size="7" text-anchor="middle" font-family="monospace">50</text>
+                        <text x="98" y="62" fill="#71717a" font-size="7" text-anchor="middle" font-family="monospace">100</text>
+                        <text x="133" y="62" fill="#71717a" font-size="7" text-anchor="middle" font-family="monospace">150</text>
+                        <text x="168" y="62" fill="#71717a" font-size="7" text-anchor="middle" font-family="monospace">200</text>
+                        <text x="203" y="62" fill="#71717a" font-size="7" text-anchor="middle" font-family="monospace">250</text>
+                        <text x="230" y="62" fill="#71717a" font-size="7" text-anchor="middle" font-family="monospace">300</text>
                       </svg>
                     </div>
-                    <div style="display: flex; flex-direction: column; gap: 8px; margin-top: auto;">
-                      <div class="cluster-stat-row"><span class="k">🕒 Mean Recency</span><span class="v">399.4 days</span></div>
-                      <div class="cluster-stat-row"><span class="k">🔄 Mean Frequency</span><span class="v">1.6 orders</span></div>
-                      <div class="cluster-stat-row"><span class="k">💰 Mean Spend</span><span class="v">$305.52</span></div>
-                      <div class="cluster-stat-row"><span class="k">👥 Cohort Size</span><span class="v">2,037 accounts (34.3%)</span></div>
-                    </div>
+
                     <button type="button" class="cluster-action-btn" onclick="window.switchDashboardTab('lookup'); if(window.selectSampleCustomer) window.selectSampleCustomer('16964');">View Segment Details →</button>
                   </div>
                 </div>
@@ -1083,38 +1284,66 @@
                 <div class="simulator-layout-grid reveal-fade-up" style="display: grid; grid-template-columns: 1.15fr 1fr; gap: 24px; align-items: start; margin-top: 10px;">
                   <!-- Left: Adjust Customer Inputs Card -->
                   <div class="overview-card" style="padding: 24px;">
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
-                      <div style="font-size: 15px; font-weight: 800; color: #fff;">Adjust Customer Inputs</div>
+                    <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 16px;">
+                      <div>
+                        <div style="font-size: 15px; font-weight: 800; color: #fff; display: flex; align-items: center; gap: 8px;">
+                          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+                          ADJUST CUSTOMER INPUTS
+                        </div>
+                        <div style="font-size: 11.5px; color: #8e9693; margin-top: 2px;">Modify customer behavior parameters to predict segment, CLV, and churn risk</div>
+                      </div>
                       <button type="button" class="dash-action-pill" id="simResetBtn" style="font-size: 11px; padding: 4px 10px; cursor: pointer;">↺ Reset to Defaults</button>
                     </div>
 
                     <div class="rfm-slider-row" id="simRowRecency">
                       <div class="rfm-slider-label">
-                        <label for="simRecency">Recency (Days since last checkout)</label>
+                        <label for="simRecency" style="display: flex; align-items: center; gap: 6px;">
+                          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                          Recency (Days since last checkout)
+                        </label>
                         <div style="display: flex; align-items: center; gap: 6px;">
                           <input type="number" class="sim-num-input" id="simRecency" value="25" min="0" max="730" aria-describedby="simRecencyErr" aria-invalid="false">
                           <span class="value" id="simRecencyVal">days</span>
                         </div>
                       </div>
                       <input type="range" class="rfm-slider-input" id="simRecencySlider" min="0" max="730" value="25" tabindex="-1" aria-hidden="true">
+                      <div class="sim-slider-ticks">
+                        <span>0</span>
+                        <span>90</span>
+                        <span>180</span>
+                        <span>270</span>
+                        <span>365</span>
+                      </div>
                       <div class="sim-field-error" id="simRecencyErr" role="alert" aria-live="polite"></div>
                     </div>
 
                     <div class="rfm-slider-row" id="simRowFreq">
                       <div class="rfm-slider-label">
-                        <label for="simFreq">Frequency (Total completed orders)</label>
+                        <label for="simFreq" style="display: flex; align-items: center; gap: 6px;">
+                          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+                          Frequency (Total completed orders)
+                        </label>
                         <div style="display: flex; align-items: center; gap: 6px;">
                           <input type="number" class="sim-num-input" id="simFreq" value="6" min="1" max="150" aria-describedby="simFreqErr" aria-invalid="false">
                           <span class="value" id="simFreqVal">orders</span>
                         </div>
                       </div>
                       <input type="range" class="rfm-slider-input" id="simFreqSlider" min="1" max="150" value="6" tabindex="-1" aria-hidden="true">
+                      <div class="sim-slider-ticks">
+                        <span>0</span>
+                        <span>10</span>
+                        <span>25</span>
+                        <span>50</span>
+                      </div>
                       <div class="sim-field-error" id="simFreqErr" role="alert" aria-live="polite"></div>
                     </div>
 
                     <div class="rfm-slider-row" id="simRowSpend">
                       <div class="rfm-slider-label">
-                        <label for="simSpend">Total Historical Spend ($)</label>
+                        <label for="simSpend" style="display: flex; align-items: center; gap: 6px;">
+                          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg>
+                          Monetary (Total historical spend)
+                        </label>
                         <div style="display: flex; align-items: center; gap: 6px;">
                           <span style="color: #ffffff; font-weight: 700;">$</span>
                           <input type="number" class="sim-num-input" id="simSpend" value="1250" min="0" max="50000" step="50" aria-describedby="simSpendErr" aria-invalid="false">
@@ -1122,18 +1351,34 @@
                         </div>
                       </div>
                       <input type="range" class="rfm-slider-input" id="simSpendSlider" min="0" max="50000" step="50" value="1250" tabindex="-1" aria-hidden="true">
+                      <div class="sim-slider-ticks">
+                        <span>50</span>
+                        <span>250</span>
+                        <span>500</span>
+                        <span>1,000</span>
+                        <span>2,000</span>
+                      </div>
                       <div class="sim-field-error" id="simSpendErr" role="alert" aria-live="polite"></div>
                     </div>
 
                     <div class="rfm-slider-row" id="simRowTenure">
                       <div class="rfm-slider-label">
-                        <label for="simTenure">Customer Tenure (Days with company)</label>
+                        <label for="simTenure" style="display: flex; align-items: center; gap: 6px;">
+                          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                          Tenure (Days with company)
+                        </label>
                         <div style="display: flex; align-items: center; gap: 6px;">
                           <input type="number" class="sim-num-input" id="simTenure" value="300" min="0" max="730" aria-describedby="simTenureErr" aria-invalid="false">
                           <span class="value" id="simTenureVal">days</span>
                         </div>
                       </div>
                       <input type="range" class="rfm-slider-input" id="simTenureSlider" min="0" max="730" value="300" tabindex="-1" aria-hidden="true">
+                      <div class="sim-slider-ticks">
+                        <span>30</span>
+                        <span>365</span>
+                        <span>730</span>
+                        <span>1,095</span>
+                      </div>
                       <div class="sim-field-error" id="simTenureErr" role="alert" aria-live="polite"></div>
                     </div>
 
@@ -1145,43 +1390,61 @@
 
                   <!-- Right: Real-Time Prediction Results Card -->
                   <div class="overview-card" style="background: linear-gradient(145deg, #161918 0%, #0e1110 100%); border-color: rgba(255, 255, 255, 0.16); padding: 24px;">
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
-                      <div style="font-size: 11px; font-weight: 800; letter-spacing: 1px; color: #a1a1aa; text-transform: uppercase;">Prediction Results</div>
+                    <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px;">
+                      <div>
+                        <div style="font-size: 14px; font-weight: 800; color: #fff; display: flex; align-items: center; gap: 8px;">
+                          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="4" width="16" height="16" rx="2"/><rect x="9" y="9" width="6" height="6"/><line x1="9" y1="1" x2="9" y2="4"/><line x1="15" y1="1" x2="15" y2="4"/><line x1="9" y1="20" x2="9" y2="23"/><line x1="15" y1="20" x2="15" y2="23"/><line x1="20" y1="9" x2="23" y2="9"/><line x1="20" y1="14" x2="23" y2="14"/><line x1="1" y1="9" x2="4" y2="9"/><line x1="1" y1="14" x2="4" y2="14"/></svg>
+                          PREDICTION RESULTS
+                        </div>
+                        <div style="font-size: 11.5px; color: #8e9693; margin-top: 2px;">AI-powered customer value and churn prediction</div>
+                      </div>
                       <span class="sim-confidence-pill">📊 Prediction Confidence 78%</span>
                     </div>
 
                     <div class="sim-metric-quad">
                       <!-- Metric 1: Segment -->
                       <div class="sim-quad-box">
-                        <div class="sim-quad-lbl">Predicted Segment</div>
+                        <div style="display: flex; align-items: center; gap: 6px; margin-bottom: 6px;">
+                          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.45 1-1 1H7c-.55 0-1-.45-1-1v-2.34c-1.22-.64-2-1.92-2-3.32V4h16v7.34c0 1.4-.78 2.68-2 3.32V17c0 .55-.45 1-1 1h-2c-.55 0-1-.45-1-1v-2.34c-.7.37-1.5.58-2.35.63H9.35c-.85-.05-1.65-.26-2.35-.63z"/></svg>
+                          <span class="sim-quad-lbl" style="margin-bottom: 0;">Predicted Segment</span>
+                        </div>
                         <div id="simSegOutput" class="cluster-card-badge badge-loyal" style="font-size: 13px; padding: 4px 10px; margin-top: 6px;">Loyal Customers</div>
                       </div>
 
                       <!-- Metric 2: CLV -->
                       <div class="sim-quad-box">
-                        <div class="sim-quad-lbl">Predicted 90-Day CLV</div>
-                        <div style="display: flex; align-items: baseline; gap: 6px; margin-top: 2px;">
+                        <div style="display: flex; align-items: center; gap: 6px; margin-bottom: 4px;">
+                          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+                          <span class="sim-quad-lbl" style="margin-bottom: 0;">Predicted 90-Day CLV</span>
+                        </div>
+                        <div style="display: flex; align-items: baseline; gap: 6px;">
                           <div class="sim-quad-num" id="simClvOutput">$341.43</div>
                         </div>
-                        <span class="metric-delta delta-up">↑ 32.1%</span>
+                        <span class="metric-delta delta-up">↑ 32.1% vs average</span>
                       </div>
 
                       <!-- Metric 3: Churn Risk -->
                       <div class="sim-quad-box">
-                        <div class="sim-quad-lbl">Churn Risk</div>
-                        <div style="display: flex; align-items: baseline; gap: 6px; margin-top: 2px;">
+                        <div style="display: flex; align-items: center; gap: 6px; margin-bottom: 4px;">
+                          <span style="font-size: 12px; font-weight: 800;">%</span>
+                          <span class="sim-quad-lbl" style="margin-bottom: 0;">Churn Risk</span>
+                        </div>
+                        <div style="display: flex; align-items: baseline; gap: 6px;">
                           <div class="sim-quad-num" id="simChurnOutput">23.5%</div>
                         </div>
-                        <span class="metric-delta delta-up">↑ 18.6%</span>
+                        <span class="metric-delta delta-down">↓ 18.6% vs average</span>
                       </div>
 
                       <!-- Metric 4: Expected Orders -->
                       <div class="sim-quad-box">
-                        <div class="sim-quad-lbl">Expected Orders</div>
-                        <div style="display: flex; align-items: baseline; gap: 6px; margin-top: 2px;">
+                        <div style="display: flex; align-items: center; gap: 6px; margin-bottom: 4px;">
+                          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
+                          <span class="sim-quad-lbl" style="margin-bottom: 0;">Expected Orders</span>
+                        </div>
+                        <div style="display: flex; align-items: baseline; gap: 6px;">
                           <div class="sim-quad-num" id="simOrdersOutput">8.2</div>
                         </div>
-                        <span class="metric-delta delta-up">↑ 12.3%</span>
+                        <span class="metric-delta delta-up">↑ 12.3% vs average</span>
                       </div>
                     </div>
 
@@ -1196,47 +1459,113 @@
                   <!-- Chart 1: CLV Sensitivity Analysis -->
                   <div class="profile-card-section" style="padding: 22px;">
                     <div class="card-section-header">
-                      <span class="card-section-title">CLV Sensitivity Analysis</span>
-                      <span style="font-size: 11px; color: #a1a1aa;">Spend vs Projected CLV</span>
+                      <div>
+                        <span class="card-section-title">CLV SENSITIVITY ANALYSIS</span>
+                        <div style="font-size: 11.5px; color: #8e9693; margin-top: 2px;">How input changes affect predicted CLV</div>
+                      </div>
                     </div>
-                    <svg width="100%" height="150" viewBox="0 0 400 150" fill="none">
-                      <line x1="40" y1="20" x2="40" y2="120" stroke="rgba(255,255,255,0.1)"/>
-                      <line x1="40" y1="120" x2="380" y2="120" stroke="rgba(255,255,255,0.1)"/>
-                      <text x="10" y="25" fill="#71717a" font-size="10" font-family="monospace">$1.5k</text>
-                      <text x="15" y="75" fill="#71717a" font-size="10" font-family="monospace">$800</text>
-                      <text x="25" y="122" fill="#71717a" font-size="10" font-family="monospace">$0</text>
-                      <text x="40" y="140" fill="#71717a" font-size="10" font-family="monospace">$0</text>
-                      <text x="140" y="140" fill="#71717a" font-size="10" font-family="monospace">$1k</text>
-                      <text x="240" y="140" fill="#71717a" font-size="10" font-family="monospace">$2.5k</text>
-                      <text x="340" y="140" fill="#71717a" font-size="10" font-family="monospace">$5k</text>
-                      <!-- Trajectory Spline -->
-                      <path d="M 40 115 Q 120 100 200 65 T 380 25" stroke="#ffffff" stroke-width="2.5" fill="none"/>
-                      <circle cx="200" cy="65" r="4" fill="#ffffff" stroke="#000" stroke-width="1.5"/>
-                      <circle cx="380" cy="25" r="4" fill="#34d399" stroke="#000" stroke-width="1.5"/>
+                    <svg width="100%" height="170" viewBox="0 0 420 170" fill="none" preserveAspectRatio="none">
+                      <!-- Y-Axis Grid & Ticks -->
+                      <line x1="45" y1="20" x2="400" y2="20" stroke="rgba(255,255,255,0.06)" stroke-dasharray="2 2"/>
+                      <text x="38" y="24" fill="#71717a" font-size="9" text-anchor="end" font-family="monospace">$1.5K</text>
+                      <line x1="45" y1="55" x2="400" y2="55" stroke="rgba(255,255,255,0.06)" stroke-dasharray="2 2"/>
+                      <text x="38" y="59" fill="#71717a" font-size="9" text-anchor="end" font-family="monospace">$1.0K</text>
+                      <line x1="45" y1="90" x2="400" y2="90" stroke="rgba(255,255,255,0.06)" stroke-dasharray="2 2"/>
+                      <text x="38" y="94" fill="#71717a" font-size="9" text-anchor="end" font-family="monospace">$500</text>
+                      <line x1="45" y1="125" x2="400" y2="125" stroke="rgba(255,255,255,0.18)"/>
+                      <text x="38" y="128" fill="#71717a" font-size="9" text-anchor="end" font-family="monospace">$0</text>
+
+                      <!-- Center Current line -->
+                      <line x1="222" y1="20" x2="222" y2="125" stroke="rgba(255,255,255,0.12)" stroke-dasharray="2 2"/>
+
+                      <!-- Series 1: Recency (declining line) -->
+                      <path d="M 60 85 L 140 88 L 222 92 L 305 95 L 385 105" stroke="#ffffff" stroke-width="1.8" fill="none"/>
+                      <circle cx="60" cy="85" r="3" fill="#ffffff"/>
+                      <circle cx="140" cy="88" r="3" fill="#ffffff"/>
+                      <circle cx="222" cy="92" r="3" fill="#ffffff"/>
+                      <circle cx="305" cy="95" r="3" fill="#ffffff"/>
+                      <circle cx="385" cy="105" r="3" fill="#ffffff"/>
+
+                      <!-- Series 2: Frequency (strong ascending line) -->
+                      <path d="M 60 115 L 140 102 L 222 75 L 305 45 L 385 30" stroke="#d4d4d4" stroke-width="2" fill="none"/>
+                      <circle cx="60" cy="115" r="3.5" fill="#ffffff"/>
+                      <circle cx="140" cy="102" r="3.5" fill="#ffffff"/>
+                      <circle cx="222" cy="75" r="3.5" fill="#ffffff"/>
+                      <circle cx="305" cy="45" r="3.5" fill="#ffffff"/>
+                      <circle cx="385" cy="30" r="3.5" fill="#ffffff"/>
+
+                      <!-- Series 3: Monetary (moderate ascending line) -->
+                      <path d="M 60 105 L 140 92 L 222 80 L 305 68 L 385 58" stroke="#a1a1aa" stroke-width="1.6" stroke-dasharray="3 3" fill="none"/>
+                      <circle cx="60" cy="105" r="3" fill="#a1a1aa"/>
+                      <circle cx="140" cy="92" r="3" fill="#a1a1aa"/>
+                      <circle cx="222" cy="80" r="3" fill="#a1a1aa"/>
+                      <circle cx="305" cy="68" r="3" fill="#a1a1aa"/>
+                      <circle cx="385" cy="58" r="3" fill="#a1a1aa"/>
+
+                      <!-- Series 4: Tenure (slight curve) -->
+                      <path d="M 60 98 L 140 94 L 222 90 L 305 86 L 385 82" stroke="#71717a" stroke-width="1.6" stroke-dasharray="5 2" fill="none"/>
+
+                      <!-- X-Axis Labels -->
+                      <text x="60" y="140" fill="#71717a" font-size="9" text-anchor="middle" font-family="monospace">-50%</text>
+                      <text x="140" y="140" fill="#71717a" font-size="9" text-anchor="middle" font-family="monospace">-25%</text>
+                      <text x="222" y="140" fill="#ffffff" font-size="9" text-anchor="middle" font-family="monospace">Current</text>
+                      <text x="305" y="140" fill="#71717a" font-size="9" text-anchor="middle" font-family="monospace">+25%</text>
+                      <text x="385" y="140" fill="#71717a" font-size="9" text-anchor="middle" font-family="monospace">+50%</text>
+                      <text x="222" y="152" fill="#71717a" font-size="9" text-anchor="middle" font-family="sans-serif">Input Change</text>
+
+                      <!-- Legend -->
+                      <circle cx="70" cy="164" r="3" fill="#ffffff"/>
+                      <text x="78" y="167" fill="#a1a1aa" font-size="8.5">Recency</text>
+                      <circle cx="145" cy="164" r="3" fill="#ffffff"/>
+                      <text x="153" y="167" fill="#a1a1aa" font-size="8.5">Frequency</text>
+                      <circle cx="225" cy="164" r="3" fill="#a1a1aa"/>
+                      <text x="233" y="167" fill="#a1a1aa" font-size="8.5">Monetary</text>
+                      <line x1="295" y1="164" x2="307" y2="164" stroke="#71717a" stroke-width="1.5" stroke-dasharray="3 2"/>
+                      <text x="313" y="167" fill="#a1a1aa" font-size="8.5">Tenure</text>
                     </svg>
                   </div>
 
                   <!-- Chart 2: Churn Probability Curve -->
                   <div class="profile-card-section" style="padding: 22px;">
                     <div class="card-section-header">
-                      <span class="card-section-title">Churn Probability Curve</span>
-                      <span style="font-size: 11px; color: #fb7185;">Critical Threshold: 60%</span>
+                      <div>
+                        <span class="card-section-title">CHURN PROBABILITY CURVE</span>
+                        <div style="font-size: 11.5px; color: #8e9693; margin-top: 2px;">Predicted churn risk across input ranges</div>
+                      </div>
                     </div>
-                    <svg width="100%" height="150" viewBox="0 0 400 150" fill="none">
-                      <line x1="40" y1="20" x2="40" y2="120" stroke="rgba(255,255,255,0.1)"/>
-                      <line x1="40" y1="120" x2="380" y2="120" stroke="rgba(255,255,255,0.1)"/>
-                      <!-- 60% dashed threshold line -->
-                      <line x1="40" y1="56" x2="380" y2="56" stroke="rgba(251, 113, 133, 0.45)" stroke-dasharray="4 4" stroke-width="1.5"/>
-                      <text x="10" y="60" fill="#fb7185" font-size="10" font-family="monospace">60%</text>
-                      <text x="10" y="25" fill="#71717a" font-size="10" font-family="monospace">100%</text>
-                      <text x="25" y="122" fill="#71717a" font-size="10" font-family="monospace">0%</text>
-                      <text x="40" y="140" fill="#71717a" font-size="10" font-family="monospace">0d</text>
-                      <text x="140" y="140" fill="#71717a" font-size="10" font-family="monospace">60d</text>
-                      <text x="240" y="140" fill="#71717a" font-size="10" font-family="monospace">180d</text>
-                      <text x="340" y="140" fill="#71717a" font-size="10" font-family="monospace">365d</text>
-                      <!-- Sigmoid Churn Curve -->
-                      <path d="M 40 115 C 100 112, 160 100, 220 56 S 320 28, 380 24" stroke="#ffffff" stroke-width="2.5" fill="none"/>
-                      <circle cx="220" cy="56" r="4" fill="#fbbf24" stroke="#000" stroke-width="1.5"/>
+                    <svg width="100%" height="170" viewBox="0 0 420 170" fill="none" preserveAspectRatio="none">
+                      <!-- Y-Axis Grid & Ticks -->
+                      <line x1="45" y1="20" x2="400" y2="20" stroke="rgba(255,255,255,0.06)" stroke-dasharray="2 2"/>
+                      <text x="38" y="24" fill="#71717a" font-size="9" text-anchor="end" font-family="monospace">100%</text>
+                      <line x1="45" y1="46" x2="400" y2="46" stroke="rgba(255,255,255,0.06)" stroke-dasharray="2 2"/>
+                      <text x="38" y="50" fill="#71717a" font-size="9" text-anchor="end" font-family="monospace">75%</text>
+                      <line x1="45" y1="72" x2="400" y2="72" stroke="rgba(255,255,255,0.06)" stroke-dasharray="2 2"/>
+                      <text x="38" y="76" fill="#71717a" font-size="9" text-anchor="end" font-family="monospace">50%</text>
+                      <line x1="45" y1="98" x2="400" y2="98" stroke="rgba(255,255,255,0.06)" stroke-dasharray="2 2"/>
+                      <text x="38" y="102" fill="#71717a" font-size="9" text-anchor="end" font-family="monospace">25%</text>
+                      <line x1="45" y1="125" x2="400" y2="125" stroke="rgba(255,255,255,0.18)"/>
+                      <text x="38" y="128" fill="#71717a" font-size="9" text-anchor="end" font-family="monospace">0%</text>
+
+                      <!-- Sigmoid Curve from high down to low or S-shape -->
+                      <path d="M 55 28 C 90 32, 130 50, 170 85 S 250 118, 385 120" stroke="#ffffff" stroke-width="2.2" fill="none"/>
+                      
+                      <!-- Highlight Points -->
+                      <circle cx="55" cy="28" r="3.5" fill="#ffffff"/>
+                      <circle cx="115" cy="42" r="3" fill="#ffffff"/>
+                      <circle cx="170" cy="85" r="3" fill="#ffffff"/>
+                      <circle cx="230" cy="108" r="3" fill="#ffffff"/>
+                      <circle cx="300" cy="118" r="3" fill="#ffffff"/>
+                      <circle cx="385" cy="120" r="3.5" fill="#ffffff"/>
+
+                      <!-- X-Axis Labels -->
+                      <text x="55" y="140" fill="#71717a" font-size="9" text-anchor="middle" font-family="monospace">0</text>
+                      <text x="110" y="140" fill="#71717a" font-size="9" text-anchor="middle" font-family="monospace">30</text>
+                      <text x="165" y="140" fill="#71717a" font-size="9" text-anchor="middle" font-family="monospace">60</text>
+                      <text x="220" y="140" fill="#71717a" font-size="9" text-anchor="middle" font-family="monospace">90</text>
+                      <text x="275" y="140" fill="#71717a" font-size="9" text-anchor="middle" font-family="monospace">120</text>
+                      <text x="330" y="140" fill="#71717a" font-size="9" text-anchor="middle" font-family="monospace">180</text>
+                      <text x="385" y="140" fill="#71717a" font-size="9" text-anchor="middle" font-family="monospace">365</text>
+                      <text x="220" y="152" fill="#71717a" font-size="9" text-anchor="middle" font-family="sans-serif">Recency (days)</text>
                     </svg>
                   </div>
                 </div>
@@ -1244,68 +1573,79 @@
                 <!-- Bottom Scenario Comparison Card -->
                 <div class="profile-card-section reveal-fade-up" style="margin-top: 24px; padding: 22px;">
                   <div class="card-section-header">
-                    <span class="card-section-title">Scenario Comparison</span>
+                    <div>
+                      <span class="card-section-title" style="display: flex; align-items: center; gap: 8px;">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/></svg>
+                        SCENARIO COMPARISON
+                      </span>
+                      <div style="font-size: 11.5px; color: #8e9693; margin-top: 2px;">Compare saved scenarios and their predicted outcomes</div>
+                    </div>
                     <button type="button" class="btn-pill-secondary" id="simSaveCurrentBtn" style="font-size: 11px; padding: 5px 12px; cursor: pointer;">+ Save Current Scenario</button>
                   </div>
                   <div class="sim-table-wrap">
                     <table class="sim-scenario-table">
                       <thead>
                         <tr>
-                          <th>SCENARIO</th>
+                          <th style="width: 28px; text-align: center;"><input type="checkbox" aria-label="Select all scenarios" style="cursor: pointer;"></th>
+                          <th>SCENARIO NAME</th>
                           <th>RECENCY</th>
                           <th>FREQUENCY</th>
-                          <th>SPEND</th>
+                          <th>MONETARY</th>
                           <th>TENURE</th>
-                          <th>PREDICTED SEGMENT</th>
+                          <th>SEGMENT</th>
                           <th>PREDICTED CLV</th>
                           <th>CHURN RISK</th>
-                          <th style="text-align: right;">ACTION</th>
+                          <th style="text-align: right;">ACTIONS</th>
                         </tr>
                       </thead>
                       <tbody>
                         <tr>
-                          <td style="color: #fff; font-weight: 700;">Baseline</td>
-                          <td>25d</td>
+                          <td style="text-align: center;"><input type="checkbox" checked aria-label="Select Baseline" style="cursor: pointer;"></td>
+                          <td style="color: #fff; font-weight: 700;">Baseline (Current)</td>
+                          <td>25</td>
                           <td>6</td>
                           <td>$1,250</td>
-                          <td>300d</td>
-                          <td><span class="cluster-card-badge badge-loyal" style="padding: 2px 8px; font-size: 10.5px;">Loyal Customers</span></td>
-                          <td style="font-weight: 700; color: #fff;">$341.43</td>
-                          <td>23.5%</td>
-                          <td style="text-align: right;"><span style="font-size: 11px; color: #34d399; font-weight: 700;">Current</span></td>
+                          <td>300</td>
+                          <td><span class="cluster-card-badge badge-loyal" style="padding: 2px 8px; font-size: 10.5px;">Loyal</span></td>
+                          <td style="font-weight: 700; color: #fff; font-family: var(--font-mono);">$341.43</td>
+                          <td style="color: #fbbf24; font-weight: 700;">23.5%</td>
+                          <td style="text-align: right;"><button type="button" class="dash-action-pill" style="padding: 2px 8px; font-size: 10px;">•••</button></td>
                         </tr>
                         <tr>
-                          <td style="color: #fff; font-weight: 700;">Increase Frequency (+4 orders)</td>
-                          <td>25d</td>
-                          <td>10</td>
-                          <td>$1,800</td>
-                          <td>300d</td>
-                          <td><span class="cluster-card-badge badge-champ" style="padding: 2px 8px; font-size: 10.5px;">Champions</span></td>
-                          <td style="font-weight: 700; color: #fff;">$582.10</td>
-                          <td>14.2%</td>
-                          <td style="text-align: right;"><button type="button" class="dash-action-pill load-scenario-btn" data-r="25" data-f="10" data-s="1800" data-t="300" data-name="Increase Frequency" style="padding: 3px 10px; font-size: 11px; cursor: pointer;">Load</button></td>
+                          <td style="text-align: center;"><input type="checkbox" aria-label="Select Increase Frequency" style="cursor: pointer;"></td>
+                          <td style="color: #fff; font-weight: 700;">Increase Frequency</td>
+                          <td>25</td>
+                          <td>12</td>
+                          <td>$1,500</td>
+                          <td>300</td>
+                          <td><span class="cluster-card-badge badge-loyal" style="padding: 2px 8px; font-size: 10.5px;">Loyal</span></td>
+                          <td style="font-weight: 700; color: #fff; font-family: var(--font-mono);">$512.20</td>
+                          <td style="color: #34d399; font-weight: 700;">18.2%</td>
+                          <td style="text-align: right;"><button type="button" class="dash-action-pill" style="padding: 2px 8px; font-size: 10px;">•••</button></td>
                         </tr>
                         <tr>
-                          <td style="color: #fff; font-weight: 700;">High Value Retention</td>
-                          <td>15d</td>
+                          <td style="text-align: center;"><input type="checkbox" aria-label="Select High Value Scenario" style="cursor: pointer;"></td>
+                          <td style="color: #fff; font-weight: 700;">High Value Scenario</td>
+                          <td>15</td>
                           <td>18</td>
-                          <td>$4,500</td>
-                          <td>450d</td>
+                          <td>$2,000</td>
+                          <td>365</td>
                           <td><span class="cluster-card-badge badge-champ" style="padding: 2px 8px; font-size: 10.5px;">Champions</span></td>
-                          <td style="font-weight: 700; color: #fff;">$1,240.80</td>
-                          <td>8.7%</td>
-                          <td style="text-align: right;"><button type="button" class="dash-action-pill load-scenario-btn" data-r="15" data-f="18" data-s="4500" data-t="450" data-name="High Value Retention" style="padding: 3px 10px; font-size: 11px; cursor: pointer;">Load</button></td>
+                          <td style="font-weight: 700; color: #fff; font-family: var(--font-mono);">$1,004.32</td>
+                          <td style="color: #34d399; font-weight: 700;">8.1%</td>
+                          <td style="text-align: right;"><button type="button" class="dash-action-pill" style="padding: 2px 8px; font-size: 10px;">•••</button></td>
                         </tr>
                         <tr>
-                          <td style="color: #fff; font-weight: 700;">At-Risk Inactivity (+90d)</td>
-                          <td>115d</td>
-                          <td>6</td>
-                          <td>$1,250</td>
-                          <td>300d</td>
+                          <td style="text-align: center;"><input type="checkbox" aria-label="Select At Risk Scenario" style="cursor: pointer;"></td>
+                          <td style="color: #fff; font-weight: 700;">At Risk Scenario</td>
+                          <td>120</td>
+                          <td>2</td>
+                          <td>$300</td>
+                          <td>90</td>
                           <td><span class="cluster-card-badge badge-risk" style="padding: 2px 8px; font-size: 10.5px;">At-Risk</span></td>
-                          <td style="font-weight: 700; color: #fff;">$189.20</td>
-                          <td>64.8%</td>
-                          <td style="text-align: right;"><button type="button" class="dash-action-pill load-scenario-btn" data-r="115" data-f="6" data-s="1250" data-t="300" data-name="At-Risk Inactivity" style="padding: 3px 10px; font-size: 11px; cursor: pointer;">Load</button></td>
+                          <td style="font-weight: 700; color: #fff; font-family: var(--font-mono);">$124.15</td>
+                          <td style="color: #fb7185; font-weight: 700;">62.3%</td>
+                          <td style="text-align: right;"><button type="button" class="dash-action-pill" style="padding: 2px 8px; font-size: 10px;">•••</button></td>
                         </tr>
                       </tbody>
                     </table>
@@ -1331,51 +1671,93 @@
                 <!-- Top 4 KPI Summary Cards -->
                 <div class="clv-kpi-grid reveal-fade-up" style="margin-top: 10px;">
                   <div class="clv-kpi-card">
-                    <div class="clv-kpi-lbl">Predicted CLV (Average)</div>
-                    <div class="clv-kpi-val">
-                      <span>$3,412.75</span>
+                    <div class="clv-kpi-icon-header">
+                      <span class="clv-kpi-lbl">Predicted CLV (Average)</span>
+                      <div class="clv-kpi-icon-badge" aria-hidden="true">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+                      </div>
+                    </div>
+                    <div class="clv-kpi-num-row">
+                      <div class="clv-kpi-num">$3,412.75</div>
+                      <div class="clv-kpi-sparkbars" aria-hidden="true">
+                        <span style="height: 8px;"></span>
+                        <span style="height: 12px;"></span>
+                        <span style="height: 15px;"></span>
+                        <span style="height: 19px;"></span>
+                        <span style="height: 24px; background: #ffffff;"></span>
+                      </div>
+                    </div>
+                    <div class="clv-kpi-footer">
                       <span class="metric-delta delta-up">↑ 18.2%</span>
+                      <span class="trend-compare">vs previous period</span>
                     </div>
-                    <svg width="100%" height="20" viewBox="0 0 160 20" fill="none">
-                      <path d="M2 16 L30 14 L60 11 L90 13 L120 7 L158 3" stroke="#ffffff" stroke-width="2" stroke-linecap="round"/>
-                      <circle cx="158" cy="3" r="2.5" fill="#34d399"/>
-                    </svg>
                   </div>
 
                   <div class="clv-kpi-card">
-                    <div class="clv-kpi-lbl">Churn Risk (Average)</div>
-                    <div class="clv-kpi-val">
-                      <span>16.7%</span>
-                      <span class="metric-delta delta-up">↑ 4.3%</span>
+                    <div class="clv-kpi-icon-header">
+                      <span class="clv-kpi-lbl">Churn Risk (Average)</span>
+                      <div class="clv-kpi-icon-badge" aria-hidden="true">
+                        <span style="font-size: 13px; font-weight: 800;">%</span>
+                      </div>
                     </div>
-                    <svg width="100%" height="20" viewBox="0 0 160 20" fill="none">
-                      <path d="M2 17 L30 15 L60 16 L90 12 L120 9 L158 5" stroke="#ffffff" stroke-width="2" stroke-linecap="round"/>
-                      <circle cx="158" cy="5" r="2.5" fill="#ffffff"/>
-                    </svg>
+                    <div class="clv-kpi-num-row">
+                      <div class="clv-kpi-num">16.7%</div>
+                      <div class="clv-kpi-sparkbars" aria-hidden="true">
+                        <span style="height: 6px;"></span>
+                        <span style="height: 9px;"></span>
+                        <span style="height: 14px;"></span>
+                        <span style="height: 18px;"></span>
+                        <span style="height: 22px; background: #ffffff;"></span>
+                      </div>
+                    </div>
+                    <div class="clv-kpi-footer">
+                      <span class="metric-delta delta-down">↑ 4.3%</span>
+                      <span class="trend-compare">vs previous period</span>
+                    </div>
                   </div>
 
                   <div class="clv-kpi-card">
-                    <div class="clv-kpi-lbl">Model Performance</div>
-                    <div class="clv-kpi-val">
-                      <span>87.3%</span>
-                      <span style="font-size: 11px; color: #a1a1aa; font-family: var(--font-mono);">AUC 0.8056</span>
+                    <div class="clv-kpi-icon-header">
+                      <span class="clv-kpi-lbl">Model Performance</span>
+                      <div class="clv-kpi-icon-badge" aria-hidden="true">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
+                      </div>
                     </div>
-                    <svg width="100%" height="20" viewBox="0 0 160 20" fill="none">
-                      <path d="M2 18 L30 14 L60 9 L90 7 L120 5 L158 2" stroke="#ffffff" stroke-width="2" stroke-linecap="round"/>
-                      <circle cx="158" cy="2" r="2.5" fill="#34d399"/>
-                    </svg>
+                    <div class="clv-kpi-num-row">
+                      <div class="clv-kpi-num">87.3%</div>
+                      <div class="clv-kpi-sparkbars" aria-hidden="true">
+                        <span style="height: 10px;"></span>
+                        <span style="height: 14px;"></span>
+                        <span style="height: 18px;"></span>
+                        <span style="height: 21px;"></span>
+                        <span style="height: 24px; background: #ffffff;"></span>
+                      </div>
+                    </div>
+                    <div class="clv-kpi-footer">
+                      <span style="color: #a1a1aa; font-size: 11px;">Accuracy (F1 Score)</span>
+                    </div>
                   </div>
 
                   <div class="clv-kpi-card">
-                    <div class="clv-kpi-lbl">Customers Analyzed</div>
-                    <div class="clv-kpi-val">
-                      <span>5,942</span>
-                      <span style="font-size: 11px; color: #a1a1aa;">4 Cohorts</span>
+                    <div class="clv-kpi-icon-header">
+                      <span class="clv-kpi-lbl">Customers Analyzed</span>
+                      <div class="clv-kpi-icon-badge" aria-hidden="true">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                      </div>
                     </div>
-                    <svg width="100%" height="20" viewBox="0 0 160 20" fill="none">
-                      <path d="M2 15 L30 13 L60 14 L90 8 L120 6 L158 3" stroke="#ffffff" stroke-width="2" stroke-linecap="round"/>
-                      <circle cx="158" cy="3" r="2.5" fill="#ffffff"/>
-                    </svg>
+                    <div class="clv-kpi-num-row">
+                      <div class="clv-kpi-num">5,942</div>
+                      <div class="clv-kpi-sparkbars" aria-hidden="true">
+                        <span style="height: 8px;"></span>
+                        <span style="height: 12px;"></span>
+                        <span style="height: 16px;"></span>
+                        <span style="height: 20px;"></span>
+                        <span style="height: 24px; background: #ffffff;"></span>
+                      </div>
+                    </div>
+                    <div class="clv-kpi-footer">
+                      <span style="color: #a1a1aa; font-size: 11px;">Verified customer profiles</span>
+                    </div>
                   </div>
                 </div>
 
@@ -1393,7 +1775,13 @@
                     <!-- CLV Distribution Card -->
                     <div class="profile-card-section" style="padding: 22px;">
                       <div class="card-section-header">
-                        <span class="card-section-title">CLV Distribution</span>
+                        <div>
+                          <span class="card-section-title" style="display: flex; align-items: center; gap: 8px;">
+                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+                            CLV DISTRIBUTION
+                          </span>
+                          <div style="font-size: 11.5px; color: #8e9693; margin-top: 2px;">Distribution of predicted customer lifetime value across all customers</div>
+                        </div>
                         <select style="background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.14); color: #fff; font-size: 11px; border-radius: 6px; padding: 4px 10px;">
                           <option>All Segments</option>
                           <option>Champions</option>
@@ -1401,122 +1789,163 @@
                           <option>At-Risk</option>
                         </select>
                       </div>
-                      <div style="display: flex; align-items: flex-end; justify-content: space-between; height: 110px; padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.08); gap: 12px;">
-                        <div style="display: flex; flex-direction: column; align-items: center; gap: 6px; flex: 1;">
-                          <span style="font-size: 10px; color: #a1a1aa; font-family: var(--font-mono);">1.4k</span>
-                          <div style="width: 100%; height: 50px; background: rgba(255,255,255,0.25); border-radius: 4px;"></div>
-                          <span style="font-size: 10px; color: #71717a;">$0-500</span>
-                        </div>
-                        <div style="display: flex; flex-direction: column; align-items: center; gap: 6px; flex: 1;">
-                          <span style="font-size: 10px; color: #ffffff; font-family: var(--font-mono); font-weight: 700;">1.8k</span>
-                          <div style="width: 100%; height: 85px; background: #ffffff; border-radius: 4px;"></div>
-                          <span style="font-size: 10px; color: #71717a;">$500-1k</span>
-                        </div>
-                        <div style="display: flex; flex-direction: column; align-items: center; gap: 6px; flex: 1;">
-                          <span style="font-size: 10px; color: #a1a1aa; font-family: var(--font-mono);">1.3k</span>
-                          <div style="width: 100%; height: 65px; background: rgba(255,255,255,0.60); border-radius: 4px;"></div>
-                          <span style="font-size: 10px; color: #71717a;">$1k-2.5k</span>
-                        </div>
-                        <div style="display: flex; flex-direction: column; align-items: center; gap: 6px; flex: 1;">
-                          <span style="font-size: 10px; color: #a1a1aa; font-family: var(--font-mono);">820</span>
-                          <div style="width: 100%; height: 42px; background: rgba(255,255,255,0.35); border-radius: 4px;"></div>
-                          <span style="font-size: 10px; color: #71717a;">$2.5k-5k</span>
-                        </div>
-                        <div style="display: flex; flex-direction: column; align-items: center; gap: 6px; flex: 1;">
-                          <span style="font-size: 10px; color: #a1a1aa; font-family: var(--font-mono);">390</span>
-                          <div style="width: 100%; height: 26px; background: rgba(255,255,255,0.20); border-radius: 4px;"></div>
-                          <span style="font-size: 10px; color: #71717a;">$5k-10k</span>
-                        </div>
-                        <div style="display: flex; flex-direction: column; align-items: center; gap: 6px; flex: 1;">
-                          <span style="font-size: 10px; color: #a1a1aa; font-family: var(--font-mono);">162</span>
-                          <div style="width: 100%; height: 16px; background: rgba(255,255,255,0.12); border-radius: 4px;"></div>
-                          <span style="font-size: 10px; color: #71717a;">$10k+</span>
-                        </div>
+
+                      <!-- Detailed Histogram SVG Chart with proper X and Y axes -->
+                      <div style="position: relative; width: 100%; height: 210px; margin-top: 10px;">
+                        <svg width="100%" height="210" viewBox="0 0 540 210" fill="none" preserveAspectRatio="none">
+                          <!-- Y-Axis Grid Lines & Ticks -->
+                          <line x1="45" y1="20" x2="525" y2="20" stroke="rgba(255,255,255,0.05)" stroke-dasharray="2 2"/>
+                          <text x="40" y="24" fill="#71717a" font-size="9" text-anchor="end" font-family="monospace">800</text>
+                          <line x1="45" y1="60" x2="525" y2="60" stroke="rgba(255,255,255,0.05)" stroke-dasharray="2 2"/>
+                          <text x="40" y="64" fill="#71717a" font-size="9" text-anchor="end" font-family="monospace">600</text>
+                          <line x1="45" y1="100" x2="525" y2="100" stroke="rgba(255,255,255,0.05)" stroke-dasharray="2 2"/>
+                          <text x="40" y="104" fill="#71717a" font-size="9" text-anchor="end" font-family="monospace">400</text>
+                          <line x1="45" y1="140" x2="525" y2="140" stroke="rgba(255,255,255,0.05)" stroke-dasharray="2 2"/>
+                          <text x="40" y="144" fill="#71717a" font-size="9" text-anchor="end" font-family="monospace">200</text>
+                          <line x1="45" y1="175" x2="525" y2="175" stroke="rgba(255,255,255,0.18)"/>
+                          <text x="40" y="178" fill="#71717a" font-size="9" text-anchor="end" font-family="monospace">0</text>
+
+                          <!-- Rotated Y-Axis Label -->
+                          <text x="-95" y="14" fill="#71717a" font-size="10" transform="rotate(-90)" text-anchor="middle" font-family="sans-serif">Number of Customers</text>
+
+                          <!-- Distribution Bars (22 continuous bins) -->
+                          <rect x="52" y="170" width="16" height="5" rx="1.5" fill="rgba(255,255,255,0.2)"/>
+                          <rect x="72" y="166" width="16" height="9" rx="1.5" fill="rgba(255,255,255,0.25)"/>
+                          <rect x="92" y="158" width="16" height="17" rx="1.5" fill="rgba(255,255,255,0.3)"/>
+                          <rect x="112" y="145" width="16" height="30" rx="1.5" fill="rgba(255,255,255,0.35)"/>
+                          <rect x="132" y="125" width="16" height="50" rx="1.5" fill="rgba(255,255,255,0.45)"/>
+                          <rect x="152" y="105" width="16" height="70" rx="1.5" fill="rgba(255,255,255,0.55)"/>
+                          <rect x="172" y="85" width="16" height="90" rx="1.5" fill="rgba(255,255,255,0.65)"/>
+                          <rect x="192" y="72" width="16" height="103" rx="1.5" fill="rgba(255,255,255,0.75)"/>
+                          <rect x="212" y="52" width="16" height="123" rx="1.5" fill="rgba(255,255,255,0.9)"/>
+                          <rect x="232" y="42" width="16" height="133" rx="1.5" fill="#ffffff"/>
+                          <rect x="252" y="55" width="16" height="120" rx="1.5" fill="rgba(255,255,255,0.85)"/>
+                          <rect x="272" y="75" width="16" height="100" rx="1.5" fill="rgba(255,255,255,0.7)"/>
+                          <rect x="292" y="95" width="16" height="80" rx="1.5" fill="rgba(255,255,255,0.6)"/>
+                          <rect x="312" y="112" width="16" height="63" rx="1.5" fill="rgba(255,255,255,0.5)"/>
+                          <rect x="332" y="125" width="16" height="50" rx="1.5" fill="rgba(255,255,255,0.4)"/>
+                          <rect x="352" y="138" width="16" height="37" rx="1.5" fill="rgba(255,255,255,0.3)"/>
+                          <rect x="372" y="148" width="16" height="27" rx="1.5" fill="rgba(255,255,255,0.25)"/>
+                          <rect x="392" y="155" width="16" height="20" rx="1.5" fill="rgba(255,255,255,0.2)"/>
+                          <rect x="412" y="162" width="16" height="13" rx="1.5" fill="rgba(255,255,255,0.16)"/>
+                          <rect x="432" y="166" width="16" height="9" rx="1.5" fill="rgba(255,255,255,0.14)"/>
+                          <rect x="452" y="169" width="16" height="6" rx="1.5" fill="rgba(255,255,255,0.12)"/>
+                          <rect x="472" y="171" width="16" height="4" rx="1.5" fill="rgba(255,255,255,0.1)"/>
+                          <rect x="492" y="172" width="16" height="3" rx="1.5" fill="rgba(255,255,255,0.08)"/>
+
+                          <!-- X-Axis Ticks & Labels -->
+                          <text x="52" y="190" fill="#71717a" font-size="9" text-anchor="middle" font-family="monospace">$0</text>
+                          <text x="112" y="190" fill="#71717a" font-size="9" text-anchor="middle" font-family="monospace">$1K</text>
+                          <text x="172" y="190" fill="#71717a" font-size="9" text-anchor="middle" font-family="monospace">$2K</text>
+                          <text x="232" y="190" fill="#71717a" font-size="9" text-anchor="middle" font-family="monospace">$3K</text>
+                          <text x="292" y="190" fill="#71717a" font-size="9" text-anchor="middle" font-family="monospace">$4K</text>
+                          <text x="352" y="190" fill="#71717a" font-size="9" text-anchor="middle" font-family="monospace">$5K</text>
+                          <text x="412" y="190" fill="#71717a" font-size="9" text-anchor="middle" font-family="monospace">$6K</text>
+                          <text x="472" y="190" fill="#71717a" font-size="9" text-anchor="middle" font-family="monospace">$7K</text>
+                          <text x="515" y="190" fill="#71717a" font-size="9" text-anchor="middle" font-family="monospace">$8K+</text>
+
+                          <text x="285" y="204" fill="#71717a" font-size="10" text-anchor="middle" font-family="sans-serif">Predicted CLV (USD)</text>
+                        </svg>
                       </div>
                     </div>
 
-                    <!-- CLV Factors (Feature Importance) Card -->
-                    <div class="profile-card-section" style="padding: 22px;">
-                      <div class="card-section-header">
-                        <span class="card-section-title">CLV Factors (Feature Importance)</span>
-                      </div>
-                      <div class="factor-progress-row">
-                        <div class="factor-label-row">
-                          <span>Recency (Days)</span>
-                          <span style="font-weight: 700; color: #fff;">28.4%</span>
+                    <!-- Bottom Row: CLV Factors & Top CLV Customers Side-by-Side -->
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+                      <!-- Card A: CLV Factors (Feature Importance) -->
+                      <div class="profile-card-section" style="padding: 20px;">
+                        <div class="card-section-header" style="margin-bottom: 14px;">
+                          <div>
+                            <span class="card-section-title" style="display: flex; align-items: center; gap: 6px;">
+                              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+                              CLV FACTORS
+                            </span>
+                            <div style="font-size: 11px; color: #8e9693; margin-top: 2px;">Key factors influencing customer lifetime value</div>
+                          </div>
                         </div>
-                        <div class="factor-track"><div class="factor-bar" style="width: 28.4%;"></div></div>
-                      </div>
-                      <div class="factor-progress-row">
-                        <div class="factor-label-row">
-                          <span>Frequency (Orders)</span>
-                          <span style="font-weight: 700; color: #fff;">32.1%</span>
+                        <div class="factor-progress-row">
+                          <div class="factor-label-row">
+                            <span>Recency</span>
+                            <span style="font-weight: 700; color: #fff; font-family: var(--font-mono);">28.4%</span>
+                          </div>
+                          <div class="factor-track"><div class="factor-bar" style="width: 28.4%;"></div></div>
                         </div>
-                        <div class="factor-track"><div class="factor-bar" style="width: 32.1%;"></div></div>
-                      </div>
-                      <div class="factor-progress-row">
-                        <div class="factor-label-row">
-                          <span>Monetary Value ($)</span>
-                          <span style="font-weight: 700; color: #fff;">24.7%</span>
+                        <div class="factor-progress-row">
+                          <div class="factor-label-row">
+                            <span>Frequency</span>
+                            <span style="font-weight: 700; color: #fff; font-family: var(--font-mono);">32.1%</span>
+                          </div>
+                          <div class="factor-track"><div class="factor-bar" style="width: 32.1%;"></div></div>
                         </div>
-                        <div class="factor-track"><div class="factor-bar" style="width: 24.7%;"></div></div>
-                      </div>
-                      <div class="factor-progress-row" style="margin-bottom: 0;">
-                        <div class="factor-label-row">
-                          <span>Tenure (Days)</span>
-                          <span style="font-weight: 700; color: #fff;">14.8%</span>
+                        <div class="factor-progress-row">
+                          <div class="factor-label-row">
+                            <span>Monetary</span>
+                            <span style="font-weight: 700; color: #fff; font-family: var(--font-mono);">24.7%</span>
+                          </div>
+                          <div class="factor-track"><div class="factor-bar" style="width: 24.7%;"></div></div>
                         </div>
-                        <div class="factor-track"><div class="factor-bar" style="width: 14.8%;"></div></div>
+                        <div class="factor-progress-row" style="margin-bottom: 0;">
+                          <div class="factor-label-row">
+                            <span>Tenure</span>
+                            <span style="font-weight: 700; color: #fff; font-family: var(--font-mono);">14.8%</span>
+                          </div>
+                          <div class="factor-track"><div class="factor-bar" style="width: 14.8%;"></div></div>
+                        </div>
                       </div>
-                    </div>
 
-                    <!-- Top CLV Customers Table -->
-                    <div class="profile-card-section" style="padding: 22px;">
-                      <div class="card-section-header">
-                        <span class="card-section-title">Top CLV Customers</span>
+                      <!-- Card B: Top CLV Customers Table -->
+                      <div class="profile-card-section" style="padding: 20px;">
+                        <div class="card-section-header" style="margin-bottom: 14px;">
+                          <div>
+                            <span class="card-section-title" style="display: flex; align-items: center; gap: 6px;">
+                              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.45 1-1 1H7c-.55 0-1-.45-1-1v-2.34c-1.22-.64-2-1.92-2-3.32V4h16v7.34c0 1.4-.78 2.68-2 3.32V17c0 .55-.45 1-1 1h-2c-.55 0-1-.45-1-1v-2.34c-.7.37-1.5.58-2.35.63H9.35c-.85-.05-1.65-.26-2.35-.63z"/></svg>
+                              TOP CLV CUSTOMERS
+                            </span>
+                            <div style="font-size: 11px; color: #8e9693; margin-top: 2px;">Highest predicted customer lifetime value</div>
+                          </div>
+                        </div>
+                        <table style="width: 100%; border-collapse: collapse; font-size: 11.5px;">
+                          <thead>
+                            <tr style="border-bottom: 1px solid rgba(255,255,255,0.08);">
+                              <th style="padding: 6px 4px; text-align: left; color: #71717a; font-size: 10px;">#</th>
+                              <th style="padding: 6px 6px; text-align: left; color: #71717a; font-size: 10px;">CUSTOMER</th>
+                              <th style="padding: 6px 6px; text-align: right; color: #71717a; font-size: 10px;">PREDICTED CLV</th>
+                              <th style="padding: 6px 4px; text-align: right; color: #71717a; font-size: 10px;">SEGMENT</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr style="border-bottom: 1px solid rgba(255,255,255,0.04);">
+                              <td style="padding: 6px 4px; color: #71717a;">1</td>
+                              <td style="padding: 6px; font-family: var(--font-mono); color: #fff;">#17850</td>
+                              <td style="padding: 6px; text-align: right; color: #fff; font-weight: 700; font-family: var(--font-mono);">$8,432</td>
+                              <td style="padding: 6px 4px; text-align: right; color: #a1a1aa;">Champions</td>
+                            </tr>
+                            <tr style="border-bottom: 1px solid rgba(255,255,255,0.04);">
+                              <td style="padding: 6px 4px; color: #71717a;">2</td>
+                              <td style="padding: 6px; font-family: var(--font-mono); color: #fff;">#12731</td>
+                              <td style="padding: 6px; text-align: right; color: #fff; font-weight: 700; font-family: var(--font-mono);">$7,880</td>
+                              <td style="padding: 6px 4px; text-align: right; color: #a1a1aa;">Champions</td>
+                            </tr>
+                            <tr style="border-bottom: 1px solid rgba(255,255,255,0.04);">
+                              <td style="padding: 6px 4px; color: #71717a;">3</td>
+                              <td style="padding: 6px; font-family: var(--font-mono); color: #fff;">#14652</td>
+                              <td style="padding: 6px; text-align: right; color: #fff; font-weight: 700; font-family: var(--font-mono);">$6,780</td>
+                              <td style="padding: 6px 4px; text-align: right; color: #a1a1aa;">Loyal</td>
+                            </tr>
+                            <tr style="border-bottom: 1px solid rgba(255,255,255,0.04);">
+                              <td style="padding: 6px 4px; color: #71717a;">4</td>
+                              <td style="padding: 6px; font-family: var(--font-mono); color: #fff;">#16032</td>
+                              <td style="padding: 6px; text-align: right; color: #fff; font-weight: 700; font-family: var(--font-mono);">$6,420</td>
+                              <td style="padding: 6px 4px; text-align: right; color: #a1a1aa;">Loyal</td>
+                            </tr>
+                            <tr>
+                              <td style="padding: 6px 4px; color: #71717a;">5</td>
+                              <td style="padding: 6px; font-family: var(--font-mono); color: #fff;">#11890</td>
+                              <td style="padding: 6px; text-align: right; color: #fff; font-weight: 700; font-family: var(--font-mono);">$6,210</td>
+                              <td style="padding: 6px 4px; text-align: right; color: #a1a1aa;">Champions</td>
+                            </tr>
+                          </tbody>
+                        </table>
                       </div>
-                      <table style="width: 100%; border-collapse: collapse; font-size: 12px;">
-                        <thead>
-                          <tr style="border-bottom: 1px solid rgba(255,255,255,0.08);">
-                            <th style="padding: 6px 8px; text-align: left; color: #71717a; font-size: 10.5px;">CUSTOMER</th>
-                            <th style="padding: 6px 8px; text-align: left; color: #71717a; font-size: 10.5px;">SEGMENT</th>
-                            <th style="padding: 6px 8px; text-align: right; color: #71717a; font-size: 10.5px;">PREDICTED CLV</th>
-                            <th style="padding: 6px 8px; text-align: right; color: #71717a; font-size: 10.5px;">STATUS</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          <tr style="border-bottom: 1px solid rgba(255,255,255,0.04);">
-                            <td style="padding: 8px; font-family: var(--font-mono); color: #fff;">#17850</td>
-                            <td style="padding: 8px;"><span class="cluster-card-badge badge-champ" style="padding: 2px 8px; font-size: 10px;">Champions</span></td>
-                            <td style="padding: 8px; text-align: right; color: #fff; font-weight: 700;">$8,432.10</td>
-                            <td style="padding: 8px; text-align: right;"><span class="status-pill-active" style="padding: 1px 6px; font-size: 10px;">Active</span></td>
-                          </tr>
-                          <tr style="border-bottom: 1px solid rgba(255,255,255,0.04);">
-                            <td style="padding: 8px; font-family: var(--font-mono); color: #fff;">#12731</td>
-                            <td style="padding: 8px;"><span class="cluster-card-badge badge-champ" style="padding: 2px 8px; font-size: 10px;">Champions</span></td>
-                            <td style="padding: 8px; text-align: right; color: #fff; font-weight: 700;">$7,880.50</td>
-                            <td style="padding: 8px; text-align: right;"><span class="status-pill-active" style="padding: 1px 6px; font-size: 10px;">Active</span></td>
-                          </tr>
-                          <tr style="border-bottom: 1px solid rgba(255,255,255,0.04);">
-                            <td style="padding: 8px; font-family: var(--font-mono); color: #fff;">#14652</td>
-                            <td style="padding: 8px;"><span class="cluster-card-badge badge-champ" style="padding: 2px 8px; font-size: 10px;">Champions</span></td>
-                            <td style="padding: 8px; text-align: right; color: #fff; font-weight: 700;">$6,780.00</td>
-                            <td style="padding: 8px; text-align: right;"><span class="status-pill-active" style="padding: 1px 6px; font-size: 10px;">Active</span></td>
-                          </tr>
-                          <tr style="border-bottom: 1px solid rgba(255,255,255,0.04);">
-                            <td style="padding: 8px; font-family: var(--font-mono); color: #fff;">#16032</td>
-                            <td style="padding: 8px;"><span class="cluster-card-badge badge-loyal" style="padding: 2px 8px; font-size: 10px;">Loyal Customers</span></td>
-                            <td style="padding: 8px; text-align: right; color: #fff; font-weight: 700;">$6,420.25</td>
-                            <td style="padding: 8px; text-align: right;"><span class="status-pill-active" style="padding: 1px 6px; font-size: 10px;">Active</span></td>
-                          </tr>
-                          <tr>
-                            <td style="padding: 8px; font-family: var(--font-mono); color: #fff;">#11890</td>
-                            <td style="padding: 8px;"><span class="cluster-card-badge badge-loyal" style="padding: 2px 8px; font-size: 10px;">Loyal Customers</span></td>
-                            <td style="padding: 8px; text-align: right; color: #fff; font-weight: 700;">$6,210.00</td>
-                            <td style="padding: 8px; text-align: right;"><span class="status-pill-active" style="padding: 1px 6px; font-size: 10px;">Active</span></td>
-                          </tr>
-                        </tbody>
-                      </table>
                     </div>
                   </div>
 
@@ -1525,74 +1954,115 @@
                     <!-- Churn Risk Card -->
                     <div class="profile-card-section" style="padding: 22px;">
                       <div class="card-section-header">
-                        <span class="card-section-title">Churn Risk Analytics</span>
-                        <span style="font-size: 11px; color: #a1a1aa;">Supervised Classification</span>
+                        <div>
+                          <span class="card-section-title" style="display: flex; align-items: center; gap: 8px;">
+                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                            CHURN RISK ANALYTICS
+                          </span>
+                          <div style="font-size: 11.5px; color: #8e9693; margin-top: 2px;">Identify at-risk customers and their key characteristics</div>
+                        </div>
                       </div>
-                      <p style="font-size: 12.5px; color: var(--text-secondary); line-height: 1.5; margin-bottom: 14px;">
-                        A Random Forest classifier analyzes behavioral dormancy patterns to estimate the exact probability that an active customer will lapse into churned status.
-                      </p>
+
                       <div class="model-metrics-row" style="margin-bottom: 18px;">
                         <div class="model-metric-tile">
-                          <div class="metric-tile-val" style="color: #ffffff;">0.8056</div>
+                          <div class="metric-tile-val" style="color: #ffffff; font-family: var(--font-mono);">0.8056</div>
                           <div class="metric-tile-lbl">ROC-AUC Score</div>
                         </div>
                         <div class="model-metric-tile">
-                          <div class="metric-tile-val">75.09%</div>
+                          <div class="metric-tile-val" style="font-family: var(--font-mono);">75.09%</div>
                           <div class="metric-tile-lbl">Overall Accuracy</div>
                         </div>
                         <div class="model-metric-tile">
-                          <div class="metric-tile-val">0.7876</div>
+                          <div class="metric-tile-val" style="font-family: var(--font-mono);">0.7876</div>
                           <div class="metric-tile-lbl">Harmonic F1-Score</div>
                         </div>
                       </div>
 
-                      <div style="font-size: 10.5px; font-weight: 700; color: #71717a; text-transform: uppercase; letter-spacing: 0.06em; margin-top: 28px; margin-bottom: 20px;">
-                        Churn Risk Distribution
+                      <div style="font-size: 10.5px; font-weight: 700; color: #71717a; text-transform: uppercase; letter-spacing: 0.06em; margin-top: 18px; margin-bottom: 8px;">
+                        CHURN RISK DISTRIBUTION
                       </div>
-                      <div style="display: flex; align-items: flex-end; justify-content: space-between; height: 110px; padding: 16px 0 6px 0; border-bottom: 1px solid rgba(255,255,255,0.08); gap: 12px;">
-                        <div style="display: flex; flex-direction: column; align-items: center; gap: 6px; flex: 1;">
-                          <span style="font-size: 10px; color: #ffffff; font-family: var(--font-mono); font-weight: 700;">54%</span>
-                          <div style="width: 100%; height: 60px; background: #ffffff; border-radius: 4px;"></div>
-                          <span style="font-size: 10px; color: #71717a;">0-20%</span>
-                        </div>
-                        <div style="display: flex; flex-direction: column; align-items: center; gap: 6px; flex: 1;">
-                          <span style="font-size: 10px; color: #a1a1aa; font-family: var(--font-mono);">22%</span>
-                          <div style="width: 100%; height: 35px; background: rgba(255,255,255,0.5); border-radius: 4px;"></div>
-                          <span style="font-size: 10px; color: #71717a;">20-40%</span>
-                        </div>
-                        <div style="display: flex; flex-direction: column; align-items: center; gap: 6px; flex: 1;">
-                          <span style="font-size: 10px; color: #a1a1aa; font-family: var(--font-mono);">12%</span>
-                          <div style="width: 100%; height: 22px; background: rgba(255,255,255,0.3); border-radius: 4px;"></div>
-                          <span style="font-size: 10px; color: #71717a;">40-60%</span>
-                        </div>
-                        <div style="display: flex; flex-direction: column; align-items: center; gap: 6px; flex: 1;">
-                          <span style="font-size: 10px; color: #a1a1aa; font-family: var(--font-mono);">8%</span>
-                          <div style="width: 100%; height: 16px; background: rgba(255,255,255,0.2); border-radius: 4px;"></div>
-                          <span style="font-size: 10px; color: #71717a;">60-80%</span>
-                        </div>
-                        <div style="display: flex; flex-direction: column; align-items: center; gap: 6px; flex: 1;">
-                          <span style="font-size: 10px; color: #a1a1aa; font-family: var(--font-mono);">4%</span>
-                          <div style="width: 100%; height: 10px; background: rgba(255,255,255,0.12); border-radius: 4px;"></div>
-                          <span style="font-size: 10px; color: #71717a;">80-100%</span>
-                        </div>
+                      
+                      <!-- Churn Risk Histogram with proper X and Y axes -->
+                      <div style="position: relative; width: 100%; height: 160px;">
+                        <svg width="100%" height="160" viewBox="0 0 440 160" fill="none" preserveAspectRatio="none">
+                          <line x1="38" y1="15" x2="425" y2="15" stroke="rgba(255,255,255,0.05)" stroke-dasharray="2 2"/>
+                          <text x="32" y="19" fill="#71717a" font-size="8.5" text-anchor="end" font-family="monospace">800</text>
+                          <line x1="38" y1="45" x2="425" y2="45" stroke="rgba(255,255,255,0.05)" stroke-dasharray="2 2"/>
+                          <text x="32" y="49" fill="#71717a" font-size="8.5" text-anchor="end" font-family="monospace">600</text>
+                          <line x1="38" y1="75" x2="425" y2="75" stroke="rgba(255,255,255,0.05)" stroke-dasharray="2 2"/>
+                          <text x="32" y="79" fill="#71717a" font-size="8.5" text-anchor="end" font-family="monospace">400</text>
+                          <line x1="38" y1="105" x2="425" y2="105" stroke="rgba(255,255,255,0.05)" stroke-dasharray="2 2"/>
+                          <text x="32" y="109" fill="#71717a" font-size="8.5" text-anchor="end" font-family="monospace">200</text>
+                          <line x1="38" y1="130" x2="425" y2="130" stroke="rgba(255,255,255,0.18)"/>
+                          <text x="32" y="133" fill="#71717a" font-size="8.5" text-anchor="end" font-family="monospace">0</text>
+
+                          <text x="-72" y="12" fill="#71717a" font-size="8.5" transform="rotate(-90)" text-anchor="middle" font-family="sans-serif">Number of Customers</text>
+
+                          <!-- Decaying distribution bars -->
+                          <rect x="44" y="24" width="13" height="106" rx="1" fill="#ffffff"/>
+                          <rect x="61" y="45" width="13" height="85" rx="1" fill="rgba(255,255,255,0.85)"/>
+                          <rect x="78" y="58" width="13" height="72" rx="1" fill="rgba(255,255,255,0.7)"/>
+                          <rect x="95" y="80" width="13" height="50" rx="1" fill="rgba(255,255,255,0.55)"/>
+                          <rect x="112" y="94" width="13" height="36" rx="1" fill="rgba(255,255,255,0.45)"/>
+                          <rect x="129" y="104" width="13" height="26" rx="1" fill="rgba(255,255,255,0.38)"/>
+                          <rect x="146" y="112" width="13" height="18" rx="1" fill="rgba(255,255,255,0.3)"/>
+                          <rect x="163" y="118" width="13" height="12" rx="1" fill="rgba(255,255,255,0.25)"/>
+                          <rect x="180" y="121" width="13" height="9" rx="1" fill="rgba(255,255,255,0.2)"/>
+                          <rect x="197" y="123" width="13" height="7" rx="1" fill="rgba(255,255,255,0.18)"/>
+                          <rect x="214" y="124" width="13" height="6" rx="1" fill="rgba(255,255,255,0.15)"/>
+                          <rect x="231" y="125" width="13" height="5" rx="1" fill="rgba(255,255,255,0.13)"/>
+                          <rect x="248" y="126" width="13" height="4" rx="1" fill="rgba(255,255,255,0.11)"/>
+                          <rect x="265" y="127" width="13" height="3" rx="1" fill="rgba(255,255,255,0.09)"/>
+                          <rect x="282" y="127.5" width="13" height="2.5" rx="1" fill="rgba(255,255,255,0.08)"/>
+                          <rect x="299" y="128" width="13" height="2" rx="1" fill="rgba(255,255,255,0.07)"/>
+                          <rect x="316" y="128" width="13" height="2" rx="1" fill="rgba(255,255,255,0.06)"/>
+                          <rect x="333" y="128.5" width="13" height="1.5" rx="1" fill="rgba(255,255,255,0.05)"/>
+                          <rect x="350" y="128.5" width="13" height="1.5" rx="1" fill="rgba(255,255,255,0.05)"/>
+                          <rect x="367" y="129" width="13" height="1" rx="1" fill="rgba(255,255,255,0.04)"/>
+                          <rect x="384" y="129" width="13" height="1" rx="1" fill="rgba(255,255,255,0.03)"/>
+                          <rect x="401" y="129" width="13" height="1" rx="1" fill="rgba(255,255,255,0.03)"/>
+
+                          <text x="44" y="143" fill="#71717a" font-size="8.5" text-anchor="middle" font-family="monospace">0.0</text>
+                          <text x="120" y="143" fill="#71717a" font-size="8.5" text-anchor="middle" font-family="monospace">0.2</text>
+                          <text x="197" y="143" fill="#71717a" font-size="8.5" text-anchor="middle" font-family="monospace">0.4</text>
+                          <text x="274" y="143" fill="#71717a" font-size="8.5" text-anchor="middle" font-family="monospace">0.6</text>
+                          <text x="350" y="143" fill="#71717a" font-size="8.5" text-anchor="middle" font-family="monospace">0.8</text>
+                          <text x="414" y="143" fill="#71717a" font-size="8.5" text-anchor="middle" font-family="monospace">1.0</text>
+
+                          <text x="230" y="155" fill="#71717a" font-size="9" text-anchor="middle" font-family="sans-serif">Churn Probability</text>
+                        </svg>
                       </div>
                     </div>
 
                     <!-- Automated Action Triggers Card -->
                     <div class="profile-card-section" style="padding: 22px;">
                       <div class="card-section-header">
-                        <span class="card-section-title">Automated Action Triggers</span>
-                        <span style="font-size: 11px; color: #a1a1aa;">Proactive Retention Protocol</span>
+                        <div>
+                          <span class="card-section-title" style="display: flex; align-items: center; gap: 8px;">
+                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+                            AUTOMATED ACTION TRIGGERS
+                          </span>
+                          <div style="font-size: 11.5px; color: #8e9693; margin-top: 2px;">Proactive retention strategies based on churn risk levels</div>
+                        </div>
                       </div>
-                      <div style="display: flex; flex-direction: column; gap: 12px;">
-                        <div style="padding: 12px 14px; background: rgba(255,255,255,0.03); border: 1px solid var(--border-subtle); border-radius: var(--radius-sm); font-size: 12.5px; line-height: 1.5;">
-                          <span style="color: #34d399; font-weight: 700;">● Low Risk (&lt; 30%):</span> Standard loyalty rewards and product recommendations.
+                      <div style="display: flex; flex-direction: column; gap: 10px;">
+                        <div class="clv-trigger-item">
+                          <div class="clv-trigger-text">
+                            <span style="color: #ffffff; font-weight: 700;">● Low Risk (&lt; 30%):</span> Standard loyalty rewards and product recommendations.
+                          </div>
+                          <button type="button" class="clv-trigger-btn" onclick="window.switchDashboardTab('lookup'); if(window.selectSampleCustomer) window.selectSampleCustomer('15485');">View Actions &rarr;</button>
                         </div>
-                        <div style="padding: 12px 14px; background: rgba(255,255,255,0.03); border: 1px solid var(--border-subtle); border-radius: var(--radius-sm); font-size: 12.5px; line-height: 1.5;">
-                          <span style="color: #fbbf24; font-weight: 700;">● Medium Risk (30 - 60%):</span> Automated win-back campaign with tiered cross-sell incentives.
+                        <div class="clv-trigger-item">
+                          <div class="clv-trigger-text">
+                            <span style="color: #fbbf24; font-weight: 700;">● Medium Risk (30 - 60%):</span> Automated win-back campaign with tiered cross-sell incentives.
+                          </div>
+                          <button type="button" class="clv-trigger-btn" onclick="window.switchDashboardTab('lookup'); if(window.selectSampleCustomer) window.selectSampleCustomer('13748');">View Actions &rarr;</button>
                         </div>
-                        <div style="padding: 12px 14px; background: rgba(255,255,255,0.03); border: 1px solid var(--border-subtle); border-radius: var(--radius-sm); font-size: 12.5px; line-height: 1.5;">
-                          <span style="color: #fb7185; font-weight: 700;">● High Risk (&gt; 60%):</span> Immediate priority outreach and direct customer retention play.
+                        <div class="clv-trigger-item">
+                          <div class="clv-trigger-text">
+                            <span style="color: #fb7185; font-weight: 700;">● High Risk (&gt; 60%):</span> Immediate priority outreach and direct customer retention play.
+                          </div>
+                          <button type="button" class="clv-trigger-btn" onclick="window.switchDashboardTab('lookup'); if(window.selectSampleCustomer) window.selectSampleCustomer('16964');">View Actions &rarr;</button>
                         </div>
                       </div>
                     </div>

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { PredictionResult, SavedScenario } from '../../types';
 import { api } from '../../lib/api';
 import { formatCurrency, formatPercent } from '../../lib/formatters';
@@ -12,6 +12,15 @@ export const SimulatorView: React.FC = () => {
   const [prediction, setPrediction] = useState<PredictionResult | null>(null);
   const [loading, setLoading] = useState(false);
   const [scenarios, setScenarios] = useState<SavedScenario[]>([]);
+  const [error, setError] = useState<string | null>(null);
+  const [scenarioError, setScenarioError] = useState<string | null>(null);
+  const [actionError, setActionError] = useState<string | null>(null);
+  const [scenariosLoading, setScenariosLoading] = useState(true);
+  const [resultKey, setResultKey] = useState('');
+  const inputKey = JSON.stringify([recency, frequency, spend, tenure]);
+  const currentPrediction = resultKey === inputKey ? prediction : null;
+  const saving = useRef(false);
+  const listRequest = useRef(0);
 
   // Save scenario modal
   const [showSaveModal, setShowSaveModal] = useState(false);
@@ -19,35 +28,45 @@ export const SimulatorView: React.FC = () => {
   const [scenarioNotes, setScenarioNotes] = useState('');
   const [saveSuccessMsg, setSaveSuccessMsg] = useState<string | null>(null);
 
-  const runPrediction = async () => {
-    setLoading(true);
-    try {
-      const res = await api.predictCustomer(recency, frequency, spend, tenure);
-      setPrediction(res);
-    } catch (err) {
-      console.error(err);
-    } finally {
-      setLoading(false);
-    }
-  };
-
   const loadSavedScenarios = async () => {
+    const request = ++listRequest.current;
+    setScenariosLoading(true);
+    setScenarioError(null);
     try {
       const res = await api.getScenarios();
-      setScenarios(res.scenarios || []);
-    } catch (err) {
-      console.error(err);
+      if (request === listRequest.current) setScenarios(res.scenarios);
+    } catch (err: any) {
+      if (request === listRequest.current) setScenarioError(err.message);
+    } finally {
+      if (request === listRequest.current) setScenariosLoading(false);
     }
   };
 
   useEffect(() => {
-    runPrediction();
     loadSavedScenarios();
+    return () => { ++listRequest.current; };
+  }, []);
+
+  useEffect(() => {
+    let current = true;
+    setLoading(true);
+    setError(null);
+    setPrediction(null);
+    const timer = window.setTimeout(() => {
+      api.predictCustomer(recency, frequency, spend, tenure).then(res => {
+        if (current) { setPrediction(res); setResultKey(inputKey); }
+      }).catch(err => { if (current) setError(err.message); })
+        .finally(() => { if (current) setLoading(false); });
+    }, 250);
+    return () => { current = false; window.clearTimeout(timer); };
   }, [recency, frequency, spend, tenure]);
 
   const handleSaveScenario = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!prediction) return;
+    if (!currentPrediction || loading || saving.current) return;
+    saving.current = true;
+    setActionError(null);
+    setSaveSuccessMsg(null);
     try {
       await api.saveScenario({
         name: scenarioName || `Scenario R${recency}-F${frequency}-M${spend}`,
@@ -55,9 +74,9 @@ export const SimulatorView: React.FC = () => {
         frequency,
         total_spend: spend,
         tenure_days: tenure,
-        predicted_segment: prediction.segment,
-        predicted_clv: prediction.predicted_clv,
-        predicted_churn: prediction.churn_probability,
+        predicted_segment: currentPrediction.segment,
+        predicted_clv: currentPrediction.predicted_clv,
+        predicted_churn: currentPrediction.churn_probability,
         notes: scenarioNotes,
       });
       setShowSaveModal(false);
@@ -67,16 +86,21 @@ export const SimulatorView: React.FC = () => {
       setTimeout(() => setSaveSuccessMsg(null), 3500);
       loadSavedScenarios();
     } catch (err: any) {
-      alert(err.message || 'Failed to save scenario');
+      setActionError(err.message || 'Failed to save scenario');
+      setShowSaveModal(false);
+    } finally {
+      saving.current = false;
     }
   };
 
   const handleDeleteScenario = async (id: number) => {
+    setActionError(null);
+    setSaveSuccessMsg(null);
     try {
       await api.deleteScenario(id);
       loadSavedScenarios();
-    } catch (err) {
-      console.error(err);
+    } catch (err: any) {
+      setActionError(err.message);
     }
   };
 
@@ -88,7 +112,10 @@ export const SimulatorView: React.FC = () => {
   };
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+    <div className="insight-view" style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+      {error && <p role="alert">Prediction unavailable: {error}</p>}
+      {scenarioError && <p role="alert">Scenario service: {scenarioError}</p>}
+      {actionError && <p role="alert">Scenario action failed: {actionError}</p>}
       
       {/* Header */}
       <div className="dash-header-bar" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '12px' }}>
@@ -105,6 +132,7 @@ export const SimulatorView: React.FC = () => {
           type="button"
           className="btn-pill-primary"
           onClick={() => setShowSaveModal(true)}
+          disabled={!currentPrediction || loading}
           style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', fontSize: '12px', padding: '8px 16px' }}
         >
           <span>Save Current Scenario</span>
@@ -118,7 +146,7 @@ export const SimulatorView: React.FC = () => {
       )}
 
       {/* Main Simulator Grid */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'minmax(320px, 1fr) minmax(320px, 380px)', gap: '24px', alignItems: 'start' }}>
+      <div className="insight-split" style={{ display: 'grid', gridTemplateColumns: 'minmax(320px, 1fr) minmax(320px, 380px)', gap: '24px', alignItems: 'start' }}>
         
         {/* Controls Pane */}
         <div className="rfm-interactive-card" style={{ padding: '24px', display: 'flex', flexDirection: 'column', gap: '20px' }}>
@@ -202,31 +230,31 @@ export const SimulatorView: React.FC = () => {
             Real-Time Inference Output
           </div>
           <div style={{ fontSize: '26px', fontWeight: 800, color: '#fff', margin: '6px 0 16px 0' }}>
-            {prediction?.segment || 'Calculating...'}
+            {currentPrediction?.segment || (error ? 'Unavailable' : 'Calculating...')}
           </div>
 
           <div style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: '14px', padding: '16px', marginBottom: '14px' }}>
             <div style={{ fontSize: '12px', color: '#8e9693', fontWeight: 600 }}>Predicted 90-Day CLV</div>
             <div style={{ fontSize: '28px', fontWeight: 800, color: '#ffffff', fontFamily: 'var(--font-mono)' }}>
-              {formatCurrency(prediction?.predicted_clv)}
+              {currentPrediction ? formatCurrency(currentPrediction.predicted_clv) : '—'}
             </div>
             <div style={{ fontSize: '11px', color: '#8e9693', marginTop: '2px' }}>
-              Gradient Boosting Regressor (R² 0.524)
+              API-reported CLV prediction
             </div>
           </div>
 
           <div style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: '14px', padding: '16px', marginBottom: '16px' }}>
             <div style={{ fontSize: '12px', color: '#8e9693', fontWeight: 600 }}>Estimated Churn Probability</div>
             <div style={{ fontSize: '28px', fontWeight: 800, color: '#ffffff', fontFamily: 'var(--font-mono)' }}>
-              {formatPercent(prediction?.churn_probability)}
+              {currentPrediction ? formatPercent(currentPrediction.churn_probability) : '—'}
             </div>
             <div style={{ fontSize: '11px', color: '#8e9693', marginTop: '2px' }}>
-              Random Forest Classifier (ROC-AUC 0.806)
+              API-reported churn probability
             </div>
           </div>
 
           <div style={{ fontSize: '11.5px', color: '#8e9693', lineHeight: 1.5 }}>
-            Inference latency: &lt; 2ms. Parameters are evaluated in-memory against trained Scikit-Learn models.
+            Parameters are evaluated by the connected inference service. Model evaluation is available in CLV &amp; Churn ML.
           </div>
         </div>
 
@@ -242,11 +270,11 @@ export const SimulatorView: React.FC = () => {
             </div>
           </div>
           <span className="ui-badge" style={{ background: 'rgba(255,255,255,0.08)', color: '#fff' }}>
-            {scenarios.length} Scenarios
+            {scenariosLoading || scenarioError ? '—' : scenarios.length} Scenarios
           </span>
         </div>
 
-        {scenarios.length === 0 ? (
+        {scenariosLoading ? <p role="status">Loading saved scenarios…</p> : scenarioError ? <p>Saved scenarios unavailable. <button onClick={loadSavedScenarios}>Retry</button></p> : scenarios.length === 0 ? (
           <div style={{ textAlign: 'center', padding: '30px', color: '#8e9693', fontSize: '13px' }}>
             No scenarios saved yet. Adjust the sliders above and click "Save Current Scenario".
           </div>

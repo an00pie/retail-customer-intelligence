@@ -11,41 +11,40 @@ export const SegmentationView: React.FC<SegmentationViewProps> = ({ initialCohor
   const [cohorts, setCohorts] = useState<CohortSummary | null>(initialCohorts);
   const [retention, setRetention] = useState<RetentionMatrixData | null>(null);
   const [activeSegment, setActiveSegment] = useState<string>('Champions');
+  const [error, setError] = useState<string | null>(null);
+  const [retentionError, setRetentionError] = useState<string | null>(null);
 
   useEffect(() => {
-    if (!cohorts) {
-      api.getCohorts().then(setCohorts).catch(console.error);
+    let current = true;
+    if (!initialCohorts) {
+      api.getCohorts().then(data => { if (current) setCohorts(data); }).catch(err => { if (current) setError(err.message); });
     }
-    api.getRetentionMatrix().then(setRetention).catch(console.error);
+    api.getRetentionMatrix().then(data => { if (current) setRetention(data); }).catch(err => { if (current) setRetentionError(err.message); });
+    return () => { current = false; };
   }, []);
 
-  const cohortData = cohorts?.cohorts || {
-    'Champions': { count: 1241, percentage: 20.9, avg_recency: 24.8, avg_frequency: 20.0, avg_monetary: 11466.0 },
-    'Loyal Customers': { count: 1187, percentage: 20.0, avg_recency: 27.6, avg_frequency: 3.0, avg_monetary: 855.0 },
-    'At-Risk': { count: 1475, percentage: 24.8, avg_recency: 210.7, avg_frequency: 5.4, avg_monetary: 2148.2 },
-    'Lost / Churned': { count: 2038, percentage: 34.3, avg_recency: 393.0, avg_frequency: 1.4, avg_monetary: 346.0 },
-  };
+  const cohortData = cohorts?.cohorts || {};
 
   const segmentDescriptions: Record<string, { title: string; strategy: string; traits: string[] }> = {
     'Champions': {
       title: 'High-Value VIP Brand Advocates',
       strategy: 'VIP exclusive rewards, ambassador tier, personalized outreach, no discount incentives needed.',
-      traits: ['Highest average monetary spend ($11,466)', 'Average 20.0 orders per account', 'Low recency (< 25 days)'],
+      traits: ['High-value, frequently engaged customers'],
     },
     'Loyal Customers': {
       title: 'Steady & Predictable Brand Regulars',
       strategy: 'Volume bundle incentives, referral bonuses, cross-selling complementary product lines.',
-      traits: ['Average spend of $855', 'Consistent purchase frequency', 'Responsive to loyalty point rewards'],
+      traits: ['Consistent purchase frequency', 'Responsive to loyalty point rewards'],
     },
     'At-Risk': {
       title: 'High-Spending Customers In Danger of Churn',
       strategy: 'Urgent retention outreach, personalized 15% win-back incentives, outbound customer support.',
-      traits: ['High historical spend ($2,148)', 'Dormant for over 7 months (210.7 days)', 'Churn probability > 50%'],
+      traits: ['Historical spending with declining engagement'],
     },
     'Lost / Churned': {
       title: 'Inactive & Lapsed Accounts',
       strategy: 'Automated low-cost email reactivation campaign, exit feedback survey to identify churn drivers.',
-      traits: ['Dormant for over 12 months (393 days)', 'Lowest monetary value ($346)', 'High churn risk (74.4%)'],
+      traits: ['Inactive customers requiring reactivation'],
     },
   };
 
@@ -54,7 +53,11 @@ export const SegmentationView: React.FC<SegmentationViewProps> = ({ initialCohor
   };
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+    <div className="insight-view" style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+      {error && <p role="alert">Cohorts unavailable: {error}</p>}
+      {!cohorts && !error && <p role="status">Loading cohorts…</p>}
+      {retentionError && <p role="alert">Retention matrix unavailable: {retentionError}</p>}
+      {!retention && !retentionError && <p role="status">Loading retention matrix…</p>}
       
       {/* Header Bar */}
       <div className="dash-header-bar" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '12px' }}>
@@ -63,7 +66,7 @@ export const SegmentationView: React.FC<SegmentationViewProps> = ({ initialCohor
             Customer Behavioral Segmentation (K-Means)
           </h2>
           <p style={{ fontSize: '12.5px', color: '#8e9693', marginTop: '2px' }}>
-            Unsupervised clustering over normalized log1p RFM feature vectors across 5,942 customer accounts
+            Unsupervised clustering over normalized log1p RFM feature vectors{cohorts?.total_profiles ? ` across ${cohorts.total_profiles.toLocaleString()} customer accounts` : ''}
           </p>
         </div>
 
@@ -89,7 +92,11 @@ export const SegmentationView: React.FC<SegmentationViewProps> = ({ initialCohor
           return (
             <div
               key={name}
-              className="overview-cohort-card"
+              className="insight-panel overview-cohort-card"
+              role="button"
+              tabIndex={0}
+              aria-pressed={isSelected}
+              onKeyDown={e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setActiveSegment(name); } }}
               onClick={() => setActiveSegment(name)}
               style={{
                 cursor: 'pointer',
@@ -122,7 +129,7 @@ export const SegmentationView: React.FC<SegmentationViewProps> = ({ initialCohor
       </div>
 
       {/* Selected Segment Strategy Deep-Dive */}
-      {segmentDescriptions[activeSegment] && (
+      {cohortData[activeSegment] && segmentDescriptions[activeSegment] && (
         <div className="dash-ov-card" style={{ padding: '24px' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '12px', marginBottom: '16px' }}>
             <div>
@@ -138,13 +145,13 @@ export const SegmentationView: React.FC<SegmentationViewProps> = ({ initialCohor
             </span>
           </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
+          <div className="insight-split" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
             <div style={{ background: 'rgba(255, 255, 255, 0.02)', padding: '16px', borderRadius: '12px', border: '1px solid rgba(255, 255, 255, 0.06)' }}>
               <div style={{ fontSize: '12px', fontWeight: 700, color: '#fff', marginBottom: '8px' }}>
                 Cohort Key Characteristics
               </div>
               <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '6px', fontSize: '12px', color: '#b9bfbd' }}>
-                {segmentDescriptions[activeSegment].traits.map((t, idx) => (
+                {[...segmentDescriptions[activeSegment].traits, `Average recency: ${cohortData[activeSegment].avg_recency} days`, `Average orders: ${cohortData[activeSegment].avg_frequency}`, `Average spend: ${formatCurrency(cohortData[activeSegment].avg_monetary)}`].map((t, idx) => (
                   <li key={idx} style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                     <span style={{ color: '#fff' }}>•</span>
                     <span>{t}</span>
@@ -171,11 +178,11 @@ export const SegmentationView: React.FC<SegmentationViewProps> = ({ initialCohor
           <div style={{ marginBottom: '16px' }}>
             <div style={{ fontSize: '15px', fontWeight: 700, color: '#fff' }}>Monthly Cohort Retention Matrix</div>
             <div style={{ fontSize: '12px', color: '#8e9693', marginTop: '2px' }}>
-              Percentage of customers returning in subsequent months after initial purchase
+              Backend-provided preview matrix · static reference values, not a live retention calculation
             </div>
           </div>
 
-          <div style={{ overflowX: 'auto' }}>
+          <div className="insight-table-scroll" style={{ overflowX: 'auto' }}>
             <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '11px', textAlign: 'center' }}>
               <thead>
                 <tr style={{ borderBottom: '1px solid rgba(255, 255, 255, 0.08)' }}>

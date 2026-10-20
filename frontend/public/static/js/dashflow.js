@@ -1031,21 +1031,39 @@ function renderCustomerProfile(data) {
         <div class="card-section-header">
           <span class="card-section-title">Recommended Next Best Actions</span>
         </div>
-        <div class="customer-actions-box" style="margin-bottom: 16px; background: transparent; border: none; padding: 0;">
-          <div class="action-item-row" style="padding: 10px 0;">
-            <span style="font-weight: 600;">${rawSeg === 'Champions' ? '⭐ VIP Exclusive Rewards Access' : '✨ Re-engagement Promotion'}</span>
-            <span style="font-size: 11px; color: #34d399; font-weight: 700; background: rgba(16,185,129,0.12); border: 1px solid rgba(16,185,129,0.25); padding: 3px 10px; border-radius: 999px;">Eligible</span>
+        <div class="customer-actions-box" style="margin-bottom: 16px; background: transparent; border: none; padding: 0; display: flex; flex-direction: column; gap: 10px;">
+          <div class="next-action-row">
+            <div class="next-action-left">
+              <span class="next-action-icon">⭐</span>
+              <div>
+                <div class="next-action-title">${rawSeg === 'Champions' ? 'VIP Exclusive Rewards Access' : 'Re-engagement Promotion'}</div>
+                <div class="next-action-desc">Offer early access to new collections based on high purchase frequency.</div>
+              </div>
+            </div>
+            <div class="next-action-right">
+              <span style="font-size: 11px; color: #34d399; font-weight: 700; background: rgba(16,185,129,0.12); border: 1px solid rgba(16,185,129,0.25); padding: 3px 10px; border-radius: 999px;">Eligible</span>
+              <button type="button" class="btn-pill-secondary" style="padding: 4px 10px; font-size: 11px;" onclick="window.showToast('Early access VIP campaign queued for dispatch', 'info')">View Details &rarr;</button>
+            </div>
           </div>
-          <div class="action-item-row" style="padding: 10px 0;">
-            <span style="font-weight: 600;">📦 High-AOV Category Cross-Sell Catalog</span>
-            <span style="font-size: 11px; color: #60a5fa; font-weight: 700; background: rgba(59,130,246,0.12); border: 1px solid rgba(59,130,246,0.25); padding: 3px 10px; border-radius: 999px;">Queued</span>
+          <div class="next-action-row">
+            <div class="next-action-left">
+              <span class="next-action-icon">🎁</span>
+              <div>
+                <div class="next-action-title">High-AOV Category Cross-Sell Catalog</div>
+                <div class="next-action-desc">Recommend complementary products from high-value categories.</div>
+              </div>
+            </div>
+            <div class="next-action-right">
+              <span style="font-size: 11px; color: #60a5fa; font-weight: 700; background: rgba(59,130,246,0.12); border: 1px solid rgba(59,130,246,0.25); padding: 3px 10px; border-radius: 999px;">Queued</span>
+              <button type="button" class="btn-pill-secondary" style="padding: 4px 10px; font-size: 11px;" onclick="window.showToast('Cross-sell recommendation matrix generated', 'info')">View Details &rarr;</button>
+            </div>
           </div>
         </div>
 
         <div class="customer-profile-actions">
           <button type="button" class="btn-pill-secondary" id="exportCustomerProfileBtn" style="flex: 1; justify-content: center; font-size: 12px; padding: 10px;" onclick="window.exportCustomerProfileCsv()" title="Export Customer Profile (CSV)" aria-label="Export Customer Profile CSV">📥 Export Profile</button>
           <button type="button" class="btn-pill-secondary" style="flex: 1; justify-content: center; font-size: 12px; padding: 10px; opacity: 0.8;" onclick="window.showToast('Messaging integration unavailable: Outbound SMS/Email gateway not configured', 'info')" title="Direct customer messaging gateway not configured">💬 Message <span style="font-size: 10px; opacity: 0.75; margin-left: 3px;">(Unavailable)</span></button>
-          <button type="button" class="btn-pill-primary" style="flex: 1; justify-content: center; font-size: 12px; padding: 10px; opacity: 0.8;" onclick="window.showToast('Task assignment unavailable: CRM/Task integration not configured', 'info')" title="CRM/Task assignment integration not configured">+ Assign Task <span style="font-size: 10px; opacity: 0.75; margin-left: 3px;">(Unavailable)</span></button>
+          <button type="button" class="btn-pill-primary" style="flex: 1; justify-content: center; font-size: 12px; padding: 10px; opacity: 0.9;" onclick="window.showToast('Task assignment unavailable: CRM/Task integration not configured', 'info')" title="CRM/Task assignment integration not configured">+ Assign Task <span style="font-size: 10px; opacity: 0.75; margin-left: 3px;">(Unavailable)</span></button>
         </div>
       </div>
     </div>

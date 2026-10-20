@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { api } from './lib/api';
-import { DashboardKpis, TrajectoryData, CohortSummary, User } from './types';
+import { TrajectoryData, CohortSummary, User } from './types';
+import { ModelMetricsView } from './features/analytics/ModelMetricsView';
 import { Navbar } from './components/layout/Navbar';
 import { HeroSection } from './components/layout/HeroSection';
 import { DashboardView } from './features/dashboard/DashboardView';
@@ -14,11 +15,24 @@ import { ArchitectureModal } from './components/modals/ArchitectureModal';
 import { CinematicIntro } from './features/intro/CinematicIntro';
 
 export const App: React.FC = () => {
-  const [activeTab, setActiveTab] = useState<string>('dashboard');
+  const normalizeTab = (tab: string) => tab === 'rfm' ? 'segmentation' : ['dashboard', 'lookup', 'segmentation', 'clv', 'simulator', 'datasets', 'recommendations'].includes(tab) ? tab : 'dashboard';
+  const [activeTab, updateActiveTab] = useState<string>(() => normalizeTab(window.location.hash.slice(1)));
+  const setActiveTab = (tab: string) => {
+    const next = normalizeTab(tab);
+    updateActiveTab(next);
+    if (window.location.hash !== `#${next}`) window.location.hash = next;
+  };
+  useEffect(() => {
+    const sync = () => updateActiveTab(normalizeTab(window.location.hash.slice(1)));
+    window.addEventListener('hashchange', sync);
+    return () => window.removeEventListener('hashchange', sync);
+  }, []);
   const [lookupTargetId, setLookupTargetId] = useState<string>('15485');
   const [selectedPeriod, setSelectedPeriod] = useState<string>('12m');
 
-  const [kpis, setKpis] = useState<DashboardKpis | null>(null);
+  const [trajectoryError, setTrajectoryError] = useState<string | null>(null);
+  const [trajectoryLoading, setTrajectoryLoading] = useState(true);
+  const [cohortError, setCohortError] = useState<string | null>(null);
   const [trajectory, setTrajectory] = useState<TrajectoryData | null>(null);
   const [cohorts, setCohorts] = useState<CohortSummary | null>(null);
 
@@ -28,10 +42,11 @@ export const App: React.FC = () => {
 
   // Initialize data on mount
   useEffect(() => {
+    let current = true;
     // Check auth status
     api.getCurrentUser()
       .then((res) => {
-        if (res.authenticated && res.user) {
+        if (current && res.authenticated && res.user) {
           setCurrentUser(res.user);
         }
       })
@@ -39,32 +54,25 @@ export const App: React.FC = () => {
         // Not authenticated or session expired
       });
 
-    // Load initial KPIs
-    api.getKpis()
-      .then(setKpis)
-      .catch((err) => console.error('Failed to load KPIs:', err));
-
-    // Load initial trajectory
-    api.getTrajectory('12m')
-      .then(setTrajectory)
-      .catch((err) => console.error('Failed to load trajectory:', err));
-
     // Load cohorts
     api.getCohorts()
-      .then(setCohorts)
-      .catch((err) => console.error('Failed to load cohorts:', err));
+      .then(data => { if (current) { setCohorts(data); setCohortError(null); } })
+      .catch((err) => { if (current) setCohortError(err.message); });
+    return () => { current = false; };
   }, []);
 
   // Update trajectory when period changes
-  const handlePeriodChange = async (period: string) => {
-    setSelectedPeriod(period);
-    try {
-      const data = await api.getTrajectory(period);
-      setTrajectory(data);
-    } catch (err) {
-      console.error('Failed to fetch period trajectory:', err);
-    }
-  };
+  useEffect(() => {
+    let current = true;
+    setTrajectory(null);
+    setTrajectoryError(null);
+    setTrajectoryLoading(true);
+    api.getTrajectory(selectedPeriod).then(data => {
+      if (current) setTrajectory(data);
+    }).catch(err => { if (current) setTrajectoryError(err.message); })
+      .finally(() => { if (current) setTrajectoryLoading(false); });
+    return () => { current = false; };
+  }, [selectedPeriod]);
 
   const handleQuickLookup = (id: string) => {
     setLookupTargetId(id);
@@ -120,13 +128,13 @@ export const App: React.FC = () => {
           }}
         >
           {[
-            { id: 'dashboard', label: 'Overview & KPIs', count: '5,942' },
+            { id: 'dashboard', label: 'Overview & KPIs', count: cohorts?.total_profiles?.toLocaleString() },
             { id: 'lookup', label: 'Customer 360 Lookup', count: null },
-            { id: 'segmentation', label: 'RFM & Cohorts', count: '4' },
-            { id: 'clv', label: 'CLV & Churn ML', count: 'R² 0.52' },
+            { id: 'segmentation', label: 'RFM & Cohorts', count: cohorts ? String(Object.keys(cohorts.cohorts).length) : null },
+            { id: 'clv', label: 'CLV & Churn ML', count: null },
             { id: 'simulator', label: 'What-If Simulator', count: 'Real-Time' },
             { id: 'datasets', label: 'Dataset Ingestion', count: 'CSV' },
-            { id: 'recommendations', label: 'Action Playbooks', count: '3 Active' },
+            { id: 'recommendations', label: 'Action Playbooks', count: null },
           ].map((t) => {
             const isActive = activeTab === t.id;
             return (
@@ -173,11 +181,13 @@ export const App: React.FC = () => {
         <div className="workspace-tab-body">
           {activeTab === 'dashboard' && (
             <DashboardView
-              kpis={kpis}
+              loading={trajectoryLoading}
+              error={trajectoryError}
+              cohortError={cohortError}
               trajectory={trajectory}
               cohorts={cohorts}
               selectedPeriod={selectedPeriod}
-              onSelectPeriod={handlePeriodChange}
+              onSelectPeriod={setSelectedPeriod}
               onNavigateTab={setActiveTab}
               onQuickLookup={handleQuickLookup}
             />
@@ -187,7 +197,8 @@ export const App: React.FC = () => {
             <CustomerLookupView initialCustomerId={lookupTargetId} />
           )}
 
-          {(activeTab === 'segmentation' || activeTab === 'clv') && (
+          {activeTab === 'clv' && <ModelMetricsView />}
+          {activeTab === 'segmentation' && (
             <SegmentationView initialCohorts={cohorts} />
           )}
 

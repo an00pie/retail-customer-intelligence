@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Customer } from '../../types';
 import { api } from '../../lib/api';
 import { formatCurrency, formatPercent, formatDate } from '../../lib/formatters';
@@ -12,6 +12,7 @@ export const CustomerLookupView: React.FC<CustomerLookupViewProps> = ({ initialC
   const [customer, setCustomer] = useState<Customer | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const requestId = useRef(0);
 
   const sampleIds = [
     { id: '15485', label: '#15485 (Champ)' },
@@ -26,32 +27,38 @@ export const CustomerLookupView: React.FC<CustomerLookupViewProps> = ({ initialC
   const doSearch = async (idToSearch: string) => {
     const cleanId = idToSearch.trim();
     if (!cleanId) return;
+    const request = ++requestId.current;
+    setCustomer(null);
     setLoading(true);
     setError(null);
     try {
       const data = await api.getCustomer(cleanId);
+      if (request !== requestId.current) return;
       setCustomer(data);
     } catch (err: any) {
+      if (request !== requestId.current) return;
       setCustomer(null);
       setError(err.message || 'Customer not found in retail intelligence records');
     } finally {
-      setLoading(false);
+      if (request === requestId.current) setLoading(false);
     }
   };
 
   useEffect(() => {
     if (initialCustomerId) {
+      setCustomerId(initialCustomerId);
       doSearch(initialCustomerId);
     }
+    return () => { ++requestId.current; };
   }, [initialCustomerId]);
 
   const handleExportCsv = () => {
     if (!customer) return;
-    window.location.href = `/api/customer/${customer.customer_id}/export/csv`;
+    window.location.href = `/api/customer/${encodeURIComponent(customer.customer_id)}/export/csv`;
   };
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+    <div className="insight-view" style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
       
       {/* Header Bar */}
       <div className="dash-header-bar" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
@@ -65,10 +72,10 @@ export const CustomerLookupView: React.FC<CustomerLookupViewProps> = ({ initialC
         </div>
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: 'minmax(320px, 380px) 1fr', gap: '24px', alignItems: 'start' }}>
+      <div className="insight-split" style={{ display: 'grid', gridTemplateColumns: 'minmax(320px, 380px) 1fr', gap: '24px', alignItems: 'start' }}>
         
         {/* Left: Search Controller Card */}
-        <div className="lookup-search-card" style={{ padding: '24px', display: 'flex', flexDirection: 'column', gap: '16px' }}>
+        <div className="insight-panel lookup-search-card" style={{ padding: '24px', display: 'flex', flexDirection: 'column', gap: '16px' }}>
           <div>
             <div style={{ fontSize: '15px', fontWeight: 700, color: '#fff' }}>Find Customer Profile</div>
             <div style={{ fontSize: '12px', color: '#8e9693', marginTop: '4px' }}>

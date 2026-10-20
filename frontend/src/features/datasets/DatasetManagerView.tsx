@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { api } from '../../lib/api';
 import { DatasetUploadResponse, DatasetValidationReport, DatasetImportHistoryItem } from '../../types';
 import { formatNumber, formatDate } from '../../lib/formatters';
@@ -15,18 +15,27 @@ export const DatasetManagerView: React.FC = () => {
   const [history, setHistory] = useState<DatasetImportHistoryItem[]>([]);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [successMsg, setSuccessMsg] = useState<string | null>(null);
+  const [historyError, setHistoryError] = useState<string | null>(null);
+  const [historyLoading, setHistoryLoading] = useState(true);
+  const historyRequest = useRef(0);
 
   const loadHistory = async () => {
+    const request = ++historyRequest.current;
+    setHistoryLoading(true);
+    setHistoryError(null);
     try {
       const res = await api.getDatasetHistory();
-      setHistory(res.imports || []);
+      if (request === historyRequest.current) setHistory(res.imports);
     } catch (err: any) {
-      console.error('Failed to load dataset history:', err);
+      if (request === historyRequest.current) setHistoryError(err.message);
+    } finally {
+      if (request === historyRequest.current) setHistoryLoading(false);
     }
   };
 
   useEffect(() => {
     loadHistory();
+    return () => { ++historyRequest.current; };
   }, []);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -37,6 +46,7 @@ export const DatasetManagerView: React.FC = () => {
         return;
       }
       setSelectedFile(file);
+      setSuccessMsg(null);
       setErrorMsg(null);
       setUploadResult(null);
       setValidationReport(null);
@@ -50,7 +60,8 @@ export const DatasetManagerView: React.FC = () => {
     try {
       const res = await api.uploadDataset(selectedFile);
       setUploadResult(res);
-      setColumnMapping(res.suggested_mapping || {});
+      // Backend maps source headers to target fields; the mapper renders by target.
+      setColumnMapping(Object.fromEntries(Object.entries(res.suggested_mapping || {}).map(([source, target]) => [target, source])));
     } catch (err: any) {
       setErrorMsg(err.message || 'File upload failed');
     } finally {
@@ -77,13 +88,13 @@ export const DatasetManagerView: React.FC = () => {
     setIsImporting(true);
     setErrorMsg(null);
     try {
-      const res = await api.commitDatasetImport(
+      await api.commitDatasetImport(
         uploadResult.filename,
         validationReport.total_rows,
         validationReport.valid_rows,
         validationReport.rejected_rows
       );
-      setSuccessMsg(res.message || 'Dataset imported successfully to production warehouse!');
+      setSuccessMsg('Preview import audit record saved. Customer profiles, models, and warehouse data were not updated.');
       setSelectedFile(null);
       setUploadResult(null);
       setValidationReport(null);
@@ -97,7 +108,7 @@ export const DatasetManagerView: React.FC = () => {
   };
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+    <div className="insight-view" style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
       {/* View Header */}
       <div className="dash-header-bar" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '12px' }}>
         <div>
@@ -105,7 +116,7 @@ export const DatasetManagerView: React.FC = () => {
             Dataset Ingestion &amp; Schema Validation Engine
           </h2>
           <p style={{ fontSize: '12.5px', color: '#8e9693', marginTop: '2px' }}>
-            Upload raw transaction batches, execute schema compliance auditing, and ingest into the analytical data warehouse
+            Preview CSV batches and record import audit metadata. Validation is a backend preview; it does not perform real row auditing or warehouse ingestion.
           </p>
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
@@ -128,7 +139,7 @@ export const DatasetManagerView: React.FC = () => {
       )}
 
       {/* Main Grid: Upload & Mapper on Left, History on Right */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(360px, 1fr))', gap: '20px' }}>
+      <div className="insight-split" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(360px, 1fr))', gap: '20px' }}>
         
         {/* Ingestion Pipeline Card */}
         <div className="dash-card" style={{ background: '#0a0d0c', border: '1px solid #1f2421', borderRadius: '8px', padding: '20px', display: 'flex', flexDirection: 'column', gap: '18px' }}>
@@ -156,6 +167,7 @@ export const DatasetManagerView: React.FC = () => {
               id="csv-file-input"
               type="file"
               accept=".csv"
+              disabled={isUploading || isValidating || isImporting}
               style={{ display: 'none' }}
               onChange={handleFileChange}
             />
@@ -202,14 +214,14 @@ export const DatasetManagerView: React.FC = () => {
                     <div style={{ color: '#8e9693', fontSize: '10px', textTransform: 'uppercase' }}>Target Field</div>
                     <div style={{ fontWeight: 600, color: '#fff' }}>{field}</div>
                     <div style={{ color: '#525c57', fontSize: '11px', marginTop: '4px' }}>
-                      Mapped to: <span style={{ color: '#d1d5db' }}>{columnMapping[field] || 'Auto-matched'}</span>
+                      Suggested mapping: <span style={{ color: '#d1d5db' }}>{columnMapping[field] || 'Not matched'}</span>
                     </div>
                   </div>
                 ))}
               </div>
 
               {/* Data Preview Table */}
-              <div style={{ overflowX: 'auto', maxHeight: '160px', border: '1px solid #1f2421', borderRadius: '4px' }}>
+              <div className="insight-table-scroll" style={{ overflowX: 'auto', maxHeight: '160px', border: '1px solid #1f2421', borderRadius: '4px' }}>
                 <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '11px', fontFamily: 'monospace' }}>
                   <thead style={{ background: '#121614', color: '#8e9693', position: 'sticky', top: 0 }}>
                     <tr>
@@ -246,7 +258,7 @@ export const DatasetManagerView: React.FC = () => {
                     opacity: isValidating ? 0.6 : 1,
                   }}
                 >
-                  {isValidating ? 'Auditing Schema...' : 'Execute Schema Audit'}
+                  {isValidating ? 'Loading Preview...' : 'Preview Schema Audit'}
                 </button>
               )}
             </div>
@@ -304,7 +316,7 @@ export const DatasetManagerView: React.FC = () => {
                   opacity: isImporting ? 0.6 : 1,
                 }}
               >
-                {isImporting ? 'Ingesting to Warehouse...' : 'Commit Batch to Analytical Warehouse'}
+                {isImporting ? 'Saving Preview Record...' : 'Save Preview Import Record'}
               </button>
             </div>
           )}
@@ -325,7 +337,7 @@ export const DatasetManagerView: React.FC = () => {
             </button>
           </div>
 
-          {history.length === 0 ? (
+          {historyLoading ? <p role="status">Loading dataset history…</p> : historyError ? <p role="alert">Dataset history unavailable: {historyError}</p> : history.length === 0 ? (
             <div style={{ padding: '40px 20px', textAlign: 'center', color: '#525c57', fontSize: '13px' }}>
               No previous dataset import logs found in database.
             </div>
@@ -369,7 +381,7 @@ export const DatasetManagerView: React.FC = () => {
 
                   {item.summary && (
                     <div style={{ fontSize: '10.5px', color: '#525c57', borderTop: '1px solid #161c18', paddingTop: '6px', marginTop: '2px' }}>
-                      User: {item.summary.imported_by || 'system'} • Destination: {item.summary.warehouse_destination || 'Serving DB'} • Pass rate: {item.summary.valid_percentage || 100}%
+                      User: {item.summary.imported_by || 'Unavailable'} • Preview destination: {item.summary.warehouse_destination || 'Unavailable'} • Preview pass rate: {item.summary.valid_percentage ?? 'Unavailable'}%
                     </div>
                   )}
                 </div>
