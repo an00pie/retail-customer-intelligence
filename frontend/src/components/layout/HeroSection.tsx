@@ -118,29 +118,6 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onExploreClick }) => {
             margin: '0 auto',
           }}
         >
-          {/* Pill Tag */}
-          <div
-            className="hero-tag"
-            style={{
-              display: 'inline-flex',
-              alignItems: 'center',
-              gap: '6px',
-              background: 'rgba(34, 37, 38, 0.65)',
-              border: '1px solid rgba(255, 255, 255, 0.20)',
-              borderRadius: '999px',
-              padding: '6px 14px',
-              fontSize: '10px',
-              fontWeight: 600,
-              letterSpacing: '0.1em',
-              color: '#d4d8d6',
-              marginBottom: '20px',
-              textTransform: 'uppercase',
-            }}
-          >
-            <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#ffffff', display: 'inline-block' }} />
-            <span>Retail Customer Analytics</span>
-          </div>
-
           {/* Retro Dot-Matrix Headline */}
           <h1
             className="hero-title"
