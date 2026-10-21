@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { InteractiveGlobe } from '../globe/InteractiveGlobe';
 
 interface HeroSectionProps {
@@ -7,22 +7,43 @@ interface HeroSectionProps {
 
 export const HeroSection: React.FC<HeroSectionProps> = ({ onExploreClick }) => {
   const videoRef = useRef<HTMLVideoElement | null>(null);
+  const sectionRef = useRef<HTMLElement | null>(null);
   const [isPaused, setIsPaused] = useState(false);
+  const [reducedMotion, setReducedMotion] = useState(() => window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+  const [isVisible, setIsVisible] = useState(false);
 
-  const toggleVideo = () => {
-    if (videoRef.current) {
-      if (videoRef.current.paused) {
-        videoRef.current.play();
-        setIsPaused(false);
-      } else {
-        videoRef.current.pause();
-        setIsPaused(true);
-      }
-    }
-  };
+  useEffect(() => {
+    const media = window.matchMedia('(prefers-reduced-motion: reduce)');
+    let inView = false;
+    const syncVisibility = () => setIsVisible(inView && !document.hidden);
+    const syncMotion = () => setReducedMotion(media.matches);
+    const observer = new IntersectionObserver(([entry]) => {
+      inView = entry.isIntersecting;
+      syncVisibility();
+    });
+    if (sectionRef.current) observer.observe(sectionRef.current);
+    document.addEventListener('visibilitychange', syncVisibility);
+    media.addEventListener('change', syncMotion);
+    syncMotion();
+    return () => {
+      observer.disconnect();
+      document.removeEventListener('visibilitychange', syncVisibility);
+      media.removeEventListener('change', syncMotion);
+    };
+  }, []);
+
+  const motionPaused = isPaused || reducedMotion || !isVisible;
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video) return;
+    let active = true;
+    if (motionPaused) video.pause();
+    else void video.play().catch(() => { if (active) setIsPaused(true); });
+    return () => { active = false; video.pause(); };
+  }, [motionPaused]);
 
   return (
-    <section className="hero-section" style={{ position: 'relative', overflow: 'hidden', padding: '24px 16px 40px' }}>
+    <section ref={sectionRef} className="hero-section" style={{ position: 'relative', overflow: 'hidden', padding: '24px 16px 40px' }}>
       {/* Full-bleed cinematic video background */}
       <div
         className="hero-video-backdrop"
@@ -40,7 +61,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onExploreClick }) => {
       >
         <video
           ref={videoRef}
-          autoPlay
+          aria-hidden="true"
           muted
           loop
           playsInline
@@ -85,7 +106,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onExploreClick }) => {
         }}
       >
         {/* Centered 3D Wireframe Globe crowning gracefully behind headline */}
-        <InteractiveGlobe />
+        <InteractiveGlobe paused={motionPaused} />
 
         {/* Content Header (Elevated with z-index above globe) */}
         <div
@@ -189,7 +210,9 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onExploreClick }) => {
             <button
               type="button"
               className="hero-motion-control"
-              onClick={toggleVideo}
+              onClick={() => setIsPaused(paused => !paused)}
+              aria-pressed={isPaused || reducedMotion}
+              disabled={reducedMotion}
               style={{
                 background: 'rgba(0, 0, 0, 0.5)',
                 color: '#c8ccca',
@@ -201,7 +224,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onExploreClick }) => {
                 transition: 'all 0.2s ease',
               }}
             >
-              {isPaused ? 'Resume background' : 'Pause background'}
+              {reducedMotion ? 'Reduced motion enabled' : isPaused ? 'Resume background' : 'Pause background'}
             </button>
           </div>
         </div>

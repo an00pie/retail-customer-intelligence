@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useDialog } from '../../lib/useDialog';
 
 interface ArchitectureModalProps {
   isOpen: boolean;
@@ -7,12 +8,14 @@ interface ArchitectureModalProps {
 
 export const ArchitectureModal: React.FC<ArchitectureModalProps> = ({ isOpen, onClose }) => {
   const [activeTab, setActiveTab] = useState<'pipeline' | 'catalog' | 'faq'>('pipeline');
+  const dialogRef = useDialog(isOpen, onClose);
 
   if (!isOpen) return null;
 
   return (
     <div
       id="modal-architecture-react"
+      className="insight-dialog-backdrop"
       style={{
         position: 'fixed',
         inset: 0,
@@ -27,6 +30,12 @@ export const ArchitectureModal: React.FC<ArchitectureModalProps> = ({ isOpen, on
       onClick={onClose}
     >
       <div
+        ref={dialogRef}
+        className="insight-dialog"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="architecture-dialog-title"
+        tabIndex={-1}
         style={{
           background: '#0a0d0c',
           border: '1px solid #2a312d',
@@ -48,11 +57,13 @@ export const ArchitectureModal: React.FC<ArchitectureModalProps> = ({ isOpen, on
             <span style={{ fontSize: '11px', color: '#8e9693', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
               Academic &amp; Enterprise Architecture
             </span>
-            <h3 style={{ fontSize: '20px', fontWeight: 700, color: '#fff', marginTop: '2px' }}>
+            <h3 id="architecture-dialog-title" style={{ fontSize: '20px', fontWeight: 700, color: '#fff', marginTop: '2px' }}>
               Big Data Architecture &amp; System Specifications
             </h3>
           </div>
           <button
+            type="button"
+            aria-label="Close architecture dialog"
             onClick={onClose}
             style={{ background: 'transparent', border: 'none', color: '#8e9693', fontSize: '22px', cursor: 'pointer' }}
           >
@@ -65,6 +76,7 @@ export const ArchitectureModal: React.FC<ArchitectureModalProps> = ({ isOpen, on
           <button
             type="button"
             onClick={() => setActiveTab('pipeline')}
+            aria-pressed={activeTab === 'pipeline'}
             style={{
               flex: 1,
               padding: '8px',
@@ -82,6 +94,7 @@ export const ArchitectureModal: React.FC<ArchitectureModalProps> = ({ isOpen, on
           <button
             type="button"
             onClick={() => setActiveTab('catalog')}
+            aria-pressed={activeTab === 'catalog'}
             style={{
               flex: 1,
               padding: '8px',
@@ -99,6 +112,7 @@ export const ArchitectureModal: React.FC<ArchitectureModalProps> = ({ isOpen, on
           <button
             type="button"
             onClick={() => setActiveTab('faq')}
+            aria-pressed={activeTab === 'faq'}
             style={{
               flex: 1,
               padding: '8px',

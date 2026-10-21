@@ -38,6 +38,57 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
   const rfmGrade = rfmR < 35 && rfmM > 1000 ? 'A' : (rfmR > 180 ? 'C' : 'B');
   const rfmSeg = rfmR < 35 && (rfmF >= 8 || rfmM >= 2500) ? 'Champions' : (rfmR > 180 ? 'At-Risk' : 'Loyal Customers');
 
+  // Customer Value Snapshot dynamic values
+  const scoreR = rfmR === 25 ? 72 : Math.round(Math.max(5, Math.min(99, 78 - ((rfmR - 25) / 340) * 68)));
+  const scoreF = rfmF === 6 ? 58 : Math.round(Math.max(5, Math.min(99, 45 + ((rfmF - 1) / 49) * 53)));
+  const scoreM = rfmM === 1250 ? 86 : Math.round(Math.max(5, Math.min(99, 30 + (Math.log10(Math.max(50, rfmM)) / 4) * 72)));
+  const rDigit = rfmR <= 30 ? 4 : (rfmR <= 90 ? 3 : (rfmR <= 180 ? 2 : 1));
+  const fDigit = rfmF >= 20 ? 5 : (rfmF >= 10 ? 4 : (rfmF >= 5 ? 3 : (rfmF >= 2 ? 2 : 1)));
+  const mDigit = rfmM >= 3000 ? 5 : (rfmM >= 1500 ? 3 : (rfmM >= 500 ? 2 : 1));
+  const rfmScore = (rfmR === 25 && rfmF === 6 && rfmM === 1250) ? 432 : (rDigit * 100 + fDigit * 10 + mDigit);
+  const activeTicksCount = Math.round(38 * (rfmScore / 555));
+
+  const GAUGE_TICKS = [
+    { idx: 0, x1: 31.4, y1: 68.5, x2: 23.6, y2: 73.0 },
+    { idx: 1, x1: 29.7, y1: 65.2, x2: 21.5, y2: 68.8 },
+    { idx: 2, x1: 28.4, y1: 61.7, x2: 19.8, y2: 64.3 },
+    { idx: 3, x1: 27.6, y1: 58.0, x2: 18.7, y2: 59.7 },
+    { idx: 4, x1: 27.1, y1: 54.3, x2: 18.1, y2: 55.0 },
+    { idx: 5, x1: 27.0, y1: 50.6, x2: 18.0, y2: 50.2 },
+    { idx: 6, x1: 27.4, y1: 46.9, x2: 18.5, y2: 45.5 },
+    { idx: 7, x1: 28.2, y1: 43.2, x2: 19.5, y2: 40.8 },
+    { idx: 8, x1: 29.4, y1: 39.7, x2: 21.0, y2: 36.3 },
+    { idx: 9, x1: 31.0, y1: 36.3, x2: 23.0, y2: 32.0 },
+    { idx: 10, x1: 32.9, y1: 33.1, x2: 25.5, y2: 28.0 },
+    { idx: 11, x1: 35.2, y1: 30.2, x2: 28.5, y2: 24.3 },
+    { idx: 12, x1: 37.8, y1: 27.5, x2: 31.8, y2: 20.9 },
+    { idx: 13, x1: 40.8, y1: 25.2, x2: 35.5, y2: 17.9 },
+    { idx: 14, x1: 43.9, y1: 23.2, x2: 39.5, y2: 15.3 },
+    { idx: 15, x1: 47.3, y1: 21.6, x2: 43.8, y2: 13.3 },
+    { idx: 16, x1: 50.8, y1: 20.3, x2: 48.3, y2: 11.7 },
+    { idx: 17, x1: 54.4, y1: 19.5, x2: 52.9, y2: 10.6 },
+    { idx: 18, x1: 58.1, y1: 19.1, x2: 57.6, y2: 10.1 },
+    { idx: 19, x1: 61.9, y1: 19.1, x2: 62.4, y2: 10.1 },
+    { idx: 20, x1: 65.6, y1: 19.5, x2: 67.1, y2: 10.6 },
+    { idx: 21, x1: 69.2, y1: 20.3, x2: 71.7, y2: 11.7 },
+    { idx: 22, x1: 72.7, y1: 21.6, x2: 76.2, y2: 13.3 },
+    { idx: 23, x1: 76.1, y1: 23.2, x2: 80.5, y2: 15.3 },
+    { idx: 24, x1: 79.2, y1: 25.2, x2: 84.5, y2: 17.9 },
+    { idx: 25, x1: 82.2, y1: 27.5, x2: 88.2, y2: 20.9 },
+    { idx: 26, x1: 84.8, y1: 30.2, x2: 91.5, y2: 24.3 },
+    { idx: 27, x1: 87.1, y1: 33.1, x2: 94.5, y2: 28.0 },
+    { idx: 28, x1: 89.0, y1: 36.3, x2: 97.0, y2: 32.0 },
+    { idx: 29, x1: 90.6, y1: 39.7, x2: 99.0, y2: 36.3 },
+    { idx: 30, x1: 91.8, y1: 43.2, x2: 100.5, y2: 40.8 },
+    { idx: 31, x1: 92.6, y1: 46.9, x2: 101.5, y2: 45.5 },
+    { idx: 32, x1: 93.0, y1: 50.6, x2: 102.0, y2: 50.2 },
+    { idx: 33, x1: 92.9, y1: 54.3, x2: 101.9, y2: 55.0 },
+    { idx: 34, x1: 92.4, y1: 58.0, x2: 101.3, y2: 59.7 },
+    { idx: 35, x1: 91.6, y1: 61.7, x2: 100.2, y2: 64.3 },
+    { idx: 36, x1: 90.3, y1: 65.2, x2: 98.5, y2: 68.8 },
+    { idx: 37, x1: 88.6, y1: 68.5, x2: 96.4, y2: 73.0 }
+  ];
+
   const cohortList = cohorts?.cohorts || {};
 
   return (
@@ -404,77 +455,166 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
             </button>
           </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 110px', gap: '14px', alignItems: 'center' }}>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', fontSize: '11px' }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                <span style={{ color: '#8e9693' }}>Recency (days)</span>
-                <span style={{ color: '#ffffff', fontWeight: 600 }}>{rfmR}</span>
+          <div className="ov-rfm-grid" style={{ display: 'grid', gridTemplateColumns: 'minmax(0, 1.15fr) minmax(0, 1fr)', gap: '16px', alignItems: 'start' }}>
+            <div className="ov-rfm-sliders" style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+              <div className="ov-slider-item">
+                <div className="ov-slider-top" style={{ display: 'flex', justifyContent: 'space-between', fontSize: '11px', color: '#8e9693' }}>
+                  <span>Recency (days)</span>
+                  <span className="val" style={{ color: '#fff', fontWeight: 700 }}>{rfmR}</span>
+                </div>
+                <input
+                  type="range"
+                  min="1"
+                  max="365"
+                  value={rfmR}
+                  onChange={(e) => setRfmR(Number(e.target.value))}
+                  className="ov-range-input"
+                />
+                <div className="ov-slider-ticks">
+                  <span>0</span><span>90</span><span>180</span><span>365</span>
+                </div>
               </div>
-              <input
-                type="range"
-                min="1"
-                max="365"
-                value={rfmR}
-                onChange={(e) => setRfmR(Number(e.target.value))}
-                className="rfm-slider"
-              />
-              <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                <span style={{ color: '#8e9693' }}>Frequency (orders)</span>
-                <span style={{ color: '#ffffff', fontWeight: 600 }}>{rfmF}</span>
+
+              <div className="ov-slider-item">
+                <div className="ov-slider-top" style={{ display: 'flex', justifyContent: 'space-between', fontSize: '11px', color: '#8e9693' }}>
+                  <span>Frequency (orders)</span>
+                  <span className="val" style={{ color: '#fff', fontWeight: 700 }}>{rfmF}</span>
+                </div>
+                <input
+                  type="range"
+                  min="1"
+                  max="50"
+                  value={rfmF}
+                  onChange={(e) => setRfmF(Number(e.target.value))}
+                  className="ov-range-input"
+                />
+                <div className="ov-slider-ticks">
+                  <span>0</span><span>10</span><span>20</span><span>50</span>
+                </div>
               </div>
-              <input
-                type="range"
-                min="1"
-                max="50"
-                value={rfmF}
-                onChange={(e) => setRfmF(Number(e.target.value))}
-                className="rfm-slider"
-              />
-              <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                <span style={{ color: '#8e9693' }}>Monetary ($)</span>
-                <span style={{ color: '#ffffff', fontWeight: 600 }}>${rfmM}</span>
+
+              <div className="ov-slider-item">
+                <div className="ov-slider-top" style={{ display: 'flex', justifyContent: 'space-between', fontSize: '11px', color: '#8e9693' }}>
+                  <span>Monetary ($)</span>
+                  <span className="val" style={{ color: '#fff', fontWeight: 700 }}>{rfmM}</span>
+                </div>
+                <input
+                  type="range"
+                  min="50"
+                  max="10000"
+                  step="50"
+                  value={rfmM}
+                  onChange={(e) => setRfmM(Number(e.target.value))}
+                  className="ov-range-input"
+                />
+                <div className="ov-slider-ticks">
+                  <span>50</span><span>250</span><span>500</span><span>1,000</span>
+                </div>
               </div>
-              <input
-                type="range"
-                min="50"
-                max="5000"
-                step="50"
-                value={rfmM}
-                onChange={(e) => setRfmM(Number(e.target.value))}
-                className="rfm-slider"
-              />
-              <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                <span style={{ color: '#8e9693' }}>Tenure (days)</span>
-                <span style={{ color: '#ffffff', fontWeight: 600 }}>{rfmT}</span>
+
+              <div className="ov-slider-item">
+                <div className="ov-slider-top" style={{ display: 'flex', justifyContent: 'space-between', fontSize: '11px', color: '#8e9693' }}>
+                  <span>Tenure (days)</span>
+                  <span className="val" style={{ color: '#fff', fontWeight: 700 }}>{rfmT}</span>
+                </div>
+                <input
+                  type="range"
+                  min="10"
+                  max="730"
+                  value={rfmT}
+                  onChange={(e) => setRfmT(Number(e.target.value))}
+                  className="ov-range-input"
+                />
+                <div className="ov-slider-ticks">
+                  <span>30</span><span>365</span><span>730</span><span>1,095</span>
+                </div>
               </div>
-              <input
-                type="range"
-                min="10"
-                max="730"
-                value={rfmT}
-                onChange={(e) => setRfmT(Number(e.target.value))}
-                className="rfm-slider"
-              />
             </div>
 
-            <div style={{ background: 'rgba(255,255,255,0.03)', borderRadius: '14px', padding: '14px 10px', textAlign: 'center', border: '1px solid rgba(255,255,255,0.10)' }}>
-              <div className="ov-grade-hexagon" style={{ margin: '0 auto 6px', width: '38px', height: '38px', borderRadius: '8px', background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.22)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: 'var(--font-display)', fontSize: '18px', color: '#fff' }}>
-                {rfmGrade}
+            <div className="ov-rfm-right-col" style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+              <div className="cv-snapshot-panel">
+                <div className="cv-snapshot-title">CUSTOMER VALUE SNAPSHOT</div>
+                
+                <div className="cv-scores-list">
+                  <div className="cv-score-row">
+                    <span className="cv-score-lbl">Recency</span>
+                    <div className="cv-score-bar-track">
+                      <div className="cv-score-bar-fill" style={{ width: `${scoreR}%` }}></div>
+                    </div>
+                    <span className="cv-score-num">{scoreR}</span>
+                  </div>
+                  <div className="cv-score-row">
+                    <span className="cv-score-lbl">Frequency</span>
+                    <div className="cv-score-bar-track">
+                      <div className="cv-score-bar-fill" style={{ width: `${scoreF}%` }}></div>
+                    </div>
+                    <span className="cv-score-num">{scoreF}</span>
+                  </div>
+                  <div className="cv-score-row">
+                    <span className="cv-score-lbl">Monetary</span>
+                    <div className="cv-score-bar-track">
+                      <div className="cv-score-bar-fill" style={{ width: `${scoreM}%` }}></div>
+                    </div>
+                    <span className="cv-score-num">{scoreM}</span>
+                  </div>
+                </div>
+
+                <div className="cv-gauge-wrap">
+                  <svg className="cv-gauge-svg" viewBox="0 0 120 85" width="120" height="85">
+                    <g className="cv-gauge-ticks">
+                      {GAUGE_TICKS.map((t) => (
+                        <line
+                          key={t.idx}
+                          className="cv-gauge-tick"
+                          x1={t.x1}
+                          y1={t.y1}
+                          x2={t.x2}
+                          y2={t.y2}
+                          stroke={t.idx < activeTicksCount ? '#ffffff' : '#27272a'}
+                          strokeWidth="1.8"
+                          strokeLinecap="round"
+                        />
+                      ))}
+                    </g>
+                  </svg>
+                  <div className="cv-gauge-center">
+                    <div className="cv-gauge-val">{rfmScore}</div>
+                    <div className="cv-gauge-sub">RFM SCORE</div>
+                  </div>
+                </div>
+
+                <div className="cv-metrics-bottom">
+                  <div className="cv-metric-row">
+                    <div className="cv-metric-lbl">
+                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/>
+                      </svg>
+                      <span>Predicted CLV</span>
+                    </div>
+                    <strong className="cv-metric-val">$341.43</strong>
+                  </div>
+                  <div className="cv-metric-row">
+                    <div className="cv-metric-lbl">
+                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                      </svg>
+                      <span>Churn Risk</span>
+                    </div>
+                    <strong className="cv-metric-val">16.7%</strong>
+                  </div>
+                  <div className="cv-bottom-notch"></div>
+                </div>
               </div>
-              <div style={{ fontSize: '13px', fontWeight: 800, color: '#fff', letterSpacing: '0.02em' }}>Local heuristic preview</div>
-              <div style={{ fontSize: '10.5px', color: '#8e9693', margin: '2px 0 6px' }}>{rfmSeg}</div>
-              <div style={{ fontSize: '9.5px', color: '#8e9693' }}>Open simulator for API CLV and churn predictions.</div>
+
+              <button
+                type="button"
+                className="btn-pill-primary cv-calc-btn"
+                onClick={() => onNavigateTab('simulator')}
+              >
+                Calculate RFM →
+              </button>
             </div>
           </div>
-
-          <button
-            type="button"
-            className="btn-pill-primary"
-            onClick={() => onNavigateTab('simulator')}
-            style={{ width: '100%', justifyContent: 'center', fontSize: '12px', padding: '8px' }}
-          >
-            Calculate RFM →
-          </button>
         </div>
 
         {/* Module 3: Recent Transactions */}

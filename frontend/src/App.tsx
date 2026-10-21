@@ -140,6 +140,7 @@ export const App: React.FC = () => {
             return (
               <button
                 key={t.id}
+                aria-current={isActive ? 'page' : undefined}
                 onClick={() => setActiveTab(t.id)}
                 style={{
                   display: 'flex',

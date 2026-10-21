@@ -122,7 +122,7 @@ export const DualAxisTrajectoryChart: React.FC<DualAxisTrajectoryChartProps> = (
       intersect: false,
     },
     animation: {
-      duration: 800,
+      duration: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 0 : 450,
     },
     plugins: {
       legend: {
@@ -157,7 +157,7 @@ export const DualAxisTrajectoryChart: React.FC<DualAxisTrajectoryChartProps> = (
           color: 'rgba(255, 255, 255, 0.04)',
         },
         ticks: {
-          color: 'rgba(255, 255, 255, 0.50)',
+          color: '#b5b5bd',
           font: { size: 11, weight: 'bold' },
           maxTicksLimit: data.labels.length > 40 ? 10 : 12,
           maxRotation: 0,
@@ -166,6 +166,7 @@ export const DualAxisTrajectoryChart: React.FC<DualAxisTrajectoryChartProps> = (
       yRevenue: {
         type: 'linear',
         position: 'left',
+        title: { display: true, text: 'Revenue (USD)', color: '#b5b5bd', font: { size: 11 } },
         grid: {
           color: 'rgba(255, 255, 255, 0.04)',
         },
@@ -183,6 +184,7 @@ export const DualAxisTrajectoryChart: React.FC<DualAxisTrajectoryChartProps> = (
       yOrders: {
         type: 'linear',
         position: 'right',
+        title: { display: true, text: 'Order Volume', color: '#b5b5bd', font: { size: 11 } },
         grid: {
           drawOnChartArea: false,
         },
@@ -219,6 +221,7 @@ export const DualAxisTrajectoryChart: React.FC<DualAxisTrajectoryChartProps> = (
               type="button"
               className={`period-pill ${selectedPeriod.toLowerCase() === p.key ? 'active' : ''}`}
               onClick={() => onSelectPeriod(p.key)}
+              aria-pressed={selectedPeriod.toLowerCase() === p.key}
               style={{
                 borderRadius: '999px',
                 padding: '5px 12px',
@@ -243,7 +246,7 @@ export const DualAxisTrajectoryChart: React.FC<DualAxisTrajectoryChartProps> = (
             <span style={{ fontSize: '12px', color: '#fff' }}>Updating chart...</span>
           </div>
         )}
-        <Line ref={chartRef} data={chartData} options={options} />
+        <Line ref={chartRef} data={chartData} options={options} role="img" aria-label={`Revenue and order volume for ${data.date_range_label}, ${data.labels.length} periods. Revenue uses the solid white line; orders use the dashed gray line.`} />
       </div>
 
       {/* Legend & Source Meta */}

@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { useDialog } from '../../lib/useDialog';
 import { User } from '../../types';
 
 interface NavbarProps {
@@ -17,6 +18,14 @@ export const Navbar: React.FC<NavbarProps> = ({
   currentUser,
 }) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const menuRef = useDialog(mobileMenuOpen, () => setMobileMenuOpen(false));
+  useEffect(() => {
+    const desktop = window.matchMedia('(min-width: 1280px)');
+    const closeOnDesktop = () => { if (desktop.matches) setMobileMenuOpen(false); };
+    closeOnDesktop();
+    desktop.addEventListener('change', closeOnDesktop);
+    return () => desktop.removeEventListener('change', closeOnDesktop);
+  }, []);
 
   const navItems = [
     { id: 'dashboard', label: 'Dashboard' },
@@ -48,12 +57,12 @@ export const Navbar: React.FC<NavbarProps> = ({
               }}
             >
               <svg width="30" height="30" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                <circle cx="50" cy="50" r="46" stroke="url(#arcRingGradReact)" stroke-width="4.5" fill="#000000" fillOpacity="0.8"/>
+                <circle cx="50" cy="50" r="46" stroke="url(#arcRingGradReact)" strokeWidth="4.5" fill="#000000" fillOpacity="0.8"/>
                 <rect x="29" y="52" width="7" height="24" rx="3.5" fill="url(#arcBarGradReact)"/>
                 <rect x="40" y="42" width="7" height="34" rx="3.5" fill="url(#arcBarGradReact)"/>
                 <rect x="51" y="32" width="7" height="44" rx="3.5" fill="url(#arcBarGradReact)"/>
                 <rect x="62" y="22" width="7" height="54" rx="3.5" fill="url(#arcBarGradReact)"/>
-                <path d="M 21 68 C 17 50, 27 28, 56 22 C 72 19, 81 24, 78 32 C 75 41, 52 56, 30 67 C 24 70, 22 70, 21 68 Z" fill="none" stroke="url(#arcSwoopGradReact)" stroke-width="4" strokeLinecap="round"/>
+                <path d="M 21 68 C 17 50, 27 28, 56 22 C 72 19, 81 24, 78 32 C 75 41, 52 56, 30 67 C 24 70, 22 70, 21 68 Z" fill="none" stroke="url(#arcSwoopGradReact)" strokeWidth="4" strokeLinecap="round"/>
                 <circle cx="77" cy="27" r="3" fill="#ffffff"/>
                 <circle cx="77" cy="27" r="6" fill="#ffffff" fillOpacity="0.5"/>
                 <defs>
@@ -100,6 +109,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                   key={item.id}
                   type="button"
                   className={`nav-link ${isActive ? 'active' : ''}`}
+                  aria-current={isActive ? 'page' : undefined}
                   onClick={() => onSelectTab(item.id)}
                   style={{
                     position: 'relative',
@@ -143,6 +153,7 @@ export const Navbar: React.FC<NavbarProps> = ({
               id="navArchitectureBtn"
               className="nav-icon-btn"
               title="View Big Data Architecture Pipeline"
+              aria-label="View Big Data Architecture Pipeline"
               onClick={onOpenArchitecture}
               style={{
                 width: '38px',
@@ -157,7 +168,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                 cursor: 'pointer',
               }}
             >
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
                 <rect x="2" y="3" width="20" height="14" rx="2" />
                 <line x1="8" y1="21" x2="16" y2="21" />
                 <line x1="12" y1="17" x2="12" y2="21" />
@@ -185,7 +196,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                 cursor: 'pointer',
               }}
             >
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
                 <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" />
                 <circle cx="12" cy="7" r="4" />
               </svg>
@@ -198,6 +209,9 @@ export const Navbar: React.FC<NavbarProps> = ({
               className="nav-mobile-toggle mobile-only"
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               aria-label="Toggle navigation menu"
+              aria-expanded={mobileMenuOpen}
+              aria-controls="mobile-navigation-dialog"
+              aria-haspopup="dialog"
               style={{
                 width: '38px',
                 height: '38px',
@@ -211,7 +225,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                 cursor: 'pointer',
               }}
             >
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" aria-hidden="true">
                 <line x1="3" y1="6" x2="21" y2="6" />
                 <line x1="3" y1="12" x2="21" y2="12" />
                 <line x1="3" y1="18" x2="21" y2="18" />
@@ -240,6 +254,12 @@ export const Navbar: React.FC<NavbarProps> = ({
         >
           <div
             className="nav-mobile-dropdown"
+            ref={menuRef}
+            id="mobile-navigation-dialog"
+            role="dialog"
+            aria-modal="true"
+            aria-label="Navigation"
+            tabIndex={-1}
             onClick={(e) => e.stopPropagation()}
             style={{
               width: 'min(400px, 100%)',
@@ -257,6 +277,7 @@ export const Navbar: React.FC<NavbarProps> = ({
               <button
                 type="button"
                 onClick={() => setMobileMenuOpen(false)}
+                aria-label="Close navigation menu"
                 style={{
                   width: '32px',
                   height: '32px',
@@ -277,6 +298,7 @@ export const Navbar: React.FC<NavbarProps> = ({
               <button
                 key={item.id}
                 type="button"
+                aria-current={activeTab === item.id ? 'page' : undefined}
                 onClick={() => {
                   onSelectTab(item.id);
                   setMobileMenuOpen(false);

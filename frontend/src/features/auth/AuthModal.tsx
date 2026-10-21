@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { api } from '../../lib/api';
 import { User } from '../../types';
+import { useDialog } from '../../lib/useDialog';
 
 interface AuthModalProps {
   isOpen: boolean;
@@ -15,6 +16,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, onAuthSuc
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
+  const dialogRef = useDialog(isOpen, onClose);
 
   if (!isOpen) return null;
 
@@ -48,6 +50,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, onAuthSuc
 
   return (
     <div
+      className="insight-dialog-backdrop"
       style={{
         position: 'fixed',
         inset: 0,
@@ -62,6 +65,12 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, onAuthSuc
       onClick={onClose}
     >
       <div
+        ref={dialogRef}
+        className="insight-dialog"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="auth-dialog-title"
+        tabIndex={-1}
         style={{
           background: '#0a0d0c',
           border: '1px solid #2a312d',
@@ -78,7 +87,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, onAuthSuc
         {/* Header */}
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <div>
-            <h3 style={{ fontSize: '18px', fontWeight: 700, color: '#fff', letterSpacing: '-0.02em' }}>
+            <h3 id="auth-dialog-title" style={{ fontSize: '18px', fontWeight: 700, color: '#fff', letterSpacing: '-0.02em' }}>
               {tab === 'login' ? 'Analytical Workspace Login' : 'Create Intelligence Account'}
             </h3>
             <p style={{ fontSize: '12px', color: '#8e9693', marginTop: '2px' }}>
@@ -86,6 +95,8 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, onAuthSuc
             </p>
           </div>
           <button
+            type="button"
+            aria-label="Close authentication dialog"
             onClick={onClose}
             style={{ background: 'transparent', border: 'none', color: '#8e9693', fontSize: '20px', cursor: 'pointer' }}
           >
@@ -98,6 +109,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, onAuthSuc
           <button
             type="button"
             onClick={() => { setTab('login'); setErrorMsg(null); }}
+            aria-pressed={tab === 'login'}
             style={{
               flex: 1,
               padding: '6px',
@@ -116,6 +128,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, onAuthSuc
           <button
             type="button"
             onClick={() => { setTab('register'); setErrorMsg(null); }}
+            aria-pressed={tab === 'register'}
             style={{
               flex: 1,
               padding: '6px',
@@ -178,7 +191,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, onAuthSuc
 
         {/* Error alert */}
         {errorMsg && (
-          <div style={{ padding: '8px 12px', background: 'rgba(239, 68, 68, 0.1)', border: '1px solid rgba(239, 68, 68, 0.25)', borderRadius: '4px', color: '#f87171', fontSize: '12px' }}>
+          <div role="alert" style={{ padding: '8px 12px', background: 'rgba(239, 68, 68, 0.1)', border: '1px solid rgba(239, 68, 68, 0.25)', borderRadius: '4px', color: '#f87171', fontSize: '12px' }}>
             {errorMsg}
           </div>
         )}
@@ -186,11 +199,13 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, onAuthSuc
         {/* Form */}
         <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
           <div>
-            <label style={{ display: 'block', fontSize: '11px', color: '#8e9693', marginBottom: '4px', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+            <label htmlFor="auth-username" style={{ display: 'block', fontSize: '11px', color: '#8e9693', marginBottom: '4px', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
               Username
             </label>
             <input
               type="text"
+              id="auth-username"
+              autoComplete="username"
               required
               value={username}
               onChange={(e) => setUsername(e.target.value)}
@@ -203,7 +218,6 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, onAuthSuc
                 padding: '8px 12px',
                 fontSize: '13px',
                 color: '#fff',
-                outline: 'none',
                 boxSizing: 'border-box',
               }}
             />
@@ -211,11 +225,13 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, onAuthSuc
 
           {tab === 'register' && (
             <div>
-              <label style={{ display: 'block', fontSize: '11px', color: '#8e9693', marginBottom: '4px', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+              <label htmlFor="auth-email" style={{ display: 'block', fontSize: '11px', color: '#8e9693', marginBottom: '4px', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
                 Email Address
               </label>
               <input
                 type="email"
+                id="auth-email"
+                autoComplete="email"
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
@@ -228,7 +244,6 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, onAuthSuc
                   padding: '8px 12px',
                   fontSize: '13px',
                   color: '#fff',
-                  outline: 'none',
                   boxSizing: 'border-box',
                 }}
               />
@@ -236,11 +251,13 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, onAuthSuc
           )}
 
           <div>
-            <label style={{ display: 'block', fontSize: '11px', color: '#8e9693', marginBottom: '4px', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+            <label htmlFor="auth-password" style={{ display: 'block', fontSize: '11px', color: '#8e9693', marginBottom: '4px', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
               Password
             </label>
             <input
               type="password"
+              id="auth-password"
+              autoComplete={tab === 'login' ? 'current-password' : 'new-password'}
               required
               value={password}
               onChange={(e) => setPassword(e.target.value)}
@@ -253,7 +270,6 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, onAuthSuc
                 padding: '8px 12px',
                 fontSize: '13px',
                 color: '#fff',
-                outline: 'none',
                 boxSizing: 'border-box',
               }}
             />

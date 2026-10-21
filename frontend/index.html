@@ -613,6 +613,9 @@
                           <span class="val" id="ovRfmRecencyVal">25</span>
                         </div>
                         <input type="range" class="ov-range-input" id="ovRfmRecencyInput" min="1" max="365" value="25">
+                        <div class="ov-slider-ticks">
+                          <span>0</span><span>90</span><span>180</span><span>365</span>
+                        </div>
                       </div>
                       <div class="ov-slider-item">
                         <div class="ov-slider-top">
@@ -620,6 +623,9 @@
                           <span class="val" id="ovRfmFreqVal">6</span>
                         </div>
                         <input type="range" class="ov-range-input" id="ovRfmFreqInput" min="1" max="50" value="6">
+                        <div class="ov-slider-ticks">
+                          <span>0</span><span>10</span><span>20</span><span>50</span>
+                        </div>
                       </div>
                       <div class="ov-slider-item">
                         <div class="ov-slider-top">
@@ -627,6 +633,9 @@
                           <span class="val" id="ovRfmMonetaryVal">1250</span>
                         </div>
                         <input type="range" class="ov-range-input" id="ovRfmMonetaryInput" min="50" max="10000" step="50" value="1250">
+                        <div class="ov-slider-ticks">
+                          <span>50</span><span>250</span><span>500</span><span>1,000</span>
+                        </div>
                       </div>
                       <div class="ov-slider-item">
                         <div class="ov-slider-top">
@@ -634,19 +643,118 @@
                           <span class="val" id="ovRfmTenureVal">300</span>
                         </div>
                         <input type="range" class="ov-range-input" id="ovRfmTenureInput" min="10" max="730" value="300">
+                        <div class="ov-slider-ticks">
+                          <span>30</span><span>365</span><span>730</span><span>1,095</span>
+                        </div>
                       </div>
                     </div>
 
-                    <div class="ov-rfm-result-card">
-                      <div class="ov-grade-hexagon">A</div>
-                      <div class="ov-rfm-score-text" id="ovRfmScore">RFM 432</div>
-                      <div class="ov-rfm-seg-label" id="ovRfmSeg">Loyal Customers</div>
-                      <div style="font-size: 10px; color: var(--text-muted); margin-top: 4px;">Predicted CLV: <strong style="color: #ffffff;" id="ovRfmClv">$341.43</strong></div>
-                      <div style="font-size: 10px; color: var(--text-muted);">Churn Risk: <strong style="color: #d4d4d4;" id="ovRfmChurn">16.7%</strong></div>
+                    <div class="ov-rfm-right-col">
+                      <div class="ov-rfm-result-card cv-snapshot-panel">
+                        <div class="cv-snapshot-title">CUSTOMER VALUE SNAPSHOT</div>
+                        <p>Preview: scores and gauge are local heuristics, not model outputs. CLV and churn below start as reference values; Calculate RFM requests predictions.</p>
+                        <div class="cv-scores-list">
+
+                          <div class="cv-score-row">
+                            <span class="cv-score-lbl">Recency</span>
+                            <div class="cv-score-bar-track">
+                              <div class="cv-score-bar-fill" id="ovBarRecency" style="width: 72%;"></div>
+                            </div>
+                            <span class="cv-score-num" id="ovScoreRecency">72</span>
+                          </div>
+                          <div class="cv-score-row">
+                            <span class="cv-score-lbl">Frequency</span>
+                            <div class="cv-score-bar-track">
+                              <div class="cv-score-bar-fill" id="ovBarFreq" style="width: 58%;"></div>
+                            </div>
+                            <span class="cv-score-num" id="ovScoreFreq">58</span>
+                          </div>
+                          <div class="cv-score-row">
+                            <span class="cv-score-lbl">Monetary</span>
+                            <div class="cv-score-bar-track">
+                              <div class="cv-score-bar-fill" id="ovBarMonetary" style="width: 86%;"></div>
+                            </div>
+                            <span class="cv-score-num" id="ovScoreMonetary">86</span>
+                          </div>
+                        </div>
+
+                        <div class="cv-gauge-wrap">
+                          <svg class="cv-gauge-svg" viewBox="0 0 120 85" width="120" height="85">
+                            <g class="cv-gauge-ticks">
+                              <line class="cv-gauge-tick" data-idx="0" x1="31.4" y1="68.5" x2="23.6" y2="73.0" stroke="#ffffff" stroke-width="1.8" stroke-linecap="round"/>
+                              <line class="cv-gauge-tick" data-idx="1" x1="29.7" y1="65.2" x2="21.5" y2="68.8" stroke="#ffffff" stroke-width="1.8" stroke-linecap="round"/>
+                              <line class="cv-gauge-tick" data-idx="2" x1="28.4" y1="61.7" x2="19.8" y2="64.3" stroke="#ffffff" stroke-width="1.8" stroke-linecap="round"/>
+                              <line class="cv-gauge-tick" data-idx="3" x1="27.6" y1="58.0" x2="18.7" y2="59.7" stroke="#ffffff" stroke-width="1.8" stroke-linecap="round"/>
+                              <line class="cv-gauge-tick" data-idx="4" x1="27.1" y1="54.3" x2="18.1" y2="55.0" stroke="#ffffff" stroke-width="1.8" stroke-linecap="round"/>
+                              <line class="cv-gauge-tick" data-idx="5" x1="27.0" y1="50.6" x2="18.0" y2="50.2" stroke="#ffffff" stroke-width="1.8" stroke-linecap="round"/>
+                              <line class="cv-gauge-tick" data-idx="6" x1="27.4" y1="46.9" x2="18.5" y2="45.5" stroke="#ffffff" stroke-width="1.8" stroke-linecap="round"/>
+                              <line class="cv-gauge-tick" data-idx="7" x1="28.2" y1="43.2" x2="19.5" y2="40.8" stroke="#ffffff" stroke-width="1.8" stroke-linecap="round"/>
+                              <line class="cv-gauge-tick" data-idx="8" x1="29.4" y1="39.7" x2="21.0" y2="36.3" stroke="#ffffff" stroke-width="1.8" stroke-linecap="round"/>
+                              <line class="cv-gauge-tick" data-idx="9" x1="31.0" y1="36.3" x2="23.0" y2="32.0" stroke="#ffffff" stroke-width="1.8" stroke-linecap="round"/>
+                              <line class="cv-gauge-tick" data-idx="10" x1="32.9" y1="33.1" x2="25.5" y2="28.0" stroke="#ffffff" stroke-width="1.8" stroke-linecap="round"/>
+                              <line class="cv-gauge-tick" data-idx="11" x1="35.2" y1="30.2" x2="28.5" y2="24.3" stroke="#ffffff" stroke-width="1.8" stroke-linecap="round"/>
+                              <line class="cv-gauge-tick" data-idx="12" x1="37.8" y1="27.5" x2="31.8" y2="20.9" stroke="#ffffff" stroke-width="1.8" stroke-linecap="round"/>
+                              <line class="cv-gauge-tick" data-idx="13" x1="40.8" y1="25.2" x2="35.5" y2="17.9" stroke="#ffffff" stroke-width="1.8" stroke-linecap="round"/>
+                              <line class="cv-gauge-tick" data-idx="14" x1="43.9" y1="23.2" x2="39.5" y2="15.3" stroke="#ffffff" stroke-width="1.8" stroke-linecap="round"/>
+                              <line class="cv-gauge-tick" data-idx="15" x1="47.3" y1="21.6" x2="43.8" y2="13.3" stroke="#ffffff" stroke-width="1.8" stroke-linecap="round"/>
+                              <line class="cv-gauge-tick" data-idx="16" x1="50.8" y1="20.3" x2="48.3" y2="11.7" stroke="#ffffff" stroke-width="1.8" stroke-linecap="round"/>
+                              <line class="cv-gauge-tick" data-idx="17" x1="54.4" y1="19.5" x2="52.9" y2="10.6" stroke="#ffffff" stroke-width="1.8" stroke-linecap="round"/>
+                              <line class="cv-gauge-tick" data-idx="18" x1="58.1" y1="19.1" x2="57.6" y2="10.1" stroke="#ffffff" stroke-width="1.8" stroke-linecap="round"/>
+                              <line class="cv-gauge-tick" data-idx="19" x1="61.9" y1="19.1" x2="62.4" y2="10.1" stroke="#ffffff" stroke-width="1.8" stroke-linecap="round"/>
+                              <line class="cv-gauge-tick" data-idx="20" x1="65.6" y1="19.5" x2="67.1" y2="10.6" stroke="#ffffff" stroke-width="1.8" stroke-linecap="round"/>
+                              <line class="cv-gauge-tick" data-idx="21" x1="69.2" y1="20.3" x2="71.7" y2="11.7" stroke="#ffffff" stroke-width="1.8" stroke-linecap="round"/>
+                              <line class="cv-gauge-tick" data-idx="22" x1="72.7" y1="21.6" x2="76.2" y2="13.3" stroke="#ffffff" stroke-width="1.8" stroke-linecap="round"/>
+                              <line class="cv-gauge-tick" data-idx="23" x1="76.1" y1="23.2" x2="80.5" y2="15.3" stroke="#ffffff" stroke-width="1.8" stroke-linecap="round"/>
+                              <line class="cv-gauge-tick" data-idx="24" x1="79.2" y1="25.2" x2="84.5" y2="17.9" stroke="#ffffff" stroke-width="1.8" stroke-linecap="round"/>
+                              <line class="cv-gauge-tick" data-idx="25" x1="82.2" y1="27.5" x2="88.2" y2="20.9" stroke="#ffffff" stroke-width="1.8" stroke-linecap="round"/>
+                              <line class="cv-gauge-tick" data-idx="26" x1="84.8" y1="30.2" x2="91.5" y2="24.3" stroke="#ffffff" stroke-width="1.8" stroke-linecap="round"/>
+                              <line class="cv-gauge-tick" data-idx="27" x1="87.1" y1="33.1" x2="94.5" y2="28.0" stroke="#ffffff" stroke-width="1.8" stroke-linecap="round"/>
+                              <line class="cv-gauge-tick" data-idx="28" x1="89.0" y1="36.3" x2="97.0" y2="32.0" stroke="#27272a" stroke-width="1.8" stroke-linecap="round"/>
+                              <line class="cv-gauge-tick" data-idx="29" x1="90.6" y1="39.7" x2="99.0" y2="36.3" stroke="#27272a" stroke-width="1.8" stroke-linecap="round"/>
+                              <line class="cv-gauge-tick" data-idx="30" x1="91.8" y1="43.2" x2="100.5" y2="40.8" stroke="#27272a" stroke-width="1.8" stroke-linecap="round"/>
+                              <line class="cv-gauge-tick" data-idx="31" x1="92.6" y1="46.9" x2="101.5" y2="45.5" stroke="#27272a" stroke-width="1.8" stroke-linecap="round"/>
+                              <line class="cv-gauge-tick" data-idx="32" x1="93.0" y1="50.6" x2="102.0" y2="50.2" stroke="#27272a" stroke-width="1.8" stroke-linecap="round"/>
+                              <line class="cv-gauge-tick" data-idx="33" x1="92.9" y1="54.3" x2="101.9" y2="55.0" stroke="#27272a" stroke-width="1.8" stroke-linecap="round"/>
+                              <line class="cv-gauge-tick" data-idx="34" x1="92.4" y1="58.0" x2="101.3" y2="59.7" stroke="#27272a" stroke-width="1.8" stroke-linecap="round"/>
+                              <line class="cv-gauge-tick" data-idx="35" x1="91.6" y1="61.7" x2="100.2" y2="64.3" stroke="#27272a" stroke-width="1.8" stroke-linecap="round"/>
+                              <line class="cv-gauge-tick" data-idx="36" x1="90.3" y1="65.2" x2="98.5" y2="68.8" stroke="#27272a" stroke-width="1.8" stroke-linecap="round"/>
+                              <line class="cv-gauge-tick" data-idx="37" x1="88.6" y1="68.5" x2="96.4" y2="73.0" stroke="#27272a" stroke-width="1.8" stroke-linecap="round"/>
+                            </g>
+                          </svg>
+                          <div class="cv-gauge-center">
+                            <div class="cv-gauge-val" id="ovRfmScore">432</div>
+                            <div class="cv-gauge-sub">RFM SCORE</div>
+                          </div>
+                        </div>
+
+                        <span id="ovRfmSeg" class="visually-hidden">Loyal Customers</span>
+
+                        <div class="cv-metrics-bottom">
+                          <div class="cv-metric-row">
+                            <div class="cv-metric-lbl">
+                              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/>
+                              </svg>
+                              <span>Predicted CLV</span>
+                            </div>
+                            <strong class="cv-metric-val" id="ovRfmClv">$341.43</strong>
+                          </div>
+                          <div class="cv-metric-row">
+                            <div class="cv-metric-lbl">
+                              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                              </svg>
+                              <span>Churn Risk</span>
+                            </div>
+                            <strong class="cv-metric-val" id="ovRfmChurn">16.7%</strong>
+                          </div>
+                          <div class="cv-bottom-notch"></div>
+                        </div>
+                      </div>
+
+                      <button type="button" class="btn-pill-primary cv-calc-btn" id="ovCalcRfmBtn">Calculate RFM →</button>
                     </div>
                   </div>
-
-                  <button type="button" class="btn-pill-primary" id="ovCalcRfmBtn" style="width: 100%; justify-content: center; font-size: 12.5px; padding: 9px;">Calculate RFM →</button>
                 </div>
 
                 <!-- Module 3: Recent Transactions & Customer Dossier -->
@@ -975,6 +1083,7 @@
                     </div>
 
                     <!-- Histogram with proper X/Y Axes -->
+                    <p>Preview: static illustrative histogram, not computed from customer records.</p>
                     <div style="background: rgba(0, 0, 0, 0.4); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 6px; padding: 8px 10px; margin: 8px 0;">
                       <div style="font-size: 9px; font-weight: 700; color: #71717a; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 4px;">RECENCY VS MONETARY DISTRIBUTION</div>
                       <svg width="100%" height="68" viewBox="0 0 240 68" fill="none" preserveAspectRatio="none">
@@ -1063,6 +1172,7 @@
                     </div>
 
                     <!-- Histogram -->
+                    <p>Preview: static illustrative histogram, not computed from customer records.</p>
                     <div style="background: rgba(0, 0, 0, 0.4); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 6px; padding: 8px 10px; margin: 8px 0;">
                       <div style="font-size: 9px; font-weight: 700; color: #71717a; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 4px;">RECENCY VS MONETARY DISTRIBUTION</div>
                       <svg width="100%" height="68" viewBox="0 0 240 68" fill="none" preserveAspectRatio="none">
@@ -1146,6 +1256,7 @@
                     </div>
 
                     <!-- Histogram: centered around 200 days -->
+                    <p>Preview: static illustrative histogram, not computed from customer records.</p>
                     <div style="background: rgba(0, 0, 0, 0.4); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 6px; padding: 8px 10px; margin: 8px 0;">
                       <div style="font-size: 9px; font-weight: 700; color: #71717a; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 4px;">RECENCY VS MONETARY DISTRIBUTION</div>
                       <svg width="100%" height="68" viewBox="0 0 240 68" fill="none" preserveAspectRatio="none">
@@ -1230,6 +1341,7 @@
                     </div>
 
                     <!-- Histogram: concentrated at high recency (250-300+ days) -->
+                    <p>Preview: static illustrative histogram, not computed from customer records.</p>
                     <div style="background: rgba(0, 0, 0, 0.4); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 6px; padding: 8px 10px; margin: 8px 0;">
                       <div style="font-size: 9px; font-weight: 700; color: #71717a; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 4px;">RECENCY VS MONETARY DISTRIBUTION</div>
                       <svg width="100%" height="68" viewBox="0 0 240 68" fill="none" preserveAspectRatio="none">
@@ -1386,6 +1498,7 @@
                       <button type="button" class="btn-pill-primary" id="simRunBtn" style="padding: 10px 20px; font-size: 13px; cursor: pointer;">▶ Run Simulation →</button>
                       <button type="button" class="btn-pill-secondary" id="simSaveBtn" style="padding: 10px 16px; font-size: 13px; cursor: pointer;">💾 Save Scenario</button>
                     </div>
+                    <p>Saving not available in this view; use <a href="/app#simulator">React workspace</a>.</p>
                   </div>
 
                   <!-- Right: Real-Time Prediction Results Card -->
@@ -1398,7 +1511,7 @@
                         </div>
                         <div style="font-size: 11.5px; color: #8e9693; margin-top: 2px;">AI-powered customer value and churn prediction</div>
                       </div>
-                      <span class="sim-confidence-pill">📊 Prediction Confidence 78%</span>
+                      <span class="sim-confidence-pill">Prediction confidence: not provided</span>
                     </div>
 
                     <div class="sim-metric-quad">
@@ -1408,7 +1521,7 @@
                           <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.45 1-1 1H7c-.55 0-1-.45-1-1v-2.34c-1.22-.64-2-1.92-2-3.32V4h16v7.34c0 1.4-.78 2.68-2 3.32V17c0 .55-.45 1-1 1h-2c-.55 0-1-.45-1-1v-2.34c-.7.37-1.5.58-2.35.63H9.35c-.85-.05-1.65-.26-2.35-.63z"/></svg>
                           <span class="sim-quad-lbl" style="margin-bottom: 0;">Predicted Segment</span>
                         </div>
-                        <div id="simSegOutput" class="cluster-card-badge badge-loyal" style="font-size: 13px; padding: 4px 10px; margin-top: 6px;">Loyal Customers</div>
+                        <div id="simSegOutput" class="cluster-card-badge badge-loyal" style="font-size: 13px; padding: 4px 10px; margin-top: 6px;">Awaiting prediction</div>
                       </div>
 
                       <!-- Metric 2: CLV -->
@@ -1418,9 +1531,9 @@
                           <span class="sim-quad-lbl" style="margin-bottom: 0;">Predicted 90-Day CLV</span>
                         </div>
                         <div style="display: flex; align-items: baseline; gap: 6px;">
-                          <div class="sim-quad-num" id="simClvOutput">$341.43</div>
+                          <div class="sim-quad-num" id="simClvOutput">--</div>
                         </div>
-                        <span class="metric-delta delta-up">↑ 32.1% vs average</span>
+                        <span class="metric-delta delta-up">Illustrative, noncomputed: ↑ 32.1% vs average</span>
                       </div>
 
                       <!-- Metric 3: Churn Risk -->
@@ -1430,26 +1543,26 @@
                           <span class="sim-quad-lbl" style="margin-bottom: 0;">Churn Risk</span>
                         </div>
                         <div style="display: flex; align-items: baseline; gap: 6px;">
-                          <div class="sim-quad-num" id="simChurnOutput">23.5%</div>
+                          <div class="sim-quad-num" id="simChurnOutput">--</div>
                         </div>
-                        <span class="metric-delta delta-down">↓ 18.6% vs average</span>
+                        <span class="metric-delta delta-down">Illustrative, noncomputed: ↓ 18.6% vs average</span>
                       </div>
 
                       <!-- Metric 4: Expected Orders -->
                       <div class="sim-quad-box">
                         <div style="display: flex; align-items: center; gap: 6px; margin-bottom: 4px;">
                           <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
-                          <span class="sim-quad-lbl" style="margin-bottom: 0;">Expected Orders</span>
+                          <span class="sim-quad-lbl" style="margin-bottom: 0;">Orders heuristic (not a forecast)</span>
                         </div>
                         <div style="display: flex; align-items: baseline; gap: 6px;">
-                          <div class="sim-quad-num" id="simOrdersOutput">8.2</div>
+                          <div class="sim-quad-num" id="simOrdersOutput">--</div>
                         </div>
-                        <span class="metric-delta delta-up">↑ 12.3% vs average</span>
+                        <span class="metric-delta delta-up">Illustrative, noncomputed: ↑ 12.3% vs average</span>
                       </div>
                     </div>
 
                     <div style="margin-top: 16px; padding: 12px; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.06); border-radius: var(--radius-sm); font-size: 11.5px; color: #a1a1aa; line-height: 1.5;">
-                      <span style="color: #fff; font-weight: 700;">Cohort Insight:</span> High purchase habituation with moderate churn elasticity. Retention outreach recommended within 14 days.
+                      <span style="color: #fff; font-weight: 700;">Preview insight (static, not personalized):</span> High purchase habituation with moderate churn elasticity. Retention outreach recommended within 14 days. Orders heuristic = input frequency × (1 − returned churn probability).
                     </div>
                   </div>
                 </div>
@@ -1461,7 +1574,7 @@
                     <div class="card-section-header">
                       <div>
                         <span class="card-section-title">CLV SENSITIVITY ANALYSIS</span>
-                        <div style="font-size: 11.5px; color: #8e9693; margin-top: 2px;">How input changes affect predicted CLV</div>
+                        <div style="font-size: 11.5px; color: #8e9693; margin-top: 2px;">Preview: static illustrative sensitivity SVG; not computed from inputs or model predictions.</div>
                       </div>
                     </div>
                     <svg width="100%" height="170" viewBox="0 0 420 170" fill="none" preserveAspectRatio="none">
@@ -1530,7 +1643,7 @@
                     <div class="card-section-header">
                       <div>
                         <span class="card-section-title">CHURN PROBABILITY CURVE</span>
-                        <div style="font-size: 11.5px; color: #8e9693; margin-top: 2px;">Predicted churn risk across input ranges</div>
+                        <div style="font-size: 11.5px; color: #8e9693; margin-top: 2px;">Preview: static illustrative churn SVG; not computed from inputs or model predictions.</div>
                       </div>
                     </div>
                     <svg width="100%" height="170" viewBox="0 0 420 170" fill="none" preserveAspectRatio="none">
@@ -1578,7 +1691,7 @@
                         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/></svg>
                         SCENARIO COMPARISON
                       </span>
-                      <div style="font-size: 11.5px; color: #8e9693; margin-top: 2px;">Compare saved scenarios and their predicted outcomes</div>
+                      <div style="font-size: 11.5px; color: #8e9693; margin-top: 2px;">Preview: fixed preset comparison with illustrative, noncomputed outcomes; these are not saved scenarios. Saving not available in this view; use <a href="/app#simulator">React workspace</a>.</div>
                     </div>
                     <button type="button" class="btn-pill-secondary" id="simSaveCurrentBtn" style="font-size: 11px; padding: 5px 12px; cursor: pointer;">+ Save Current Scenario</button>
                   </div>
@@ -1669,6 +1782,7 @@
                 </div>
 
                 <!-- Top 4 KPI Summary Cards -->
+                <p>Preview: static KPI reference snapshot. Values, sparklines, performance labels and comparison deltas are illustrative, noncomputed; not current API metrics.</p>
                 <div class="clv-kpi-grid reveal-fade-up" style="margin-top: 10px;">
                   <div class="clv-kpi-card">
                     <div class="clv-kpi-icon-header">
@@ -1756,7 +1870,7 @@
                       </div>
                     </div>
                     <div class="clv-kpi-footer">
-                      <span style="color: #a1a1aa; font-size: 11px;">Verified customer profiles</span>
+                      <span style="color: #a1a1aa; font-size: 11px;">Illustrative profile count</span>
                     </div>
                   </div>
                 </div>
@@ -1791,6 +1905,7 @@
                       </div>
 
                       <!-- Detailed Histogram SVG Chart with proper X and Y axes -->
+                      <p>Preview: static illustrative CLV histogram; not computed from customer records. Segment selection does not update this SVG.</p>
                       <div style="position: relative; width: 100%; height: 210px; margin-top: 10px;">
                         <svg width="100%" height="210" viewBox="0 0 540 210" fill="none" preserveAspectRatio="none">
                           <!-- Y-Axis Grid Lines & Ticks -->
@@ -1859,7 +1974,7 @@
                               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
                               CLV FACTORS
                             </span>
-                            <div style="font-size: 11px; color: #8e9693; margin-top: 2px;">Key factors influencing customer lifetime value</div>
+                            <div style="font-size: 11px; color: #8e9693; margin-top: 2px;">Preview: illustrative static factors, not model-derived feature importance.</div>
                           </div>
                         </div>
                         <div class="factor-progress-row">
@@ -1900,7 +2015,7 @@
                               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.45 1-1 1H7c-.55 0-1-.45-1-1v-2.34c-1.22-.64-2-1.92-2-3.32V4h16v7.34c0 1.4-.78 2.68-2 3.32V17c0 .55-.45 1-1 1h-2c-.55 0-1-.45-1-1v-2.34c-.7.37-1.5.58-2.35.63H9.35c-.85-.05-1.65-.26-2.35-.63z"/></svg>
                               TOP CLV CUSTOMERS
                             </span>
-                            <div style="font-size: 11px; color: #8e9693; margin-top: 2px;">Highest predicted customer lifetime value</div>
+                            <div style="font-size: 11px; color: #8e9693; margin-top: 2px;">Preview: static reference table; not a current customer ranking or computed predictions.</div>
                           </div>
                         </div>
                         <table style="width: 100%; border-collapse: collapse; font-size: 11.5px;">
@@ -1983,6 +2098,7 @@
                       </div>
                       
                       <!-- Churn Risk Histogram with proper X and Y axes -->
+                      <p>Preview: static illustrative churn histogram; not computed from customer records.</p>
                       <div style="position: relative; width: 100%; height: 160px;">
                         <svg width="100%" height="160" viewBox="0 0 440 160" fill="none" preserveAspectRatio="none">
                           <line x1="38" y1="15" x2="425" y2="15" stroke="rgba(255,255,255,0.05)" stroke-dasharray="2 2"/>
@@ -2076,7 +2192,7 @@
       </div>
     </div>
   </section>
-  <footer class="font-credit"><a href="https://www.onlinewebfonts.com/fonts">Display font by OnlineWebFonts</a> · CC BY 4.0</footer>
+  <footer class="font-credit"><a href="/app">Open React workspace — all workspace features</a> · <a href="https://www.onlinewebfonts.com/fonts">Display font by OnlineWebFonts</a> · CC BY 4.0</footer>
 
   <!-- ==============================================================================
        MODAL 1: BIG DATA ARCHITECTURE PIPELINE

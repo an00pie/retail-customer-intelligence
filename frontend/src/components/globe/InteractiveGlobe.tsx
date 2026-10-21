@@ -2,11 +2,18 @@ import React, { useEffect, useRef } from 'react';
 
 interface InteractiveGlobeProps {
   className?: string;
+  paused?: boolean;
 }
 
-export const InteractiveGlobe: React.FC<InteractiveGlobeProps> = ({ className = '' }) => {
+export const InteractiveGlobe: React.FC<InteractiveGlobeProps> = ({ className = '', paused = false }) => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const containerRef = useRef<HTMLDivElement | null>(null);
+  const pausedRef = useRef(paused);
+  const syncRef = useRef<(() => void) | null>(null);
+  useEffect(() => {
+    pausedRef.current = paused;
+    syncRef.current?.();
+  }, [paused]);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -16,7 +23,9 @@ export const InteractiveGlobe: React.FC<InteractiveGlobeProps> = ({ className = 
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
-    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const motionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+    let inView = false;
+    const canAnimate = () => !pausedRef.current && !motionQuery.matches && !document.hidden && inView;
 
     let width = container.clientWidth || 720;
     let height = container.clientHeight || 440;
@@ -34,7 +43,6 @@ export const InteractiveGlobe: React.FC<InteractiveGlobeProps> = ({ className = 
     };
 
     resize();
-    window.addEventListener('resize', resize, { passive: true });
 
     // Continent Polygons
     const CONTINENT_POLYS: [number, number][][] = [
@@ -132,15 +140,16 @@ export const InteractiveGlobe: React.FC<InteractiveGlobeProps> = ({ className = 
 
     let rotX = -0.42;
     let rotY = -0.60;
-    let targetRotSpeedY = prefersReducedMotion ? 0 : 0.0035;
-    let curRotSpeedY = targetRotSpeedY;
     let pointerX = 0;
     let pointerY = 0;
     let targetPointerX = 0;
     let targetPointerY = 0;
-    let animId: number;
+    let animId = 0;
+    let elapsed = 0;
+    let lastFrame = 0;
 
     const onMouseMove = (e: MouseEvent) => {
+      if (!canAnimate()) return;
       const normX = (e.clientX / window.innerWidth) * 2 - 1;
       const normY = (e.clientY / window.innerHeight) * 2 - 1;
       targetPointerX = normX * 24;
@@ -168,12 +177,14 @@ export const InteractiveGlobe: React.FC<InteractiveGlobeProps> = ({ className = 
       };
     };
 
-    const draw = () => {
+    const draw = (delta = 0) => {
       ctx.clearRect(0, 0, width, height);
-      pointerX += (targetPointerX - pointerX) * 0.06;
-      pointerY += (targetPointerY - pointerY) * 0.06;
-      curRotSpeedY += (targetRotSpeedY - curRotSpeedY) * 0.05;
-      rotY += curRotSpeedY;
+      if (delta > 0) {
+        pointerX += (targetPointerX - pointerX) * 0.06;
+        pointerY += (targetPointerY - pointerY) * 0.06;
+        rotY += 0.0035 * delta / (1000 / 60);
+        elapsed += delta;
+      }
 
       const cx = width * 0.50 + pointerX;
       const currentRadius = Math.min(width * 0.42, height * 0.46, 260);
@@ -265,7 +276,7 @@ export const InteractiveGlobe: React.FC<InteractiveGlobeProps> = ({ className = 
       }
 
       // 7. Arcs & Traveling Packets
-      const now = Date.now();
+      const now = elapsed;
       for (let a = 0; a < arcs.length; a++) {
         const hFrom = hubs[arcs[a].from];
         const hTo = hubs[arcs[a].to];
@@ -354,14 +365,38 @@ export const InteractiveGlobe: React.FC<InteractiveGlobeProps> = ({ className = 
       ctx.arc(cx, cy, currentRadius * 1.001, startAng + 0.08, endAng - 0.08);
       ctx.stroke();
 
-      animId = requestAnimationFrame(draw);
     };
 
-    animId = requestAnimationFrame(draw);
+    const frame = (time: number) => {
+      animId = 0;
+      if (!canAnimate()) return;
+      draw(lastFrame ? Math.min(time - lastFrame, 50) : 1000 / 60);
+      lastFrame = time;
+      animId = requestAnimationFrame(frame);
+    };
+    const sync = () => {
+      cancelAnimationFrame(animId);
+      animId = 0;
+      lastFrame = 0;
+      if (canAnimate()) animId = requestAnimationFrame(frame);
+    };
+    const onResize = () => { resize(); draw(); };
+    const observer = new IntersectionObserver(([entry]) => { inView = entry.isIntersecting; sync(); });
+    observer.observe(container);
+    syncRef.current = sync;
+    document.addEventListener('visibilitychange', sync);
+    motionQuery.addEventListener('change', sync);
+    window.addEventListener('resize', onResize, { passive: true });
+    draw();
+    sync();
 
     return () => {
       cancelAnimationFrame(animId);
-      window.removeEventListener('resize', resize);
+      syncRef.current = null;
+      observer.disconnect();
+      document.removeEventListener('visibilitychange', sync);
+      motionQuery.removeEventListener('change', sync);
+      window.removeEventListener('resize', onResize);
       window.removeEventListener('mousemove', onMouseMove);
     };
   }, []);

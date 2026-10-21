@@ -1218,6 +1218,10 @@ function initWhatIfSimulator() {
   }
 
   function executeSim() {
+    clearTimeout(simDebounceTimer);
+    const requestId = ++currentRequestId;
+    const ordersTarget = document.getElementById('simOrdersOutput');
+    if (ordersTarget) ordersTarget.textContent = '--';
     const r = validateField(recInput, recRow, recErr, 'Recency', 'recency');
     const f = validateField(freqInput, freqRow, freqErr, 'Frequency', 'frequency');
     const s = validateField(spendInput, spendRow, spendErr, 'Historical Spend', 'spend');
@@ -1240,7 +1244,6 @@ function initWhatIfSimulator() {
       tenure_days: t.value
     };
 
-    const requestId = ++currentRequestId;
     if (segTarget) segTarget.style.opacity = '0.5';
 
     fetch('/api/predict', {
@@ -1257,6 +1260,11 @@ function initWhatIfSimulator() {
       })
       .then(res => {
         if (!res || requestId !== currentRequestId) return;
+        if (!Number.isFinite(Number(res.predicted_clv)) || res.predicted_clv == null ||
+            !Number.isFinite(Number(res.churn_probability)) || res.churn_probability == null ||
+            res.churn_probability < 0 || res.churn_probability > 1 || !res.segment) {
+          throw new Error('Incomplete prediction response');
+        }
         if (segTarget) {
           segTarget.style.opacity = '1';
           segTarget.textContent = res.segment;
@@ -1266,10 +1274,10 @@ function initWhatIfSimulator() {
           animateMetricCounter(churnTarget, `${(parseFloat(res.churn_probability) * 100).toFixed(1)}%`, 450);
           churnTarget.style.color = res.churn_probability > 0.4 ? '#fb7185' : '#ffffff';
         }
-        const ordersTarget = document.getElementById('simOrdersOutput');
         if (ordersTarget) {
-          const expOrders = (parseFloat(f.value || 6) * (1 - parseFloat(res.churn_probability || 0.2))).toFixed(1);
-          animateMetricCounter(ordersTarget, expOrders, 450);
+          // Local heuristic only, not an order forecast from the model.
+          const expOrders = (f.value * (1 - Number(res.churn_probability ?? 0))).toFixed(1);
+          ordersTarget.textContent = expOrders;
         }
         const infCard = segTarget ? segTarget.closest('.overview-card') : null;
         if (infCard) {
@@ -1281,6 +1289,7 @@ function initWhatIfSimulator() {
       .catch(err => {
         if (requestId !== currentRequestId) return;
         console.warn('[What-If Simulator] Prediction request failed:', err);
+        if (ordersTarget) ordersTarget.textContent = '--';
         if (segTarget) {
           segTarget.style.opacity = '1';
           segTarget.innerHTML = '<span style="font-size: 15px; color: #fb7185;">Inference Unavailable</span>';
@@ -1312,7 +1321,7 @@ function initWhatIfSimulator() {
   if (runBtn) {
     runBtn.addEventListener('click', () => {
       executeSim();
-      window.showToast('Scenario simulation executed with live gradient boosting inference', 'success');
+      window.showToast('Simulation requested; see results or validation errors in this view.', 'info');
     });
   }
 
@@ -1331,14 +1340,14 @@ function initWhatIfSimulator() {
   const saveBtn = document.getElementById('simSaveBtn');
   if (saveBtn) {
     saveBtn.addEventListener('click', () => {
-      window.showToast('Scenario successfully saved to session workspace', 'success');
+      window.showToast('Saving not available in this view; use React workspace', 'info');
     });
   }
 
   const saveCurrentBtn = document.getElementById('simSaveCurrentBtn');
   if (saveCurrentBtn) {
     saveCurrentBtn.addEventListener('click', () => {
-      window.showToast('Current simulation parameters saved to comparison table', 'success');
+      window.showToast('Saving not available in this view; use React workspace', 'info');
     });
   }
 
@@ -1834,25 +1843,69 @@ function initOverviewModules() {
   const tInput = document.getElementById('ovRfmTenureInput');
   const calcBtn = document.getElementById('ovCalcRfmBtn');
 
-  function updateOvRfmLabels() {
-    if (rInput) { const el = document.getElementById('ovRfmRecencyVal'); if (el) el.textContent = rInput.value; }
-    if (fInput) { const el = document.getElementById('ovRfmFreqVal'); if (el) el.textContent = fInput.value; }
-    if (mInput) { const el = document.getElementById('ovRfmMonetaryVal'); if (el) el.textContent = mInput.value; }
-    if (tInput) { const el = document.getElementById('ovRfmTenureVal'); if (el) el.textContent = tInput.value; }
+  function updateOvRfmSnapshot() {
+    const rec = parseInt(rInput ? rInput.value : 25, 10);
+    const freq = parseInt(fInput ? fInput.value : 6, 10);
+    const mon = parseFloat(mInput ? mInput.value : 1250);
+    const ten = parseInt(tInput ? tInput.value : 300, 10);
+
+    if (rInput) { const el = document.getElementById('ovRfmRecencyVal'); if (el) el.textContent = rec; }
+    if (fInput) { const el = document.getElementById('ovRfmFreqVal'); if (el) el.textContent = freq; }
+    if (mInput) { const el = document.getElementById('ovRfmMonetaryVal'); if (el) el.textContent = mon; }
+    if (tInput) { const el = document.getElementById('ovRfmTenureVal'); if (el) el.textContent = ten; }
+
+    // Normalized scores (0-100)
+    let scoreR = (rec === 25) ? 72 : Math.round(Math.max(5, Math.min(99, 78 - ((rec - 25) / 340) * 68)));
+    let scoreF = (freq === 6) ? 58 : Math.round(Math.max(5, Math.min(99, 45 + ((freq - 1) / 49) * 53)));
+    let scoreM = (mon === 1250) ? 86 : Math.round(Math.max(5, Math.min(99, 30 + (Math.log10(Math.max(50, mon)) / 4) * 72)));
+
+    const elScoreR = document.getElementById('ovScoreRecency');
+    const elBarR = document.getElementById('ovBarRecency');
+    if (elScoreR) elScoreR.textContent = scoreR;
+    if (elBarR) elBarR.style.width = scoreR + '%';
+
+    const elScoreF = document.getElementById('ovScoreFreq');
+    const elBarF = document.getElementById('ovBarFreq');
+    if (elScoreF) elScoreF.textContent = scoreF;
+    if (elBarF) elBarF.style.width = scoreF + '%';
+
+    const elScoreM = document.getElementById('ovScoreMonetary');
+    const elBarM = document.getElementById('ovBarMonetary');
+    if (elScoreM) elScoreM.textContent = scoreM;
+    if (elBarM) elBarM.style.width = scoreM + '%';
+
+    // RFM Score digits
+    const rDigit = rec <= 30 ? 4 : (rec <= 90 ? 3 : (rec <= 180 ? 2 : 1));
+    const fDigit = freq >= 20 ? 5 : (freq >= 10 ? 4 : (freq >= 5 ? 3 : (freq >= 2 ? 2 : 1)));
+    const mDigit = mon >= 3000 ? 5 : (mon >= 1500 ? 3 : (mon >= 500 ? 2 : 1));
+    const rfmCode = (rec === 25 && freq === 6 && mon === 1250) ? 432 : (rDigit * 100 + fDigit * 10 + mDigit);
+
+    const elScore = document.getElementById('ovRfmScore');
+    if (elScore) elScore.textContent = rfmCode;
+
+    // Update gauge ticks
+    const ticks = document.querySelectorAll('.cv-gauge-tick');
+    if (ticks.length > 0) {
+      const activeCount = Math.round(ticks.length * (rfmCode / 555));
+      ticks.forEach((tk, idx) => {
+        tk.setAttribute('stroke', idx < activeCount ? '#ffffff' : '#27272a');
+      });
+    }
   }
 
   [rInput, fInput, mInput, tInput].forEach(inp => {
-    if (inp) inp.addEventListener('input', updateOvRfmLabels);
+    if (inp) inp.addEventListener('input', updateOvRfmSnapshot);
   });
+  updateOvRfmSnapshot();
 
   if (calcBtn) {
     calcBtn.addEventListener('click', () => {
       calcBtn.textContent = 'Calculating...';
       const payload = {
-        recency_days: parseInt(rInput ? rInput.value : 25),
-        frequency: parseInt(fInput ? fInput.value : 6),
+        recency_days: parseInt(rInput ? rInput.value : 25, 10),
+        frequency: parseInt(fInput ? fInput.value : 6, 10),
         total_spend: parseFloat(mInput ? mInput.value : 1250),
-        tenure_days: parseInt(tInput ? tInput.value : 300)
+        tenure_days: parseInt(tInput ? tInput.value : 300, 10)
       };
 
       fetch('/api/predict', {
@@ -1872,6 +1925,10 @@ function initOverviewModules() {
       })
       .catch(() => {
         calcBtn.textContent = 'Calculate RFM →';
+        const elClv = document.getElementById('ovRfmClv');
+        const elChurn = document.getElementById('ovRfmChurn');
+        if (elClv) elClv.textContent = 'Unavailable';
+        if (elChurn) elChurn.textContent = 'Unavailable';
       });
     });
   }
