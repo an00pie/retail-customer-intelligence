@@ -1091,6 +1091,38 @@ function renderCustomerJourneyChart(data, period = 'ALL') {
   });
 }
 
+function getCustomerAvatarUrl(customerId, segment, isHero = false) {
+  const idStr = String(customerId || '').trim();
+  if (idStr === '15485') return isHero ? '/static/img/avatars/avatar_15485.png' : '/static/img/avatars/avatar_dir_15485.png';
+  if (idStr === '13748') return '/static/img/avatars/avatar_13748.png';
+  if (idStr === '12364') return '/static/img/avatars/avatar_12364.png';
+  if (idStr === '16964') return '/static/img/avatars/avatar_16964.png';
+  if (idStr === '13269') return '/static/img/avatars/avatar_13269.png';
+  if (idStr === '18229') return '/static/img/avatars/avatar_18229.png';
+  if (idStr === '99999') return '/static/img/avatars/avatar_99999.png';
+
+  const seg = String(segment || '').toLowerCase();
+  if (seg.includes('champ')) return isHero ? '/static/img/avatars/avatar_15485.png' : '/static/img/avatars/avatar_dir_15485.png';
+  if (seg.includes('risk')) return '/static/img/avatars/avatar_13748.png';
+  if (seg.includes('loyal')) return '/static/img/avatars/avatar_12364.png';
+  if (seg.includes('lost')) return '/static/img/avatars/avatar_16964.png';
+
+  const avatarPool = [
+    '/static/img/avatars/avatar_15485.png',
+    '/static/img/avatars/avatar_12364.png',
+    '/static/img/avatars/avatar_13748.png',
+    '/static/img/avatars/avatar_13269.png',
+    '/static/img/avatars/avatar_18229.png',
+    '/static/img/avatars/avatar_16964.png'
+  ];
+  let hash = 0;
+  for (let i = 0; i < idStr.length; i++) {
+    hash = (hash << 5) - hash + idStr.charCodeAt(i);
+    hash |= 0;
+  }
+  return avatarPool[Math.abs(hash) % avatarPool.length];
+}
+
 function renderCustomerProfile(data) {
   window.currentCustomerProfile = data;
   const container = document.getElementById('customerProfileTarget');
@@ -1142,6 +1174,7 @@ function renderCustomerProfile(data) {
   }
 
   const initials = safeId.substring(0, 2).toUpperCase() || 'CU';
+  const avatarUrl = getCustomerAvatarUrl(rawId, rawSeg, true);
 
   let transactionsRowsHtml = '';
   if (Array.isArray(data.transactions) && data.transactions.length > 0) {
@@ -1187,7 +1220,10 @@ function renderCustomerProfile(data) {
 
           <div class="lookup-hero-main">
             <div class="lookup-hero-avatar-wrap">
-              <div class="lookup-hero-avatar">${initials}</div>
+              <div class="lookup-hero-avatar" id="lookupProfileAvatar">
+                <img src="${avatarUrl}" alt="Customer #${safeId}" class="lookup-hero-avatar-img" onerror="this.style.display='none'; if (this.nextElementSibling) this.nextElementSibling.style.display='none'; this.parentElement.innerText='${initials}';">
+                <span class="lookup-hero-verified-badge" title="Verified Columnar Customer">✓</span>
+              </div>
             </div>
             <div class="lookup-hero-info">
               <div class="lookup-hero-name">Customer #${safeId}</div>
@@ -1395,6 +1431,9 @@ function renderCustomerProfile(data) {
           </div>
           <div class="lookup-nba-list">
             <div class="lookup-nba-item">
+              <div class="lookup-nba-avatar-wrap">
+                <img src="/static/img/avatars/avatar_action_vip.png" alt="VIP Exclusive Action" class="lookup-nba-avatar-img">
+              </div>
               <div class="lookup-nba-left">
                 <span class="lookup-nba-title">VIP Exclusive Rewards</span>
                 <span class="lookup-nba-desc">Offer early access to upcoming luxury collection.</span>
@@ -1403,6 +1442,9 @@ function renderCustomerProfile(data) {
               <button type="button" class="nba-apply-btn" onclick="window.showToast('Messaging integration unavailable: Outbound SMS/Email gateway not configured', 'info')">Apply</button>
             </div>
             <div class="lookup-nba-item">
+              <div class="lookup-nba-avatar-wrap">
+                <img src="/static/img/avatars/avatar_action_cross.png" alt="Cross-Sell Action" class="lookup-nba-avatar-img">
+              </div>
               <div class="lookup-nba-left">
                 <span class="lookup-nba-title">Cross-Sell Opportunity</span>
                 <span class="lookup-nba-desc">Recommend items from frequently co-purchased categories.</span>
@@ -1411,6 +1453,9 @@ function renderCustomerProfile(data) {
               <button type="button" class="nba-apply-btn" onclick="window.showToast('Messaging integration unavailable: Outbound SMS/Email gateway not configured', 'info')">Apply</button>
             </div>
             <div class="lookup-nba-item">
+              <div class="lookup-nba-avatar-wrap">
+                <img src="/static/img/avatars/avatar_action_reengage.png" alt="Re-Engagement Action" class="lookup-nba-avatar-img">
+              </div>
               <div class="lookup-nba-left">
                 <span class="lookup-nba-title">Re-Engagement Campaign</span>
                 <span class="lookup-nba-desc">Schedule automated personalized touchpoint in 14 days.</span>

@@ -874,11 +874,21 @@
                   <div class="dash-title-block">
                     <div class="dash-title-with-icon">
                       <span class="dash-title-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></span>
-                      <h2>Customer Lookup</h2>
+                      <h2>Customer Intelligence Command Center</h2>
                     </div>
-                    <p>Direct low-latency query to the columnar Key-Value profile serving store (SQLite / Apache HBase schema, 5,942 profiles)</p>
+                    <p>Search and explore individual customer profiles with transaction history, RFM analysis, and AI-powered insights.</p>
                   </div>
-                  <button type="button" class="dash-action-pill" onclick="window.switchDashboardTab('dashboard')">← Back to Overview</button>
+                  <div class="dash-header-right-actions">
+                    <div class="header-mascot-widget" title="INSIGHT.arc Intelligence Navigator">
+                      <img src="/static/img/avatars/mascot_penguin.png" alt="INSIGHT.arc Mascot" class="header-mascot-img">
+                      <div class="header-mascot-bubble">
+                        <span class="mascot-bubble-line1">Find customers</span>
+                        <span class="mascot-bubble-line2">Discover insights</span>
+                        <span class="mascot-bubble-line3">Drive growth <span class="mascot-sparkle">✨</span></span>
+                      </div>
+                    </div>
+                    <button type="button" class="dash-action-pill" onclick="window.switchDashboardTab('dashboard')">← Back to Overview</button>
+                  </div>
                 </div>
 
                 <div class="lookup-3col-layout reveal-fade-up">
@@ -911,10 +921,12 @@
                       <span class="lookup-count-badge" id="lookupTopCustCount">6 profiles</span>
                     </div>
 
-                    <!-- Top Customers List (Sample Pills with rich card styling) -->
+                    <!-- Top Customers List (Sample Pills with rich card styling and individual penguin avatars) -->
                     <div class="lookup-top-cust-list" id="lookupTopCustList">
                       <button type="button" class="sample-id-pill lookup-cust-card active" data-id="15485" data-segment="champions" title="Customer #15485 (Champions)">
-                        <div class="lookup-card-avatar avatar-champ">15</div>
+                        <div class="lookup-card-avatar avatar-champ">
+                          <img src="/static/img/avatars/avatar_dir_15485.png" alt="Customer #15485" class="lookup-card-avatar-img" onerror="this.style.display='none'; this.parentElement.innerText='15';">
+                        </div>
                         <div class="lookup-card-info">
                           <div class="lookup-card-topline">
                             <span class="lookup-card-id">Customer #15485</span>
@@ -926,7 +938,9 @@
                       </button>
 
                       <button type="button" class="sample-id-pill lookup-cust-card" data-id="13748" data-segment="at-risk" title="Customer #13748 (At-Risk)">
-                        <div class="lookup-card-avatar avatar-risk">13</div>
+                        <div class="lookup-card-avatar avatar-risk">
+                          <img src="/static/img/avatars/avatar_13748.png" alt="Customer #13748" class="lookup-card-avatar-img" onerror="this.style.display='none'; this.parentElement.innerText='13';">
+                        </div>
                         <div class="lookup-card-info">
                           <div class="lookup-card-topline">
                             <span class="lookup-card-id">Customer #13748</span>
@@ -938,7 +952,9 @@
                       </button>
 
                       <button type="button" class="sample-id-pill lookup-cust-card" data-id="12364" data-segment="loyal" title="Customer #12364 (Loyal Customers)">
-                        <div class="lookup-card-avatar avatar-loyal">12</div>
+                        <div class="lookup-card-avatar avatar-loyal">
+                          <img src="/static/img/avatars/avatar_12364.png" alt="Customer #12364" class="lookup-card-avatar-img" onerror="this.style.display='none'; this.parentElement.innerText='12';">
+                        </div>
                         <div class="lookup-card-info">
                           <div class="lookup-card-topline">
                             <span class="lookup-card-id">Customer #12364</span>
@@ -950,7 +966,9 @@
                       </button>
 
                       <button type="button" class="sample-id-pill lookup-cust-card" data-id="16964" data-segment="lost" title="Customer #16964 (Lost / Churned)">
-                        <div class="lookup-card-avatar avatar-lost">16</div>
+                        <div class="lookup-card-avatar avatar-lost">
+                          <img src="/static/img/avatars/avatar_16964.png" alt="Customer #16964" class="lookup-card-avatar-img" onerror="this.style.display='none'; this.parentElement.innerText='16';">
+                        </div>
                         <div class="lookup-card-info">
                           <div class="lookup-card-topline">
                             <span class="lookup-card-id">Customer #16964</span>
@@ -962,7 +980,9 @@
                       </button>
 
                       <button type="button" class="sample-id-pill lookup-cust-card" data-id="13269" data-segment="champions" title="Customer #13269 (Top Spending Champion)">
-                        <div class="lookup-card-avatar avatar-champ">13</div>
+                        <div class="lookup-card-avatar avatar-champ">
+                          <img src="/static/img/avatars/avatar_13269.png" alt="Customer #13269" class="lookup-card-avatar-img" onerror="this.style.display='none'; this.parentElement.innerText='13';">
+                        </div>
                         <div class="lookup-card-info">
                           <div class="lookup-card-topline">
                             <span class="lookup-card-id">Customer #13269</span>
@@ -974,7 +994,9 @@
                       </button>
 
                       <button type="button" class="sample-id-pill lookup-cust-card" data-id="18229" data-segment="loyal" title="Customer #18229 (High Frequency Champion)">
-                        <div class="lookup-card-avatar avatar-loyal">18</div>
+                        <div class="lookup-card-avatar avatar-loyal">
+                          <img src="/static/img/avatars/avatar_18229.png" alt="Customer #18229" class="lookup-card-avatar-img" onerror="this.style.display='none'; this.parentElement.innerText='18';">
+                        </div>
                         <div class="lookup-card-info">
                           <div class="lookup-card-topline">
                             <span class="lookup-card-id">Customer #18229</span>
@@ -986,7 +1008,9 @@
                       </button>
 
                       <button type="button" class="sample-id-pill lookup-cust-card" data-id="99999" data-segment="all" title="Customer #99999 (Non-existent test ID)">
-                        <div class="lookup-card-avatar avatar-test">99</div>
+                        <div class="lookup-card-avatar avatar-test">
+                          <img src="/static/img/avatars/avatar_99999.png" alt="Customer #99999" class="lookup-card-avatar-img" onerror="this.style.display='none'; this.parentElement.innerText='99';">
+                        </div>
                         <div class="lookup-card-info">
                           <div class="lookup-card-topline">
                             <span class="lookup-card-id">Customer #99999</span>
@@ -1491,7 +1515,17 @@
                     <p>Model customer behavior, test scenarios, and forecast lifetime value<br>
                     <span style="font-size: 11.5px; color: #8e9693;">Supervised Gradient Boosting Regressor (Cohort R² 0.5238, MAE $321.78)</span></p>
                   </div>
-                  <button type="button" class="dash-action-pill" onclick="window.switchDashboardTab('dashboard')">← Back to Overview</button>
+                  <div class="dash-header-right-actions">
+                    <div class="header-mascot-widget" title="INSIGHT.arc Simulator Engine">
+                      <img src="/static/img/avatars/mascot_penguin.png" alt="INSIGHT.arc Mascot" class="header-mascot-img">
+                      <div class="header-mascot-bubble">
+                        <span class="mascot-bubble-line1">Simulate strategies</span>
+                        <span class="mascot-bubble-line2">Predict customer value</span>
+                        <span class="mascot-bubble-line3">Find what drives growth <span class="mascot-sparkle">✨</span></span>
+                      </div>
+                    </div>
+                    <button type="button" class="dash-action-pill" onclick="window.switchDashboardTab('dashboard')">← Back to Overview</button>
+                  </div>
                 </div>
 
                 <!-- 2-Column Master Simulator Grid Matching Reference Design -->

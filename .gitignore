@@ -30,4 +30,7 @@ derby.log
 node_modules/
 dist/
 *.png
+!frontend/static/img/**
+!web/static/img/**
+!frontend/public/static/img/**
 loding page/
