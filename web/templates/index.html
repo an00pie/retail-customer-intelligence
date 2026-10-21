@@ -125,7 +125,7 @@
     <div class="hero-video-backdrop" aria-hidden="true">
       <video id="heroVideo" autoplay muted loop playsinline preload="none" tabindex="-1" data-src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260809_012548_ef22562c-c0ae-4816-ad9d-f8922af4e6a7.mp4"></video>
     </div>
-    <div class="container hero-container" style="max-width: 1440px;">
+    <div class="container hero-container" style="max-width: min(95vw, 1720px);">
       <!-- Hero 2-Column Split: Left Text + Right 3D Globe Visual -->
       <div class="hero-stage-split">
         <div class="dash-hero-header reveal-fade-up">
@@ -2348,88 +2348,621 @@
        MODAL 1: BIG DATA ARCHITECTURE PIPELINE
        ============================================================================== -->
   <div class="spa-modal-overlay" id="modal-architecture">
-    <div class="spa-modal-dialog">
-      <div class="spa-modal-header">
-        <div class="spa-modal-title">
-          <span class="dash-title-icon" style="width: 26px; height: 26px; border-radius: 6px;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="8" x="2" y="2" rx="2"/><rect width="20" height="8" x="2" y="14" rx="2"/><line x1="6" x2="6.01" y1="6" y2="6"/><line x1="6" x2="6.01" y1="18" y2="18"/></svg></span>
-          <span>End-to-End Big Data Architecture Pipeline</span>
+    <div class="spa-modal-dialog arch-modal-dialog">
+      <div class="spa-modal-header arch-modal-header">
+        <div class="arch-header-left">
+          <div class="arch-header-title-row">
+            <span class="arch-spark-icon">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>
+            </span>
+            <h3 class="arch-title">End-to-End Big Data Architecture Pipeline</h3>
+          </div>
+          <p class="arch-subtitle">From raw retail data to actionable customer intelligence</p>
         </div>
-        <button type="button" class="spa-modal-close-btn" onclick="window.closeSpaModal('architecture')">✕</button>
+        <div class="arch-header-right">
+          <div class="arch-badge-pill">
+            <div class="arch-badge-topline">
+              <span class="arch-badge-sparkle">✦</span>
+              <span class="arch-badge-label">Scalable. Modular. AI-Powered.</span>
+            </div>
+            <div class="arch-badge-sub">A unified data platform that transforms multi-source retail data into real-time customer insights.</div>
+          </div>
+          <button type="button" class="spa-modal-close-btn" onclick="window.closeSpaModal('architecture')" aria-label="Close Architecture Modal">✕</button>
+        </div>
       </div>
-      <div class="spa-modal-body">
-        <div class="pipeline-diagram">
-          <div class="pipeline-step">
-            <div class="step-num">01</div>
-            <div class="step-content">
-              <h4>Web &amp; Retail Data Sources</h4>
-              <p>1,067,371 raw transaction rows from UCI Online Retail II + scraped multi-category product catalog.</p>
+      <div class="spa-modal-body arch-modal-body">
+        <!-- 6-Stage Pipeline Layout with Inter-Stage Connectors -->
+        <div class="arch-pipeline-wrapper">
+          <div class="arch-pipeline-grid">
+            
+            <!-- STAGE 01: DATA SOURCES -->
+            <div class="arch-stage-col" data-stage="01">
+              <div class="arch-stage-header">
+                <div class="arch-stage-num">01</div>
+                <div>
+                  <div class="arch-stage-title">Data Sources</div>
+                  <div class="arch-stage-desc">Multi-channel retail data ingestion</div>
+                </div>
+              </div>
+              <div class="arch-cards-stack">
+                <div class="arch-node-card">
+                  <div class="arch-node-icon icon-cyan">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+                  </div>
+                  <div class="arch-node-info">
+                    <div class="arch-node-name">UCI Online Retail</div>
+                    <div class="arch-node-sub">1,067,371 transactions</div>
+                  </div>
+                </div>
+                <div class="arch-node-card">
+                  <div class="arch-node-icon icon-blue">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
+                  </div>
+                  <div class="arch-node-info">
+                    <div class="arch-node-name">Product Catalog</div>
+                    <div class="arch-node-sub">Multi-category items</div>
+                  </div>
+                </div>
+                <div class="arch-node-card">
+                  <div class="arch-node-icon icon-teal">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                  </div>
+                  <div class="arch-node-info">
+                    <div class="arch-node-name">Customer Profiles</div>
+                    <div class="arch-node-sub">5,942 customers</div>
+                  </div>
+                </div>
+                <div class="arch-node-card">
+                  <div class="arch-node-icon icon-slate">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="14" height="20" x="5" y="2" rx="2" ry="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>
+                  </div>
+                  <div class="arch-node-info">
+                    <div class="arch-node-name">Web &amp; App Events</div>
+                    <div class="arch-node-sub">Clickstream &amp; behavior</div>
+                  </div>
+                </div>
+                <div class="arch-node-card">
+                  <div class="arch-node-icon icon-indigo">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9Z"/></svg>
+                  </div>
+                  <div class="arch-node-info">
+                    <div class="arch-node-name">External Data</div>
+                    <div class="arch-node-sub">Marketing, promotions</div>
+                  </div>
+                </div>
+              </div>
+              <div class="arch-stage-bottom-pill">
+                <div class="arch-bottom-icon">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect width="7" height="7" x="3" y="3" rx="1"/><rect width="7" height="7" x="14" y="3" rx="1"/><rect width="7" height="7" x="14" y="14" rx="1"/><rect width="7" height="7" x="3" y="14" rx="1"/></svg>
+                </div>
+                <div>
+                  <div class="arch-bottom-title">Multiple Sources</div>
+                  <div class="arch-bottom-sub">Batch + Streaming</div>
+                </div>
+              </div>
             </div>
-            <div class="step-tech-badge">Sources</div>
-          </div>
-          <div class="pipeline-connector">↓</div>
-          <div class="pipeline-step">
-            <div class="step-num">02</div>
-            <div class="step-content">
-              <h4>Data Mining &amp; Catalog Scraping</h4>
-              <p>Automated Python spider extracts prices, star ratings, and review metadata into JSON &amp; CSV.</p>
+
+            <!-- CONNECTOR 1 -> 2 -->
+            <div class="arch-connector-cell" aria-hidden="true">
+              <svg class="arch-connector-svg" viewBox="0 0 40 280" fill="none" preserveAspectRatio="none">
+                <path d="M0,45 C20,45 20,45 40,45" stroke="rgba(34,211,238,0.5)" stroke-width="1.5" stroke-dasharray="3 3"/>
+                <path d="M0,105 C25,105 15,65 40,65" stroke="rgba(34,211,238,0.4)" stroke-width="1.5"/>
+                <path d="M0,165 C25,165 15,125 40,125" stroke="rgba(56,189,248,0.4)" stroke-width="1.5"/>
+                <path d="M0,225 C25,225 15,185 40,185" stroke="rgba(99,102,241,0.4)" stroke-width="1.5" stroke-dasharray="3 3"/>
+                <circle cx="20" cy="45" r="2.5" fill="#22d3ee" class="arch-pulse-dot"/>
+              </svg>
             </div>
-            <div class="step-tech-badge">Scrapy / BS4</div>
-          </div>
-          <div class="pipeline-connector">↓</div>
-          <div class="pipeline-step">
-            <div class="step-num">03</div>
-            <div class="step-content">
-              <h4>HDFS Distributed Raw Landing Zone</h4>
-              <p>Immutable raw storage at <code>/retail/raw/transactions/</code> and <code>/retail/raw/products/</code>.</p>
+
+            <!-- STAGE 02: INGESTION & SCRAPING -->
+            <div class="arch-stage-col" data-stage="02">
+              <div class="arch-stage-header">
+                <div class="arch-stage-num">02</div>
+                <div>
+                  <div class="arch-stage-title">Ingestion &amp; Scraping</div>
+                  <div class="arch-stage-desc">Collect, clean, and standardize</div>
+                </div>
+              </div>
+              <div class="arch-cards-stack">
+                <div class="arch-node-card">
+                  <div class="arch-node-icon icon-yellow">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2H2v10l9.29 9.29c.94.94 2.48.94 3.42 0l7.29-7.29c.94-.94.94-2.48 0-3.42L12 2Z"/><path d="M7 7h.01"/></svg>
+                  </div>
+                  <div class="arch-node-info">
+                    <div class="arch-node-name">Python Scrapers</div>
+                    <div class="arch-node-sub">Automated data extraction</div>
+                  </div>
+                </div>
+                <div class="arch-node-card">
+                  <div class="arch-node-icon icon-emerald">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+                  </div>
+                  <div class="arch-node-info">
+                    <div class="arch-node-name">Data Validation</div>
+                    <div class="arch-node-sub">Schema &amp; quality checks</div>
+                  </div>
+                </div>
+                <div class="arch-node-card">
+                  <div class="arch-node-icon icon-cyan">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg>
+                  </div>
+                  <div class="arch-node-info">
+                    <div class="arch-node-name">De-duplication</div>
+                    <div class="arch-node-sub">Clean &amp; merge records</div>
+                  </div>
+                </div>
+                <div class="arch-node-card">
+                  <div class="arch-node-icon icon-teal">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>
+                  </div>
+                  <div class="arch-node-info">
+                    <div class="arch-node-name">Metadata Enrichment</div>
+                    <div class="arch-node-sub">Add product &amp; customer info</div>
+                  </div>
+                </div>
+              </div>
+              <div class="arch-stage-bottom-pill">
+                <div class="arch-bottom-icon icon-emerald">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                </div>
+                <div>
+                  <div class="arch-bottom-title">1.1M+ Records</div>
+                  <div class="arch-bottom-sub">Processed &amp; validated</div>
+                </div>
+              </div>
             </div>
-            <div class="step-tech-badge">Hadoop HDFS</div>
-          </div>
-          <div class="pipeline-connector">↓</div>
-          <div class="pipeline-step">
-            <div class="step-num">04</div>
-            <div class="step-content">
-              <h4>Apache Hive Analytical Warehouse</h4>
-              <p>Schema validation, cancellation filtering, deduplication, and Snappy Parquet storage (805,549 clean rows).</p>
+
+            <!-- CONNECTOR 2 -> 3 -->
+            <div class="arch-connector-cell" aria-hidden="true">
+              <svg class="arch-connector-svg" viewBox="0 0 40 280" fill="none" preserveAspectRatio="none">
+                <path d="M0,50 C20,50 20,50 40,50" stroke="rgba(16,185,129,0.5)" stroke-width="1.5"/>
+                <path d="M0,110 C25,110 15,110 40,110" stroke="rgba(34,211,238,0.5)" stroke-width="1.5" stroke-dasharray="3 3"/>
+                <path d="M0,170 C25,170 15,170 40,170" stroke="rgba(56,189,248,0.5)" stroke-width="1.5"/>
+                <circle cx="20" cy="110" r="2.5" fill="#10b981" class="arch-pulse-dot"/>
+              </svg>
             </div>
-            <div class="step-tech-badge">Apache Hive</div>
-          </div>
-          <div class="pipeline-connector">↓</div>
-          <div class="pipeline-step">
-            <div class="step-num">05</div>
-            <div class="step-content">
-              <h4>Apache Spark / PySpark ML Pipeline</h4>
-              <p>Distributed feature aggregation, Recency-Frequency-Monetary computation, log-scaling, and ML training.</p>
+
+            <!-- STAGE 03: DATA STORAGE -->
+            <div class="arch-stage-col" data-stage="03">
+              <div class="arch-stage-header">
+                <div class="arch-stage-num">03</div>
+                <div>
+                  <div class="arch-stage-title">Data Storage</div>
+                  <div class="arch-stage-desc">Distributed &amp; scalable infrastructure</div>
+                </div>
+              </div>
+              <div class="arch-cards-stack">
+                <div class="arch-node-card">
+                  <div class="arch-node-icon icon-yellow">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/><circle cx="12" cy="12" r="3"/></svg>
+                  </div>
+                  <div class="arch-node-info">
+                    <div class="arch-node-name">HDFS Data Lake</div>
+                    <div class="arch-node-sub">Raw retail data (transactions, products)</div>
+                  </div>
+                </div>
+                <div class="arch-node-card">
+                  <div class="arch-node-icon icon-cyan">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+                  </div>
+                  <div class="arch-node-info">
+                    <div class="arch-node-name">Parquet Storage</div>
+                    <div class="arch-node-sub">Optimized columnar format</div>
+                  </div>
+                </div>
+                <div class="arch-node-card">
+                  <div class="arch-node-icon icon-yellow">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 22 8.5 22 15.5 12 22 2 15.5 2 8.5 12 2"/></svg>
+                  </div>
+                  <div class="arch-node-info">
+                    <div class="arch-node-name">Hive Warehouse</div>
+                    <div class="arch-node-sub">Analytical data store</div>
+                  </div>
+                </div>
+                <div class="arch-node-card">
+                  <div class="arch-node-icon icon-blue">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+                  </div>
+                  <div class="arch-node-info">
+                    <div class="arch-node-name">Metadata Catalog</div>
+                    <div class="arch-node-sub">Schemas &amp; data discovery</div>
+                  </div>
+                </div>
+              </div>
+              <div class="arch-stage-bottom-pill">
+                <div class="arch-bottom-icon icon-cyan">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg>
+                </div>
+                <div>
+                  <div class="arch-bottom-title">805,549</div>
+                  <div class="arch-bottom-sub">Clean rows (Parquet)</div>
+                </div>
+              </div>
             </div>
-            <div class="step-tech-badge">Apache Spark</div>
-          </div>
-          <div class="pipeline-connector">↓</div>
-          <div class="pipeline-step">
-            <div class="step-num">06</div>
-            <div class="step-content">
-              <h4>RFM Segmentation + Machine Learning</h4>
-              <p>K-Means clustering (k=4), Gradient Boosting CLV regression (R² 0.5238), and Random Forest Churn classification (AUC 0.806).</p>
+
+            <!-- CONNECTOR 3 -> 4 -->
+            <div class="arch-connector-cell" aria-hidden="true">
+              <svg class="arch-connector-svg" viewBox="0 0 40 280" fill="none" preserveAspectRatio="none">
+                <path d="M0,50 C25,50 15,50 40,50" stroke="rgba(249,115,22,0.5)" stroke-width="1.5"/>
+                <path d="M0,110 C25,110 15,110 40,110" stroke="rgba(168,85,247,0.5)" stroke-width="1.5"/>
+                <path d="M0,170 C25,170 15,170 40,170" stroke="rgba(236,72,153,0.5)" stroke-width="1.5" stroke-dasharray="3 3"/>
+                <circle cx="20" cy="50" r="2.5" fill="#f97316" class="arch-pulse-dot"/>
+              </svg>
             </div>
-            <div class="step-tech-badge">Scikit-Learn</div>
-          </div>
-          <div class="pipeline-connector">↓</div>
-          <div class="pipeline-step">
-            <div class="step-num">07</div>
-            <div class="step-content">
-              <h4>Columnar KV Serving Layer (HBase Schema)</h4>
-              <p>High-performance columnar Key-Value serving store (HappyBase / HBase schema compatible) enabling low-latency point-lookups across 5,942 customer profiles.</p>
+
+            <!-- STAGE 04: PROCESSING & ML -->
+            <div class="arch-stage-col" data-stage="04">
+              <div class="arch-stage-header">
+                <div class="arch-stage-num">04</div>
+                <div>
+                  <div class="arch-stage-title">Processing &amp; ML</div>
+                  <div class="arch-stage-desc">Analytics, segmentation &amp; prediction</div>
+                </div>
+              </div>
+              <div class="arch-cards-stack">
+                <div class="arch-node-card">
+                  <div class="arch-node-icon icon-orange">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                  </div>
+                  <div class="arch-node-info">
+                    <div class="arch-node-name">Apache Spark</div>
+                    <div class="arch-node-sub">Feature engineering &amp; ML pipeline</div>
+                  </div>
+                </div>
+                <div class="arch-node-card">
+                  <div class="arch-node-icon icon-teal">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+                  </div>
+                  <div class="arch-node-info">
+                    <div class="arch-node-name">RFM Segmentation</div>
+                    <div class="arch-node-sub">K-Means (K=4) (ARUC 0.806)</div>
+                  </div>
+                </div>
+                <div class="arch-node-card">
+                  <div class="arch-node-icon icon-purple">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+                  </div>
+                  <div class="arch-node-info">
+                    <div class="arch-node-name">CLV Prediction</div>
+                    <div class="arch-node-sub">Gradient Boosting (R² 0.5238)</div>
+                  </div>
+                </div>
+                <div class="arch-node-card">
+                  <div class="arch-node-icon icon-indigo">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                  </div>
+                  <div class="arch-node-info">
+                    <div class="arch-node-name">Churn Classification</div>
+                    <div class="arch-node-sub">Random Forest (AUC 0.806)</div>
+                  </div>
+                </div>
+              </div>
+              <div class="arch-stage-bottom-pill">
+                <div class="arch-bottom-icon icon-teal">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+                </div>
+                <div>
+                  <div class="arch-bottom-title">ML Models Trained</div>
+                  <div class="arch-bottom-sub">Segmentation, CLV, Churn</div>
+                </div>
+              </div>
             </div>
-            <div class="step-tech-badge">Columnar KV Store</div>
-          </div>
-          <div class="pipeline-connector">↓</div>
-          <div class="pipeline-step">
-            <div class="step-num">08</div>
-            <div class="step-content">
-              <h4>Web Application &amp; BI Analytics Hub</h4>
-              <p>Interactive DashFlow UI, instant scenario simulator, customer lookup drawer, and Tableau/Power BI analytical exports.</p>
+
+            <!-- CONNECTOR 4 -> 5 -->
+            <div class="arch-connector-cell" aria-hidden="true">
+              <svg class="arch-connector-svg" viewBox="0 0 40 280" fill="none" preserveAspectRatio="none">
+                <path d="M0,50 C25,50 15,50 40,50" stroke="rgba(59,130,246,0.5)" stroke-width="1.5"/>
+                <path d="M0,110 C25,110 15,110 40,110" stroke="rgba(14,165,233,0.5)" stroke-width="1.5" stroke-dasharray="3 3"/>
+                <path d="M0,170 C25,170 15,170 40,170" stroke="rgba(168,85,247,0.5)" stroke-width="1.5"/>
+                <circle cx="20" cy="50" r="2.5" fill="#3b82f6" class="arch-pulse-dot"/>
+              </svg>
             </div>
-            <div class="step-tech-badge">Web &amp; BI Hub</div>
+
+            <!-- STAGE 05: SERVING LAYER -->
+            <div class="arch-stage-col" data-stage="05">
+              <div class="arch-stage-header">
+                <div class="arch-stage-num">05</div>
+                <div>
+                  <div class="arch-stage-title">Serving Layer</div>
+                  <div class="arch-stage-desc">Fast, scalable data access</div>
+                </div>
+              </div>
+              <div class="arch-cards-stack">
+                <div class="arch-node-card">
+                  <div class="arch-node-icon icon-blue">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg>
+                  </div>
+                  <div class="arch-node-info">
+                    <div class="arch-node-name">HBase (Columnar KV)</div>
+                    <div class="arch-node-sub">Low-latency lookups</div>
+                  </div>
+                </div>
+                <div class="arch-node-card">
+                  <div class="arch-node-icon icon-cyan">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+                  </div>
+                  <div class="arch-node-info">
+                    <div class="arch-node-name">REST API</div>
+                    <div class="arch-node-sub">Model predictions</div>
+                  </div>
+                </div>
+                <div class="arch-node-card">
+                  <div class="arch-node-icon icon-yellow">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+                  </div>
+                  <div class="arch-node-info">
+                    <div class="arch-node-name">Real-time Queries</div>
+                    <div class="arch-node-sub">Customer lookups &amp; segmentation</div>
+                  </div>
+                </div>
+                <div class="arch-node-card">
+                  <div class="arch-node-icon icon-cyan">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                  </div>
+                  <div class="arch-node-info">
+                    <div class="arch-node-name">Caching Layer</div>
+                    <div class="arch-node-sub">Optimized performance</div>
+                  </div>
+                </div>
+              </div>
+              <div class="arch-stage-bottom-pill">
+                <div class="arch-bottom-icon icon-cyan">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                </div>
+                <div>
+                  <div class="arch-bottom-title">Sub-second</div>
+                  <div class="arch-bottom-sub">Query response time</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- CONNECTOR 5 -> 6 -->
+            <div class="arch-connector-cell" aria-hidden="true">
+              <svg class="arch-connector-svg" viewBox="0 0 40 280" fill="none" preserveAspectRatio="none">
+                <path d="M0,50 C20,50 20,40 40,40" stroke="rgba(34,211,238,0.5)" stroke-width="1.5"/>
+                <path d="M0,80 C20,80 20,85 40,85" stroke="rgba(99,102,241,0.5)" stroke-width="1.5"/>
+                <path d="M0,110 C20,110 20,130 40,130" stroke="rgba(168,85,247,0.5)" stroke-width="1.5" stroke-dasharray="3 3"/>
+                <path d="M0,140 C20,140 20,175 40,175" stroke="rgba(236,72,153,0.5)" stroke-width="1.5"/>
+                <path d="M0,170 C20,170 20,220 40,220" stroke="rgba(34,211,238,0.5)" stroke-width="1.5"/>
+                <circle cx="20" cy="85" r="2.5" fill="#a855f7" class="arch-pulse-dot"/>
+              </svg>
+            </div>
+
+            <!-- STAGE 06: APPLICATIONS -->
+            <div class="arch-stage-col" data-stage="06">
+              <div class="arch-stage-header">
+                <div class="arch-stage-num">06</div>
+                <div>
+                  <div class="arch-stage-title">Applications</div>
+                  <div class="arch-stage-desc">Business insights &amp; user interfaces</div>
+                </div>
+              </div>
+              <div class="arch-cards-stack">
+                <div class="arch-node-card">
+                  <div class="arch-node-icon icon-emerald">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="18" height="18" x="3" y="3" rx="2"/><line x1="8" y1="17" x2="8" y2="13"/><line x1="12" y1="17" x2="12" y2="9"/><line x1="16" y1="17" x2="16" y2="5"/></svg>
+                  </div>
+                  <div class="arch-node-info">
+                    <div class="arch-node-name">Dashboard</div>
+                    <div class="arch-node-sub">Real-time analytics</div>
+                  </div>
+                </div>
+                <div class="arch-node-card">
+                  <div class="arch-node-icon icon-teal">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                  </div>
+                  <div class="arch-node-info">
+                    <div class="arch-node-name">Customer Lookup</div>
+                    <div class="arch-node-sub">Profile insights</div>
+                  </div>
+                </div>
+                <div class="arch-node-card">
+                  <div class="arch-node-icon icon-cyan">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.21 15.89A10 10 0 1 1 8 2.83"/><path d="M22 12A10 10 0 0 0 12 2v10z"/></svg>
+                  </div>
+                  <div class="arch-node-info">
+                    <div class="arch-node-name">Segmentation</div>
+                    <div class="arch-node-sub">RFM customer clusters</div>
+                  </div>
+                </div>
+                <div class="arch-node-card">
+                  <div class="arch-node-icon icon-purple">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+                  </div>
+                  <div class="arch-node-info">
+                    <div class="arch-node-name">CLV &amp; Churn</div>
+                    <div class="arch-node-sub">Lifetime value prediction</div>
+                  </div>
+                </div>
+                <div class="arch-node-card">
+                  <div class="arch-node-icon icon-blue">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="4" y1="21" x2="4" y2="14"/><line x1="4" y1="10" x2="4" y2="3"/><line x1="12" y1="21" x2="12" y2="12"/><line x1="12" y1="8" x2="12" y2="3"/><line x1="20" y1="21" x2="20" y2="16"/><line x1="20" y1="12" x2="20" y2="3"/><line x1="1" y1="14" x2="7" y2="14"/><line x1="9" y1="8" x2="15" y2="8"/><line x1="17" y1="16" x2="23" y2="16"/></svg>
+                  </div>
+                  <div class="arch-node-info">
+                    <div class="arch-node-name">Scenario Simulator</div>
+                    <div class="arch-node-sub">What-if analysis</div>
+                  </div>
+                </div>
+                <div class="arch-node-card">
+                  <div class="arch-node-icon icon-slate">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+                  </div>
+                  <div class="arch-node-info">
+                    <div class="arch-node-name">Exports &amp; Reports</div>
+                    <div class="arch-node-sub">CSV &amp; Tableau/Power BI</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
           </div>
         </div>
+
+        <!-- Lower Panels: Data Flow Overview & Technology Stack -->
+        <div class="arch-lower-grid">
+          
+          <!-- Data Flow Overview Panel -->
+          <div class="arch-lower-panel arch-flow-panel">
+            <div class="arch-panel-header">
+              <div class="arch-panel-icon">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+              </div>
+              <div>
+                <div class="arch-panel-title">Data Flow Overview</div>
+                <div class="arch-panel-sub">Complete pipeline from raw data to business insights</div>
+              </div>
+            </div>
+            
+            <div class="arch-flow-sequence">
+              <div class="arch-flow-step">
+                <div class="arch-flow-circle icon-cyan">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg>
+                </div>
+                <div class="arch-flow-name">Raw Data</div>
+                <div class="arch-flow-desc">Transactions, Products, Customers</div>
+              </div>
+              <div class="arch-flow-arrow">→</div>
+              <div class="arch-flow-step">
+                <div class="arch-flow-circle icon-teal">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+                </div>
+                <div class="arch-flow-name">Ingestion</div>
+                <div class="arch-flow-desc">Scraping &amp; Validation</div>
+              </div>
+              <div class="arch-flow-arrow">→</div>
+              <div class="arch-flow-step">
+                <div class="arch-flow-circle icon-blue">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg>
+                </div>
+                <div class="arch-flow-name">Data Lake</div>
+                <div class="arch-flow-desc">HDFS + Parquet + Hive</div>
+              </div>
+              <div class="arch-flow-arrow">→</div>
+              <div class="arch-flow-step">
+                <div class="arch-flow-circle icon-orange">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                </div>
+                <div class="arch-flow-name">Processing</div>
+                <div class="arch-flow-desc">Spark + ML + Segmentation</div>
+              </div>
+              <div class="arch-flow-arrow">→</div>
+              <div class="arch-flow-step">
+                <div class="arch-flow-circle icon-purple">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="20" height="8" x="2" y="2" rx="2"/><rect width="20" height="8" x="2" y="14" rx="2"/><line x1="6" x2="6.01" y1="6" y2="6"/><line x1="6" x2="6.01" y1="18" y2="18"/></svg>
+                </div>
+                <div class="arch-flow-name">Serving</div>
+                <div class="arch-flow-desc">HBase + API + Caching</div>
+              </div>
+              <div class="arch-flow-arrow">→</div>
+              <div class="arch-flow-step">
+                <div class="arch-flow-circle icon-emerald">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="18" height="18" x="3" y="3" rx="2"/><line x1="8" y1="17" x2="8" y2="13"/><line x1="12" y1="17" x2="12" y2="9"/><line x1="16" y1="17" x2="16" y2="5"/></svg>
+                </div>
+                <div class="arch-flow-name">Insights</div>
+                <div class="arch-flow-desc">Dashboard &amp; Analytics</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Technology Stack Panel -->
+          <div class="arch-lower-panel arch-tech-panel">
+            <div class="arch-panel-header">
+              <div class="arch-panel-icon">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>
+              </div>
+              <div>
+                <div class="arch-panel-title">Technology Stack</div>
+                <div class="arch-panel-sub">Enterprise-grade open source ecosystem</div>
+              </div>
+            </div>
+
+            <div class="arch-tech-grid">
+              <!-- Python -->
+              <div class="arch-tech-tile">
+                <div class="arch-tech-logo-box">
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+                    <path d="M11.91 2C6.83 2 7.14 4.21 7.14 4.21l.01 2.29h4.84v.69H5.16S2 6.83 2 11.92s2.77 4.92 2.77 4.92h1.65v-2.32s-.09-2.77 2.73-2.77h4.7v-.71H9.17s-.76-.02-.76-.73V8.89s-.14-.76.76-.76h4.74s2.69.04 2.69-2.67V4.21S16.99 2 11.91 2z" fill="#387eb8"/>
+                    <path d="M12.09 22c5.08 0 4.77-2.21 4.77-2.21l-.01-2.29h-4.84v-.69h6.83S22 17.17 22 12.08s-2.77-4.92-2.77-4.92h-1.65v2.32s.09 2.77-2.73 2.77h-4.7v.71h4.68s.76.02.76.73v2.42s.14.76-.76.76H9.08s-2.69-.04-2.69 2.67v1.25S7.01 22 12.09 22z" fill="#ffe052"/>
+                    <circle cx="8.98" cy="4.4" r=".6" fill="#fff"/>
+                    <circle cx="15.02" cy="19.6" r=".6" fill="#fff"/>
+                  </svg>
+                </div>
+                <div class="arch-tech-info">
+                  <div class="arch-tech-name">Python</div>
+                  <div class="arch-tech-role">Scraping &amp; ETL</div>
+                </div>
+              </div>
+
+              <!-- Hadoop HDFS -->
+              <div class="arch-tech-tile">
+                <div class="arch-tech-logo-box">
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+                    <path d="M4 14c0-3.5 2.5-6 6.5-6 3.5 0 6 1.8 6.5 4.5.3 1.8-.4 3.5-1.5 4.5v3h-3v-2.5c-.8.3-1.8.5-2.5.5-3.5 0-6-1.8-6-4z" fill="#facc15"/>
+                    <circle cx="8" cy="11" r="1" fill="#000"/>
+                    <path d="M16 11c1-1 3-1 4 0s1 3 0 4l-3 3" stroke="#facc15" stroke-width="2" stroke-linecap="round"/>
+                  </svg>
+                </div>
+                <div class="arch-tech-info">
+                  <div class="arch-tech-name">Hadoop HDFS</div>
+                  <div class="arch-tech-role">Data Lake</div>
+                </div>
+              </div>
+
+              <!-- Apache Hive -->
+              <div class="arch-tech-tile">
+                <div class="arch-tech-logo-box">
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+                    <polygon points="12 2 20 7 20 17 12 22 4 17 4 7 12 2" fill="#eab308" fill-opacity="0.2" stroke="#eab308" stroke-width="1.8"/>
+                    <circle cx="12" cy="12" r="3.5" fill="#facc15"/>
+                  </svg>
+                </div>
+                <div class="arch-tech-info">
+                  <div class="arch-tech-name">Apache Hive</div>
+                  <div class="arch-tech-role">Data Warehouse</div>
+                </div>
+              </div>
+
+              <!-- Apache Spark -->
+              <div class="arch-tech-tile">
+                <div class="arch-tech-logo-box">
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+                    <path d="M12 2l2.2 6.8h7.1l-5.8 4.2 2.2 6.8-5.7-4.2-5.7 4.2 2.2-6.8-5.8-4.2h7.1z" fill="#f97316"/>
+                  </svg>
+                </div>
+                <div class="arch-tech-info">
+                  <div class="arch-tech-name">Apache Spark</div>
+                  <div class="arch-tech-role">Processing &amp; ML</div>
+                </div>
+              </div>
+
+              <!-- HBase -->
+              <div class="arch-tech-tile">
+                <div class="arch-tech-logo-box">
+                  <div class="arch-hbase-badge">HBASE</div>
+                </div>
+                <div class="arch-tech-info">
+                  <div class="arch-tech-name">HBase</div>
+                  <div class="arch-tech-role">Serving Layer</div>
+                </div>
+              </div>
+
+              <!-- Scikit-Learn -->
+              <div class="arch-tech-tile">
+                <div class="arch-tech-logo-box">
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+                    <circle cx="9" cy="12" r="6" fill="#0284c7" fill-opacity="0.8"/>
+                    <circle cx="15" cy="12" r="6" fill="#f97316" fill-opacity="0.8"/>
+                  </svg>
+                </div>
+                <div class="arch-tech-info">
+                  <div class="arch-tech-name">Scikit-Learn</div>
+                  <div class="arch-tech-role">ML Models</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
       </div>
     </div>
   </div>

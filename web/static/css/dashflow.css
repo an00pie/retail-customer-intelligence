@@ -68,7 +68,7 @@
   --font-mono: 'JetBrains Mono', monospace;
 
   /* Layout */
-  --container-max: 1320px;
+  --container-max: min(95vw, 1720px);
   --section-spacing: 120px;
 }
 
@@ -216,7 +216,7 @@ button, input, select, textarea {
   left: 50%;
   transform: translateX(-50%);
   width: 100%;
-  max-width: 1440px;
+  max-width: min(95vw, 1720px);
   height: 820px;
   pointer-events: none;
   z-index: 1;
@@ -408,7 +408,7 @@ button, input, select, textarea {
 
   box-shadow: none;
 
-  max-width: 1400px;
+  max-width: min(95vw, 1720px);
 
   width: 100%;
   justify-content: space-between;
@@ -990,7 +990,7 @@ button, input, select, textarea {
 
 /* Single Dashboard Container */
 .hero-mockup-wrapper {
-  max-width: 1400px;
+  max-width: min(95vw, 1720px);
   width: 100%;
   margin: 0 auto;
   padding: 0 16px;
@@ -8204,5 +8204,506 @@ input[type='range'].sim-slider::-moz-range-thumb {
 @media (max-width: 540px) {
   .header-mascot-widget {
     display: none;
+  }
+}
+
+/* ==============================================================================
+   PREMIUM END-TO-END BIG DATA ARCHITECTURE PIPELINE (Reference media_1792558698211)
+   ============================================================================== */
+#modal-architecture .spa-modal-dialog.arch-modal-dialog {
+  max-width: 1540px !important;
+  width: 96vw !important;
+  max-height: 94vh !important;
+  background: radial-gradient(circle at 50% 0%, #11161d 0%, #090b0e 70%, #050608 100%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.16) !important;
+  border-radius: 20px !important;
+  box-shadow: 0 32px 100px rgba(0, 0, 0, 0.95), 0 0 60px rgba(6, 182, 212, 0.1) !important;
+}
+
+.arch-modal-header {
+  padding: 18px 24px 16px !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  background: rgba(13, 17, 23, 0.6) !important;
+  backdrop-filter: blur(12px) !important;
+  gap: 16px;
+}
+
+.arch-header-left {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.arch-header-title-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.arch-spark-icon {
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #38bdf8;
+  flex-shrink: 0;
+}
+
+.arch-title {
+  font-family: var(--font-display) !important;
+  font-size: clamp(16px, 1.8vw, 22px) !important;
+  font-weight: 400 !important;
+  color: #ffffff;
+  letter-spacing: -0.02em;
+  margin: 0;
+  text-transform: none !important;
+}
+
+.arch-subtitle {
+  font-size: 12.5px;
+  color: #94a3b8;
+  margin: 0;
+  margin-left: 38px;
+}
+
+.arch-header-right {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-shrink: 0;
+}
+
+.arch-badge-pill {
+  background: rgba(168, 85, 247, 0.08);
+  border: 1px solid rgba(168, 85, 247, 0.28);
+  border-radius: 10px;
+  padding: 6px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  max-width: 380px;
+}
+
+.arch-badge-topline {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.arch-badge-sparkle {
+  color: #c084fc;
+  font-size: 11px;
+}
+
+.arch-badge-label {
+  font-size: 11.5px;
+  font-weight: 700;
+  color: #e9d5ff;
+  letter-spacing: 0.01em;
+}
+
+.arch-badge-sub {
+  font-size: 10.5px;
+  color: #94a3b8;
+  line-height: 1.35;
+}
+
+.arch-modal-body {
+  padding: 20px 24px 24px !important;
+  overflow-y: auto !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 18px !important;
+}
+
+/* 6-Stage Pipeline Grid */
+.arch-pipeline-wrapper {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  padding-bottom: 4px;
+}
+
+.arch-pipeline-grid {
+  display: grid;
+  grid-template-columns: minmax(130px, 1fr) 18px minmax(130px, 1fr) 18px minmax(130px, 1fr) 18px minmax(130px, 1fr) 18px minmax(130px, 1fr) 18px minmax(130px, 1fr);
+  align-items: stretch;
+  gap: 0;
+  min-width: 900px;
+}
+
+.arch-stage-col {
+  background: rgba(15, 20, 28, 0.75);
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  border-radius: 14px;
+  padding: 12px 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  backdrop-filter: blur(14px);
+  position: relative;
+  transition: all 0.25s ease;
+}
+
+.arch-stage-col:hover {
+  border-color: rgba(255, 255, 255, 0.22);
+  background: rgba(20, 26, 36, 0.85);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+}
+
+.arch-stage-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+  padding-bottom: 8px;
+}
+
+.arch-stage-num {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: #ffffff;
+  color: #0b0f17;
+  font-size: 11px;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.arch-stage-title {
+  font-size: 12.5px;
+  font-weight: 700;
+  color: #ffffff;
+  line-height: 1.2;
+}
+
+.arch-stage-desc {
+  font-size: 9px;
+  color: #94a3b8;
+  line-height: 1.2;
+  margin-top: 1px;
+}
+
+.arch-cards-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  flex: 1;
+}
+
+.arch-node-card {
+  background: rgba(22, 29, 39, 0.85);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 8px;
+  padding: 7px 8px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.2s ease;
+}
+
+.arch-node-card:hover {
+  background: rgba(30, 41, 59, 0.95);
+  border-color: rgba(255, 255, 255, 0.18);
+  transform: translateX(2px);
+}
+
+.arch-node-icon {
+  width: 26px;
+  height: 26px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.arch-node-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.arch-node-name {
+  font-size: 11px;
+  font-weight: 700;
+  color: #f1f5f9;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.arch-node-sub {
+  font-size: 9px;
+  color: #94a3b8;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.arch-stage-bottom-pill {
+  margin-top: auto;
+  background: rgba(10, 15, 22, 0.95);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 8px;
+  padding: 6px 8px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.arch-bottom-icon {
+  width: 20px;
+  height: 20px;
+  border-radius: 5px;
+  background: rgba(255, 255, 255, 0.06);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  color: #38bdf8;
+}
+
+.arch-bottom-title {
+  font-size: 10px;
+  font-weight: 700;
+  color: #ffffff;
+}
+
+.arch-bottom-sub {
+  font-size: 8.5px;
+  color: #94a3b8;
+}
+
+/* Inter-stage Connector Cells */
+.arch-connector-cell {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  position: relative;
+}
+
+.arch-connector-svg {
+  width: 100%;
+  height: 100%;
+  min-height: 240px;
+}
+
+.arch-pulse-dot {
+  animation: connectorDotPulse 2.5s ease-in-out infinite;
+}
+
+@keyframes connectorDotPulse {
+  0%, 100% { opacity: 0.4; r: 2; }
+  50% { opacity: 1; r: 3.5; }
+}
+
+/* Lower Panels Grid */
+.arch-lower-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+  gap: 16px;
+  margin-top: 4px;
+}
+
+.arch-lower-panel {
+  background: rgba(15, 20, 28, 0.75);
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  border-radius: 14px;
+  padding: 14px 18px;
+  backdrop-filter: blur(14px);
+}
+
+.arch-panel-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+  padding-bottom: 10px;
+}
+
+.arch-panel-icon {
+  width: 24px;
+  height: 24px;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.08);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #38bdf8;
+  flex-shrink: 0;
+}
+
+.arch-panel-title {
+  font-size: 13px;
+  font-weight: 700;
+  color: #ffffff;
+}
+
+.arch-panel-sub {
+  font-size: 10.5px;
+  color: #94a3b8;
+}
+
+/* Data Flow Overview Sequence */
+.arch-flow-sequence {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 4px;
+  margin-top: 14px;
+  flex-wrap: nowrap;
+}
+
+.arch-flow-step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 3px;
+  flex: 1;
+  min-width: 0;
+}
+
+.arch-flow-circle {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  margin-bottom: 2px;
+  flex-shrink: 0;
+}
+
+.arch-flow-arrow {
+  color: #475569;
+  font-size: 13px;
+  font-weight: 700;
+  padding: 8px 1px 0;
+  user-select: none;
+  flex-shrink: 0;
+}
+
+.arch-flow-name {
+  font-size: 11px;
+  font-weight: 700;
+  color: #f1f5f9;
+}
+
+.arch-flow-desc {
+  font-size: 8.5px;
+  color: #94a3b8;
+  line-height: 1.25;
+}
+
+/* Technology Stack Grid */
+.arch-tech-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin-top: 14px;
+}
+
+.arch-tech-tile {
+  background: rgba(22, 29, 39, 0.85);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 8px;
+  padding: 8px 10px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  transition: all 0.2s ease;
+}
+
+.arch-tech-tile:hover {
+  background: rgba(30, 41, 59, 0.95);
+  border-color: rgba(255, 255, 255, 0.18);
+  transform: translateY(-1px);
+}
+
+.arch-tech-logo-box {
+  width: 32px;
+  height: 32px;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.05);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.arch-tech-name {
+  font-size: 11.5px;
+  font-weight: 700;
+  color: #ffffff;
+}
+
+.arch-tech-role {
+  font-size: 9.5px;
+  color: #94a3b8;
+}
+
+.arch-hbase-badge {
+  background: #dc2626;
+  color: #ffffff;
+  font-size: 8px;
+  font-weight: 900;
+  padding: 2px 4px;
+  border-radius: 3px;
+  letter-spacing: 0.04em;
+}
+
+/* Palette utility classes */
+.icon-cyan { background: rgba(34, 211, 238, 0.12) !important; color: #22d3ee !important; }
+.icon-blue { background: rgba(59, 130, 246, 0.12) !important; color: #60a5fa !important; }
+.icon-teal { background: rgba(20, 184, 166, 0.12) !important; color: #2dd4bf !important; }
+.icon-yellow { background: rgba(234, 179, 8, 0.12) !important; color: #facc15 !important; }
+.icon-emerald { background: rgba(16, 185, 129, 0.12) !important; color: #34d399 !important; }
+.icon-orange { background: rgba(249, 115, 22, 0.12) !important; color: #fb923c !important; }
+.icon-purple { background: rgba(168, 85, 247, 0.12) !important; color: #c084fc !important; }
+.icon-indigo { background: rgba(99, 102, 241, 0.12) !important; color: #818cf8 !important; }
+.icon-slate { background: rgba(148, 163, 184, 0.12) !important; color: #cbd5e1 !important; }
+
+/* Responsive Media Queries for Architecture Pipeline */
+@media (max-width: 1200px) {
+  .arch-lower-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 1024px) {
+  .arch-badge-pill {
+    display: none;
+  }
+}
+
+@media (max-width: 768px) {
+  #modal-architecture .spa-modal-dialog.arch-modal-dialog {
+    width: 98vw !important;
+    padding: 0 !important;
+  }
+  .arch-modal-header {
+    padding: 14px 16px !important;
+  }
+  .arch-subtitle {
+    margin-left: 0;
+  }
+  .arch-modal-body {
+    padding: 14px 12px !important;
+  }
+  .arch-tech-grid {
+    grid-template-columns: repeat(2, 1fr);
   }
 }
