@@ -1486,383 +1486,352 @@
                   <div class="dash-title-block">
                     <div class="dash-title-with-icon">
                       <span class="dash-title-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 3-1.9 5.8a2 2 0 0 1-1.3 1.3L3 12l5.8 1.9a2 2 0 0 1 1.3 1.3L12 21l1.9-5.8a2 2 0 0 1 1.3-1.3L21 12l-5.8-1.9a2 2 0 0 1-1.3-1.3L12 3z"/></svg></span>
-                      <h2>CLV Forecast &amp; Scenario Simulator</h2>
+                      <h2>CLV FORECAST &amp; SCENARIO SIMULATOR</h2>
                     </div>
-                    <p>Supervised Gradient Boosting Regressor (Cohort R² 0.5238, MAE $321.78)</p>
+                    <p>Model customer behavior, test scenarios, and forecast lifetime value<br>
+                    <span style="font-size: 11.5px; color: #8e9693;">Supervised Gradient Boosting Regressor (Cohort R² 0.5238, MAE $321.78)</span></p>
                   </div>
                   <button type="button" class="dash-action-pill" onclick="window.switchDashboardTab('dashboard')">← Back to Overview</button>
                 </div>
 
-                <!-- Top 2-Column Inputs & Prediction Results -->
-                <div class="simulator-layout-grid reveal-fade-up" style="display: grid; grid-template-columns: 1.15fr 1fr; gap: 24px; align-items: start; margin-top: 10px;">
-                  <!-- Left: Adjust Customer Inputs Card -->
-                  <div class="overview-card" style="padding: 24px;">
-                    <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 16px;">
-                      <div>
-                        <div style="font-size: 15px; font-weight: 800; color: #fff; display: flex; align-items: center; gap: 8px;">
+                <!-- 2-Column Master Simulator Grid Matching Reference Design -->
+                <div class="sim-main-grid reveal-fade-up">
+                  <!-- LEFT COLUMN: ADJUST CUSTOMER INPUTS -->
+                  <div class="sim-card sim-inputs-card">
+                    <div class="sim-card-header">
+                      <div class="sim-card-header-left">
+                        <div class="sim-card-icon-box">
                           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
-                          ADJUST CUSTOMER INPUTS
                         </div>
-                        <div style="font-size: 11.5px; color: #8e9693; margin-top: 2px;">Modify customer behavior parameters to predict segment, CLV, and churn risk</div>
+                        <div>
+                          <div class="sim-card-title">ADJUST CUSTOMER INPUTS</div>
+                          <div class="sim-card-sub">Modify customer behavior parameters to predict segment, CLV, and churn risk</div>
+                        </div>
                       </div>
                       <button type="button" class="dash-action-pill" id="simResetBtn" style="font-size: 11px; padding: 4px 10px; cursor: pointer;">↺ Reset to Defaults</button>
                     </div>
 
-                    <div class="rfm-slider-row" id="simRowRecency">
-                      <div class="rfm-slider-label">
-                        <label for="simRecency" style="display: flex; align-items: center; gap: 6px;">
-                          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-                          Recency (Days since last checkout)
-                        </label>
-                        <div style="display: flex; align-items: center; gap: 6px;">
-                          <input type="number" class="sim-num-input" id="simRecency" value="25" min="0" max="730" aria-describedby="simRecencyErr" aria-invalid="false">
-                          <span class="value" id="simRecencyVal">days</span>
+                    <!-- Sliders List -->
+                    <div class="sim-sliders-list">
+                      <!-- Slider 1: Recency -->
+                      <div class="sim-slider-group rfm-slider-row" id="simRowRecency">
+                        <div class="sim-slider-top">
+                          <label for="simRecency" class="sim-slider-label">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                            <span>Recency (Days since last checkout)</span>
+                          </label>
+                          <div class="sim-slider-input-box">
+                            <input type="number" class="sim-num-input" id="simRecency" value="25" min="0" max="730" aria-describedby="simRecencyErr" aria-invalid="false">
+                            <span class="sim-unit-text" id="simRecencyVal">25 days</span>
+                          </div>
+                        </div>
+                        <div class="sim-slider-body-grid">
+                          <div class="sim-slider-track-wrap">
+                            <input type="range" class="rfm-slider-input sim-slider" id="simRecencySlider" min="0" max="730" value="25" tabindex="-1" aria-hidden="true">
+                            <div class="sim-slider-ticks">
+                              <span>0</span>
+                              <span>90</span>
+                              <span>180</span>
+                              <span>270</span>
+                              <span>365</span>
+                            </div>
+                            <div class="sim-field-error" id="simRecencyErr" role="alert" aria-live="polite"></div>
+                          </div>
+                          <div class="sim-context-callout">
+                            More recent purchases increase predicted value and reduce churn risk.
+                          </div>
                         </div>
                       </div>
-                      <input type="range" class="rfm-slider-input" id="simRecencySlider" min="0" max="730" value="25" tabindex="-1" aria-hidden="true">
-                      <div class="sim-slider-ticks">
-                        <span>0</span>
-                        <span>90</span>
-                        <span>180</span>
-                        <span>270</span>
-                        <span>365</span>
-                      </div>
-                      <div class="sim-field-error" id="simRecencyErr" role="alert" aria-live="polite"></div>
-                    </div>
 
-                    <div class="rfm-slider-row" id="simRowFreq">
-                      <div class="rfm-slider-label">
-                        <label for="simFreq" style="display: flex; align-items: center; gap: 6px;">
-                          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
-                          Frequency (Total completed orders)
-                        </label>
-                        <div style="display: flex; align-items: center; gap: 6px;">
-                          <input type="number" class="sim-num-input" id="simFreq" value="6" min="1" max="150" aria-describedby="simFreqErr" aria-invalid="false">
-                          <span class="value" id="simFreqVal">orders</span>
+                      <!-- Slider 2: Frequency -->
+                      <div class="sim-slider-group rfm-slider-row" id="simRowFreq">
+                        <div class="sim-slider-top">
+                          <label for="simFreq" class="sim-slider-label">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+                            <span>Frequency (Total completed orders)</span>
+                          </label>
+                          <div class="sim-slider-input-box">
+                            <input type="number" class="sim-num-input" id="simFreq" value="6" min="1" max="150" aria-describedby="simFreqErr" aria-invalid="false">
+                            <span class="sim-unit-text" id="simFreqVal">6 orders</span>
+                          </div>
+                        </div>
+                        <div class="sim-slider-body-grid">
+                          <div class="sim-slider-track-wrap">
+                            <input type="range" class="rfm-slider-input sim-slider" id="simFreqSlider" min="1" max="150" value="6" tabindex="-1" aria-hidden="true">
+                            <div class="sim-slider-ticks">
+                              <span>0</span>
+                              <span>10</span>
+                              <span>25</span>
+                              <span>50</span>
+                            </div>
+                            <div class="sim-field-error" id="simFreqErr" role="alert" aria-live="polite"></div>
+                          </div>
+                          <div class="sim-context-callout">
+                            Higher purchase frequency increases customer lifetime value.
+                          </div>
                         </div>
                       </div>
-                      <input type="range" class="rfm-slider-input" id="simFreqSlider" min="1" max="150" value="6" tabindex="-1" aria-hidden="true">
-                      <div class="sim-slider-ticks">
-                        <span>0</span>
-                        <span>10</span>
-                        <span>25</span>
-                        <span>50</span>
-                      </div>
-                      <div class="sim-field-error" id="simFreqErr" role="alert" aria-live="polite"></div>
-                    </div>
 
-                    <div class="rfm-slider-row" id="simRowSpend">
-                      <div class="rfm-slider-label">
-                        <label for="simSpend" style="display: flex; align-items: center; gap: 6px;">
-                          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg>
-                          Monetary (Total historical spend)
-                        </label>
-                        <div style="display: flex; align-items: center; gap: 6px;">
-                          <span style="color: #ffffff; font-weight: 700;">$</span>
-                          <input type="number" class="sim-num-input" id="simSpend" value="1250" min="0" max="50000" step="50" aria-describedby="simSpendErr" aria-invalid="false">
-                          <span class="value" id="simSpendVal">USD</span>
+                      <!-- Slider 3: Monetary -->
+                      <div class="sim-slider-group rfm-slider-row" id="simRowSpend">
+                        <div class="sim-slider-top">
+                          <label for="simSpend" class="sim-slider-label">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg>
+                            <span>Monetary (Total historical spend)</span>
+                          </label>
+                          <div class="sim-slider-input-box">
+                            <span style="color: #ffffff; font-weight: 700; font-size: 13px;">$</span>
+                            <input type="number" class="sim-num-input" id="simSpend" value="1250" min="0" max="50000" step="50" aria-describedby="simSpendErr" aria-invalid="false">
+                            <span class="sim-unit-text" id="simSpendVal">$1,250</span>
+                          </div>
+                        </div>
+                        <div class="sim-slider-body-grid">
+                          <div class="sim-slider-track-wrap">
+                            <input type="range" class="rfm-slider-input sim-slider" id="simSpendSlider" min="0" max="50000" step="50" value="1250" tabindex="-1" aria-hidden="true">
+                            <div class="sim-slider-ticks">
+                              <span>50</span>
+                              <span>250</span>
+                              <span>500</span>
+                              <span>1,000</span>
+                              <span>2,000</span>
+                            </div>
+                            <div class="sim-field-error" id="simSpendErr" role="alert" aria-live="polite"></div>
+                          </div>
+                          <div class="sim-context-callout">
+                            Greater spend history indicates higher customer value.
+                          </div>
                         </div>
                       </div>
-                      <input type="range" class="rfm-slider-input" id="simSpendSlider" min="0" max="50000" step="50" value="1250" tabindex="-1" aria-hidden="true">
-                      <div class="sim-slider-ticks">
-                        <span>50</span>
-                        <span>250</span>
-                        <span>500</span>
-                        <span>1,000</span>
-                        <span>2,000</span>
-                      </div>
-                      <div class="sim-field-error" id="simSpendErr" role="alert" aria-live="polite"></div>
-                    </div>
 
-                    <div class="rfm-slider-row" id="simRowTenure">
-                      <div class="rfm-slider-label">
-                        <label for="simTenure" style="display: flex; align-items: center; gap: 6px;">
-                          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-                          Tenure (Days with company)
-                        </label>
-                        <div style="display: flex; align-items: center; gap: 6px;">
-                          <input type="number" class="sim-num-input" id="simTenure" value="300" min="0" max="730" aria-describedby="simTenureErr" aria-invalid="false">
-                          <span class="value" id="simTenureVal">days</span>
+                      <!-- Slider 4: Tenure -->
+                      <div class="sim-slider-group rfm-slider-row" id="simRowTenure">
+                        <div class="sim-slider-top">
+                          <label for="simTenure" class="sim-slider-label">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                            <span>Tenure (Days with company)</span>
+                          </label>
+                          <div class="sim-slider-input-box">
+                            <input type="number" class="sim-num-input" id="simTenure" value="300" min="0" max="730" aria-describedby="simTenureErr" aria-invalid="false">
+                            <span class="sim-unit-text" id="simTenureVal">300 days</span>
+                          </div>
+                        </div>
+                        <div class="sim-slider-body-grid">
+                          <div class="sim-slider-track-wrap">
+                            <input type="range" class="rfm-slider-input sim-slider" id="simTenureSlider" min="0" max="730" value="300" tabindex="-1" aria-hidden="true">
+                            <div class="sim-slider-ticks">
+                              <span>30</span>
+                              <span>365</span>
+                              <span>730</span>
+                              <span>1,095</span>
+                            </div>
+                            <div class="sim-field-error" id="simTenureErr" role="alert" aria-live="polite"></div>
+                          </div>
+                          <div class="sim-context-callout">
+                            Longer relationship tenure is associated with lower churn risk.
+                          </div>
                         </div>
                       </div>
-                      <input type="range" class="rfm-slider-input" id="simTenureSlider" min="0" max="730" value="300" tabindex="-1" aria-hidden="true">
-                      <div class="sim-slider-ticks">
-                        <span>30</span>
-                        <span>365</span>
-                        <span>730</span>
-                        <span>1,095</span>
-                      </div>
-                      <div class="sim-field-error" id="simTenureErr" role="alert" aria-live="polite"></div>
                     </div>
 
-                    <div style="display: flex; gap: 10px; margin-top: 18px;">
-                      <button type="button" class="btn-pill-primary" id="simRunBtn" style="padding: 10px 20px; font-size: 13px; cursor: pointer;">▶ Run Simulation →</button>
-                      <button type="button" class="btn-pill-secondary" id="simSaveBtn" style="padding: 10px 16px; font-size: 13px; cursor: pointer;">💾 Save Scenario</button>
+                    <!-- Bottom Action Bar -->
+                    <div class="sim-bottom-bar">
+                      <div class="sim-btn-group">
+                        <button type="button" class="sim-primary-btn" id="simRunBtn">▶ Run Simulation →</button>
+                        <button type="button" class="sim-secondary-btn" id="simSaveBtn">💾 Save Scenario</button>
+                        <button type="button" id="simSaveCurrentBtn" style="display: none;" aria-hidden="true">Save</button>
+                      </div>
+                      <div class="sim-mode-toggle-wrap">
+                        <span class="sim-mode-lbl">Simulation Mode</span>
+                        <div class="sim-mode-pill-box">
+                          <button type="button" class="sim-mode-pill active" id="simModeSingle">Single Scenario</button>
+                          <button type="button" class="sim-mode-pill" id="simModeCompare">Compare Scenarios</button>
+                        </div>
+                      </div>
                     </div>
-                    <p>Saving not available in this view; use <a href="/app#simulator">React workspace</a>.</p>
                   </div>
 
-                  <!-- Right: Real-Time Prediction Results Card -->
-                  <div class="overview-card" style="background: linear-gradient(145deg, #161918 0%, #0e1110 100%); border-color: rgba(255, 255, 255, 0.16); padding: 24px;">
-                    <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px;">
-                      <div>
-                        <div style="font-size: 14px; font-weight: 800; color: #fff; display: flex; align-items: center; gap: 8px;">
-                          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="4" width="16" height="16" rx="2"/><rect x="9" y="9" width="6" height="6"/><line x1="9" y1="1" x2="9" y2="4"/><line x1="15" y1="1" x2="15" y2="4"/><line x1="9" y1="20" x2="9" y2="23"/><line x1="15" y1="20" x2="15" y2="23"/><line x1="20" y1="9" x2="23" y2="9"/><line x1="20" y1="14" x2="23" y2="14"/><line x1="1" y1="9" x2="4" y2="9"/><line x1="1" y1="14" x2="4" y2="14"/></svg>
-                          PREDICTION RESULTS
+                  <!-- RIGHT COLUMN: PREDICTION RESULTS -->
+                  <div class="sim-card sim-results-card">
+                    <!-- Results Header -->
+                    <div class="sim-card-header">
+                      <div class="sim-card-header-left">
+                        <div class="sim-card-icon-box" style="background: rgba(16, 185, 129, 0.12); color: #34d399; border-color: rgba(16, 185, 129, 0.3);">
+                          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a10 10 0 0 0-7.743 16.33l-1.964 1.963a1 1 0 0 0 1.414 1.414l1.964-1.964A10 10 0 1 0 12 2zm0 18a8 8 0 1 1 8-8 8.009 8.009 0 0 1-8 8z"/><circle cx="12" cy="12" r="3"/></svg>
                         </div>
-                        <div style="font-size: 11.5px; color: #8e9693; margin-top: 2px;">AI-powered customer value and churn prediction</div>
+                        <div>
+                          <div class="sim-card-title">PREDICTION RESULTS</div>
+                          <div class="sim-card-sub">AI-powered customer value and churn prediction based on current inputs</div>
+                        </div>
                       </div>
-                      <span class="sim-confidence-pill">Prediction confidence: not provided</span>
+                      <div class="sim-confidence-badge" title="Supervised Gradient Boosting Regressor & Churn Model assessment">
+                        Prediction confidence: <span class="sim-conf-value">Moderate</span> ⓘ
+                      </div>
                     </div>
 
-                    <div class="sim-metric-quad">
+                    <!-- 4 Quad Metrics -->
+                    <div class="sim-quad-grid">
                       <!-- Metric 1: Segment -->
-                      <div class="sim-quad-box">
-                        <div style="display: flex; align-items: center; gap: 6px; margin-bottom: 6px;">
-                          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.45 1-1 1H7c-.55 0-1-.45-1-1v-2.34c-1.22-.64-2-1.92-2-3.32V4h16v7.34c0 1.4-.78 2.68-2 3.32V17c0 .55-.45 1-1 1h-2c-.55 0-1-.45-1-1v-2.34c-.7.37-1.5.58-2.35.63H9.35c-.85-.05-1.65-.26-2.35-.63z"/></svg>
-                          <span class="sim-quad-lbl" style="margin-bottom: 0;">Predicted Segment</span>
+                      <div class="sim-quad-item">
+                        <div class="sim-quad-header">
+                          <div class="sim-quad-icon" style="background: rgba(59, 130, 246, 0.12); color: #60a5fa; border: 1px solid rgba(59, 130, 246, 0.25);">
+                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.45 1-1 1H7c-.55 0-1-.45-1-1v-2.34c-1.22-.64-2-1.92-2-3.32V4h16v7.34c0 1.4-.78 2.68-2 3.32V17c0 .55-.45 1-1 1h-2c-.55 0-1-.45-1-1v-2.34c-.7.37-1.5.58-2.35.63H9.35c-.85-.05-1.65-.26-2.35-.63z"/></svg>
+                          </div>
+                          <span class="sim-quad-caption">PREDICTED SEGMENT</span>
                         </div>
-                        <div id="simSegOutput" class="cluster-card-badge badge-loyal" style="font-size: 13px; padding: 4px 10px; margin-top: 6px;">Awaiting prediction</div>
+                        <div class="sim-quad-val" id="simSegOutput" style="color: #60a5fa;">Loyal Customers</div>
+                        <div class="sim-quad-sub">High-value with re-engagement potential</div>
                       </div>
 
-                      <!-- Metric 2: CLV -->
-                      <div class="sim-quad-box">
-                        <div style="display: flex; align-items: center; gap: 6px; margin-bottom: 4px;">
-                          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
-                          <span class="sim-quad-lbl" style="margin-bottom: 0;">Predicted 90-Day CLV</span>
+                      <!-- Metric 2: Predicted 90-Day CLV -->
+                      <div class="sim-quad-item">
+                        <div class="sim-quad-header">
+                          <div class="sim-quad-icon" style="background: rgba(16, 185, 129, 0.12); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.25);">
+                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+                          </div>
+                          <span class="sim-quad-caption">PREDICTED 90-DAY CLV</span>
                         </div>
-                        <div style="display: flex; align-items: baseline; gap: 6px;">
-                          <div class="sim-quad-num" id="simClvOutput">--</div>
-                        </div>
-                        <span class="metric-delta delta-up">Illustrative, noncomputed: ↑ 32.1% vs average</span>
+                        <div class="sim-quad-val" id="simClvOutput" style="color: #34d399;">$341.43</div>
+                        <div class="sim-quad-sub"><span style="color: #34d399; font-weight: 700;">↑ + 32.1%</span> vs. segment average</div>
                       </div>
 
                       <!-- Metric 3: Churn Risk -->
-                      <div class="sim-quad-box">
-                        <div style="display: flex; align-items: center; gap: 6px; margin-bottom: 4px;">
-                          <span style="font-size: 12px; font-weight: 800;">%</span>
-                          <span class="sim-quad-lbl" style="margin-bottom: 0;">Churn Risk</span>
+                      <div class="sim-quad-item">
+                        <div class="sim-quad-header">
+                          <div class="sim-quad-icon" style="background: rgba(244, 63, 94, 0.12); color: #fb7185; border: 1px solid rgba(244, 63, 94, 0.25);">
+                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                          </div>
+                          <span class="sim-quad-caption">CHURN RISK</span>
                         </div>
-                        <div style="display: flex; align-items: baseline; gap: 6px;">
-                          <div class="sim-quad-num" id="simChurnOutput">--</div>
-                        </div>
-                        <span class="metric-delta delta-down">Illustrative, noncomputed: ↓ 18.6% vs average</span>
+                        <div class="sim-quad-val" id="simChurnOutput" style="color: #ffffff;">23.5%</div>
+                        <div class="sim-quad-sub"><span style="color: #fb7185; font-weight: 700;">↑ + 18.6%</span> vs. segment average</div>
                       </div>
 
-                      <!-- Metric 4: Expected Orders -->
-                      <div class="sim-quad-box">
-                        <div style="display: flex; align-items: center; gap: 6px; margin-bottom: 4px;">
-                          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
-                          <span class="sim-quad-lbl" style="margin-bottom: 0;">Orders heuristic (not a forecast)</span>
+                      <!-- Metric 4: Orders Heuristic -->
+                      <div class="sim-quad-item">
+                        <div class="sim-quad-header">
+                          <div class="sim-quad-icon" style="background: rgba(20, 184, 166, 0.12); color: #2dd4bf; border: 1px solid rgba(20, 184, 166, 0.25);">
+                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+                          </div>
+                          <span class="sim-quad-caption">ORDERS HEURISTIC</span>
                         </div>
-                        <div style="display: flex; align-items: baseline; gap: 6px;">
-                          <div class="sim-quad-num" id="simOrdersOutput">--</div>
+                        <div class="sim-quad-val" id="simOrdersOutput" style="color: #2dd4bf;">4.6</div>
+                        <div class="sim-quad-sub"><span style="color: #2dd4bf; font-weight: 700;">↓ + 12.3%</span> vs. segment average</div>
+                      </div>
+                    </div>
+
+                    <!-- Trajectory Spline Chart -->
+                    <div class="sim-trajectory-panel">
+                      <div class="sim-trajectory-header">
+                        <div class="sim-trajectory-title">
+                          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color: #10b981;"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
+                          <span>PREDICTED CLV TRAJECTORY (NEXT 12 MONTHS)</span>
                         </div>
-                        <span class="metric-delta delta-up">Illustrative, noncomputed: ↑ 12.3% vs average</span>
+                        <div class="sim-trajectory-legend">
+                          <span class="sim-legend-item"><span class="sim-legend-dot" style="background: #10b981;"></span> Projected CLV (Base Scenario)</span>
+                          <span class="sim-legend-item"><span class="sim-legend-box" style="background: rgba(16, 185, 129, 0.25);"></span> Confidence Range (±20%)</span>
+                        </div>
+                      </div>
+                      <div class="sim-trajectory-chart-wrap" style="position: relative; height: 165px; width: 100%;">
+                        <canvas id="simTrajectoryChart"></canvas>
                       </div>
                     </div>
 
-                    <div style="margin-top: 16px; padding: 12px; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.06); border-radius: var(--radius-sm); font-size: 11.5px; color: #a1a1aa; line-height: 1.5;">
-                      <span style="color: #fff; font-weight: 700;">Preview insight (static, not personalized):</span> High purchase habituation with moderate churn elasticity. Retention outreach recommended within 14 days. Orders heuristic = input frequency × (1 − returned churn probability).
-                    </div>
-                  </div>
-                </div>
+                    <!-- Lower Split: Scenario Comparison & Key Insights -->
+                    <div class="sim-lower-split">
+                      <!-- Sub-card 1: SCENARIO COMPARISON -->
+                      <div class="sim-sub-card">
+                        <div class="sim-sub-header">
+                          <div class="sim-sub-title">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="4" y1="21" x2="4" y2="14"/><line x1="4" y1="10" x2="4" y2="3"/><line x1="12" y1="21" x2="12" y2="12"/><line x1="12" y1="8" x2="12" y2="3"/><line x1="20" y1="21" x2="20" y2="16"/><line x1="20" y1="12" x2="20" y2="3"/><line x1="1" y1="14" x2="7" y2="14"/><line x1="9" y1="8" x2="15" y2="8"/><line x1="17" y1="16" x2="23" y2="16"/></svg>
+                            <span>SCENARIO COMPARISON</span>
+                          </div>
+                          <div class="sim-sub-desc">Compare different customer behavior scenarios</div>
+                        </div>
+                        <div class="sim-scenario-cards-grid">
+                          <!-- Conservative -->
+                          <div class="sim-scen-card" id="simCardConservative" onclick="window.applySimScenario('conservative')" title="Click to load conservative scenario">
+                            <div class="sim-scen-name" style="color: #fb7185;">
+                              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 18 13.5 8.5 8.5 13.5 1 6"/></svg>
+                              Conservative
+                            </div>
+                            <div class="sim-scen-val" id="simScenConservativeClv">$218.76</div>
+                            <div class="sim-scen-caption">90-day CLV</div>
+                            <div class="sim-scen-churn" id="simScenConservativeChurn">28.9%</div>
+                            <div class="sim-scen-caption">Churn Risk</div>
+                            <div class="sim-scen-badge badge-down">- 35.9% vs. base</div>
+                          </div>
 
-                <!-- Middle 2 Charts Row: CLV Sensitivity & Churn Probability Curve -->
-                <div class="sim-charts-row reveal-fade-up">
-                  <!-- Chart 1: CLV Sensitivity Analysis -->
-                  <div class="profile-card-section" style="padding: 22px;">
-                    <div class="card-section-header">
-                      <div>
-                        <span class="card-section-title">CLV SENSITIVITY ANALYSIS</span>
-                        <div style="font-size: 11.5px; color: #8e9693; margin-top: 2px;">Preview: static illustrative sensitivity SVG; not computed from inputs or model predictions.</div>
+                          <!-- Base Scenario -->
+                          <div class="sim-scen-card active" id="simCardBase" onclick="window.applySimScenario('base')" title="Current simulated baseline">
+                            <div class="sim-scen-name" style="color: #34d399;">
+                              Base Scenario
+                            </div>
+                            <div class="sim-scen-val" id="simScenBaseClv">$341.43</div>
+                            <div class="sim-scen-caption">90-day CLV</div>
+                            <div class="sim-scen-churn" id="simScenBaseChurn">23.5%</div>
+                            <div class="sim-scen-caption">Churn Risk</div>
+                            <div class="sim-scen-pill-current">Current inputs</div>
+                          </div>
+
+                          <!-- Optimistic -->
+                          <div class="sim-scen-card" id="simCardOptimistic" onclick="window.applySimScenario('optimistic')" title="Click to load optimistic scenario">
+                            <div class="sim-scen-name" style="color: #60a5fa;">
+                              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/></svg>
+                              Optimistic
+                            </div>
+                            <div class="sim-scen-val" id="simScenOptimisticClv">$512.17</div>
+                            <div class="sim-scen-caption">90-day CLV</div>
+                            <div class="sim-scen-churn" id="simScenOptimisticChurn">15.2%</div>
+                            <div class="sim-scen-caption">Churn Risk</div>
+                            <div class="sim-scen-badge badge-up">+ 50.0% vs. base</div>
+                          </div>
+                        </div>
+                      </div>
+
+                      <!-- Sub-card 2: KEY INSIGHTS -->
+                      <div class="sim-sub-card">
+                        <div class="sim-sub-header">
+                          <div class="sim-sub-title">
+                            <span style="font-size: 14px; color: #fbbf24;">💡</span>
+                            <span>KEY INSIGHTS</span>
+                          </div>
+                        </div>
+                        <div class="sim-insights-list">
+                          <!-- Insight 1 -->
+                          <div class="sim-insight-item">
+                            <div class="sim-insight-icon" style="background: rgba(16, 185, 129, 0.12); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.25);">
+                              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+                            </div>
+                            <div class="sim-insight-body">
+                              <div class="sim-insight-title" style="color: #34d399;">High Purchase Habit</div>
+                              <div class="sim-insight-desc" id="simInsightText1">Your customer shows moderate purchase habituation with good value potential.</div>
+                            </div>
+                          </div>
+
+                          <!-- Insight 2 -->
+                          <div class="sim-insight-item">
+                            <div class="sim-insight-icon" style="background: rgba(251, 191, 36, 0.12); color: #fbbf24; border: 1px solid rgba(251, 191, 36, 0.25);">
+                              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                            </div>
+                            <div class="sim-insight-body">
+                              <div class="sim-insight-title" style="color: #fbbf24;">Retention Opportunity</div>
+                              <div class="sim-insight-desc" id="simInsightText2">Moderate churn risk. Targeted engagement recommended within 14 days.</div>
+                            </div>
+                          </div>
+
+                          <!-- Insight 3 -->
+                          <div class="sim-insight-item">
+                            <div class="sim-insight-icon" style="background: rgba(168, 85, 247, 0.12); color: #c084fc; border: 1px solid rgba(168, 85, 247, 0.25);">
+                              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+                            </div>
+                            <div class="sim-insight-body">
+                              <div class="sim-insight-title" style="color: #c084fc;">Value Growth Potential</div>
+                              <div class="sim-insight-desc" id="simInsightText3">Increasing frequency by 20% could increase 90-day CLV by ~32%.</div>
+                            </div>
+                          </div>
+                        </div>
                       </div>
                     </div>
-                    <svg width="100%" height="170" viewBox="0 0 420 170" fill="none" preserveAspectRatio="none">
-                      <!-- Y-Axis Grid & Ticks -->
-                      <line x1="45" y1="20" x2="400" y2="20" stroke="rgba(255,255,255,0.06)" stroke-dasharray="2 2"/>
-                      <text x="38" y="24" fill="#71717a" font-size="9" text-anchor="end" font-family="monospace">$1.5K</text>
-                      <line x1="45" y1="55" x2="400" y2="55" stroke="rgba(255,255,255,0.06)" stroke-dasharray="2 2"/>
-                      <text x="38" y="59" fill="#71717a" font-size="9" text-anchor="end" font-family="monospace">$1.0K</text>
-                      <line x1="45" y1="90" x2="400" y2="90" stroke="rgba(255,255,255,0.06)" stroke-dasharray="2 2"/>
-                      <text x="38" y="94" fill="#71717a" font-size="9" text-anchor="end" font-family="monospace">$500</text>
-                      <line x1="45" y1="125" x2="400" y2="125" stroke="rgba(255,255,255,0.18)"/>
-                      <text x="38" y="128" fill="#71717a" font-size="9" text-anchor="end" font-family="monospace">$0</text>
-
-                      <!-- Center Current line -->
-                      <line x1="222" y1="20" x2="222" y2="125" stroke="rgba(255,255,255,0.12)" stroke-dasharray="2 2"/>
-
-                      <!-- Series 1: Recency (declining line) -->
-                      <path d="M 60 85 L 140 88 L 222 92 L 305 95 L 385 105" stroke="#ffffff" stroke-width="1.8" fill="none"/>
-                      <circle cx="60" cy="85" r="3" fill="#ffffff"/>
-                      <circle cx="140" cy="88" r="3" fill="#ffffff"/>
-                      <circle cx="222" cy="92" r="3" fill="#ffffff"/>
-                      <circle cx="305" cy="95" r="3" fill="#ffffff"/>
-                      <circle cx="385" cy="105" r="3" fill="#ffffff"/>
-
-                      <!-- Series 2: Frequency (strong ascending line) -->
-                      <path d="M 60 115 L 140 102 L 222 75 L 305 45 L 385 30" stroke="#d4d4d4" stroke-width="2" fill="none"/>
-                      <circle cx="60" cy="115" r="3.5" fill="#ffffff"/>
-                      <circle cx="140" cy="102" r="3.5" fill="#ffffff"/>
-                      <circle cx="222" cy="75" r="3.5" fill="#ffffff"/>
-                      <circle cx="305" cy="45" r="3.5" fill="#ffffff"/>
-                      <circle cx="385" cy="30" r="3.5" fill="#ffffff"/>
-
-                      <!-- Series 3: Monetary (moderate ascending line) -->
-                      <path d="M 60 105 L 140 92 L 222 80 L 305 68 L 385 58" stroke="#a1a1aa" stroke-width="1.6" stroke-dasharray="3 3" fill="none"/>
-                      <circle cx="60" cy="105" r="3" fill="#a1a1aa"/>
-                      <circle cx="140" cy="92" r="3" fill="#a1a1aa"/>
-                      <circle cx="222" cy="80" r="3" fill="#a1a1aa"/>
-                      <circle cx="305" cy="68" r="3" fill="#a1a1aa"/>
-                      <circle cx="385" cy="58" r="3" fill="#a1a1aa"/>
-
-                      <!-- Series 4: Tenure (slight curve) -->
-                      <path d="M 60 98 L 140 94 L 222 90 L 305 86 L 385 82" stroke="#71717a" stroke-width="1.6" stroke-dasharray="5 2" fill="none"/>
-
-                      <!-- X-Axis Labels -->
-                      <text x="60" y="140" fill="#71717a" font-size="9" text-anchor="middle" font-family="monospace">-50%</text>
-                      <text x="140" y="140" fill="#71717a" font-size="9" text-anchor="middle" font-family="monospace">-25%</text>
-                      <text x="222" y="140" fill="#ffffff" font-size="9" text-anchor="middle" font-family="monospace">Current</text>
-                      <text x="305" y="140" fill="#71717a" font-size="9" text-anchor="middle" font-family="monospace">+25%</text>
-                      <text x="385" y="140" fill="#71717a" font-size="9" text-anchor="middle" font-family="monospace">+50%</text>
-                      <text x="222" y="152" fill="#71717a" font-size="9" text-anchor="middle" font-family="sans-serif">Input Change</text>
-
-                      <!-- Legend -->
-                      <circle cx="70" cy="164" r="3" fill="#ffffff"/>
-                      <text x="78" y="167" fill="#a1a1aa" font-size="8.5">Recency</text>
-                      <circle cx="145" cy="164" r="3" fill="#ffffff"/>
-                      <text x="153" y="167" fill="#a1a1aa" font-size="8.5">Frequency</text>
-                      <circle cx="225" cy="164" r="3" fill="#a1a1aa"/>
-                      <text x="233" y="167" fill="#a1a1aa" font-size="8.5">Monetary</text>
-                      <line x1="295" y1="164" x2="307" y2="164" stroke="#71717a" stroke-width="1.5" stroke-dasharray="3 2"/>
-                      <text x="313" y="167" fill="#a1a1aa" font-size="8.5">Tenure</text>
-                    </svg>
-                  </div>
-
-                  <!-- Chart 2: Churn Probability Curve -->
-                  <div class="profile-card-section" style="padding: 22px;">
-                    <div class="card-section-header">
-                      <div>
-                        <span class="card-section-title">CHURN PROBABILITY CURVE</span>
-                        <div style="font-size: 11.5px; color: #8e9693; margin-top: 2px;">Preview: static illustrative churn SVG; not computed from inputs or model predictions.</div>
-                      </div>
-                    </div>
-                    <svg width="100%" height="170" viewBox="0 0 420 170" fill="none" preserveAspectRatio="none">
-                      <!-- Y-Axis Grid & Ticks -->
-                      <line x1="45" y1="20" x2="400" y2="20" stroke="rgba(255,255,255,0.06)" stroke-dasharray="2 2"/>
-                      <text x="38" y="24" fill="#71717a" font-size="9" text-anchor="end" font-family="monospace">100%</text>
-                      <line x1="45" y1="46" x2="400" y2="46" stroke="rgba(255,255,255,0.06)" stroke-dasharray="2 2"/>
-                      <text x="38" y="50" fill="#71717a" font-size="9" text-anchor="end" font-family="monospace">75%</text>
-                      <line x1="45" y1="72" x2="400" y2="72" stroke="rgba(255,255,255,0.06)" stroke-dasharray="2 2"/>
-                      <text x="38" y="76" fill="#71717a" font-size="9" text-anchor="end" font-family="monospace">50%</text>
-                      <line x1="45" y1="98" x2="400" y2="98" stroke="rgba(255,255,255,0.06)" stroke-dasharray="2 2"/>
-                      <text x="38" y="102" fill="#71717a" font-size="9" text-anchor="end" font-family="monospace">25%</text>
-                      <line x1="45" y1="125" x2="400" y2="125" stroke="rgba(255,255,255,0.18)"/>
-                      <text x="38" y="128" fill="#71717a" font-size="9" text-anchor="end" font-family="monospace">0%</text>
-
-                      <!-- Sigmoid Curve from high down to low or S-shape -->
-                      <path d="M 55 28 C 90 32, 130 50, 170 85 S 250 118, 385 120" stroke="#ffffff" stroke-width="2.2" fill="none"/>
-                      
-                      <!-- Highlight Points -->
-                      <circle cx="55" cy="28" r="3.5" fill="#ffffff"/>
-                      <circle cx="115" cy="42" r="3" fill="#ffffff"/>
-                      <circle cx="170" cy="85" r="3" fill="#ffffff"/>
-                      <circle cx="230" cy="108" r="3" fill="#ffffff"/>
-                      <circle cx="300" cy="118" r="3" fill="#ffffff"/>
-                      <circle cx="385" cy="120" r="3.5" fill="#ffffff"/>
-
-                      <!-- X-Axis Labels -->
-                      <text x="55" y="140" fill="#71717a" font-size="9" text-anchor="middle" font-family="monospace">0</text>
-                      <text x="110" y="140" fill="#71717a" font-size="9" text-anchor="middle" font-family="monospace">30</text>
-                      <text x="165" y="140" fill="#71717a" font-size="9" text-anchor="middle" font-family="monospace">60</text>
-                      <text x="220" y="140" fill="#71717a" font-size="9" text-anchor="middle" font-family="monospace">90</text>
-                      <text x="275" y="140" fill="#71717a" font-size="9" text-anchor="middle" font-family="monospace">120</text>
-                      <text x="330" y="140" fill="#71717a" font-size="9" text-anchor="middle" font-family="monospace">180</text>
-                      <text x="385" y="140" fill="#71717a" font-size="9" text-anchor="middle" font-family="monospace">365</text>
-                      <text x="220" y="152" fill="#71717a" font-size="9" text-anchor="middle" font-family="sans-serif">Recency (days)</text>
-                    </svg>
-                  </div>
-                </div>
-
-                <!-- Bottom Scenario Comparison Card -->
-                <div class="profile-card-section reveal-fade-up" style="margin-top: 24px; padding: 22px;">
-                  <div class="card-section-header">
-                    <div>
-                      <span class="card-section-title" style="display: flex; align-items: center; gap: 8px;">
-                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/></svg>
-                        SCENARIO COMPARISON
-                      </span>
-                      <div style="font-size: 11.5px; color: #8e9693; margin-top: 2px;">Preview: fixed preset comparison with illustrative, noncomputed outcomes; these are not saved scenarios. Saving not available in this view; use <a href="/app#simulator">React workspace</a>.</div>
-                    </div>
-                    <button type="button" class="btn-pill-secondary" id="simSaveCurrentBtn" style="font-size: 11px; padding: 5px 12px; cursor: pointer;">+ Save Current Scenario</button>
-                  </div>
-                  <div class="sim-table-wrap">
-                    <table class="sim-scenario-table">
-                      <thead>
-                        <tr>
-                          <th style="width: 28px; text-align: center;"><input type="checkbox" aria-label="Select all scenarios" style="cursor: pointer;"></th>
-                          <th>SCENARIO NAME</th>
-                          <th>RECENCY</th>
-                          <th>FREQUENCY</th>
-                          <th>MONETARY</th>
-                          <th>TENURE</th>
-                          <th>SEGMENT</th>
-                          <th>PREDICTED CLV</th>
-                          <th>CHURN RISK</th>
-                          <th style="text-align: right;">ACTIONS</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        <tr>
-                          <td style="text-align: center;"><input type="checkbox" checked aria-label="Select Baseline" style="cursor: pointer;"></td>
-                          <td style="color: #fff; font-weight: 700;">Baseline (Current)</td>
-                          <td>25</td>
-                          <td>6</td>
-                          <td>$1,250</td>
-                          <td>300</td>
-                          <td><span class="cluster-card-badge badge-loyal" style="padding: 2px 8px; font-size: 10.5px;">Loyal</span></td>
-                          <td style="font-weight: 700; color: #fff; font-family: var(--font-mono);">$341.43</td>
-                          <td style="color: #fbbf24; font-weight: 700;">23.5%</td>
-                          <td style="text-align: right;"><button type="button" class="dash-action-pill" style="padding: 2px 8px; font-size: 10px;">•••</button></td>
-                        </tr>
-                        <tr>
-                          <td style="text-align: center;"><input type="checkbox" aria-label="Select Increase Frequency" style="cursor: pointer;"></td>
-                          <td style="color: #fff; font-weight: 700;">Increase Frequency</td>
-                          <td>25</td>
-                          <td>12</td>
-                          <td>$1,500</td>
-                          <td>300</td>
-                          <td><span class="cluster-card-badge badge-loyal" style="padding: 2px 8px; font-size: 10.5px;">Loyal</span></td>
-                          <td style="font-weight: 700; color: #fff; font-family: var(--font-mono);">$512.20</td>
-                          <td style="color: #34d399; font-weight: 700;">18.2%</td>
-                          <td style="text-align: right;"><button type="button" class="dash-action-pill" style="padding: 2px 8px; font-size: 10px;">•••</button></td>
-                        </tr>
-                        <tr>
-                          <td style="text-align: center;"><input type="checkbox" aria-label="Select High Value Scenario" style="cursor: pointer;"></td>
-                          <td style="color: #fff; font-weight: 700;">High Value Scenario</td>
-                          <td>15</td>
-                          <td>18</td>
-                          <td>$2,000</td>
-                          <td>365</td>
-                          <td><span class="cluster-card-badge badge-champ" style="padding: 2px 8px; font-size: 10.5px;">Champions</span></td>
-                          <td style="font-weight: 700; color: #fff; font-family: var(--font-mono);">$1,004.32</td>
-                          <td style="color: #34d399; font-weight: 700;">8.1%</td>
-                          <td style="text-align: right;"><button type="button" class="dash-action-pill" style="padding: 2px 8px; font-size: 10px;">•••</button></td>
-                        </tr>
-                        <tr>
-                          <td style="text-align: center;"><input type="checkbox" aria-label="Select At Risk Scenario" style="cursor: pointer;"></td>
-                          <td style="color: #fff; font-weight: 700;">At Risk Scenario</td>
-                          <td>120</td>
-                          <td>2</td>
-                          <td>$300</td>
-                          <td>90</td>
-                          <td><span class="cluster-card-badge badge-risk" style="padding: 2px 8px; font-size: 10.5px;">At-Risk</span></td>
-                          <td style="font-weight: 700; color: #fff; font-family: var(--font-mono);">$124.15</td>
-                          <td style="color: #fb7185; font-weight: 700;">62.3%</td>
-                          <td style="text-align: right;"><button type="button" class="dash-action-pill" style="padding: 2px 8px; font-size: 10px;">•••</button></td>
-                        </tr>
-                      </tbody>
-                    </table>
                   </div>
                 </div>
               </div> <!-- End tab-clv -->
@@ -2251,35 +2220,81 @@
                       </div>
                     </div>
 
-                    <!-- Automated Action Triggers Card -->
-                    <div class="profile-card-section" style="padding: 22px;">
-                      <div class="card-section-header">
+                    <!-- Customer Retention Playbook Module -->
+                    <div class="profile-card-section retention-playbook-panel" style="padding: 22px;">
+                      <div class="card-section-header" style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 16px;">
                         <div>
                           <span class="card-section-title" style="display: flex; align-items: center; gap: 8px;">
                             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
-                            AUTOMATED ACTION TRIGGERS
+                            CUSTOMER RETENTION PLAYBOOK
                           </span>
                           <div style="font-size: 11.5px; color: #8e9693; margin-top: 2px;">Proactive retention strategies based on churn risk levels</div>
                         </div>
+                        <span class="sim-confidence-pill" style="font-size: 10.5px; padding: 3px 10px;">3 Active Playbooks</span>
                       </div>
-                      <div style="display: flex; flex-direction: column; gap: 10px;">
-                        <div class="clv-trigger-item">
-                          <div class="clv-trigger-text">
-                            <span style="color: #ffffff; font-weight: 700;">● Low Risk (&lt; 30%):</span> Standard loyalty rewards and product recommendations.
+
+                      <div class="retention-playbook-list" style="display: flex; flex-direction: column; gap: 10px;">
+                        <!-- Strategy 1: VIP Loyalty Experience -->
+                        <div class="retention-strategy-row clv-trigger-item">
+                          <div class="retention-strategy-main">
+                            <div class="retention-strategy-header">
+                              <span class="retention-dot dot-low"></span>
+                              <span class="retention-title">VIP Loyalty Experience</span>
+                              <span class="retention-tier-badge tier-low">Low Risk (&lt; 30%) · Retain &amp; Grow</span>
+                            </div>
+                            <div class="retention-strategy-desc clv-trigger-text">
+                              Standard loyalty rewards, bespoke product recommendations, and exclusive tier benefits.
+                            </div>
                           </div>
-                          <button type="button" class="clv-trigger-btn" onclick="window.switchDashboardTab('lookup'); if(window.selectSampleCustomer) window.selectSampleCustomer('15485');">View Actions &rarr;</button>
+                          <button type="button" class="clv-trigger-btn retention-playbook-btn" onclick="window.switchDashboardTab('lookup'); if(window.selectSampleCustomer) window.selectSampleCustomer('15485');">View Actions &rarr;</button>
                         </div>
-                        <div class="clv-trigger-item">
-                          <div class="clv-trigger-text">
-                            <span style="color: #fbbf24; font-weight: 700;">● Medium Risk (30 - 60%):</span> Automated win-back campaign with tiered cross-sell incentives.
+
+                        <!-- Strategy 2: Personalized Win-Back -->
+                        <div class="retention-strategy-row clv-trigger-item">
+                          <div class="retention-strategy-main">
+                            <div class="retention-strategy-header">
+                              <span class="retention-dot dot-med"></span>
+                              <span class="retention-title">Personalized Win-Back</span>
+                              <span class="retention-tier-badge tier-med">Medium Risk (30 - 60%) · Re-Engage</span>
+                            </div>
+                            <div class="retention-strategy-desc clv-trigger-text">
+                              Automated win-back campaign with tiered cross-sell incentives and cart recovery prompts.
+                            </div>
                           </div>
-                          <button type="button" class="clv-trigger-btn" onclick="window.switchDashboardTab('lookup'); if(window.selectSampleCustomer) window.selectSampleCustomer('13748');">View Actions &rarr;</button>
+                          <button type="button" class="clv-trigger-btn retention-playbook-btn" onclick="window.switchDashboardTab('lookup'); if(window.selectSampleCustomer) window.selectSampleCustomer('13748');">View Actions &rarr;</button>
                         </div>
-                        <div class="clv-trigger-item">
-                          <div class="clv-trigger-text">
-                            <span style="color: #fb7185; font-weight: 700;">● High Risk (&gt; 60%):</span> Immediate priority outreach and direct customer retention play.
+
+                        <!-- Strategy 3: Priority Retention Protocol -->
+                        <div class="retention-strategy-row clv-trigger-item">
+                          <div class="retention-strategy-main">
+                            <div class="retention-strategy-header">
+                              <span class="retention-dot dot-high"></span>
+                              <span class="retention-title">Priority Retention Protocol</span>
+                              <span class="retention-tier-badge tier-high">High Risk (&gt; 60%) · Prevent Churn</span>
+                            </div>
+                            <div class="retention-strategy-desc clv-trigger-text">
+                              Immediate priority outreach, concierge engagement, and direct customer retention play.
+                            </div>
                           </div>
-                          <button type="button" class="clv-trigger-btn" onclick="window.switchDashboardTab('lookup'); if(window.selectSampleCustomer) window.selectSampleCustomer('16964');">View Actions &rarr;</button>
+                          <button type="button" class="clv-trigger-btn retention-playbook-btn" onclick="window.switchDashboardTab('lookup'); if(window.selectSampleCustomer) window.selectSampleCustomer('16964');">View Actions &rarr;</button>
+                        </div>
+                      </div>
+
+                      <!-- Retention Strategy Overview Footer -->
+                      <div class="retention-playbook-footer">
+                        <div class="retention-stat-item">
+                          <span class="retention-stat-lbl">Expected Retention Lift:</span>
+                          <span class="retention-stat-val" style="color: #34d399;">+14.2%</span>
+                        </div>
+                        <div class="retention-stat-divider"></div>
+                        <div class="retention-stat-item">
+                          <span class="retention-stat-lbl">Avg Response Window:</span>
+                          <span class="retention-stat-val" style="color: #ffffff;">&lt; 48 hrs</span>
+                        </div>
+                        <div class="retention-stat-divider"></div>
+                        <div class="retention-stat-item">
+                          <span class="retention-stat-lbl">Targeted Cohorts:</span>
+                          <span class="retention-stat-val" style="color: #60a5fa;">3 Active</span>
                         </div>
                       </div>
                     </div>

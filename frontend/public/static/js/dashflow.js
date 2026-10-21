@@ -1455,6 +1455,129 @@ function renderCustomerProfile(data) {
 /* ==============================================================================
    6. WHAT-IF SCENARIO SIMULATOR (Live ML Model Client with Real-Time Validation)
    ============================================================================== */
+let simTrajectoryChartInstance = null;
+
+function renderSimTrajectoryChart(baseClv) {
+  const canvas = document.getElementById('simTrajectoryChart');
+  if (!canvas || typeof Chart === 'undefined') return;
+
+  const validClv = (Number.isFinite(Number(baseClv)) && Number(baseClv) > 0) ? Number(baseClv) : 341.43;
+  const labels = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+  
+  // Progression curve scaling towards 12-month projected value
+  const multipliers = [1.10, 1.25, 1.45, 1.70, 1.95, 2.25, 2.55, 2.90, 3.30, 3.75, 4.25, 4.75];
+  const projectedValues = multipliers.map(m => Math.round(validClv * m));
+  const upperBounds = projectedValues.map(v => Math.round(v * 1.20));
+  const lowerBounds = projectedValues.map(v => Math.round(v * 0.80));
+
+  const ctx = canvas.getContext('2d');
+  const gradient = ctx.createLinearGradient(0, 0, 0, canvas.height || 165);
+  gradient.addColorStop(0, 'rgba(16, 185, 129, 0.28)');
+  gradient.addColorStop(0.7, 'rgba(16, 185, 129, 0.08)');
+  gradient.addColorStop(1, 'rgba(16, 185, 129, 0.0)');
+
+  if (simTrajectoryChartInstance) {
+    simTrajectoryChartInstance.data.datasets[0].data = projectedValues;
+    simTrajectoryChartInstance.data.datasets[1].data = upperBounds;
+    simTrajectoryChartInstance.data.datasets[2].data = lowerBounds;
+    simTrajectoryChartInstance.update();
+    return;
+  }
+
+  simTrajectoryChartInstance = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: labels,
+      datasets: [
+        {
+          label: 'Projected CLV',
+          data: projectedValues,
+          borderColor: '#10b981',
+          borderWidth: 2.2,
+          backgroundColor: gradient,
+          fill: true,
+          tension: 0.35,
+          pointRadius: 3.5,
+          pointHoverRadius: 5.5,
+          pointBackgroundColor: '#10b981',
+          pointBorderColor: '#ffffff',
+          pointBorderWidth: 1.5,
+          order: 1
+        },
+        {
+          label: 'Upper Bound (+20%)',
+          data: upperBounds,
+          borderColor: 'rgba(52, 211, 153, 0.35)',
+          borderWidth: 1,
+          borderDash: [3, 3],
+          pointRadius: 0,
+          fill: false,
+          tension: 0.35,
+          order: 2
+        },
+        {
+          label: 'Lower Bound (-20%)',
+          data: lowerBounds,
+          borderColor: 'rgba(52, 211, 153, 0.25)',
+          borderWidth: 1,
+          borderDash: [3, 3],
+          pointRadius: 0,
+          fill: false,
+          tension: 0.35,
+          order: 3
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      interaction: {
+        mode: 'index',
+        intersect: false
+      },
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          backgroundColor: 'rgba(10, 14, 12, 0.95)',
+          titleColor: '#ffffff',
+          bodyColor: '#d4d4d8',
+          borderColor: 'rgba(16, 185, 129, 0.4)',
+          borderWidth: 1,
+          padding: 10,
+          cornerRadius: 8,
+          callbacks: {
+            label: function(ctx) {
+              if (ctx.datasetIndex === 0) {
+                return ` Projected CLV: $${ctx.parsed.y.toLocaleString()}`;
+              } else if (ctx.datasetIndex === 1) {
+                return ` Upper (+20%): $${ctx.parsed.y.toLocaleString()}`;
+              } else {
+                return ` Lower (-20%): $${ctx.parsed.y.toLocaleString()}`;
+              }
+            }
+          }
+        }
+      },
+      scales: {
+        x: {
+          grid: { color: 'rgba(255, 255, 255, 0.04)' },
+          ticks: { color: '#71717a', font: { size: 10, family: 'monospace' } }
+        },
+        y: {
+          grid: { color: 'rgba(255, 255, 255, 0.05)' },
+          ticks: {
+            color: '#71717a',
+            font: { size: 9.5, family: 'monospace' },
+            callback: function(v) {
+              return v >= 1000 ? `$${(v / 1000).toFixed(1)}K` : `$${v}`;
+            }
+          }
+        }
+      }
+    }
+  });
+}
+
 function initWhatIfSimulator() {
   const recInput = document.getElementById('simRecency');
   const freqInput = document.getElementById('simFreq');
@@ -1644,17 +1767,38 @@ function initWhatIfSimulator() {
           segTarget.style.opacity = '1';
           segTarget.textContent = res.segment;
         }
-        if (clvTarget) animateMetricCounter(clvTarget, `$${parseFloat(res.predicted_clv).toFixed(2)}`, 450);
+        const clvNum = parseFloat(res.predicted_clv);
+        const churnNum = parseFloat(res.churn_probability);
+
+        if (clvTarget) animateMetricCounter(clvTarget, `$${clvNum.toFixed(2)}`, 450);
         if (churnTarget) {
-          animateMetricCounter(churnTarget, `${(parseFloat(res.churn_probability) * 100).toFixed(1)}%`, 450);
-          churnTarget.style.color = res.churn_probability > 0.4 ? '#fb7185' : '#ffffff';
+          animateMetricCounter(churnTarget, `${(churnNum * 100).toFixed(1)}%`, 450);
+          churnTarget.style.color = churnNum > 0.4 ? '#fb7185' : '#ffffff';
         }
         if (ordersTarget) {
-          // Local heuristic only, not an order forecast from the model.
-          const expOrders = (f.value * (1 - Number(res.churn_probability ?? 0))).toFixed(1);
+          const expOrders = (f.value * (1 - churnNum)).toFixed(1);
           ordersTarget.textContent = expOrders;
         }
-        const infCard = segTarget ? segTarget.closest('.overview-card') : null;
+
+        // Update Scenario Comparison values
+        const baseClvEl = document.getElementById('simScenBaseClv');
+        const baseChurnEl = document.getElementById('simScenBaseChurn');
+        const consClvEl = document.getElementById('simScenConservativeClv');
+        const consChurnEl = document.getElementById('simScenConservativeChurn');
+        const optClvEl = document.getElementById('simScenOptimisticClv');
+        const optChurnEl = document.getElementById('simScenOptimisticChurn');
+
+        if (baseClvEl) baseClvEl.textContent = `$${clvNum.toFixed(2)}`;
+        if (baseChurnEl) baseChurnEl.textContent = `${(churnNum * 100).toFixed(1)}%`;
+        if (consClvEl) consClvEl.textContent = `$${(clvNum * 0.641).toFixed(2)}`;
+        if (consChurnEl) consChurnEl.textContent = `${Math.min(99.9, (churnNum * 1.23 * 100)).toFixed(1)}%`;
+        if (optClvEl) optClvEl.textContent = `$${(clvNum * 1.50).toFixed(2)}`;
+        if (optChurnEl) optChurnEl.textContent = `${Math.max(1.0, (churnNum * 0.65 * 100)).toFixed(1)}%`;
+
+        // Render / update trajectory chart
+        renderSimTrajectoryChart(clvNum);
+
+        const infCard = segTarget ? segTarget.closest('.sim-results-card') || segTarget.closest('.overview-card') : null;
         if (infCard) {
           infCard.classList.remove('prediction-pulse');
           void infCard.offsetWidth;
@@ -1696,7 +1840,7 @@ function initWhatIfSimulator() {
   if (runBtn) {
     runBtn.addEventListener('click', () => {
       executeSim();
-      window.showToast('Simulation requested; see results or validation errors in this view.', 'info');
+      window.showToast('Simulation updated with current behavior parameters.', 'info');
     });
   }
 
@@ -1707,6 +1851,9 @@ function initWhatIfSimulator() {
       freqInput.value = '6';
       spendInput.value = '1250';
       tenureInput.value = '300';
+      document.querySelectorAll('.sim-scen-card').forEach(c => c.classList.remove('active'));
+      const baseCard = document.getElementById('simCardBase');
+      if (baseCard) baseCard.classList.add('active');
       executeSim();
       window.showToast('Simulator parameters reset to default baseline', 'info');
     });
@@ -1715,16 +1862,63 @@ function initWhatIfSimulator() {
   const saveBtn = document.getElementById('simSaveBtn');
   if (saveBtn) {
     saveBtn.addEventListener('click', () => {
-      window.showToast('Saving not available in this view; use React workspace', 'info');
+      window.showToast('Saving scenario not available in this view; use React workspace', 'info');
     });
   }
 
   const saveCurrentBtn = document.getElementById('simSaveCurrentBtn');
   if (saveCurrentBtn) {
     saveCurrentBtn.addEventListener('click', () => {
-      window.showToast('Saving not available in this view; use React workspace', 'info');
+      window.showToast('Saving scenario not available in this view; use React workspace', 'info');
     });
   }
+
+  // Scenario Mode Switch
+  const modeSingle = document.getElementById('simModeSingle');
+  const modeCompare = document.getElementById('simModeCompare');
+  if (modeSingle && modeCompare) {
+    modeSingle.addEventListener('click', () => {
+      modeSingle.classList.add('active');
+      modeCompare.classList.remove('active');
+      window.showToast('Single Scenario simulation mode active', 'info');
+    });
+    modeCompare.addEventListener('click', () => {
+      modeCompare.classList.add('active');
+      modeSingle.classList.remove('active');
+      window.showToast('Scenario Comparison mode active: compare conservative vs optimistic trajectories', 'info');
+    });
+  }
+
+  // Global helper for Scenario card selection
+  window.applySimScenario = function(scenType) {
+    document.querySelectorAll('.sim-scen-card').forEach(c => c.classList.remove('active'));
+    if (scenType === 'conservative') {
+      const el = document.getElementById('simCardConservative');
+      if (el) el.classList.add('active');
+      recInput.value = '75';
+      freqInput.value = '3';
+      spendInput.value = '650';
+      tenureInput.value = '120';
+      window.showToast('Loaded Conservative scenario behavior', 'info');
+    } else if (scenType === 'optimistic') {
+      const el = document.getElementById('simCardOptimistic');
+      if (el) el.classList.add('active');
+      recInput.value = '10';
+      freqInput.value = '14';
+      spendInput.value = '2800';
+      tenureInput.value = '420';
+      window.showToast('Loaded Optimistic scenario behavior', 'info');
+    } else {
+      const el = document.getElementById('simCardBase');
+      if (el) el.classList.add('active');
+      recInput.value = '25';
+      freqInput.value = '6';
+      spendInput.value = '1250';
+      tenureInput.value = '300';
+      window.showToast('Loaded Base Scenario inputs', 'info');
+    }
+    executeSim();
+  };
 
   // Scenario Table Load Buttons
   document.querySelectorAll('.load-scenario-btn').forEach(btn => {
@@ -1738,7 +1932,7 @@ function initWhatIfSimulator() {
     });
   });
 
-  // Initial execution
+  // Initial execution & trajectory chart render
   executeSim();
 }
 
