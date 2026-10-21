@@ -533,7 +533,14 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
 
             <div className="ov-rfm-right-col" style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
               <div className="cv-snapshot-panel">
-                <div className="cv-snapshot-title">CUSTOMER VALUE SNAPSHOT</div>
+                <div className="cv-snapshot-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <span className="cv-snapshot-title">CUSTOMER VALUE SNAPSHOT</span>
+                  <span className="cv-info-badge" title="Scores & gauge are interactive heuristics; Predicted CLV & Churn Risk are model outputs from /api/predict.">
+                    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/>
+                    </svg>
+                  </span>
+                </div>
                 
                 <div className="cv-scores-list">
                   <div className="cv-score-row">

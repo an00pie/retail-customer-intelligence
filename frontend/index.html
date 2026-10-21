@@ -651,8 +651,14 @@
 
                     <div class="ov-rfm-right-col">
                       <div class="ov-rfm-result-card cv-snapshot-panel">
-                        <div class="cv-snapshot-title">CUSTOMER VALUE SNAPSHOT</div>
-                        <p class="visually-hidden">Preview: scores and gauge are local heuristics, not model outputs. CLV and churn below start as reference values; Calculate RFM requests predictions.</p>
+                        <div class="cv-snapshot-header">
+                          <span class="cv-snapshot-title">CUSTOMER VALUE SNAPSHOT</span>
+                          <span class="cv-info-badge" title="Scores &amp; gauge are interactive heuristics; Predicted CLV &amp; Churn Risk are model outputs from /api/predict.">
+                            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                              <circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/>
+                            </svg>
+                          </span>
+                        </div>
                         <div class="cv-scores-list">
 
                           <div class="cv-score-row">

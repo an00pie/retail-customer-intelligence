@@ -1475,6 +1475,14 @@ button, input, select, textarea {
   box-sizing: border-box;
 }
 
+.cv-snapshot-header {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  width: 100% !important;
+  margin-bottom: 2px;
+}
+
 .cv-snapshot-title {
   font-family: var(--font-mono, monospace);
   font-size: 9px;
@@ -1483,6 +1491,29 @@ button, input, select, textarea {
   color: #8e9693;
   text-transform: uppercase;
   text-align: left;
+  margin: 0;
+  line-height: 1;
+}
+
+.cv-info-badge {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  color: #71717a !important;
+  cursor: help !important;
+  transition: color 0.15s ease !important;
+  line-height: 1 !important;
+}
+
+.cv-info-badge:hover {
+  color: #d4d4d8 !important;
+}
+
+@media (max-width: 900px) {
+  .ov-rfm-grid {
+    grid-template-columns: 1fr !important;
+    gap: 14px !important;
+  }
 }
 
 .cv-scores-list {
