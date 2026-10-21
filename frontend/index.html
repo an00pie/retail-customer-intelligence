@@ -881,41 +881,136 @@
                   <button type="button" class="dash-action-pill" onclick="window.switchDashboardTab('dashboard')">← Back to Overview</button>
                 </div>
 
-                <div class="lookup-grid reveal-fade-up" style="margin-top: 10px;">
-                  <!-- Search Controller Card -->
-                  <div class="lookup-search-card">
-                    <div>
-                      <div style="font-size: 16px; font-weight: 800; color: #fff;">Find Customer Profile</div>
-                      <div style="font-size: 12.5px; color: var(--text-muted); margin-top: 4px;">
-                        Select a verified sample customer or enter any ID from the 5,942 profile store:
-                      </div>
+                <div class="lookup-3col-layout reveal-fade-up">
+                  <!-- Column 1: Find Customer (Search & Directory) -->
+                  <div class="lookup-col-find lookup-search-card">
+                    <div class="lookup-find-header">
+                      <div class="lookup-col-title">Find Customer</div>
+                      <div class="lookup-col-sub">Direct columnar search &amp; verified cohort directory:</div>
                     </div>
 
-                    <div class="quick-customer-pills">
-                      <button type="button" class="sample-id-pill active" data-id="15485" title="Champions">#15485 (Champ)</button>
-                      <button type="button" class="sample-id-pill" data-id="13748" title="At-Risk">#13748 (At-Risk)</button>
-                      <button type="button" class="sample-id-pill" data-id="12364" title="Loyal Customers">#12364 (Loyal)</button>
-                      <button type="button" class="sample-id-pill" data-id="16964" title="Lost / Churned">#16964 (Lost)</button>
-                      <button type="button" class="sample-id-pill" data-id="13269" title="Top Spending Champion">#13269</button>
-                      <button type="button" class="sample-id-pill" data-id="18229" title="High Frequency Champion">#18229</button>
-                      <button type="button" class="sample-id-pill" data-id="99999" title="Non-existent test ID">#99999 (404)</button>
-                    </div>
-
-                    <div class="search-input-wrapper">
+                    <div class="lookup-search-box">
+                      <svg class="lookup-search-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
                       <input type="text" class="lookup-input" id="lookupCustIdInput" aria-label="Customer ID" placeholder="Enter Customer ID (e.g. 15485)" value="15485">
+                      <button type="button" class="lookup-clear-btn" id="lookupClearBtn" aria-label="Clear customer search" title="Clear input">✕</button>
                       <button class="lookup-btn" id="lookupSearchBtn">Search</button>
                     </div>
 
-                    <div style="background: rgba(255,255,255,0.02); border: 1px solid var(--border-subtle); border-radius: var(--radius-md); padding: 16px;">
-                      <div style="font-size: 12px; font-weight: 700; color: #fff; margin-bottom: 6px;">Serving Store Status: Online (NoSQL Columnar Store)</div>
-                      <div style="font-size: 11.5px; color: var(--text-muted); line-height: 1.5;">
-                        Primary store: <code>customer_profile</code> column families: <code>info:</code>, <code>pred:</code>, <code>meta:</code>. Fallback: High-performance embedded KV cache.
+                    <!-- Segment Filter Chips -->
+                    <div class="lookup-filter-chips" id="lookupSegmentFilterChips" role="tablist" aria-label="Filter top customers by segment">
+                      <button type="button" class="lookup-chip active" data-filter="all">All</button>
+                      <button type="button" class="lookup-chip" data-filter="champions">Champions</button>
+                      <button type="button" class="lookup-chip" data-filter="loyal">Loyal</button>
+                      <button type="button" class="lookup-chip" data-filter="at-risk">At-Risk</button>
+                      <button type="button" class="lookup-chip" data-filter="lost">Lost</button>
+                    </div>
+
+                    <!-- Section Label & Count -->
+                    <div class="lookup-section-heading">
+                      <span>TOP CUSTOMERS</span>
+                      <span class="lookup-count-badge" id="lookupTopCustCount">6 profiles</span>
+                    </div>
+
+                    <!-- Top Customers List (Sample Pills with rich card styling) -->
+                    <div class="lookup-top-cust-list" id="lookupTopCustList">
+                      <button type="button" class="sample-id-pill lookup-cust-card active" data-id="15485" data-segment="champions" title="Customer #15485 (Champions)">
+                        <div class="lookup-card-avatar avatar-champ">15</div>
+                        <div class="lookup-card-info">
+                          <div class="lookup-card-topline">
+                            <span class="lookup-card-id">Customer #15485</span>
+                            <span class="lookup-tag tag-champ">Champions</span>
+                          </div>
+                          <div class="lookup-card-spend">Total Spend: <span class="spend-val">$5,624.51</span></div>
+                        </div>
+                        <span class="lookup-card-chevron">›</span>
+                      </button>
+
+                      <button type="button" class="sample-id-pill lookup-cust-card" data-id="13748" data-segment="at-risk" title="Customer #13748 (At-Risk)">
+                        <div class="lookup-card-avatar avatar-risk">13</div>
+                        <div class="lookup-card-info">
+                          <div class="lookup-card-topline">
+                            <span class="lookup-card-id">Customer #13748</span>
+                            <span class="lookup-tag tag-risk">At-Risk</span>
+                          </div>
+                          <div class="lookup-card-spend">Total Spend: <span class="spend-val">$948.20</span></div>
+                        </div>
+                        <span class="lookup-card-chevron">›</span>
+                      </button>
+
+                      <button type="button" class="sample-id-pill lookup-cust-card" data-id="12364" data-segment="loyal" title="Customer #12364 (Loyal Customers)">
+                        <div class="lookup-card-avatar avatar-loyal">12</div>
+                        <div class="lookup-card-info">
+                          <div class="lookup-card-topline">
+                            <span class="lookup-card-id">Customer #12364</span>
+                            <span class="lookup-tag tag-loyal">Loyal</span>
+                          </div>
+                          <div class="lookup-card-spend">Total Spend: <span class="spend-val">$1,313.10</span></div>
+                        </div>
+                        <span class="lookup-card-chevron">›</span>
+                      </button>
+
+                      <button type="button" class="sample-id-pill lookup-cust-card" data-id="16964" data-segment="lost" title="Customer #16964 (Lost / Churned)">
+                        <div class="lookup-card-avatar avatar-lost">16</div>
+                        <div class="lookup-card-info">
+                          <div class="lookup-card-topline">
+                            <span class="lookup-card-id">Customer #16964</span>
+                            <span class="lookup-tag tag-lost">Lost</span>
+                          </div>
+                          <div class="lookup-card-spend">Total Spend: <span class="spend-val">$248.50</span></div>
+                        </div>
+                        <span class="lookup-card-chevron">›</span>
+                      </button>
+
+                      <button type="button" class="sample-id-pill lookup-cust-card" data-id="13269" data-segment="champions" title="Customer #13269 (Top Spending Champion)">
+                        <div class="lookup-card-avatar avatar-champ">13</div>
+                        <div class="lookup-card-info">
+                          <div class="lookup-card-topline">
+                            <span class="lookup-card-id">Customer #13269</span>
+                            <span class="lookup-tag tag-champ">Champions</span>
+                          </div>
+                          <div class="lookup-card-spend">Total Spend: <span class="spend-val">$4,890.00</span></div>
+                        </div>
+                        <span class="lookup-card-chevron">›</span>
+                      </button>
+
+                      <button type="button" class="sample-id-pill lookup-cust-card" data-id="18229" data-segment="loyal" title="Customer #18229 (High Frequency Champion)">
+                        <div class="lookup-card-avatar avatar-loyal">18</div>
+                        <div class="lookup-card-info">
+                          <div class="lookup-card-topline">
+                            <span class="lookup-card-id">Customer #18229</span>
+                            <span class="lookup-tag tag-loyal">Loyal</span>
+                          </div>
+                          <div class="lookup-card-spend">Total Spend: <span class="spend-val">$3,210.40</span></div>
+                        </div>
+                        <span class="lookup-card-chevron">›</span>
+                      </button>
+
+                      <button type="button" class="sample-id-pill lookup-cust-card" data-id="99999" data-segment="all" title="Customer #99999 (Non-existent test ID)">
+                        <div class="lookup-card-avatar avatar-test">99</div>
+                        <div class="lookup-card-info">
+                          <div class="lookup-card-topline">
+                            <span class="lookup-card-id">Customer #99999</span>
+                            <span class="lookup-tag tag-test">Test 404</span>
+                          </div>
+                          <div class="lookup-card-spend">Status: <span class="spend-val">Honest 404 Record</span></div>
+                        </div>
+                        <span class="lookup-card-chevron">›</span>
+                      </button>
+                    </div>
+
+                    <div class="lookup-store-badge">
+                      <div class="lookup-store-dot-row">
+                        <span class="lookup-live-pulse"></span>
+                        <span class="lookup-store-title">Serving Store: Online (KV Columnar Store)</span>
+                      </div>
+                      <div class="lookup-store-desc">
+                        Primary: <code>customer_profile</code> columnar store (HBase/SQLite). Latency &lt; 1ms.
                       </div>
                     </div>
                   </div>
 
-                  <!-- Customer Profile Target -->
-                  <div id="customerProfileTarget">
+                  <!-- Center & Right Columns rendered into #customerProfileTarget -->
+                  <div id="customerProfileTarget" class="lookup-content-target">
                     <!-- Populated dynamically by dashflow.js -->
                   </div>
                 </div>

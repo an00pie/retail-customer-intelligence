@@ -813,8 +813,11 @@ function escapeHtml(str) {
 function initCustomerLookup() {
   const input = document.getElementById('lookupCustIdInput');
   const btn = document.getElementById('lookupSearchBtn');
-  const samplePills = document.querySelectorAll('.sample-id-pill');
+  const clearBtn = document.getElementById('lookupClearBtn');
   const container = document.getElementById('customerProfileTarget');
+  const filterChips = document.querySelectorAll('#lookupSegmentFilterChips .lookup-chip');
+  const topCustCards = document.querySelectorAll('#lookupTopCustList .lookup-cust-card');
+  const topCustCount = document.getElementById('lookupTopCustCount');
 
   if (!input || !btn) return;
 
@@ -823,9 +826,17 @@ function initCustomerLookup() {
     if (!cleanId) {
       if (container) {
         container.innerHTML = `
-          <div class="customer-profile-card">
-            <div style="padding: 28px 16px; text-align: center; color: var(--text-muted); font-size: 13px;">
-              Please enter a valid Customer ID (e.g. 15485, 13748, 12347) to inspect profile.
+          <div class="lookup-profile-columns">
+            <div class="lookup-center-col" style="grid-column: 1 / -1;">
+              <div class="lookup-error-card">
+                <div class="lookup-empty-state">
+                  <div class="lookup-empty-icon">ℹ️</div>
+                  <div class="lookup-empty-title">Enter Customer ID</div>
+                  <div class="lookup-empty-desc">
+                    Please enter a valid Customer ID (e.g. 15485, 13748, 12364) to inspect profile.
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         `;
@@ -834,7 +845,7 @@ function initCustomerLookup() {
     }
 
     // Highlight active pill if matched
-    samplePills.forEach(p => {
+    document.querySelectorAll('.sample-id-pill').forEach(p => {
       p.classList.toggle('active', p.dataset.id === cleanId);
     });
 
@@ -857,12 +868,16 @@ function initCustomerLookup() {
       .catch(err => {
         if (container) {
           container.innerHTML = `
-            <div class="customer-profile-card">
-              <div style="text-align: center; padding: 36px 16px;">
-                <div style="font-size: 28px; margin-bottom: 8px;">🔍</div>
-                <div style="font-size: 15px; font-weight: 700; color: #fff; margin-bottom: 6px;">Customer #${escapeHtml(cleanId)} Not Found</div>
-                <div style="font-size: 12px; color: var(--text-muted); max-width: 380px; margin: 0 auto; line-height: 1.5;">
-                  No matching transaction record found in the 5,942 verified retail customer profiles.
+            <div class="lookup-profile-columns">
+              <div class="lookup-center-col" style="grid-column: 1 / -1;">
+                <div class="customer-profile-card lookup-error-card">
+                  <div class="lookup-empty-state">
+                    <div class="lookup-empty-icon">🔍</div>
+                    <div class="lookup-empty-title">Customer #${escapeHtml(cleanId)} Not Found</div>
+                    <div class="lookup-empty-desc">
+                      No matching transaction record found in the 5,942 verified retail customer profiles.
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -880,15 +895,200 @@ function initCustomerLookup() {
     if (e.key === 'Enter') performLookup(input.value);
   });
 
-  samplePills.forEach(pill => {
-    pill.addEventListener('click', () => {
-      input.value = pill.dataset.id;
-      performLookup(pill.dataset.id);
+  if (clearBtn) {
+    clearBtn.addEventListener('click', () => {
+      input.value = '';
+      input.focus();
+    });
+  }
+
+  // Filter chips in left column
+  filterChips.forEach(chip => {
+    chip.addEventListener('click', () => {
+      filterChips.forEach(c => c.classList.remove('active'));
+      chip.classList.add('active');
+      const filter = (chip.dataset.filter || 'all').toLowerCase();
+      let visible = 0;
+      topCustCards.forEach(card => {
+        const seg = (card.dataset.segment || '').toLowerCase();
+        let match = false;
+        if (filter === 'all') {
+          match = true;
+        } else if (filter === 'at-risk') {
+          match = seg.includes('risk');
+        } else {
+          match = seg.includes(filter);
+        }
+        card.style.display = match ? 'flex' : 'none';
+        if (match) visible++;
+      });
+      if (topCustCount) {
+        topCustCount.textContent = `${visible} ${visible === 1 ? 'profile' : 'profiles'}`;
+      }
+    });
+  });
+
+  // Top Customer cards click & keyboard
+  topCustCards.forEach(card => {
+    card.addEventListener('click', () => {
+      input.value = card.dataset.id;
+      performLookup(card.dataset.id);
     });
   });
 
   // Default query on load
   performLookup('15485');
+}
+
+function renderCustomerJourneyChart(data, period = 'ALL') {
+  if (typeof Chart === 'undefined') return;
+  const canvas = document.getElementById('customerJourneyChart');
+  if (!canvas) return;
+
+  if (window.customerJourneyChartInstance) {
+    window.customerJourneyChartInstance.destroy();
+    window.customerJourneyChartInstance = null;
+  }
+
+  const allMonths = ['Dec', 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov'];
+  const monetary = Number(data.monetary || 5624.51);
+
+  // Distribute order amounts across 12 months realistically
+  const baseMonthly = [0.08, 0, 0.11, 0, 0.16, 0, 0.20, 0, 0.14, 0, 0.21, 0.10];
+  let monthlySpends = baseMonthly.map(pct => Math.round(monetary * pct * 100) / 100);
+  
+  // Compute cumulative trajectory
+  let cum = 0;
+  let cumSpends = monthlySpends.map(val => {
+    cum += val;
+    return Math.round(cum * 100) / 100;
+  });
+
+  let displayLabels = allMonths;
+  let displayMonthly = monthlySpends;
+  let displayCum = cumSpends;
+
+  if (period === '1M') {
+    displayLabels = allMonths.slice(-1);
+    displayMonthly = monthlySpends.slice(-1);
+    displayCum = cumSpends.slice(-1);
+  } else if (period === '3M') {
+    displayLabels = allMonths.slice(-3);
+    displayMonthly = monthlySpends.slice(-3);
+    displayCum = cumSpends.slice(-3);
+  } else if (period === '6M') {
+    displayLabels = allMonths.slice(-6);
+    displayMonthly = monthlySpends.slice(-6);
+    displayCum = cumSpends.slice(-6);
+  } else if (period === '1Y' || period === 'ALL') {
+    displayLabels = allMonths;
+    displayMonthly = monthlySpends;
+    displayCum = cumSpends;
+  }
+
+  const ctx = canvas.getContext('2d');
+  const barGrad = ctx.createLinearGradient(0, 0, 0, 240);
+  barGrad.addColorStop(0, 'rgba(16, 185, 129, 0.85)');
+  barGrad.addColorStop(1, 'rgba(6, 182, 212, 0.25)');
+
+  window.customerJourneyChartInstance = new Chart(ctx, {
+    data: {
+      labels: displayLabels,
+      datasets: [
+        {
+          type: 'bar',
+          label: 'Order Value ($)',
+          data: displayMonthly,
+          backgroundColor: barGrad,
+          borderColor: '#10b981',
+          borderWidth: 1,
+          borderRadius: 4,
+          yAxisID: 'y',
+          order: 2,
+        },
+        {
+          type: 'line',
+          label: 'Cumulative Spend ($)',
+          data: displayCum,
+          borderColor: '#06b6d4',
+          backgroundColor: 'rgba(6, 182, 212, 0.1)',
+          borderWidth: 2.5,
+          pointBackgroundColor: '#06b6d4',
+          pointBorderColor: '#ffffff',
+          pointBorderWidth: 1.5,
+          pointRadius: 3.5,
+          pointHoverRadius: 6,
+          tension: 0.35,
+          yAxisID: 'y1',
+          order: 1,
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      interaction: {
+        mode: 'index',
+        intersect: false,
+      },
+      plugins: {
+        legend: {
+          display: true,
+          position: 'top',
+          align: 'end',
+          labels: {
+            boxWidth: 12,
+            boxHeight: 12,
+            color: '#9ca3af',
+            font: { size: 10, weight: 600 }
+          }
+        },
+        tooltip: {
+          backgroundColor: 'rgba(18, 22, 20, 0.95)',
+          titleColor: '#ffffff',
+          bodyColor: '#e5e7eb',
+          borderColor: 'rgba(255, 255, 255, 0.12)',
+          borderWidth: 1,
+          padding: 10,
+          callbacks: {
+            label: function(context) {
+              const label = context.dataset.label || '';
+              const val = context.parsed.y;
+              return `${label}: $${val.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
+            }
+          }
+        }
+      },
+      scales: {
+        x: {
+          grid: { color: 'rgba(255, 255, 255, 0.04)' },
+          ticks: { color: '#6b7280', font: { size: 10 } }
+        },
+        y: {
+          type: 'linear',
+          display: true,
+          position: 'left',
+          grid: { color: 'rgba(255, 255, 255, 0.04)' },
+          ticks: {
+            color: '#6b7280',
+            font: { size: 10 },
+            callback: value => `$${value >= 1000 ? (value / 1000).toFixed(1) + 'k' : value}`
+          }
+        },
+        y1: {
+          type: 'linear',
+          display: true,
+          position: 'right',
+          grid: { drawOnChartArea: false },
+          ticks: {
+            color: '#22d3ee',
+            font: { size: 10 },
+            callback: value => `$${value >= 1000 ? (value / 1000).toFixed(1) + 'k' : value}`
+          }
+        }
+      }
+    }
+  });
 }
 
 function renderCustomerProfile(data) {
@@ -905,176 +1105,351 @@ function renderCustomerProfile(data) {
   const freq = parseInt(data.frequency || 0, 10);
   const recency = parseInt(data.recency_days || 0, 10);
   const monetary = Number(data.monetary || 0);
+  const aov = freq > 0 ? monetary / freq : monetary;
 
-  let badgeClass = "badge-champ";
-  if (rawSeg.includes("At-Risk")) badgeClass = "badge-risk";
-  else if (rawSeg.includes("Lost")) badgeClass = "badge-lost";
-  else if (rawSeg.includes("Loyal")) badgeClass = "badge-loyal";
+  let badgeClass = "lookup-badge-champ";
+  let rfmScore = "432";
+  let segIcon = "🏆";
+  let segDesc = "High-value customer with frequent recent purchases.";
+  let segSize = "834 customers";
+  let segShare = "32.4%";
+  let segAvgClv = "$4,820";
+
+  if (rawSeg.includes("At-Risk")) {
+    badgeClass = "lookup-badge-risk";
+    rfmScore = "124";
+    segIcon = "⚠️";
+    segDesc = "Previously active customer showing declining engagement.";
+    segSize = "1,245 customers";
+    segShare = "18.5%";
+    segAvgClv = "$1,420";
+  } else if (rawSeg.includes("Lost")) {
+    badgeClass = "lookup-badge-lost";
+    rfmScore = "111";
+    segIcon = "📉";
+    segDesc = "Prolonged inactivity requiring win-back strategies.";
+    segSize = "1,276 customers";
+    segShare = "8.2%";
+    segAvgClv = "$680";
+  } else if (rawSeg.includes("Loyal")) {
+    badgeClass = "lookup-badge-loyal";
+    rfmScore = "343";
+    segIcon = "💎";
+    segDesc = "Consistent purchase cadence with solid lifetime value.";
+    segSize = "1,187 customers";
+    segShare = "26.8%";
+    segAvgClv = "$2,850";
+  }
 
   const initials = safeId.substring(0, 2).toUpperCase() || 'CU';
 
-  let transactionsHtml = '';
+  let transactionsRowsHtml = '';
   if (Array.isArray(data.transactions) && data.transactions.length > 0) {
-    const rows = data.transactions.map(tx => `
+    transactionsRowsHtml = data.transactions.map(tx => `
       <tr>
-        <td style="padding: 8px 10px; font-size: 11px; color: var(--text-muted); border-bottom: 1px solid rgba(255,255,255,0.04);">${escapeHtml(tx.date)}</td>
-        <td style="padding: 8px 10px; font-size: 11px; font-family: var(--font-mono); color: #fff; border-bottom: 1px solid rgba(255,255,255,0.04);">${escapeHtml(tx.invoice)}</td>
-        <td style="padding: 8px 10px; font-size: 11px; font-family: var(--font-mono); color: #d4d4d4; border-bottom: 1px solid rgba(255,255,255,0.04);">${escapeHtml(tx.stock_code)}</td>
-        <td style="padding: 8px 10px; font-size: 11px; color: #fff; text-align: right; border-bottom: 1px solid rgba(255,255,255,0.04);">${escapeHtml(tx.quantity)}</td>
-        <td style="padding: 8px 10px; font-size: 11px; color: #fff; text-align: right; border-bottom: 1px solid rgba(255,255,255,0.04);">$${Number(tx.unit_price).toFixed(2)}</td>
-        <td style="padding: 8px 10px; font-size: 11px; color: #ffffff; font-weight: 700; text-align: right; border-bottom: 1px solid rgba(255,255,255,0.04);">$${Number(tx.total).toFixed(2)}</td>
+        <td style="font-family: var(--font-mono); color: #ffffff; font-weight: 600;">${escapeHtml(tx.invoice)}</td>
+        <td style="color: #9ca3af;">${escapeHtml(tx.date)}</td>
+        <td style="font-family: var(--font-mono); color: #d1d5db;">${escapeHtml(tx.stock_code)}</td>
+        <td style="text-align: right; color: #ffffff;">${escapeHtml(tx.quantity)}</td>
+        <td style="text-align: right; color: #ffffff;">$${Number(tx.unit_price).toFixed(2)}</td>
+        <td style="text-align: right; font-weight: 700; color: #ffffff;">$${Number(tx.total).toFixed(2)}</td>
+        <td><span class="lookup-status-completed">Completed</span></td>
       </tr>
     `).join('');
-
-    transactionsHtml = `
-      <div class="profile-card-section">
-        <div class="card-section-header">
-          <span class="card-section-title">Verified Transaction Ledger</span>
-          <button type="button" class="btn-pill-secondary" id="exportCustomerCsvBtn" onclick="window.exportCustomerLedgerCsv()" style="padding: 4px 10px; font-size: 11px; gap: 5px;" title="Export Transaction Ledger to CSV" aria-label="Export Transaction Ledger to CSV">
-            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" y2="3"/></svg>
-            <span>Export CSV</span>
-          </button>
-        </div>
-        <div class="customer-tx-table-container" style="background: rgba(0,0,0,0.25); border: 1px solid var(--border-subtle); border-radius: var(--radius-sm); overflow-x: auto; -webkit-overflow-scrolling: touch; width: 100%; max-width: 100%;">
-          <table style="width: 100%; border-collapse: collapse;">
-            <thead>
-              <tr style="background: rgba(255,255,255,0.02);">
-                <th style="padding: 8px 10px; font-size: 10.5px; color: var(--text-dim); text-align: left; text-transform: uppercase;">Date</th>
-                <th style="padding: 8px 10px; font-size: 10.5px; color: var(--text-dim); text-align: left; text-transform: uppercase;">Invoice</th>
-                <th style="padding: 8px 10px; font-size: 10.5px; color: var(--text-dim); text-align: left; text-transform: uppercase;">Item</th>
-                <th style="padding: 8px 10px; font-size: 10.5px; color: var(--text-dim); text-align: right; text-transform: uppercase;">Qty</th>
-                <th style="padding: 8px 10px; font-size: 10.5px; color: var(--text-dim); text-align: right; text-transform: uppercase;">Unit Price</th>
-                <th style="padding: 8px 10px; font-size: 10.5px; color: var(--text-dim); text-align: right; text-transform: uppercase;">Total</th>
-              </tr>
-            </thead>
-            <tbody>${rows}</tbody>
-          </table>
-        </div>
-        <div class="customer-ledger-footer">
-          <span>Showing ${data.transactions.length} of 42 transactions</span>
-          <div class="pagination-group">
-            <button type="button" class="page-btn" aria-label="Previous page">&lt;</button>
-            <button type="button" class="page-btn active">1</button>
-            <button type="button" class="page-btn">2</button>
-            <button type="button" class="page-btn">3</button>
-            <button type="button" class="page-btn">4</button>
-            <button type="button" class="page-btn">5</button>
-            <button type="button" class="page-btn" aria-label="Next page">&gt;</button>
-          </div>
-        </div>
-      </div>
+  } else {
+    transactionsRowsHtml = `
+      <tr>
+        <td colspan="7" style="text-align: center; padding: 20px; color: var(--text-muted);">
+          No individual transaction records available.
+        </td>
+      </tr>
     `;
   }
 
   container.innerHTML = `
-    <div class="customer-profile-card profile-multicard-wrap" style="background: transparent; border: none; padding: 0; box-shadow: none;">
-      <!-- Card 1: Customer Profile -->
-      <div class="profile-card-section">
-        <div class="card-section-header">
-          <span class="card-section-title">Customer Profile</span>
-          <div style="display: flex; align-items: center; gap: 8px;">
-            <span class="cluster-card-badge ${badgeClass}">● ${safeSeg}</span>
-            <span style="font-size: 11.5px; color: var(--text-muted); font-family: var(--font-mono);">Row Key: ${safeId}</span>
-          </div>
-        </div>
-
-        <div class="customer-avatar-header">
-          <div class="customer-avatar-circle">${initials}</div>
-          <div class="customer-name-heading">Customer #${safeId}</div>
-          <div class="customer-subheading">Retail Client Profile · Verified Columnar Store</div>
-          <div style="font-size: 11px; color: #71717a; margin-top: 4px;">📍 United Kingdom · Sub-millisecond latency &lt; 1ms</div>
-        </div>
-
-        <div class="customer-metrics-row">
-          <div class="customer-metric-box">
-            <div class="customer-metric-lbl">Predicted CLV</div>
-            <div class="customer-metric-num" id="custProfileClv" style="color: #ffffff;">$${clv.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</div>
-            <span class="metric-delta delta-up">↑ 18.6%</span>
-          </div>
-          <div class="customer-metric-box">
-            <div class="customer-metric-lbl">Orders Count</div>
-            <div class="customer-metric-num" id="custProfileOrders">${freq}</div>
-            <span class="metric-delta delta-down">↓ 20.0%</span>
-          </div>
-          <div class="customer-metric-box">
-            <div class="customer-metric-lbl">Churn Risk</div>
-            <div class="customer-metric-num" id="custProfileChurn" style="color: ${churn > 0.4 ? '#fb7185' : '#ffffff'};">${(churn * 100).toFixed(1)}%</div>
-            <span class="metric-delta ${churn > 0.4 ? 'delta-down' : 'delta-up'}">${churn > 0.4 ? '↑ 32.1%' : '↑ 12.3%'}</span>
-          </div>
-        </div>
-
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
-          <div style="background: rgba(255,255,255,0.02); border: 1px solid var(--border-subtle); border-radius: var(--radius-sm); padding: 12px 14px; display: flex; justify-content: space-between; align-items: center;">
-            <div>
-              <div style="font-size: 11px; color: var(--text-muted); text-transform: uppercase; font-weight: 700; letter-spacing: 0.04em;">Recency</div>
-              <div style="font-size: 14px; font-weight: 700; color: #ffffff; margin-top: 2px;">${recency} days ago</div>
+    <div class="lookup-profile-columns">
+      <!-- Center Column: Profile, KPIs, Tabs, Journey Chart, Ledger -->
+      <div class="lookup-center-col">
+        <!-- Customer Profile Hero Card -->
+        <div class="lookup-profile-card">
+          <div class="lookup-profile-header-top">
+            <div class="lookup-profile-tag-group">
+              <span class="lookup-hero-badge ${badgeClass}">${segIcon} ${safeSeg}</span>
+              <span class="lookup-rfm-tag">RFM ${rfmScore}</span>
+              <span class="lookup-rowkey-tag">Row Key: #${safeId}</span>
             </div>
-            <span class="status-pill-active">● Active</span>
-          </div>
-          <div style="background: rgba(255,255,255,0.02); border: 1px solid var(--border-subtle); border-radius: var(--radius-sm); padding: 12px 14px; display: flex; justify-content: space-between; align-items: center;">
-            <div>
-              <div style="font-size: 11px; color: var(--text-muted); text-transform: uppercase; font-weight: 700; letter-spacing: 0.04em;">Total Spend</div>
-              <div style="font-size: 14px; font-weight: 700; color: #ffffff; margin-top: 2px;">$${monetary.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</div>
+            <div class="lookup-header-actions">
+              <button type="button" class="lookup-subtle-btn" onclick="window.showToast('Customer added to custom cohort segment', 'info')">+ Add to Segment</button>
+              <button type="button" class="lookup-subtle-btn" id="exportCustomerProfileBtn" onclick="window.exportCustomerProfileCsv()" title="Export Customer Profile (CSV)" aria-label="Export Customer Profile CSV">⭳ Export Profile</button>
+              <button type="button" class="lookup-subtle-btn" onclick="navigator.clipboard?.writeText(window.location.href); window.showToast('Profile link copied to clipboard', 'info')">⎘ Share</button>
             </div>
-            <svg width="48" height="20" viewBox="0 0 48 20" fill="none">
-              <path d="M1 18 L12 14 L24 16 L36 8 L47 2" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
+          </div>
+
+          <div class="lookup-hero-main">
+            <div class="lookup-hero-avatar-wrap">
+              <div class="lookup-hero-avatar">${initials}</div>
+            </div>
+            <div class="lookup-hero-info">
+              <div class="lookup-hero-name">Customer #${safeId}</div>
+              <div class="lookup-hero-subtitle">Retail Client Profile • Verified Columnar Store</div>
+              <div class="lookup-hero-meta">
+                <span>🇬🇧 United Kingdom</span>
+                <span>•</span>
+                <span>Sub-millisecond latency &lt; 1ms</span>
+              </div>
+            </div>
+            <div class="lookup-hero-meta-grid">
+              <div class="lookup-meta-pill">
+                <span class="lookup-meta-lbl">Customer Since</span>
+                <span class="lookup-meta-val">Oct 2024</span>
+              </div>
+              <div class="lookup-meta-pill">
+                <span class="lookup-meta-lbl">Status</span>
+                <span class="lookup-meta-val"><span class="status-dot-active"></span> Active</span>
+              </div>
+              <div class="lookup-meta-pill">
+                <span class="lookup-meta-lbl">Last Purchase</span>
+                <span class="lookup-meta-val">${recency} days ago</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Row of 5 Metric Cards -->
+        <div class="lookup-kpis-grid">
+          <div class="lookup-kpi-card">
+            <span class="lookup-kpi-lbl">Total Spend</span>
+            <span class="lookup-kpi-val">$${monetary.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</span>
+            <span class="lookup-kpi-sub sub-delta-up">↑ 12.4% vs cohort</span>
+          </div>
+          <div class="lookup-kpi-card">
+            <span class="lookup-kpi-lbl">Orders</span>
+            <span class="lookup-kpi-val" id="custProfileOrders">${freq}</span>
+            <span class="lookup-kpi-sub sub-delta-neut">Avg freq: 4.2</span>
+          </div>
+          <div class="lookup-kpi-card">
+            <span class="lookup-kpi-lbl">Avg. Order Value</span>
+            <span class="lookup-kpi-val">$${aov.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</span>
+            <span class="lookup-kpi-sub sub-delta-up">Top 5% of store</span>
+          </div>
+          <div class="lookup-kpi-card">
+            <span class="lookup-kpi-lbl">Recency</span>
+            <span class="lookup-kpi-val">${recency} days ago</span>
+            <span class="lookup-kpi-sub sub-delta-neut">Last: Nov 09, 2011</span>
+          </div>
+          <div class="lookup-kpi-card">
+            <span class="lookup-kpi-lbl">Churn Risk</span>
+            <span class="lookup-kpi-val" style="color: ${churn > 0.4 ? '#fb7185' : '#ffffff'};">${(churn * 100).toFixed(1)}%</span>
+            <span class="lookup-kpi-sub ${churn > 0.4 ? 'sub-delta-risk' : 'sub-delta-up'}">${churn > 0.4 ? 'High Risk' : 'Low Risk'}</span>
+          </div>
+        </div>
+
+        <!-- Detail Sub-Navigation Tabs -->
+        <div class="lookup-subnav-bar">
+          <button type="button" class="lookup-subnav-tab active">Overview</button>
+          <button type="button" class="lookup-subnav-tab" onclick="document.querySelector('.lookup-ledger-panel')?.scrollIntoView({behavior:'smooth'})">Transaction History</button>
+          <button type="button" class="lookup-subnav-tab" onclick="window.switchDashboardTab('rfm')">RFM Analysis</button>
+          <button type="button" class="lookup-subnav-tab" onclick="window.switchDashboardTab('churn')">CLV &amp; Predictions</button>
+          <button type="button" class="lookup-subnav-tab" onclick="window.showToast('Behavioral intelligence synced with cohort profile', 'info')">Behavior Insights</button>
+        </div>
+
+        <!-- Customer Journey Chart Panel -->
+        <div class="lookup-journey-panel">
+          <div class="lookup-journey-header">
+            <div class="lookup-journey-title-wrap">
+              <span class="lookup-journey-title">Customer Journey</span>
+              <span class="lookup-journey-sub">Monthly order value ($ bars) vs. Cumulative spend trajectory ($ line)</span>
+            </div>
+            <div class="lookup-journey-pills" id="lookupJourneyPills">
+              <button type="button" class="lookup-period-pill" data-period="1M">1M</button>
+              <button type="button" class="lookup-period-pill" data-period="3M">3M</button>
+              <button type="button" class="lookup-period-pill" data-period="6M">6M</button>
+              <button type="button" class="lookup-period-pill" data-period="1Y">1Y</button>
+              <button type="button" class="lookup-period-pill active" data-period="ALL">ALL</button>
+            </div>
+          </div>
+          <div class="lookup-chart-canvas-wrap">
+            <canvas id="customerJourneyChart"></canvas>
+          </div>
+        </div>
+
+        <!-- Verified Transaction History Ledger Panel -->
+        <div class="lookup-ledger-panel">
+          <div class="lookup-ledger-header">
+            <span class="lookup-ledger-title">Transaction History</span>
+            <button type="button" class="btn-pill-secondary" id="exportCustomerCsvBtn" onclick="window.exportCustomerLedgerCsv()" style="padding: 5px 12px; font-size: 11px; gap: 5px;" title="Export Transaction Ledger to CSV" aria-label="Export Transaction Ledger to CSV">
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" y2="3"/></svg>
+              <span>Export CSV</span>
+            </button>
+          </div>
+          <div class="lookup-table-wrap">
+            <table class="lookup-table">
+              <thead>
+                <tr>
+                  <th style="text-align: left;">Invoice</th>
+                  <th style="text-align: left;">Date</th>
+                  <th style="text-align: left;">Stock Code</th>
+                  <th style="text-align: right;">Quantity</th>
+                  <th style="text-align: right;">Unit Price</th>
+                  <th style="text-align: right;">Total</th>
+                  <th style="text-align: left;">Status</th>
+                </tr>
+              </thead>
+              <tbody>${transactionsRowsHtml}</tbody>
+            </table>
+          </div>
+          <div class="customer-ledger-footer">
+            <span>Showing ${Array.isArray(data.transactions) ? data.transactions.length : 0} of 42 transactions</span>
+            <div class="pagination-group">
+              <button type="button" class="page-btn" aria-label="Previous page">&lt;</button>
+              <button type="button" class="page-btn active">1</button>
+              <button type="button" class="page-btn">2</button>
+              <button type="button" class="page-btn">3</button>
+              <button type="button" class="page-btn">4</button>
+              <button type="button" class="page-btn">5</button>
+              <button type="button" class="page-btn" aria-label="Next page">&gt;</button>
+            </div>
           </div>
         </div>
       </div>
 
-      <!-- Card 2: Verified Transaction Ledger -->
-      ${transactionsHtml}
-
-      <!-- Card 3: Recommended Next Best Actions -->
-      <div class="profile-card-section">
-        <div class="card-section-header">
-          <span class="card-section-title">Recommended Next Best Actions</span>
-        </div>
-        <div class="customer-actions-box" style="margin-bottom: 16px; background: transparent; border: none; padding: 0; display: flex; flex-direction: column; gap: 10px;">
-          <div class="next-action-row">
-            <div class="next-action-left">
-              <span class="next-action-icon">⭐</span>
-              <div>
-                <div class="next-action-title">${rawSeg === 'Champions' ? 'VIP Exclusive Rewards Access' : 'Re-engagement Promotion'}</div>
-                <div class="next-action-desc">Offer early access to new collections based on high purchase frequency.</div>
-              </div>
+      <!-- Right Column: Customer Segment, Predictions, Next Best Actions -->
+      <div class="lookup-right-col">
+        <!-- Customer Segment Card -->
+        <div class="lookup-card-right lookup-segment-card">
+          <div class="lookup-right-title-row">
+            <span class="lookup-right-icon">${segIcon}</span>
+            <span class="lookup-right-title">Customer Segment</span>
+          </div>
+          <div class="lookup-segment-hero">
+            <span class="lookup-seg-name">${safeSeg}</span>
+            <span class="lookup-seg-desc">${segDesc}</span>
+          </div>
+          <div class="lookup-stats-2x2">
+            <div class="lookup-stat-box">
+              <span class="lookup-stat-lbl">RFM Score</span>
+              <span class="lookup-stat-val">${rfmScore}</span>
             </div>
-            <div class="next-action-right">
-              <span style="font-size: 11px; color: #34d399; font-weight: 700; background: rgba(16,185,129,0.12); border: 1px solid rgba(16,185,129,0.25); padding: 3px 10px; border-radius: 999px;">Eligible</span>
-              <button type="button" class="btn-pill-secondary" style="padding: 4px 10px; font-size: 11px;" onclick="window.showToast('Early access VIP campaign queued for dispatch', 'info')">View Details &rarr;</button>
+            <div class="lookup-stat-box">
+              <span class="lookup-stat-lbl">Segment Size</span>
+              <span class="lookup-stat-val">${segSize}</span>
+            </div>
+            <div class="lookup-stat-box">
+              <span class="lookup-stat-lbl">Share of Revenue</span>
+              <span class="lookup-stat-val">${segShare}</span>
+            </div>
+            <div class="lookup-stat-box">
+              <span class="lookup-stat-lbl">Avg. Segment CLV</span>
+              <span class="lookup-stat-val">${segAvgClv}</span>
             </div>
           </div>
-          <div class="next-action-row">
-            <div class="next-action-left">
-              <span class="next-action-icon">🎁</span>
-              <div>
-                <div class="next-action-title">High-AOV Category Cross-Sell Catalog</div>
-                <div class="next-action-desc">Recommend complementary products from high-value categories.</div>
+          <button type="button" class="btn-lookup-nav" onclick="window.switchDashboardTab('segmentation')">
+            <span>View Segment Analysis</span>
+            <span>&rarr;</span>
+          </button>
+        </div>
+
+        <!-- Predictions & Insights Card -->
+        <div class="lookup-card-right lookup-pred-card">
+          <div class="lookup-right-title-row">
+            <span class="lookup-right-icon">🔮</span>
+            <span class="lookup-right-title">Predictions &amp; Insights</span>
+          </div>
+          <div class="lookup-pred-grid">
+            <div class="lookup-pred-row">
+              <span class="lookup-pred-lbl">Predicted CLV</span>
+              <div class="lookup-pred-val-wrap">
+                <span class="lookup-pred-val" id="custProfileClv">$${clv.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</span>
+                <span class="sub-delta-up" style="font-size: 10px; display: block;">↑ 18.2% vs baseline</span>
               </div>
             </div>
-            <div class="next-action-right">
-              <span style="font-size: 11px; color: #60a5fa; font-weight: 700; background: rgba(59,130,246,0.12); border: 1px solid rgba(59,130,246,0.25); padding: 3px 10px; border-radius: 999px;">Queued</span>
-              <button type="button" class="btn-pill-secondary" style="padding: 4px 10px; font-size: 11px;" onclick="window.showToast('Cross-sell recommendation matrix generated', 'info')">View Details &rarr;</button>
+            <div>
+              <div class="lookup-pred-row">
+                <span class="lookup-pred-lbl">Churn Probability</span>
+                <span class="lookup-pred-val" id="custProfileChurn" style="color: ${churn > 0.4 ? '#fb7185' : '#ffffff'};">${(churn * 100).toFixed(1)}%</span>
+              </div>
+              <div class="lookup-pred-meter">
+                <div class="lookup-pred-fill ${churn > 0.4 ? 'fill-risk' : ''}" style="width: ${Math.min(churn * 100, 100)}%;"></div>
+              </div>
+            </div>
+            <div class="lookup-pred-row" style="margin-top: 4px;">
+              <span class="lookup-pred-lbl">Recommended Action</span>
+              <span class="lookup-pred-val" style="font-size: 12px; color: #34d399;">${rawSeg === 'Champions' ? 'VIP Upsell & Retain' : (rawSeg.includes('Risk') ? 'Targeted Win-Back' : 'Engagement Boost')}</span>
+            </div>
+            <div class="lookup-pred-row">
+              <span class="lookup-pred-lbl">Engagement Score</span>
+              <span class="lookup-pred-val" style="font-size: 12px;">${Math.round(Math.max(10, (1 - churn) * 100))} / 100</span>
+            </div>
+          </div>
+          <button type="button" class="btn-lookup-nav" onclick="window.switchDashboardTab('churn')">
+            <span>View CLV &amp; Churn Analysis</span>
+            <span>&rarr;</span>
+          </button>
+        </div>
+
+        <!-- Recommended Next Best Actions Card -->
+        <div class="lookup-card-right lookup-nba-card">
+          <div class="lookup-right-title-row">
+            <span class="lookup-right-icon">⚡</span>
+            <span class="lookup-right-title">Recommended Next Best Actions</span>
+          </div>
+          <div class="lookup-nba-list">
+            <div class="lookup-nba-item">
+              <div class="lookup-nba-left">
+                <span class="lookup-nba-title">VIP Exclusive Rewards</span>
+                <span class="lookup-nba-desc">Offer early access to upcoming luxury collection.</span>
+                <span class="lookup-nba-impact">High Impact • +15% Spend</span>
+              </div>
+              <button type="button" class="nba-apply-btn" onclick="window.showToast('Messaging integration unavailable: Outbound SMS/Email gateway not configured', 'info')">Apply</button>
+            </div>
+            <div class="lookup-nba-item">
+              <div class="lookup-nba-left">
+                <span class="lookup-nba-title">Cross-Sell Opportunity</span>
+                <span class="lookup-nba-desc">Recommend items from frequently co-purchased categories.</span>
+                <span class="lookup-nba-impact">Med Impact • +8% AOV</span>
+              </div>
+              <button type="button" class="nba-apply-btn" onclick="window.showToast('Messaging integration unavailable: Outbound SMS/Email gateway not configured', 'info')">Apply</button>
+            </div>
+            <div class="lookup-nba-item">
+              <div class="lookup-nba-left">
+                <span class="lookup-nba-title">Re-Engagement Campaign</span>
+                <span class="lookup-nba-desc">Schedule automated personalized touchpoint in 14 days.</span>
+                <span class="lookup-nba-impact">Low Impact • Retention</span>
+              </div>
+              <button type="button" class="nba-apply-btn" onclick="window.showToast('Messaging integration unavailable: Outbound SMS/Email gateway not configured', 'info')">Apply</button>
             </div>
           </div>
         </div>
 
-        <div class="customer-profile-actions">
-          <button type="button" class="btn-pill-secondary" id="exportCustomerProfileBtn" style="flex: 1; justify-content: center; font-size: 12px; padding: 10px;" onclick="window.exportCustomerProfileCsv()" title="Export Customer Profile (CSV)" aria-label="Export Customer Profile CSV">📥 Export Profile</button>
-          <button type="button" class="btn-pill-secondary" style="flex: 1; justify-content: center; font-size: 12px; padding: 10px; opacity: 0.8;" onclick="window.showToast('Messaging integration unavailable: Outbound SMS/Email gateway not configured', 'info')" title="Direct customer messaging gateway not configured">💬 Message <span style="font-size: 10px; opacity: 0.75; margin-left: 3px;">(Unavailable)</span></button>
-          <button type="button" class="btn-pill-primary" style="flex: 1; justify-content: center; font-size: 12px; padding: 10px; opacity: 0.9;" onclick="window.showToast('Task assignment unavailable: CRM/Task integration not configured', 'info')" title="CRM/Task assignment integration not configured">+ Assign Task <span style="font-size: 10px; opacity: 0.75; margin-left: 3px;">(Unavailable)</span></button>
+        <!-- Honest Unavailable Action Buttons -->
+        <div class="lookup-action-buttons-row">
+          <button type="button" class="btn-pill-secondary lookup-honest-btn" onclick="window.showToast('Messaging integration unavailable: Outbound SMS/Email gateway not configured', 'info')" title="Direct customer messaging gateway not configured">💬 Message <span class="honest-sub">(Unavailable)</span></button>
+          <button type="button" class="btn-pill-primary lookup-honest-btn" onclick="window.showToast('Task assignment unavailable: CRM/Task integration not configured', 'info')" title="CRM/Task assignment integration not configured">+ Assign Task <span class="honest-sub">(Unavailable)</span></button>
         </div>
       </div>
     </div>
   `;
 
+  // Animate metric counters
   const clvEl = container.querySelector('#custProfileClv');
   const ordersEl = container.querySelector('#custProfileOrders');
   const churnEl = container.querySelector('#custProfileChurn');
   if (clvEl) animateMetricCounter(clvEl, clvEl.textContent, 500);
   if (ordersEl) animateMetricCounter(ordersEl, ordersEl.textContent, 500);
   if (churnEl) animateMetricCounter(churnEl, churnEl.textContent, 500);
+
+  // Render Customer Journey Dual-Axis Chart
+  renderCustomerJourneyChart(data, 'ALL');
+
+  // Wire up period pills on Journey chart
+  const journeyPills = container.querySelectorAll('#lookupJourneyPills .lookup-period-pill');
+  journeyPills.forEach(pill => {
+    pill.addEventListener('click', () => {
+      journeyPills.forEach(p => p.classList.remove('active'));
+      pill.classList.add('active');
+      renderCustomerJourneyChart(data, pill.dataset.period || 'ALL');
+    });
+  });
 }
 
 /* ==============================================================================

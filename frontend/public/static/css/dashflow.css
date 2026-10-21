@@ -6097,3 +6097,1162 @@ button.faq-header {
     .insight-dialog { padding: 20px 16px !important; }
   }
 }
+
+
+/* ==============================================================================
+   PREMIUM ENTERPRISE CUSTOMER LOOKUP 3-COLUMN REDESIGN (Reference media_179255)
+   ============================================================================== */
+
+.lookup-3col-layout {
+  display: grid;
+  grid-template-columns: 280px minmax(0, 1fr);
+  gap: 20px;
+  align-items: start;
+  width: 100%;
+}
+
+.lookup-col-find {
+  background: rgba(18, 22, 20, 0.75);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 14px;
+  padding: 18px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.04);
+}
+
+.lookup-find-header {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.lookup-col-title {
+  font-size: 15px;
+  font-weight: 700;
+  color: #ffffff;
+  letter-spacing: -0.01em;
+}
+
+.lookup-col-sub {
+  font-size: 11.5px;
+  color: #9ca3af;
+  line-height: 1.4;
+}
+
+.lookup-search-box {
+  position: relative;
+  display: flex;
+  align-items: center;
+  background: rgba(0, 0, 0, 0.45);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 9px;
+  padding: 4px 6px 4px 10px;
+  gap: 8px;
+  transition: all 0.2s ease;
+}
+
+.lookup-search-box:focus-within {
+  border-color: rgba(16, 185, 129, 0.6);
+  box-shadow: 0 0 14px rgba(16, 185, 129, 0.25);
+}
+
+.lookup-search-icon {
+  color: #6b7280;
+  flex-shrink: 0;
+}
+
+.lookup-col-find .lookup-input {
+  flex: 1;
+  min-width: 0;
+  background: transparent;
+  border: none;
+  border-radius: 0;
+  padding: 6px 0;
+  color: #ffffff;
+  font-size: 13px;
+  outline: none;
+  font-family: inherit;
+}
+
+.lookup-col-find .lookup-input::placeholder {
+  color: #6b7280;
+  font-size: 12px;
+}
+
+.lookup-clear-btn {
+  background: transparent;
+  border: none;
+  color: #6b7280;
+  font-size: 13px;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  padding: 0;
+  transition: all 0.15s ease;
+}
+
+.lookup-clear-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: #ffffff;
+}
+
+.lookup-col-find .lookup-btn {
+  background: #10b981;
+  color: #04120a;
+  font-weight: 700;
+  font-size: 12px;
+  padding: 6px 14px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 8px rgba(16, 185, 129, 0.35);
+  flex-shrink: 0;
+}
+
+.lookup-col-find .lookup-btn:hover {
+  background: #34d399;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.45);
+}
+
+.lookup-filter-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+
+.lookup-chip {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 999px;
+  color: #9ca3af;
+  font-size: 11px;
+  font-weight: 500;
+  padding: 4px 10px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.lookup-chip:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: #ffffff;
+}
+
+.lookup-chip.active {
+  background: rgba(16, 185, 129, 0.15);
+  border-color: rgba(16, 185, 129, 0.45);
+  color: #34d399;
+  font-weight: 700;
+}
+
+.lookup-section-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: #6b7280;
+  text-transform: uppercase;
+  margin-top: 4px;
+}
+
+.lookup-count-badge {
+  font-size: 10px;
+  color: #9ca3af;
+  background: rgba(255, 255, 255, 0.04);
+  padding: 2px 6px;
+  border-radius: 4px;
+  text-transform: none;
+  letter-spacing: normal;
+}
+
+.lookup-top-cust-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+/* Card Button in Top Customers list */
+.lookup-cust-card {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  cursor: pointer;
+  text-align: left;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: none;
+  font-family: inherit;
+}
+
+.lookup-cust-card:hover {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.14);
+  transform: translateX(2px);
+}
+
+.lookup-cust-card.active {
+  background: rgba(16, 185, 129, 0.12) !important;
+  border-color: rgba(16, 185, 129, 0.45) !important;
+  box-shadow: 0 4px 16px rgba(16, 185, 129, 0.15) !important;
+}
+
+.lookup-card-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  font-size: 12px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  color: #ffffff;
+}
+
+.avatar-champ {
+  background: linear-gradient(135deg, #059669 0%, #10b981 100%);
+  box-shadow: 0 0 10px rgba(16, 185, 129, 0.35);
+}
+
+.avatar-risk {
+  background: linear-gradient(135deg, #b45309 0%, #f59e0b 100%);
+  box-shadow: 0 0 10px rgba(245, 158, 11, 0.35);
+}
+
+.avatar-loyal {
+  background: linear-gradient(135deg, #0284c7 0%, #06b6d4 100%);
+  box-shadow: 0 0 10px rgba(6, 182, 212, 0.35);
+}
+
+.avatar-lost {
+  background: linear-gradient(135deg, #475569 0%, #64748b 100%);
+}
+
+.avatar-test {
+  background: #27272a;
+  border: 1px dashed rgba(255, 255, 255, 0.2);
+}
+
+.lookup-card-info {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.lookup-card-topline {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+}
+
+.lookup-card-id {
+  font-size: 12px;
+  font-weight: 700;
+  color: #ffffff;
+}
+
+.lookup-tag {
+  font-size: 9.5px;
+  font-weight: 700;
+  padding: 1.5px 6px;
+  border-radius: 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.tag-champ {
+  background: rgba(16, 185, 129, 0.15);
+  color: #34d399;
+  border: 1px solid rgba(16, 185, 129, 0.3);
+}
+
+.tag-risk {
+  background: rgba(245, 158, 11, 0.15);
+  color: #fbbf24;
+  border: 1px solid rgba(245, 158, 11, 0.3);
+}
+
+.tag-loyal {
+  background: rgba(6, 182, 212, 0.15);
+  color: #22d3ee;
+  border: 1px solid rgba(6, 182, 212, 0.3);
+}
+
+.tag-lost {
+  background: rgba(148, 163, 184, 0.15);
+  color: #cbd5e1;
+  border: 1px solid rgba(148, 163, 184, 0.3);
+}
+
+.tag-test {
+  background: rgba(255, 255, 255, 0.08);
+  color: #9ca3af;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.lookup-card-spend {
+  font-size: 11px;
+  color: #9ca3af;
+}
+
+.lookup-card-spend .spend-val {
+  color: #e5e7eb;
+  font-weight: 600;
+  font-family: var(--font-mono);
+}
+
+.lookup-card-chevron {
+  color: #6b7280;
+  font-size: 15px;
+  font-weight: 300;
+}
+
+/* Store Badge */
+.lookup-store-badge {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 8px;
+  padding: 10px 12px;
+  margin-top: 4px;
+}
+
+.lookup-store-dot-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 4px;
+}
+
+.lookup-live-pulse {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #10b981;
+  box-shadow: 0 0 8px #10b981;
+  animation: pulse-emerald 2s infinite;
+}
+
+@keyframes pulse-emerald {
+  0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); }
+  70% { transform: scale(1); box-shadow: 0 0 0 6px rgba(16, 185, 129, 0); }
+  100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+}
+
+.lookup-store-title {
+  font-size: 11px;
+  font-weight: 700;
+  color: #ffffff;
+}
+
+.lookup-store-desc {
+  font-size: 10.5px;
+  color: #9ca3af;
+  line-height: 1.45;
+}
+
+.lookup-store-desc code {
+  color: #34d399;
+  font-size: 10px;
+}
+
+/* Main Content Target & Grid */
+.lookup-content-target {
+  min-width: 0;
+  width: 100%;
+}
+
+.lookup-profile-columns {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 290px;
+  gap: 20px;
+  align-items: start;
+  width: 100%;
+}
+
+.lookup-center-col {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  min-width: 0;
+}
+
+.lookup-right-col {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  min-width: 0;
+}
+
+/* Center Profile Card */
+.lookup-profile-card {
+  background: rgba(18, 22, 20, 0.75);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 14px;
+  padding: 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.04);
+}
+
+.lookup-profile-header-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.lookup-profile-tag-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.lookup-hero-badge {
+  font-size: 11px;
+  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.lookup-badge-champ {
+  background: rgba(16, 185, 129, 0.15);
+  border: 1px solid rgba(16, 185, 129, 0.4);
+  color: #34d399;
+}
+
+.lookup-badge-risk {
+  background: rgba(245, 158, 11, 0.15);
+  border: 1px solid rgba(245, 158, 11, 0.4);
+  color: #fbbf24;
+}
+
+.lookup-badge-loyal {
+  background: rgba(6, 182, 212, 0.15);
+  border: 1px solid rgba(6, 182, 212, 0.4);
+  color: #22d3ee;
+}
+
+.lookup-badge-lost {
+  background: rgba(148, 163, 184, 0.15);
+  border: 1px solid rgba(148, 163, 184, 0.4);
+  color: #cbd5e1;
+}
+
+.lookup-rfm-tag {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: #e5e7eb;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 3px 8px;
+  border-radius: 6px;
+  font-family: var(--font-mono);
+}
+
+.lookup-rowkey-tag {
+  font-size: 11px;
+  color: #9ca3af;
+  font-family: var(--font-mono);
+}
+
+.lookup-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.lookup-subtle-btn {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #ffffff;
+  font-size: 11.5px;
+  font-weight: 600;
+  padding: 5px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  transition: all 0.18s ease;
+}
+
+.lookup-subtle-btn:hover {
+  background: rgba(255, 255, 255, 0.09);
+  border-color: rgba(255, 255, 255, 0.2);
+  transform: translateY(-1px);
+}
+
+/* Hero profile main section */
+.lookup-hero-main {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  flex-wrap: wrap;
+}
+
+.lookup-hero-avatar-wrap {
+  position: relative;
+  flex-shrink: 0;
+}
+
+.lookup-hero-avatar {
+  width: 58px;
+  height: 58px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 35%, #22c55e 0%, #10b981 45%, #064e3b 100%);
+  color: #ffffff;
+  font-size: 20px;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 0 20px rgba(16, 185, 129, 0.4), inset 0 2px 4px rgba(255, 255, 255, 0.3);
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  font-family: var(--font-display);
+}
+
+.lookup-hero-info {
+  flex: 1;
+  min-width: 200px;
+}
+
+.lookup-hero-name {
+  font-size: 20px;
+  font-weight: 800;
+  color: #ffffff;
+  letter-spacing: -0.01em;
+  margin-bottom: 2px;
+}
+
+.lookup-hero-subtitle {
+  font-size: 12px;
+  color: #9ca3af;
+  margin-bottom: 4px;
+}
+
+.lookup-hero-meta {
+  font-size: 11px;
+  color: #6b7280;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.lookup-hero-meta-grid {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-left: auto;
+}
+
+.lookup-meta-pill {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 8px;
+  padding: 8px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.lookup-meta-lbl {
+  font-size: 9.5px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #6b7280;
+}
+
+.lookup-meta-val {
+  font-size: 12.5px;
+  font-weight: 700;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.status-dot-active {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #10b981;
+  box-shadow: 0 0 6px #10b981;
+}
+
+/* 5 Metrics Row */
+.lookup-kpis-grid {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 10px;
+  width: 100%;
+}
+
+.lookup-kpi-card {
+  background: rgba(18, 22, 20, 0.75);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  padding: 14px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.04);
+}
+
+.lookup-kpi-lbl {
+  font-size: 11px;
+  font-weight: 600;
+  color: #9ca3af;
+}
+
+.lookup-kpi-val {
+  font-size: 18px;
+  font-weight: 800;
+  color: #ffffff;
+  font-family: var(--font-mono);
+  letter-spacing: -0.02em;
+}
+
+.lookup-kpi-sub {
+  font-size: 10px;
+  font-weight: 600;
+  margin-top: 2px;
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+}
+
+.sub-delta-up {
+  color: #34d399;
+}
+
+.sub-delta-neut {
+  color: #9ca3af;
+}
+
+.sub-delta-risk {
+  color: #fb7185;
+}
+
+/* Detail Navigation Sub-Tabs */
+.lookup-subnav-bar {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  padding-bottom: 2px;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.lookup-subnav-tab {
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid transparent;
+  color: #9ca3af;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 8px 14px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.2s ease;
+}
+
+.lookup-subnav-tab:hover {
+  color: #ffffff;
+}
+
+.lookup-subnav-tab.active {
+  color: #10b981;
+  border-bottom-color: #10b981;
+  font-weight: 700;
+}
+
+/* Customer Journey Panel */
+.lookup-journey-panel {
+  background: rgba(18, 22, 20, 0.75);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 14px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.04);
+}
+
+.lookup-journey-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.lookup-journey-title-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.lookup-journey-title {
+  font-size: 15px;
+  font-weight: 700;
+  color: #ffffff;
+}
+
+.lookup-journey-sub {
+  font-size: 11px;
+  color: #9ca3af;
+}
+
+.lookup-journey-pills {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.lookup-period-pill {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 6px;
+  color: #9ca3af;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 4px 9px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.lookup-period-pill:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: #ffffff;
+}
+
+.lookup-period-pill.active {
+  background: rgba(16, 185, 129, 0.2);
+  border-color: rgba(16, 185, 129, 0.5);
+  color: #34d399;
+  font-weight: 700;
+}
+
+.lookup-chart-canvas-wrap {
+  position: relative;
+  width: 100%;
+  height: 240px;
+}
+
+/* Ledger Panel */
+.lookup-ledger-panel {
+  background: rgba(18, 22, 20, 0.75);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 14px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.04);
+}
+
+.lookup-ledger-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.lookup-ledger-title {
+  font-size: 15px;
+  font-weight: 700;
+  color: #ffffff;
+}
+
+.lookup-table-wrap {
+  background: rgba(0, 0, 0, 0.35);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 8px;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  width: 100%;
+}
+
+.lookup-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 11.5px;
+}
+
+.lookup-table th {
+  padding: 9px 12px;
+  background: rgba(255, 255, 255, 0.03);
+  color: #9ca3af;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  white-space: nowrap;
+}
+
+.lookup-table td {
+  padding: 9px 12px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+  color: #d1d5db;
+  white-space: nowrap;
+}
+
+.lookup-table tr:last-child td {
+  border-bottom: none;
+}
+
+.lookup-table tr:hover td {
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.lookup-status-completed {
+  background: rgba(16, 185, 129, 0.12);
+  border: 1px solid rgba(16, 185, 129, 0.3);
+  color: #34d399;
+  font-size: 10px;
+  font-weight: 700;
+  padding: 2px 7px;
+  border-radius: 4px;
+}
+
+/* Right Column Cards */
+.lookup-card-right {
+  background: rgba(18, 22, 20, 0.75);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 14px;
+  padding: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.04);
+}
+
+.lookup-right-title-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.lookup-right-icon {
+  font-size: 16px;
+}
+
+.lookup-right-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: #ffffff;
+}
+
+.lookup-segment-hero {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.lookup-seg-name {
+  font-size: 18px;
+  font-weight: 800;
+  color: #ffffff;
+}
+
+.lookup-seg-desc {
+  font-size: 11.5px;
+  color: #9ca3af;
+  line-height: 1.45;
+}
+
+.lookup-stats-2x2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.lookup-stat-box {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 8px;
+  padding: 8px 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.lookup-stat-lbl {
+  font-size: 9.5px;
+  font-weight: 600;
+  color: #9ca3af;
+  text-transform: uppercase;
+}
+
+.lookup-stat-val {
+  font-size: 13px;
+  font-weight: 700;
+  color: #ffffff;
+  font-family: var(--font-mono);
+}
+
+.btn-lookup-nav {
+  width: 100%;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #ffffff;
+  font-size: 11.5px;
+  font-weight: 600;
+  padding: 8px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  transition: all 0.18s ease;
+}
+
+.btn-lookup-nav:hover {
+  background: rgba(255, 255, 255, 0.09);
+  border-color: rgba(255, 255, 255, 0.2);
+  transform: translateY(-1px);
+}
+
+/* Predictions Card */
+.lookup-pred-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.lookup-pred-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.lookup-pred-lbl {
+  font-size: 11px;
+  color: #9ca3af;
+}
+
+.lookup-pred-val-wrap {
+  text-align: right;
+}
+
+.lookup-pred-val {
+  font-size: 13.5px;
+  font-weight: 700;
+  color: #ffffff;
+  font-family: var(--font-mono);
+}
+
+.lookup-pred-meter {
+  width: 100%;
+  height: 6px;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 999px;
+  overflow: hidden;
+  margin-top: 4px;
+}
+
+.lookup-pred-fill {
+  height: 100%;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #10b981 0%, #06b6d4 100%);
+}
+
+.lookup-pred-fill.fill-risk {
+  background: linear-gradient(90deg, #f59e0b 0%, #fb7185 100%);
+}
+
+/* Next Best Actions */
+.lookup-nba-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.lookup-nba-item {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 8px;
+  padding: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.lookup-nba-left {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex: 1;
+  min-width: 0;
+}
+
+.lookup-nba-title {
+  font-size: 11.5px;
+  font-weight: 700;
+  color: #ffffff;
+}
+
+.lookup-nba-desc {
+  font-size: 10.5px;
+  color: #9ca3af;
+  line-height: 1.35;
+}
+
+.lookup-nba-impact {
+  font-size: 9.5px;
+  font-weight: 600;
+  color: #34d399;
+}
+
+.nba-apply-btn {
+  background: rgba(16, 185, 129, 0.15);
+  border: 1px solid rgba(16, 185, 129, 0.4);
+  color: #34d399;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 5px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  flex-shrink: 0;
+}
+
+.nba-apply-btn:hover {
+  background: #10b981;
+  color: #04120a;
+}
+
+/* Action Buttons row (honest unavailable) */
+.lookup-action-buttons-row {
+  display: flex;
+  gap: 8px;
+  margin-top: 4px;
+}
+
+.lookup-honest-btn {
+  flex: 1;
+  justify-content: center;
+  font-size: 11.5px;
+  padding: 9px;
+  border-radius: 8px;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.honest-sub {
+  font-size: 9.5px;
+  opacity: 0.75;
+}
+
+/* Empty / Error state */
+.lookup-error-card {
+  padding: 48px 24px;
+  text-align: center;
+  background: rgba(18, 22, 20, 0.75);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 14px;
+}
+
+.lookup-empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.lookup-empty-icon {
+  font-size: 32px;
+  margin-bottom: 4px;
+}
+
+.lookup-empty-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: #ffffff;
+}
+
+.lookup-empty-desc {
+  font-size: 12px;
+  color: #9ca3af;
+  max-width: 380px;
+  line-height: 1.5;
+}
+
+/* Responsive Breakpoints */
+@media (max-width: 1200px) {
+  .lookup-3col-layout {
+    grid-template-columns: 260px minmax(0, 1fr);
+  }
+  .lookup-profile-columns {
+    grid-template-columns: 1fr;
+  }
+  .lookup-kpis-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 900px) {
+  .lookup-3col-layout {
+    grid-template-columns: 1fr;
+  }
+  .lookup-kpis-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .lookup-hero-main {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .lookup-hero-meta-grid {
+    margin-left: 0;
+    width: 100%;
+  }
+}
+
+@media (max-width: 540px) {
+  .lookup-kpis-grid {
+    grid-template-columns: 1fr;
+  }
+  .lookup-meta-pill {
+    flex: 1;
+  }
+}
