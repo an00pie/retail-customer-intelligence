@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { QualitySummary } from './components/QualitySummary';
 import { api } from './lib/api';
 import { TrajectoryData, CohortSummary, User } from './types';
 import { ModelMetricsView } from './features/analytics/ModelMetricsView';
@@ -182,7 +181,6 @@ export const App: React.FC = () => {
 
         {/* Dynamic Tab Body */}
         <div className="workspace-tab-body">
-          <QualitySummary />
           {activeTab === 'operations' && (
             <iframe src="/api/v1/operations/workspace" title="Data quality, action queue, and campaign measurement" style={{ width: '100%', height: '850px', border: '1px solid #355347', borderRadius: '16px' }} />
           )}

@@ -32,10 +32,12 @@ def main():
                 page.goto(base_url + '/')
                 page.wait_for_function("typeof window.switchDashboardTab === 'function'")
                 assert not page.locator('#tab-operations').is_visible(), 'Operations should be a separate inactive section'
+                assert page.locator('.dash-content').get_by_text('Data freshness & quality', exact=True).count() == 0, 'Quality workspace must not appear on the dashboard'
                 page.locator('.nav-links [data-tab=operations]').click()
                 page.locator('#tab-operations').wait_for(state='visible')
                 assert not page.locator('#tab-dashboard').is_visible(), 'Dashboard should hide when operations opens'
                 assert page.locator('.nav-links [data-tab=operations]').get_attribute('aria-current') == 'page'
+                assert page.locator('#tab-operations').get_by_text('Trust & Operations', exact=True).is_visible()
                 page.locator('.nav-links [data-tab=dashboard]').click()
                 assert not page.locator('#tab-operations').is_visible()
                 page.goto(base_url + '/#operations')

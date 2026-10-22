@@ -25,20 +25,6 @@ function renderInferenceEvidence(result, target) {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-  const qualityHost = document.querySelector('.dash-content');
-  if (qualityHost) {
-    const quality = document.createElement('aside');
-    quality.setAttribute('aria-label', 'Data freshness and coverage');
-    quality.style.cssText = 'padding:12px;margin:12px 0;border:1px solid #355347;border-radius:10px;font-size:12px';
-    quality.textContent = 'Checking data freshness…';
-    qualityHost.prepend(quality);
-    fetch('/api/v1/operations/quality').then(response => {
-      if (!response.ok) throw new Error('Unavailable');
-      return response.json();
-    }).then(data => {
-      quality.textContent = `${data.source} · ${data.records} records · refresh ${data.refreshed_at || 'unknown'} · ${data.invalid_records} invalid · ${data.prediction_coverage || 0} stored predictions · ingestion ${data.ingestion?.status || 'not recorded'} · ${data.alerts.join('; ') || 'No configured quality alerts'}. Serving refresh is not the source transaction date.`;
-    }).catch(() => { quality.textContent = 'Data freshness evidence unavailable.'; });
-  }
   initCinematicIntro();
   initInteractiveGlobe();
   initHeroVideo();
