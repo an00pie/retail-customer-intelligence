@@ -421,10 +421,19 @@ function initSpaDashboardNavigation() {
 
   // Expose switchTab globally
   window.switchDashboardTab = switchTab;
-  if (window.location.hash === '#operations') switchTab('operations');
-  window.addEventListener('hashchange', () => {
-    if (window.location.hash === '#operations') switchTab('operations');
-  });
+
+  function handleUrlHash() {
+    const hash = (window.location.hash || '').replace(/^#/, '');
+    if (!hash) return;
+    const validTabs = ['dashboard', 'lookup', 'segmentation', 'rfm', 'churn', 'clv', 'simulator', 'operations', 'architecture', 'mining', 'faq'];
+    if (validTabs.includes(hash)) {
+      const target = (hash === 'simulator') ? 'clv' : hash;
+      switchTab(target);
+    }
+  }
+
+  handleUrlHash();
+  window.addEventListener('hashchange', handleUrlHash);
 
   // Global luxury Toast Notification System
   window.showToast = function(message, type = 'info') {
@@ -1984,7 +1993,7 @@ function initWhatIfSimulator() {
     } else {
       const el = document.getElementById('simCardBase');
       if (el) el.classList.add('active');
-      recInput.value = '25';
+      recInput.value = '76';
       freqInput.value = '6';
       spendInput.value = '1250';
       tenureInput.value = '300';

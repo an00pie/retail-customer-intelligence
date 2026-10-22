@@ -4,7 +4,7 @@ import { api } from '../../lib/api';
 import { formatCurrency, formatPercent } from '../../lib/formatters';
 
 export const SimulatorView: React.FC = () => {
-  const [recency, setRecency] = useState(25);
+  const [recency, setRecency] = useState(76);
   const [frequency, setFrequency] = useState(6);
   const [spend, setSpend] = useState(1250);
   const [tenure, setTenure] = useState(300);
@@ -151,22 +151,28 @@ export const SimulatorView: React.FC = () => {
       {/* Header */}
       <div className="dash-header-bar" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '12px' }}>
         <div>
-          <h2 style={{ fontSize: '20px', fontWeight: 700, color: '#fff', letterSpacing: '-0.02em' }}>
-            What-If Scenario Simulator &amp; Decision Support
-          </h2>
-          <p style={{ fontSize: '12.5px', color: '#8e9693', marginTop: '2px' }}>
-            Simulate customer behavior adjustments and project changes in segment classification, CLV, and churn risk
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <span style={{ width: '24px', height: '24px', borderRadius: '6px', background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.14)', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', color: '#fff' }}>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="m12 3-1.9 5.8a2 2 0 0 1-1.3 1.3L3 12l5.8 1.9a2 2 0 0 1 1.3 1.3L12 21l1.9-5.8a2 2 0 0 1 1.3-1.3L21 12l-5.8-1.9a2 2 0 0 1-1.3-1.3L12 3z"/></svg>
+            </span>
+            <h2 style={{ fontFamily: 'var(--font-display)', fontSize: '20px', fontWeight: 400, color: '#fff', letterSpacing: '0.04em' }}>
+              CLV FORECAST &amp; SCENARIO SIMULATOR
+            </h2>
+          </div>
+          <p style={{ fontSize: '12px', color: '#8e9693', marginTop: '4px' }}>
+            Model customer behavior, test scenarios, and forecast lifetime value<br />
+            <span style={{ fontSize: '11px', color: '#71717a' }}>Supervised Gradient Boosting Regressor (Cohort R² 0.5238, MAE $321.78)</span>
           </p>
         </div>
 
         <button
           type="button"
-          className="btn-pill-primary"
+          className="sim-primary-btn"
           onClick={() => setShowSaveModal(true)}
           disabled={!currentPrediction || loading}
-          style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', fontSize: '12px', padding: '8px 16px' }}
+          style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', fontSize: '11.5px', padding: '6px 14px' }}
         >
-          <span>Save Current Scenario</span>
+          <span>💾 Save Scenario</span>
         </button>
       </div>
 
