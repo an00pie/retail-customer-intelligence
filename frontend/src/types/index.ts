@@ -96,7 +96,22 @@ export interface RetentionMatrixData {
   average_m6_retention: number;
 }
 
+export interface GeminiExplanation {
+  provider: string;
+  model: string;
+  summary: string;
+  notice: string;
+  evidence_refs: string[];
+  evidence: Record<string, unknown>;
+}
+
 export interface PredictionResult {
+  inference_status?: 'available' | 'unavailable';
+  model_versions?: Record<string, string>;
+  trained_data_timestamp?: string | null;
+  trained_data_timestamp_status?: string;
+  feature_inputs?: Record<string, number>;
+  drivers?: { model: string; feature: string; value: number; global_importance: number; explanation: string }[];
   segment: string;
   predicted_clv: number;
   churn_probability: number;

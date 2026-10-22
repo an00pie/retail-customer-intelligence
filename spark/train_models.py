@@ -11,6 +11,8 @@ import sys
 import numpy as np
 import pandas as pd
 import joblib
+import hashlib
+from datetime import datetime, timezone
 
 from sklearn.cluster import KMeans
 from sklearn.preprocessing import StandardScaler
@@ -252,6 +254,19 @@ def train_and_evaluate():
     }
     with open(METRICS_JSON, "w") as f:
         json.dump(metrics, f, indent=2)
+    artifact_names = {"clv": "clv_regressor.joblib", "churn": "churn_classifier.joblib",
+                      "segmentation": "kmeans_segmentation.joblib", "scaler": "rfm_scaler.joblib",
+                      "mapping": "segment_mapping.json"}
+    versions = {}
+    for name, filename in artifact_names.items():
+        with open(os.path.join("models", filename), "rb") as artifact:
+            versions[name] = hashlib.sha256(artifact.read()).hexdigest()
+    with open("models/training_metadata.json", "w") as metadata:
+        json.dump({"trained_at": datetime.now(timezone.utc).isoformat(),
+                   "trained_data_timestamp": max_date.isoformat(),
+                   "observation_cutoff": cutoff_date.isoformat(),
+                   "source": CLEAN_TX_PARQUET, "source_rows": len(tx_df),
+                   "model_versions": versions}, metadata, indent=2)
 
     # 8. Save Final Predictions Table
     print(f"Saving predictions to {PREDICTIONS_CSV} and {PREDICTIONS_PARQUET}...")

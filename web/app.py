@@ -13,6 +13,7 @@ import os
 import sys
 import json
 import joblib
+import hashlib
 import numpy as np
 import pandas as pd
 from datetime import datetime, timezone
@@ -81,6 +82,28 @@ def predict_customer(recency_days: int, frequency: int, total_spend: float, tenu
     total_spend = max(0.0, float(total_spend))
     tenure_days = max(0, int(tenure_days))
     aov = round(total_spend / frequency, 2)
+    evidence = {
+        "inference_status": "unavailable",
+        "trained_data_timestamp": None,
+        "trained_data_timestamp_status": "Not recorded in existing training artifacts",
+        "feature_inputs": {"recency_days": recency_days, "frequency": frequency,
+                           "total_spend": total_spend, "tenure_days": tenure_days, "avg_order_value": aov},
+        "model_versions": {},
+        "drivers": [],
+    }
+    for name, path in (("clv", CLV_MODEL_PATH), ("churn", CHURN_MODEL_PATH), ("segmentation", KMEANS_PATH), ("scaler", SCALER_PATH), ("mapping", MAPPING_PATH)):
+        if os.path.exists(path):
+            with open(path, "rb") as artifact:
+                evidence["model_versions"][name] = hashlib.sha256(artifact.read()).hexdigest()
+    try:
+        with open(os.path.join(MODELS_DIR, "training_metadata.json")) as metadata:
+            training = json.load(metadata)
+        if training.get("model_versions") == evidence["model_versions"]:
+            evidence["trained_data_timestamp"] = training.get("trained_data_timestamp")
+            evidence["trained_data_timestamp_status"] = "Source transaction end date, verified against model artifact hashes"
+            evidence["trained_at"] = training.get("trained_at")
+    except (OSError, ValueError):
+        pass
 
     if models:
         try:
@@ -108,6 +131,13 @@ def predict_customer(recency_days: int, frequency: int, total_spend: float, tenu
             churn_prob = max(0.0, min(1.0, churn_prob))
 
             return {
+                **evidence,
+                "inference_status": "available",
+                "drivers": [{"model": target, "feature": key, "value": float(features_df.iloc[0][key]),
+                             "global_importance": float(importance),
+                             "explanation": "Global training importance; not a signed explanation of this individual prediction."}
+                            for target in ("clv", "churn")
+                            for key, importance in zip(features_df.columns, models[target].feature_importances_)],
                 "segment": segment_name,
                 "predicted_clv": round(pred_clv, 2),
                 "churn_probability": round(churn_prob, 4),
@@ -118,24 +148,14 @@ def predict_customer(recency_days: int, frequency: int, total_spend: float, tenu
                 "avg_order_value": round(aov, 2)
             }
         except Exception as e:
-            print(f"[WARN] Prediction error, using mathematical heuristic: {e}")
-
-    # Fallback heuristic based on verified model metrics
-    seg = "Loyal Customers"
-    if recency_days < 35 and (frequency >= 10 or total_spend >= 3000):
-        seg = "Champions"
-    elif recency_days > 180 and total_spend >= 1500:
-        seg = "At-Risk"
-    elif recency_days > 300:
-        seg = "Lost / Churned"
-
-    clv_val = max(0.0, total_spend * 0.45 + (1 - recency_days / 700) * 200)
-    churn_val = min(0.95, max(0.05, (recency_days / 365) * 0.65 + 0.1))
+            print(f"[WARN] Trained inference unavailable: {type(e).__name__}")
 
     return {
-        "segment": seg,
-        "predicted_clv": round(clv_val, 2),
-        "churn_probability": round(churn_val, 4),
+        **evidence,
+        "error": "Trained inference is unavailable. No fallback estimate was produced.",
+        "segment": None,
+        "predicted_clv": None,
+        "churn_probability": None,
         "recency_days": int(recency_days),
         "frequency": int(frequency),
         "monetary": round(float(total_spend), 2),
@@ -173,13 +193,15 @@ init_db()
 
 from web.api_v1 import api_v1
 app.register_blueprint(api_v1)
+from web.operations import operations
+app.register_blueprint(operations)
 
 import re
 
 @app.after_request
 def add_cors_headers(response):
     response.headers["Access-Control-Allow-Origin"] = "*"
-    response.headers["Access-Control-Allow-Methods"] = "GET, POST, OPTIONS, HEAD"
+    response.headers["Access-Control-Allow-Methods"] = "GET, POST, PATCH, DELETE, OPTIONS, HEAD"
     response.headers["Access-Control-Allow-Headers"] = "Content-Type, Authorization, X-Requested-With"
     return response
 
@@ -300,7 +322,7 @@ def api_predict():
         return jsonify({"error": "Request must have Content-Type: application/json"}), 400
 
     data = request.get_json(silent=True)
-    if data is None:
+    if not isinstance(data, dict):
         return jsonify({"error": "Malformed JSON payload"}), 400
 
     try:
@@ -313,14 +335,14 @@ def api_predict():
         freq = int(freq_val)
         spend = float(spend_val)
         tenure = int(tenure_val)
-    except (ValueError, TypeError):
+    except (ValueError, TypeError, OverflowError):
         return jsonify({"error": "Feature values must be valid numbers"}), 400
 
-    if recency < 0 or freq < 1 or spend < 0.0 or tenure < 0:
+    if not np.isfinite(spend) or recency < 0 or freq < 1 or spend < 0.0 or tenure < 0:
         return jsonify({"error": "Feature values must be non-negative (frequency must be >= 1)"}), 400
 
     pred = predict_customer(recency, freq, spend, tenure)
-    return jsonify(pred)
+    return jsonify(pred), (200 if pred["inference_status"] == "available" else 503)
 
 @app.route("/api/metrics")
 def api_metrics():

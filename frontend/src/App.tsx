@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { QualitySummary } from './components/QualitySummary';
 import { api } from './lib/api';
 import { TrajectoryData, CohortSummary, User } from './types';
 import { ModelMetricsView } from './features/analytics/ModelMetricsView';
@@ -135,6 +136,7 @@ export const App: React.FC = () => {
             { id: 'simulator', label: 'What-If Simulator', count: 'Real-Time' },
             { id: 'datasets', label: 'Dataset Ingestion', count: 'CSV' },
             { id: 'recommendations', label: 'Action Playbooks', count: null },
+            { id: 'operations', label: 'Trust & Operations', count: null },
           ].map((t) => {
             const isActive = activeTab === t.id;
             return (
@@ -180,6 +182,10 @@ export const App: React.FC = () => {
 
         {/* Dynamic Tab Body */}
         <div className="workspace-tab-body">
+          <QualitySummary />
+          {activeTab === 'operations' && (
+            <iframe src="/api/v1/operations/workspace" title="Data quality, action queue, and campaign measurement" style={{ width: '100%', height: '850px', border: '1px solid #355347', borderRadius: '16px' }} />
+          )}
           {activeTab === 'dashboard' && (
             <DashboardView
               loading={trajectoryLoading}

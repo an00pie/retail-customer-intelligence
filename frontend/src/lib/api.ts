@@ -215,6 +215,12 @@ class ApiClient {
   }
 
   // --- ML Predictions ---
+  async explainPrediction(inputs: { recency_days: number; frequency: number; total_spend: number; tenure_days: number }): Promise<import('../types').GeminiExplanation> {
+    return this.request<import('../types').GeminiExplanation>('/operations/explain-prediction', {
+      method: 'POST', body: JSON.stringify(inputs),
+    });
+  }
+
   async getModelMetrics(): Promise<ModelEvaluationMetrics> {
     const result = await this.compatible<ModelEvaluationMetrics | ModelEvaluationMetrics['metrics']>('/predictions/metrics', '/api/metrics');
     return 'metrics' in result ? result as ModelEvaluationMetrics : { metrics: result };

@@ -181,7 +181,9 @@ def dashboard_kpis():
         aov_growth = round(((current_aov - previous_aov) / previous_aov * 100), 2) if previous_aov else 0.0
     else:
         revenue_growth = orders_growth = aov_growth = 0.0
+    from web.operations import quality_report
     return jsonify({
+        "quality": quality_report(),
         "total_customers": total_cust,
         "total_orders": int(round(total_orders)),
         "total_revenue": round(total_spend, 2),

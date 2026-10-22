@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { PredictionResult, SavedScenario } from '../../types';
+import { PredictionResult, SavedScenario, GeminiExplanation } from '../../types';
 import { api } from '../../lib/api';
 import { formatCurrency, formatPercent } from '../../lib/formatters';
 
@@ -11,6 +11,8 @@ export const SimulatorView: React.FC = () => {
 
   const [prediction, setPrediction] = useState<PredictionResult | null>(null);
   const [loading, setLoading] = useState(false);
+  const [explaining, setExplaining] = useState(false);
+  const [explanation, setExplanation] = useState<{ key: string; result?: GeminiExplanation; error?: string } | null>(null);
   const [scenarios, setScenarios] = useState<SavedScenario[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [scenarioError, setScenarioError] = useState<string | null>(null);
@@ -114,6 +116,35 @@ export const SimulatorView: React.FC = () => {
   return (
     <div className="insight-view" style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
       {error && <p role="alert">Prediction unavailable: {error}</p>}
+      <section className="insight-panel" aria-label="Gemini prediction explanation" style={{ padding: '16px' }}>
+        <button type="button" className="btn-pill-primary" disabled={!currentPrediction || loading || explaining} onClick={async () => {
+          const key = inputKey;
+          setExplaining(true);
+          setExplanation(null);
+          try {
+            const result = await api.explainPrediction({ recency_days: recency, frequency, total_spend: spend, tenure_days: tenure });
+            setExplanation({ key, result });
+          } catch (error: any) {
+            setExplanation({ key, error: error.message || 'Explanation unavailable' });
+          } finally { setExplaining(false); }
+        }}>{explaining ? 'Requesting explanation…' : 'Explain with Gemini'}</button>
+        <p style={{ fontSize: '12px' }}>Sign in to explain numeric feature inputs and computed results. Customer identity and notes are excluded.</p>
+        <div aria-live="polite">
+          {explanation?.key === inputKey && explanation.error && <p>{explanation.error}</p>}
+          {explanation?.key === inputKey && explanation.result && <>
+            <p>{explanation.result.summary}</p><p style={{ fontSize: '12px' }}>{explanation.result.notice}</p>
+            <details><summary>Gemini model &amp; evidence references</summary><pre style={{ whiteSpace: 'pre-wrap', overflowWrap: 'anywhere', fontSize: '11px' }}>{JSON.stringify(explanation.result, null, 2)}</pre></details>
+          </>}
+        </div>
+      </section>
+      {currentPrediction && (
+        <details className="insight-panel" style={{ padding: '16px', overflowWrap: 'anywhere' }}>
+          <summary>Model provenance, inputs &amp; driver evidence</summary>
+          <p>Inference: {currentPrediction.inference_status || 'not reported'}. Training data timestamp: {currentPrediction.trained_data_timestamp || 'not recorded'}.</p>
+          <p>{currentPrediction.trained_data_timestamp_status}</p>
+          <pre style={{ whiteSpace: 'pre-wrap', fontSize: '11px' }}>{JSON.stringify({ model_versions: currentPrediction.model_versions, feature_inputs: currentPrediction.feature_inputs, drivers: currentPrediction.drivers }, null, 2)}</pre>
+        </details>
+      )}
       {scenarioError && <p role="alert">Scenario service: {scenarioError}</p>}
       {actionError && <p role="alert">Scenario action failed: {actionError}</p>}
       

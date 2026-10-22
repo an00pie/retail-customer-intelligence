@@ -4,7 +4,41 @@
  * interactive RFM calculator, live customer lookup API, and Chart.js spline charts.
  */
 
+function renderInferenceEvidence(result, target) {
+  if (!target) return;
+  const host = target.closest('.sim-results-card, .overview-card') || target.parentElement;
+  let details = host.querySelector('.inference-evidence');
+  if (!details) {
+    details = document.createElement('details');
+    details.className = 'inference-evidence';
+    details.style.cssText = 'margin:12px 0;font-size:12px;overflow-wrap:anywhere';
+    const summary = document.createElement('summary');
+    summary.textContent = 'Model provenance, inputs & driver evidence';
+    details.append(summary, document.createElement('pre'));
+    details.lastChild.style.cssText = 'white-space:pre-wrap;font-size:11px';
+    host.append(details);
+  }
+  details.lastChild.textContent = JSON.stringify({inference_status: result.inference_status,
+    model_versions: result.model_versions, trained_data_timestamp: result.trained_data_timestamp,
+    timestamp_status: result.trained_data_timestamp_status, feature_inputs: result.feature_inputs,
+    drivers: result.drivers}, null, 2);
+}
+
 document.addEventListener('DOMContentLoaded', () => {
+  const qualityHost = document.querySelector('.dash-content');
+  if (qualityHost) {
+    const quality = document.createElement('aside');
+    quality.setAttribute('aria-label', 'Data freshness and coverage');
+    quality.style.cssText = 'padding:12px;margin:12px 0;border:1px solid #355347;border-radius:10px;font-size:12px';
+    quality.textContent = 'Checking data freshness…';
+    qualityHost.prepend(quality);
+    fetch('/api/v1/operations/quality').then(response => {
+      if (!response.ok) throw new Error('Unavailable');
+      return response.json();
+    }).then(data => {
+      quality.textContent = `${data.source} · ${data.records} records · refresh ${data.refreshed_at || 'unknown'} · ${data.invalid_records} invalid · ${data.prediction_coverage || 0} stored predictions · ingestion ${data.ingestion?.status || 'not recorded'} · ${data.alerts.join('; ') || 'No configured quality alerts'}. Serving refresh is not the source transaction date.`;
+    }).catch(() => { quality.textContent = 'Data freshness evidence unavailable.'; });
+  }
   initCinematicIntro();
   initInteractiveGlobe();
   initHeroVideo();
@@ -401,6 +435,10 @@ function initSpaDashboardNavigation() {
 
   // Expose switchTab globally
   window.switchDashboardTab = switchTab;
+  if (window.location.hash === '#operations') switchTab('operations');
+  window.addEventListener('hashchange', () => {
+    if (window.location.hash === '#operations') switchTab('operations');
+  });
 
   // Global luxury Toast Notification System
   window.showToast = function(message, type = 'info') {
@@ -770,6 +808,7 @@ function initRfmCalculator() {
       })
       .then(data => {
         if (data && data.segment) {
+          renderInferenceEvidence(data, clvEst);
           if (segmentBadge) {
             segmentBadge.textContent = data.segment;
             let bClass = 'badge-loyal';
@@ -784,10 +823,9 @@ function initRfmCalculator() {
         }
       })
       .catch(err => {
-        // Fallback approximation
-        const aov = monetary / Math.max(freq, 1);
-        const est = Math.max(50, (aov * freq * 0.45 * (1 - recency / 800)) + 120);
-        if (clvEst) clvEst.textContent = `$${Math.round(est).toLocaleString()}`;
+        if (clvEst) clvEst.textContent = 'Unavailable';
+        if (segmentBadge) segmentBadge.textContent = 'Inference unavailable';
+        renderInferenceEvidence({inference_status: 'unavailable'}, clvEst);
       });
     }, 150);
   }
@@ -1814,6 +1852,7 @@ function initWhatIfSimulator() {
           segTarget.style.opacity = '1';
           segTarget.textContent = res.segment;
         }
+        renderInferenceEvidence(res, clvTarget);
         const clvNum = parseFloat(res.predicted_clv);
         const churnNum = parseFloat(res.churn_probability);
 
@@ -1855,6 +1894,7 @@ function initWhatIfSimulator() {
       .catch(err => {
         if (requestId !== currentRequestId) return;
         console.warn('[What-If Simulator] Prediction request failed:', err);
+        renderInferenceEvidence({inference_status: 'unavailable'}, clvTarget);
         if (ordersTarget) ordersTarget.textContent = '--';
         if (segTarget) {
           segTarget.style.opacity = '1';
@@ -2535,13 +2575,18 @@ function initOverviewModules() {
         const elSeg = document.getElementById('ovRfmSeg');
         const elClv = document.getElementById('ovRfmClv');
         const elChurn = document.getElementById('ovRfmChurn');
+        if (res.inference_status !== 'available' || res.predicted_clv == null || res.churn_probability == null) throw new Error('Inference unavailable');
         if (elSeg) elSeg.textContent = res.segment || 'Loyal Customers';
+        renderInferenceEvidence(res, elClv);
         if (elClv) elClv.textContent = `$${Number(res.predicted_clv || 0).toFixed(2)}`;
         if (elChurn) elChurn.textContent = `${(Number(res.churn_probability || 0) * 100).toFixed(1)}%`;
       })
       .catch(() => {
         calcBtn.textContent = 'Calculate RFM →';
+        const elSeg = document.getElementById('ovRfmSeg');
+        if (elSeg) elSeg.textContent = 'Inference unavailable';
         const elClv = document.getElementById('ovRfmClv');
+        renderInferenceEvidence({inference_status: 'unavailable'}, elClv);
         const elChurn = document.getElementById('ovRfmChurn');
         if (elClv) elClv.textContent = 'Unavailable';
         if (elChurn) elChurn.textContent = 'Unavailable';
@@ -3294,4 +3339,3 @@ function initShopifyStoreAnalytics() {
       console.warn('[DashFlow] Shopify store analytics fetch notice:', err);
     });
 }
-

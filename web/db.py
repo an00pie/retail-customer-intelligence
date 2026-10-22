@@ -121,6 +121,8 @@ def init_db():
             VALUES (?, ?, ?, ?, ?)
         """, ("analyst", "analyst@retail-intelligence.internal", analyst_hash, "analyst", now_iso))
 
+    from web.operations import init_operations
+    init_operations(conn)
     conn.commit()
     conn.close()
 
