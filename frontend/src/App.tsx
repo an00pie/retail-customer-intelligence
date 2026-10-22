@@ -15,7 +15,7 @@ import { ArchitectureModal } from './components/modals/ArchitectureModal';
 import { CinematicIntro } from './features/intro/CinematicIntro';
 
 export const App: React.FC = () => {
-  const normalizeTab = (tab: string) => tab === 'rfm' ? 'segmentation' : ['dashboard', 'lookup', 'segmentation', 'clv', 'simulator', 'datasets', 'recommendations'].includes(tab) ? tab : 'dashboard';
+  const normalizeTab = (tab: string) => tab === 'rfm' ? 'segmentation' : ['dashboard', 'lookup', 'segmentation', 'clv', 'simulator', 'datasets', 'recommendations', 'operations'].includes(tab) ? tab : 'dashboard';
   const [activeTab, updateActiveTab] = useState<string>(() => normalizeTab(window.location.hash.slice(1)));
   const setActiveTab = (tab: string) => {
     const next = normalizeTab(tab);

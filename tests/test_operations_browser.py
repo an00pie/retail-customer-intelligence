@@ -48,6 +48,13 @@ def main():
                 page.locator('#tab-operations').wait_for(state='visible')
                 assert page.locator('#mobileNavToggle').get_attribute('aria-expanded') == 'false'
                 page.set_viewport_size({'width': 1440, 'height': 1000})
+                page.goto(base_url + '/app#operations')
+                page.get_by_title('Data quality, action queue, and campaign measurement').wait_for(state='visible')
+                assert page.locator('.workspace-nav-bar button[aria-current=page]').get_by_text('Trust & Operations', exact=True).is_visible()
+                page.get_by_role('button', name='Action Playbooks').click()
+                page.get_by_title('Data quality, action queue, and campaign measurement').wait_for(state='hidden')
+                page.get_by_role('button', name='Trust & Operations').click()
+                page.get_by_title('Data quality, action queue, and campaign measurement').wait_for(state='visible')
                 page.goto(f'http://127.0.0.1:{server.server_port}/api/v1/operations/workspace')
                 page.wait_for_function("document.querySelector('#quality').textContent.includes('records')")
                 page.locator('#login [name=username]').fill('admin')
