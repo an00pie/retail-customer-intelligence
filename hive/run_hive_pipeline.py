@@ -126,7 +126,11 @@ def run_pipeline():
         raw_prod_df = spark.read.option("header", "true").option("inferSchema", "false").csv(RAW_PROD_PATH)
     except Exception as e:
         print(f"[WARN] HDFS read failed ({e}). Falling back to local products CSV...")
-        raw_prod_df = spark.read.option("header", "true").option("inferSchema", "false").csv(LOCAL_PROD_PATH)
+        import glob
+        prod_candidates = sorted(glob.glob("data/raw/products/*/products.csv"))
+        prod_target = prod_candidates[-1] if prod_candidates else LOCAL_PROD_PATH
+        print(f"Loading scraped products from latest partition: {prod_target}")
+        raw_prod_df = spark.read.option("header", "true").option("inferSchema", "false").csv(prod_target)
 
     cat_enrich_df = (
         raw_prod_df.filter(F.col("category").isNotNull())

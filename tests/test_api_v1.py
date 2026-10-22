@@ -165,5 +165,44 @@ class ApiV1TestCase(unittest.TestCase):
         data = json.loads(res.data)
         self.assertGreaterEqual(len(data["reports"]), 3)
 
+    def test_shopify_stores_analytics(self):
+        for endpoint in ["/api/analytics/shopify-stores", "/api/v1/analytics/shopify-stores"]:
+            res = self.app.get(endpoint)
+            self.assertEqual(res.status_code, 200)
+            data = json.loads(res.data)
+            self.assertEqual(data["total_stores"], 5)
+            self.assertGreater(data["network_avg_churn_rate"], 30.0)
+            self.assertLess(data["network_avg_churn_rate"], 80.0)
+            self.assertEqual(len(data["stores"]), 5)
+            store_names = [s["store_name"] for s in data["stores"]]
+            for expected_name in ["Bulletproof", "ColourPop", "Allbirds", "UNTUCKit", "Taylor Stitch"]:
+                self.assertIn(expected_name, store_names)
+            for s in data["stores"]:
+                self.assertGreaterEqual(s["avg_churn_risk_pct"], 0.0)
+                self.assertLessEqual(s["avg_churn_risk_pct"], 100.0)
+                self.assertGreater(s["total_customers"], 500)
+                self.assertGreater(s["catalog_products"], 50)
+                self.assertIn("risk_level", s)
+                self.assertIn("primary_risk_driver", s)
+
+    def test_shopify_store_detail(self):
+        res = self.app.get("/api/analytics/shopify-stores/Bulletproof")
+        self.assertEqual(res.status_code, 200)
+        store = json.loads(res.data)
+        self.assertEqual(store["store_name"], "Bulletproof")
+        self.assertEqual(store["domain"], "shop.bulletproof.com")
+        self.assertIn("avg_churn_risk_pct", store)
+
+        res_404 = self.app.get("/api/analytics/shopify-stores/UnknownStore123")
+        self.assertEqual(res_404.status_code, 404)
+
+    def test_customer_store_filtering(self):
+        res = self.app.get("/api/v1/customers?store=Allbirds&limit=10")
+        self.assertEqual(res.status_code, 200)
+        data = json.loads(res.data)
+        self.assertGreaterEqual(data["total_count"], 1000)
+        for cust in data["customers"]:
+            self.assertEqual(cust.get("store"), "Allbirds")
+
 if __name__ == "__main__":
     unittest.main()

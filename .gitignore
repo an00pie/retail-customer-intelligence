@@ -11,7 +11,14 @@ __pycache__/
 
 # Large data directories and scratch files
 data/raw/
+data/warehouse/clean_transactions/
+data/warehouse/rfm_aggregates/
+data/warehouse/category_enrichment/
+data/warehouse/*.parquet
+data/warehouse/*.csv
 scratch/
+output/
+tmp/
 
 # Spark & local warehouse
 spark-warehouse/

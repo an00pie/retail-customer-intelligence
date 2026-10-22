@@ -23,6 +23,7 @@ BASE_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 sys.path.insert(0, BASE_DIR)
 
 from hbase.serving import CustomerServingLayer
+from web.db import init_db
 
 # Model Paths
 MODELS_DIR = os.path.join(BASE_DIR, "models")
@@ -168,6 +169,7 @@ app = Flask(
     template_folder=os.path.join(os.path.dirname(__file__), "templates"),
     static_folder=os.path.join(os.path.dirname(__file__), "static")
 )
+init_db()
 
 from web.api_v1 import api_v1
 app.register_blueprint(api_v1)
@@ -206,6 +208,13 @@ def serve_vite_assets(filename):
     if os.path.exists(os.path.join(dist_assets, filename)):
         return send_from_directory(dist_assets, filename)
     return jsonify({"error": "Asset not found"}), 404
+
+@app.route("/docs/<path:filename>")
+def serve_docs(filename):
+    docs_dir = os.path.join(BASE_DIR, "docs")
+    if os.path.exists(os.path.join(docs_dir, filename)):
+        return send_from_directory(docs_dir, filename)
+    return jsonify({"error": "Document not found"}), 404
 
 
 @app.route("/api/customer/<path:customer_id>")
@@ -468,6 +477,21 @@ def api_cohorts():
     """Returns aggregated cohort statistics from the authoritative customer profile store."""
     serving = get_serving()
     return jsonify(serving.get_cohort_summary())
+
+@app.route("/api/analytics/shopify-stores")
+def api_shopify_stores():
+    """Returns aggregated store-level metrics and churn risk rates for individual Shopify storefronts."""
+    serving = get_serving()
+    return jsonify(serving.get_shopify_store_analytics())
+
+@app.route("/api/analytics/shopify-stores/<store_name>")
+def api_shopify_store_detail(store_name: str):
+    """Returns granular analytics for a specific Shopify storefront."""
+    serving = get_serving()
+    store = serving.get_shopify_store_detail(store_name)
+    if not store:
+        return jsonify({"error": f"Shopify store '{store_name}' not found", "available_stores": ["Bulletproof", "ColourPop", "Allbirds", "UNTUCKit", "Taylor Stitch"]}), 404
+    return jsonify(store)
 
 @app.route("/api/analytics/segments/export/csv")
 def export_segments_csv():

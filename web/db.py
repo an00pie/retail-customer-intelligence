@@ -10,7 +10,9 @@ from typing import Dict, Any, List, Optional
 from werkzeug.security import generate_password_hash, check_password_hash
 
 BASE_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
-SQLITE_DB_PATH = os.path.join(BASE_DIR, "data", "serving", "customer_profile.db")
+SQLITE_DB_PATH = os.environ.get(
+    "RETAIL_DB_PATH", os.path.join(BASE_DIR, "data", "serving", "customer_profile.db")
+)
 
 def get_db_connection():
     """Returns an open SQLite database connection with Row factory."""
@@ -82,6 +84,28 @@ def init_db():
         )
     """)
 
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS auth_sessions (
+            token_hash TEXT PRIMARY KEY,
+            user_id INTEGER NOT NULL,
+            created_at TEXT NOT NULL,
+            expires_at TEXT NOT NULL,
+            FOREIGN KEY (user_id) REFERENCES users(id)
+        )
+    """)
+
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS customer_notes (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            customer_id TEXT NOT NULL,
+            user_id INTEGER,
+            note TEXT NOT NULL,
+            created_at TEXT NOT NULL,
+            FOREIGN KEY (user_id) REFERENCES users(id)
+        )
+    """)
+    cursor.execute("CREATE INDEX IF NOT EXISTS idx_customer_notes_customer ON customer_notes(customer_id)")
+
     # Seed default demonstration user if none exists
     cursor.execute("SELECT COUNT(*) FROM users")
     if cursor.fetchone()[0] == 0:
@@ -148,6 +172,55 @@ def verify_user(username: str, password: str) -> Optional[Dict[str, Any]]:
             "created_at": user["created_at"]
         }
     return None
+
+def create_session(token_hash: str, user_id: int, expires_at: str) -> None:
+    conn = get_db_connection()
+    conn.execute(
+        "INSERT OR REPLACE INTO auth_sessions (token_hash, user_id, created_at, expires_at) VALUES (?, ?, ?, ?)",
+        (token_hash, user_id, datetime.now(timezone.utc).isoformat(), expires_at),
+    )
+    conn.commit()
+    conn.close()
+
+def get_session_user(token_hash: str) -> Optional[Dict[str, Any]]:
+    conn = get_db_connection()
+    row = conn.execute(
+        """SELECT u.id, u.username, u.email, u.role, u.created_at
+           FROM auth_sessions s JOIN users u ON u.id = s.user_id
+           WHERE s.token_hash = ? AND s.expires_at > ?""",
+        (token_hash, datetime.now(timezone.utc).isoformat()),
+    ).fetchone()
+    conn.close()
+    return dict(row) if row else None
+
+def revoke_session(token_hash: str) -> None:
+    conn = get_db_connection()
+    conn.execute("DELETE FROM auth_sessions WHERE token_hash = ?", (token_hash,))
+    conn.commit()
+    conn.close()
+
+def add_customer_note(customer_id: str, note: str, user_id: Optional[int] = None) -> Dict[str, Any]:
+    conn = get_db_connection()
+    created_at = datetime.now(timezone.utc).isoformat()
+    cursor = conn.execute(
+        "INSERT INTO customer_notes (customer_id, user_id, note, created_at) VALUES (?, ?, ?, ?)",
+        (customer_id, user_id, note.strip(), created_at),
+    )
+    conn.commit()
+    note_id = cursor.lastrowid
+    conn.close()
+    return {"id": note_id, "customer_id": customer_id, "user_id": user_id, "note": note.strip(), "created_at": created_at}
+
+def list_customer_notes(customer_id: str) -> List[Dict[str, Any]]:
+    conn = get_db_connection()
+    rows = conn.execute(
+        """SELECT n.id, n.customer_id, n.user_id, n.note, n.created_at, u.username
+           FROM customer_notes n LEFT JOIN users u ON u.id = n.user_id
+           WHERE n.customer_id = ? ORDER BY n.id DESC""",
+        (customer_id,),
+    ).fetchall()
+    conn.close()
+    return [dict(row) for row in rows]
 
 # ------------------------------------------------------------------------------
 # Scenarios Operations

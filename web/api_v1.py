@@ -9,6 +9,8 @@ import csv
 import json
 import sqlite3
 import secrets
+import hashlib
+from datetime import timedelta
 from datetime import datetime, timezone
 from typing import Dict, Any, List, Optional
 from flask import Blueprint, jsonify, request, Response
@@ -23,13 +25,27 @@ from web.db import (
     delete_scenario,
     record_dataset_import,
     list_dataset_imports,
-    log_audit_event
+    log_audit_event,
+    create_session,
+    get_session_user,
+    revoke_session,
+    add_customer_note,
+    list_customer_notes,
 )
 
 api_v1 = Blueprint("api_v1", __name__, url_prefix="/api/v1")
 
-# In-memory session store (token -> user_dict)
-ACTIVE_SESSIONS: Dict[str, Dict[str, Any]] = {}
+SESSION_TTL_DAYS = 7
+
+def token_digest(token: str) -> str:
+    return hashlib.sha256(token.encode("utf-8")).hexdigest()
+
+def issue_session(user: Dict[str, Any]) -> str:
+    """Create a database-backed token that survives Gunicorn worker changes."""
+    token = secrets.token_urlsafe(32)
+    expiry = (datetime.now(timezone.utc) + timedelta(days=SESSION_TTL_DAYS)).isoformat()
+    create_session(token_digest(token), int(user["id"]), expiry)
+    return token
 
 def get_current_user() -> Optional[Dict[str, Any]]:
     """Extracts authenticated user from Authorization header or session token."""
@@ -40,9 +56,7 @@ def get_current_user() -> Optional[Dict[str, Any]]:
     elif "X-Auth-Token" in request.headers:
         token = request.headers.get("X-Auth-Token", "").strip()
 
-    if token and token in ACTIVE_SESSIONS:
-        return ACTIVE_SESSIONS[token]
-    return None
+    return get_session_user(token_digest(token)) if token else None
 
 def require_auth():
     """Helper to enforce authentication on protected endpoints."""
@@ -67,10 +81,9 @@ def auth_login():
 
     user = verify_user(username, password)
     if not user:
-        return jsonify({"error": "Invalid credentials. Try demo credentials: admin / admin123"}), 401
+        return jsonify({"error": "Invalid username or password"}), 401
 
-    token = secrets.token_hex(24)
-    ACTIVE_SESSIONS[token] = user
+    token = issue_session(user)
     log_audit_event("user_login", "user", str(user["id"]), user["id"], {"username": username})
 
     return jsonify({
@@ -96,8 +109,7 @@ def auth_register():
 
     try:
         user = create_user(username, email, password, role="analyst")
-        token = secrets.token_hex(24)
-        ACTIVE_SESSIONS[token] = user
+        token = issue_session(user)
         log_audit_event("user_registered", "user", str(user["id"]), user["id"], {"username": username})
         return jsonify({
             "message": "User registered successfully",
@@ -132,8 +144,10 @@ def auth_logout():
         return "", 200
     auth_header = request.headers.get("Authorization", "")
     token = auth_header[7:].strip() if auth_header.startswith("Bearer ") else request.headers.get("X-Auth-Token", "").strip()
-    if token in ACTIVE_SESSIONS:
-        user = ACTIVE_SESSIONS.pop(token)
+    user = get_current_user()
+    if token:
+        revoke_session(token_digest(token))
+    if user:
         log_audit_event("user_logout", "user", str(user.get("id", "")), user.get("id"))
     return jsonify({"message": "Logged out successfully"})
 
@@ -153,18 +167,31 @@ def dashboard_kpis():
     total_orders = sum(c.get("avg_frequency", 0.0) * c.get("count", 0) for c in cohorts.values())
     aov = round(total_spend / total_orders, 2) if total_orders > 0 else 0.0
 
+    conn = get_db_connection()
+    repeat_customers = conn.execute("SELECT COUNT(*) FROM customer_profile WHERE frequency > 1").fetchone()[0]
+    conn.close()
+    from web.app import load_analytics_data
+    monthly, _ = load_analytics_data()
+    if len(monthly) >= 2:
+        current, previous = monthly[-1], monthly[-2]
+        revenue_growth = round(((current["revenue"] - previous["revenue"]) / previous["revenue"] * 100), 2) if previous["revenue"] else 0.0
+        orders_growth = round(((current["orders"] - previous["orders"]) / previous["orders"] * 100), 2) if previous["orders"] else 0.0
+        current_aov = current["revenue"] / current["orders"] if current["orders"] else 0.0
+        previous_aov = previous["revenue"] / previous["orders"] if previous["orders"] else 0.0
+        aov_growth = round(((current_aov - previous_aov) / previous_aov * 100), 2) if previous_aov else 0.0
+    else:
+        revenue_growth = orders_growth = aov_growth = 0.0
     return jsonify({
         "total_customers": total_cust,
         "total_orders": int(round(total_orders)),
         "total_revenue": round(total_spend, 2),
         "average_order_value": aov,
-        "orders_growth": -6.5,
-        "revenue_growth": -4.3,
-        "aov_growth": 2.3,
-        "repeat_purchase_rate": 68.4,
-        "customer_retention_rate": 75.2,
-        "data_freshness": "Online Retail II (1.06M Transactions)",
-        "serving_backend": "HBase / SQLite Columnar Store"
+        "orders_growth": orders_growth,
+        "revenue_growth": revenue_growth,
+        "aov_growth": aov_growth,
+        "repeat_purchase_rate": round(repeat_customers / total_cust * 100, 2) if total_cust else 0.0,
+        "data_freshness": "Online Retail II serving snapshot",
+        "serving_backend": "HBase" if serving.use_hbase else "SQLite serving store"
     })
 
 # ------------------------------------------------------------------------------
@@ -180,6 +207,7 @@ def list_customers():
     limit = min(100, max(1, request.args.get("limit", 15, type=int)))
     search = request.args.get("search", "").strip()
     segment = request.args.get("segment", "").strip()
+    store = request.args.get("store", "").strip()
     sort_by = request.args.get("sort_by", "monetary").strip()
     sort_order = request.args.get("sort_order", "desc").lower().strip()
 
@@ -208,6 +236,10 @@ def list_customers():
         conditions.append("info_segment = ?")
         params.append(segment)
 
+    if store and store.lower() != "all":
+        conditions.append("LOWER(store_source) = LOWER(?)")
+        params.append(store)
+
     where_clause = ("WHERE " + " AND ".join(conditions)) if conditions else ""
 
     # Count total
@@ -219,7 +251,7 @@ def list_customers():
     query = f"""
         SELECT row_key as customer_id, info_segment as segment, pred_clv as predicted_clv,
                pred_churn_probability as churn_probability, recency_days, frequency, monetary,
-               tenure_days, avg_order_value, meta_last_updated as last_updated
+               tenure_days, avg_order_value, store_source as store, meta_last_updated as last_updated
         FROM customer_profile
         {where_clause}
         ORDER BY {col_sort} {dir_sort}
@@ -246,6 +278,26 @@ def get_customer_details(customer_id: str):
     """Returns Customer 360 profile with verified transaction ledger and predictive metrics."""
     from web.app import get_customer_profile
     return get_customer_profile(customer_id)
+
+@api_v1.route("/customers/<path:customer_id>/notes", methods=["GET", "POST", "OPTIONS"])
+def customer_notes(customer_id: str):
+    """Operational CRM notes kept separately from immutable customer analytics."""
+    if request.method == "OPTIONS":
+        return "", 200
+    from web.app import get_serving
+    if not get_serving().get_customer(customer_id):
+        return jsonify({"error": "Customer not found", "customer_id": customer_id}), 404
+    if request.method == "GET":
+        return jsonify({"customer_id": customer_id, "notes": list_customer_notes(customer_id)})
+    user = require_auth()
+    if not user:
+        return jsonify({"error": "Authentication is required to create customer notes"}), 401
+    note = (request.get_json(silent=True) or {}).get("note", "").strip()
+    if not note or len(note) > 4000:
+        return jsonify({"error": "note must contain 1 to 4000 characters"}), 400
+    saved = add_customer_note(customer_id, note, user["id"])
+    log_audit_event("customer_note_created", "customer", customer_id, user["id"], {"note_id": saved["id"]})
+    return jsonify({"note": saved}), 201
 
 # ------------------------------------------------------------------------------
 # 4. Analytics & Retention Matrix
@@ -286,6 +338,23 @@ def analytics_retention_matrix():
         "average_m3_retention": 22.8,
         "average_m6_retention": 23.4
     })
+
+@api_v1.route("/analytics/shopify-stores", methods=["GET"])
+def analytics_shopify_stores():
+    """Returns verified store-level analytics and churn risk rates across all individual crawled Shopify storefronts."""
+    from web.app import get_serving
+    serving = get_serving()
+    return jsonify(serving.get_shopify_store_analytics())
+
+@api_v1.route("/analytics/shopify-stores/<store_name>", methods=["GET"])
+def analytics_shopify_store_detail(store_name: str):
+    """Returns granular analytics for a specific Shopify storefront."""
+    from web.app import get_serving
+    serving = get_serving()
+    store = serving.get_shopify_store_detail(store_name)
+    if not store:
+        return jsonify({"error": f"Shopify store '{store_name}' not found", "available_stores": ["Bulletproof", "ColourPop", "Allbirds", "UNTUCKit", "Taylor Stitch"]}), 404
+    return jsonify(store)
 
 # ------------------------------------------------------------------------------
 # 5. Machine Learning Models & Evaluation
@@ -505,54 +574,37 @@ def dataset_history():
 @api_v1.route("/recommendations", methods=["GET"])
 def actionable_recommendations():
     """Generates evidence-based retention and cross-sell recommendations from customer metrics."""
-    return jsonify({
-        "generated_at": datetime.now(timezone.utc).isoformat(),
-        "total_recommendations": 3,
-        "recommendations": [
-            {
-                "id": "rec-01",
-                "priority": "Critical",
-                "title": "High-Value At-Risk Retention Sprint",
-                "target_segment": "At-Risk",
-                "audience_size": 1475,
-                "audience_pct": "24.8%",
-                "avg_clv": "$443.20",
-                "avg_recency": "210.7 days",
-                "rationale": "Customers in this cohort previously spent an average of $2,148 across 5.4 orders, but haven't placed an order in over 7 months. Model churn probability exceeds 51%.",
-                "suggested_action": "Deploy personalized VIP win-back incentive (15% anniversary discount) via direct email and outbound customer loyalty concierge.",
-                "estimated_retention_lift": "+12.4%",
-                "potential_recovered_revenue": "$39,200 USD"
-            },
-            {
-                "id": "rec-02",
-                "priority": "High",
-                "title": "Champions Ambassador & Cross-Sell Tier",
-                "target_segment": "Champions",
-                "audience_size": 1241,
-                "audience_pct": "20.9%",
-                "avg_clv": "$859.40",
-                "avg_recency": "24.8 days",
-                "rationale": "High-frequency accounts with average spend of $11,466 and recency of 24.8 days. Churn probability is extremely low (16.1%).",
-                "suggested_action": "Invite to exclusive Tier-1 Early Access program for high-margin catalog releases with zero discounting.",
-                "estimated_retention_lift": "+4.8%",
-                "potential_recovered_revenue": "$68,500 USD"
-            },
-            {
-                "id": "rec-03",
-                "priority": "Medium",
-                "title": "Automated Lapsed Reactivation Wave",
-                "target_segment": "Lost / Churned",
-                "audience_size": 2038,
-                "audience_pct": "34.3%",
-                "avg_clv": "$25.35",
-                "avg_recency": "392.9 days",
-                "rationale": "Customers have been dormant for over a year with lowest monetary spend ($346). Churn probability is 74.4%.",
-                "suggested_action": "Execute zero-marginal-cost automated re-engagement drip with survey feedback mechanism to discover churn drivers.",
-                "estimated_retention_lift": "+2.5%",
-                "potential_recovered_revenue": "$17,600 USD"
-            }
-        ]
-    })
+    conn = get_db_connection()
+    rows = conn.execute("""
+        SELECT info_segment AS segment, COUNT(*) AS audience_size,
+               AVG(pred_clv) AS avg_clv, AVG(recency_days) AS avg_recency,
+               AVG(monetary) AS avg_monetary, AVG(pred_churn_probability) AS avg_churn
+        FROM customer_profile GROUP BY info_segment
+    """).fetchall()
+    total = sum(row["audience_size"] for row in rows) or 1
+    conn.close()
+    playbooks = {
+        "At-Risk": ("Critical", "High-Value At-Risk Retention Sprint", "Deploy a consented, personalised win-back campaign and measure conversion against a holdout."),
+        "Champions": ("High", "Champions Ambassador & Cross-Sell Tier", "Offer early access to relevant releases without assuming a discount is required."),
+        "Lost / Churned": ("Medium", "Automated Lapsed Reactivation Wave", "Run a low-cost re-engagement sequence and capture feedback before further outreach."),
+        "Loyal Customers": ("High", "Loyal Customer Value Expansion", "Test relevant cross-sell and loyalty benefits with a measured control group."),
+    }
+    recommendations = []
+    for row in rows:
+        priority, title, action = playbooks.get(row["segment"], ("Medium", "Customer Cohort Review", "Review cohort behaviour before selecting an intervention."))
+        recommendations.append({
+            "id": f"rec-{row['segment'].lower().replace(' ', '-')}", "priority": priority,
+            "title": title, "target_segment": row["segment"], "audience_size": row["audience_size"],
+            "audience_pct": f"{row['audience_size'] / total * 100:.1f}%", "avg_clv": f"${row['avg_clv']:.2f}",
+            "avg_recency": f"{row['avg_recency']:.1f} days", "rationale": (
+                f"Based on {row['audience_size']:,} serving records: average spend ${row['avg_monetary']:.2f}, "
+                f"recency {row['avg_recency']:.1f} days, and model churn probability {row['avg_churn'] * 100:.1f}%."),
+            "suggested_action": action, "estimated_retention_lift": None,
+            "potential_recovered_revenue": None,
+        })
+    priority_rank = {"Critical": 0, "High": 1, "Medium": 2}
+    recommendations.sort(key=lambda item: priority_rank[item["priority"]])
+    return jsonify({"generated_at": datetime.now(timezone.utc).isoformat(), "total_recommendations": len(recommendations), "recommendations": recommendations})
 
 # ------------------------------------------------------------------------------
 # 9. Reports & Exports
