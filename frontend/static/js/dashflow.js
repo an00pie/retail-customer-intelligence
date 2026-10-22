@@ -3231,55 +3231,71 @@ function initShopifyStoreAnalytics() {
             riskColor = '#fb923c';
           }
 
+          const monogram = store.store_name === 'Allbirds' ? 'a' : (store.store_name ? store.store_name.charAt(0) : 'S');
+
           return `
             <div class="shopify-store-card">
               <div>
                 <div class="shopify-store-header">
-                  <div class="shopify-brand-block">
-                    <div class="shopify-brand-name">
-                      <span>${escapeHtml(store.store_name)}</span>
-                      <span class="status-pill-completed" style="font-size: 8.5px; padding: 1px 5px;">Shopify</span>
+                  <div class="shopify-header-left-meta">
+                    <div class="shopify-avatar">${escapeHtml(monogram)}</div>
+                    <div class="shopify-brand-block">
+                      <div class="shopify-brand-name">
+                        <a href="${escapeHtml(store.url)}" target="_blank" rel="noopener noreferrer" style="color: #fff; text-decoration: none; display: inline-flex; align-items: center; gap: 4px;">
+                          <span>${escapeHtml(store.store_name)}</span>
+                          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+                        </a>
+                      </div>
+                      <span class="shopify-brand-link">${escapeHtml(store.domain)}</span>
                     </div>
-                    <a href="${escapeHtml(store.url)}" target="_blank" rel="noopener noreferrer" class="shopify-brand-link">
-                      <span>${escapeHtml(store.domain)}</span>
-                      <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
-                    </a>
                   </div>
                   <span class="shopify-risk-badge ${riskBadgeClass}">● ${escapeHtml(store.risk_level)}</span>
                 </div>
-                <div class="shopify-dept-pill">${escapeHtml(store.department)}</div>
+                <div class="shopify-dept-pill">${escapeHtml(String(store.department || '').toUpperCase())}</div>
 
                 <div class="shopify-churn-hero">
                   <div class="shopify-churn-num-wrap">
-                    <span class="shopify-churn-label">Churn Risk Rate</span>
+                    <span class="shopify-churn-label">CHURN RISK RATE</span>
                     <span class="shopify-churn-num" style="color: ${riskColor};">${churn}%</span>
                   </div>
                   <div style="text-align: right;">
-                    <span class="shopify-churn-label">High-Risk Accts</span>
-                    <span style="font-size: 13px; font-weight: 700; color: #fff; font-family: var(--font-mono);">${Number(store.high_risk_customers || 0).toLocaleString()}</span>
+                    <span class="shopify-churn-label">HIGH-RISK ACCTS</span>
+                    <div class="shopify-high-risk-num">${Number(store.high_risk_customers || 0).toLocaleString()}</div>
                   </div>
                 </div>
 
                 <div class="shopify-progress-track">
-                  <div class="shopify-progress-fill ${fillClass}" style="width: ${Math.min(100, store.avg_churn_risk_pct)}%;"></div>
+                  <div class="shopify-progress-fill ${fillClass}" style="width: ${Math.min(100, store.avg_churn_risk_pct)}%; background: ${riskColor};"></div>
                 </div>
 
                 <div class="shopify-card-metrics">
                   <div class="shopify-mini-stat">
-                    <span class="shopify-mini-stat-lbl">Audience</span>
-                    <span class="shopify-mini-stat-val">${Number(store.total_customers || 0).toLocaleString()} Accts</span>
+                    <div class="shopify-mini-stat-header">
+                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                    </div>
+                    <span class="shopify-mini-stat-val">${Number(store.total_customers || 0).toLocaleString()}</span>
+                    <span class="shopify-mini-stat-lbl">Accts</span>
                   </div>
                   <div class="shopify-mini-stat">
-                    <span class="shopify-mini-stat-lbl">Avg CLV</span>
+                    <div class="shopify-mini-stat-header">
+                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m7.5 4.27 9 5.15"/><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/><path d="m3.3 7 8.7 5 8.7-5"/><path d="M12 22V12"/></svg>
+                    </div>
+                    <span class="shopify-mini-stat-val">${store.catalog_products}</span>
+                    <span class="shopify-mini-stat-lbl">Items</span>
+                  </div>
+                  <div class="shopify-mini-stat">
+                    <div class="shopify-mini-stat-header">
+                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/></svg>
+                    </div>
                     <span class="shopify-mini-stat-val">$${Number(store.avg_clv || 0).toFixed(2)}</span>
+                    <span class="shopify-mini-stat-lbl">Avg CLV</span>
                   </div>
                   <div class="shopify-mini-stat">
-                    <span class="shopify-mini-stat-lbl">Catalog</span>
-                    <span class="shopify-mini-stat-val">${store.catalog_products} Items</span>
-                  </div>
-                  <div class="shopify-mini-stat">
-                    <span class="shopify-mini-stat-lbl">Avg Price</span>
+                    <div class="shopify-mini-stat-header">
+                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2H2v10l9.29 9.29c.94.94 2.48.94 3.42 0l6.58-6.58c.94-.94.94-2.48 0-3.42L12 2Z"/><path d="M7 7h.01"/></svg>
+                    </div>
                     <span class="shopify-mini-stat-val">$${Number(store.catalog_avg_price || 0).toFixed(2)}</span>
+                    <span class="shopify-mini-stat-lbl">Avg Price</span>
                   </div>
                 </div>
               </div>

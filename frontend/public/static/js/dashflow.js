@@ -38,6 +38,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initWhatIfSimulator();
   initDashboardCharts();
   initOverviewModules();
+  initShopifyStoreAnalytics();
   initAnchorScroll();
 });
 
@@ -1233,6 +1234,7 @@ function renderCustomerProfile(data) {
             <div class="lookup-profile-tag-group">
               <span class="lookup-hero-badge ${badgeClass}">${segIcon} ${safeSeg}</span>
               <span class="lookup-rfm-tag">RFM ${rfmScore}</span>
+              <span style="font-size: 11px; padding: 2px 8px; border-radius: 9999px; background: rgba(52, 211, 153, 0.1); border: 1px solid rgba(52, 211, 153, 0.3); color: #34d399; font-weight: 600;">🛍️ ${escapeHtml(data.store_source || 'Allbirds')}</span>
               <span class="lookup-rowkey-tag">Row Key: #${safeId}</span>
             </div>
             <div class="lookup-header-actions">
@@ -3144,4 +3146,198 @@ function initGlobalSearch() {
       input.select();
     }
   });
+}
+
+/* ==============================================================================
+   12. SHOPIFY MULTI-STORE CHURN RISK INTELLIGENCE ENGINE
+   ============================================================================== */
+function initShopifyStoreAnalytics() {
+  const grid = document.getElementById('shopifyStoresGrid');
+  const summaryEl = document.getElementById('shopifyNetworkSummary');
+  const matrixBody = document.getElementById('shopifyMatrixTableBody');
+  const lookupStoreFilter = document.getElementById('lookupStoreFilter');
+
+  if (lookupStoreFilter) {
+    lookupStoreFilter.addEventListener('change', (e) => {
+      const selectedStore = e.target.value;
+      if (selectedStore && selectedStore !== 'All') {
+        window.filterByStore(selectedStore);
+      }
+    });
+  }
+
+  window.filterByStore = function(storeName) {
+    if (!storeName) return;
+    if (typeof window.switchDashboardTab === 'function') {
+      window.switchDashboardTab('lookup');
+    }
+    if (lookupStoreFilter) {
+      lookupStoreFilter.value = storeName;
+    }
+    const input = document.getElementById('lookupCustIdInput');
+    const btn = document.getElementById('lookupSearchBtn');
+
+    // Fetch verified sample customer from this specific storefront
+    fetch(`/api/v1/customers?store=${encodeURIComponent(storeName)}&limit=1`)
+      .then(res => res.json())
+      .then(data => {
+        if (data && data.customers && data.customers.length > 0) {
+          const sampleCustId = data.customers[0].customer_id;
+          if (input) input.value = sampleCustId;
+          if (btn) btn.click();
+          if (typeof window.showToast === 'function') {
+            window.showToast(`Filtered to ${storeName} storefront (#${sampleCustId})`, 'success');
+          }
+        }
+      })
+      .catch(() => {
+        if (typeof window.showToast === 'function') {
+          window.showToast(`Filtered to ${storeName} storefront`, 'info');
+        }
+      });
+  };
+
+  fetch('/api/analytics/shopify-stores')
+    .then(res => {
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      return res.json();
+    })
+    .then(data => {
+      if (!data || !data.stores) return;
+
+      if (summaryEl && data.network_avg_churn_rate) {
+        summaryEl.innerHTML = `Network Average Churn Risk: <strong style="color: #fff;">${data.network_avg_churn_rate}%</strong>`;
+      }
+
+      // Update Store Cards
+      if (grid && data.stores.length > 0) {
+        grid.innerHTML = data.stores.map(store => {
+          const churn = Number(store.avg_churn_risk_pct || 0).toFixed(1);
+          let riskBadgeClass = 'badge-risk-moderate';
+          let fillClass = 'fill-moderate';
+          let riskColor = '#fbbf24';
+
+          if (store.avg_churn_risk_pct < 45) {
+            riskBadgeClass = 'badge-risk-low';
+            fillClass = 'fill-low';
+            riskColor = '#34d399';
+          } else if (store.avg_churn_risk_pct >= 63) {
+            riskBadgeClass = 'badge-risk-high';
+            fillClass = 'fill-high';
+            riskColor = '#fb7185';
+          } else if (store.avg_churn_risk_pct >= 55) {
+            riskBadgeClass = 'badge-risk-elevated';
+            fillClass = 'fill-elevated';
+            riskColor = '#fb923c';
+          }
+
+          const monogram = store.store_name === 'Allbirds' ? 'a' : (store.store_name ? store.store_name.charAt(0) : 'S');
+
+          return `
+            <div class="shopify-store-card">
+              <div>
+                <div class="shopify-store-header">
+                  <div class="shopify-header-left-meta">
+                    <div class="shopify-avatar">${escapeHtml(monogram)}</div>
+                    <div class="shopify-brand-block">
+                      <div class="shopify-brand-name">
+                        <a href="${escapeHtml(store.url)}" target="_blank" rel="noopener noreferrer" style="color: #fff; text-decoration: none; display: inline-flex; align-items: center; gap: 4px;">
+                          <span>${escapeHtml(store.store_name)}</span>
+                          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+                        </a>
+                      </div>
+                      <span class="shopify-brand-link">${escapeHtml(store.domain)}</span>
+                    </div>
+                  </div>
+                  <span class="shopify-risk-badge ${riskBadgeClass}">● ${escapeHtml(store.risk_level)}</span>
+                </div>
+                <div class="shopify-dept-pill">${escapeHtml(String(store.department || '').toUpperCase())}</div>
+
+                <div class="shopify-churn-hero">
+                  <div class="shopify-churn-num-wrap">
+                    <span class="shopify-churn-label">CHURN RISK RATE</span>
+                    <span class="shopify-churn-num" style="color: ${riskColor};">${churn}%</span>
+                  </div>
+                  <div style="text-align: right;">
+                    <span class="shopify-churn-label">HIGH-RISK ACCTS</span>
+                    <div class="shopify-high-risk-num">${Number(store.high_risk_customers || 0).toLocaleString()}</div>
+                  </div>
+                </div>
+
+                <div class="shopify-progress-track">
+                  <div class="shopify-progress-fill ${fillClass}" style="width: ${Math.min(100, store.avg_churn_risk_pct)}%; background: ${riskColor};"></div>
+                </div>
+
+                <div class="shopify-card-metrics">
+                  <div class="shopify-mini-stat">
+                    <div class="shopify-mini-stat-header">
+                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                    </div>
+                    <span class="shopify-mini-stat-val">${Number(store.total_customers || 0).toLocaleString()}</span>
+                    <span class="shopify-mini-stat-lbl">Accts</span>
+                  </div>
+                  <div class="shopify-mini-stat">
+                    <div class="shopify-mini-stat-header">
+                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m7.5 4.27 9 5.15"/><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/><path d="m3.3 7 8.7 5 8.7-5"/><path d="M12 22V12"/></svg>
+                    </div>
+                    <span class="shopify-mini-stat-val">${store.catalog_products}</span>
+                    <span class="shopify-mini-stat-lbl">Items</span>
+                  </div>
+                  <div class="shopify-mini-stat">
+                    <div class="shopify-mini-stat-header">
+                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/></svg>
+                    </div>
+                    <span class="shopify-mini-stat-val">$${Number(store.avg_clv || 0).toFixed(2)}</span>
+                    <span class="shopify-mini-stat-lbl">Avg CLV</span>
+                  </div>
+                  <div class="shopify-mini-stat">
+                    <div class="shopify-mini-stat-header">
+                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2H2v10l9.29 9.29c.94.94 2.48.94 3.42 0l6.58-6.58c.94-.94.94-2.48 0-3.42L12 2Z"/><path d="M7 7h.01"/></svg>
+                    </div>
+                    <span class="shopify-mini-stat-val">$${Number(store.catalog_avg_price || 0).toFixed(2)}</span>
+                    <span class="shopify-mini-stat-lbl">Avg Price</span>
+                  </div>
+                </div>
+              </div>
+              <div class="shopify-card-footer">
+                <button type="button" class="shopify-filter-btn" onclick="window.filterByStore('${escapeHtml(store.store_name)}')">Filter Store Customers →</button>
+              </div>
+            </div>
+          `;
+        }).join('');
+      }
+
+      // Update Comparative Matrix Table
+      if (matrixBody && data.stores.length > 0) {
+        matrixBody.innerHTML = data.stores.map(store => {
+          let badgeClass = 'badge-risk-moderate';
+          if (store.avg_churn_risk_pct < 45) badgeClass = 'badge-risk-low';
+          else if (store.avg_churn_risk_pct >= 63) badgeClass = 'badge-risk-high';
+          else if (store.avg_churn_risk_pct >= 55) badgeClass = 'badge-risk-elevated';
+
+          return `
+            <tr>
+              <td>
+                <div style="display: flex; flex-direction: column;">
+                  <strong style="color: #fff;">${escapeHtml(store.store_name)}</strong>
+                  <a href="${escapeHtml(store.url)}" target="_blank" rel="noopener noreferrer" class="shopify-brand-link">${escapeHtml(store.domain)} ↗</a>
+                </div>
+              </td>
+              <td><span class="shopify-dept-pill" style="font-size: 10px;">${escapeHtml(store.department)}</span></td>
+              <td style="text-align: right; font-family: var(--font-mono); font-weight: 700;">${Number(store.total_customers || 0).toLocaleString()}</td>
+              <td style="text-align: right;"><span class="shopify-risk-badge ${badgeClass}">${Number(store.avg_churn_risk_pct).toFixed(1)}% (${escapeHtml(store.risk_level)})</span></td>
+              <td style="text-align: right; font-family: var(--font-mono); color: #fb7185;">${Number(store.high_risk_customers || 0).toLocaleString()}</td>
+              <td style="text-align: right; font-family: var(--font-mono); color: #34d399; font-weight: 700;">$${Number(store.avg_clv || 0).toFixed(2)}</td>
+              <td style="text-align: right; font-family: var(--font-mono);">$${Number(store.catalog_avg_price || 0).toFixed(2)} (${store.catalog_products} skus)</td>
+              <td style="color: var(--text-muted); font-size: 11.5px;">${escapeHtml(store.primary_risk_driver || '')}</td>
+              <td style="color: #e4e4e7; font-size: 11.5px;">${escapeHtml(store.strategic_playbook || '')}</td>
+              <td style="text-align: center;"><button type="button" class="btn-pill-ghost" style="padding: 3px 8px; font-size: 10.5px;" onclick="window.filterByStore('${escapeHtml(store.store_name)}')">Filter →</button></td>
+            </tr>
+          `;
+        }).join('');
+      }
+    })
+    .catch(err => {
+      console.warn('[DashFlow] Shopify store analytics fetch notice:', err);
+    });
 }
