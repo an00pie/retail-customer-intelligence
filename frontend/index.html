@@ -2095,7 +2095,7 @@
                     </div>
 
                     <!-- 4 Quad Metrics -->
-                    <div class="sim-quad-grid">
+                    <div class="sim-quad-grid" id="simQuadGrid">
                       <!-- Metric 1: Segment -->
                       <div class="sim-quad-item">
                         <div class="sim-quad-header">
@@ -2175,7 +2175,7 @@
                         </div>
                         <div class="sim-scenario-cards-grid">
                           <!-- Conservative -->
-                          <div class="sim-scen-card" id="simCardConservative" onclick="window.applySimScenario('conservative')" title="Click to load conservative scenario">
+                          <div class="sim-scen-card" id="simCardConservative" onclick="window.applySimScenario('conservative')" role="button" tabindex="0" aria-pressed="false" aria-label="Load Conservative behavior scenario" title="Click to load conservative scenario">
                             <div class="sim-scen-name" style="color: #fb7185;">
                               <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 18 13.5 8.5 8.5 13.5 1 6"/></svg>
                               Conservative
@@ -2188,7 +2188,7 @@
                           </div>
 
                           <!-- Base Scenario -->
-                          <div class="sim-scen-card active" id="simCardBase" onclick="window.applySimScenario('base')" title="Current simulated baseline">
+                          <div class="sim-scen-card active" id="simCardBase" onclick="window.applySimScenario('base')" role="button" tabindex="0" aria-pressed="true" aria-label="Load Base behavior scenario" title="Current simulated baseline">
                             <div class="sim-scen-name" style="color: #34d399;">
                               Base Scenario
                             </div>
@@ -2200,7 +2200,7 @@
                           </div>
 
                           <!-- Optimistic -->
-                          <div class="sim-scen-card" id="simCardOptimistic" onclick="window.applySimScenario('optimistic')" title="Click to load optimistic scenario">
+                          <div class="sim-scen-card" id="simCardOptimistic" onclick="window.applySimScenario('optimistic')" role="button" tabindex="0" aria-pressed="false" aria-label="Load Optimistic behavior scenario" title="Click to load optimistic scenario">
                             <div class="sim-scen-name" style="color: #60a5fa;">
                               <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/></svg>
                               Optimistic

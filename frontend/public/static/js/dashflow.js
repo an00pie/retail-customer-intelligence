@@ -4,6 +4,69 @@
  * interactive RFM calculator, live customer lookup API, and Chart.js spline charts.
  */
 
+/**
+ * Developer Quality & Security Toolchain Hooks:
+ * - Optional Sentry Browser Error Monitoring (active only when window.__SENTRY_DSN__ is configured)
+ * - Optional PostHog Privacy-Preserving Analytics (active only when window.__POSTHOG_API_KEY__ is configured)
+ */
+(function initObservabilityAndAnalytics() {
+  // 1. Sentry Frontend Integration
+  const sentryDsn = window.__SENTRY_DSN__ || document.querySelector('meta[name="sentry-dsn"]')?.getAttribute('content');
+  if (sentryDsn && window.Sentry && typeof window.Sentry.init === 'function') {
+    try {
+      window.Sentry.init({
+        dsn: sentryDsn,
+        environment: window.__INSIGHT_ENV__ || 'production',
+        sendDefaultPii: false,
+        tracesSampleRate: 0.1,
+        beforeSend(event) {
+          if (event.request && event.request.url) {
+            event.request.url = event.request.url.split('?')[0];
+          }
+          return event;
+        }
+      });
+    } catch (err) {
+      console.warn('[Observability] Sentry browser init notice:', err);
+    }
+  }
+
+  // 2. PostHog Privacy-Preserving Product Analytics
+  const posthogKey = window.__POSTHOG_API_KEY__ || document.querySelector('meta[name="posthog-api-key"]')?.getAttribute('content');
+  const posthogHost = window.__POSTHOG_HOST__ || 'https://us.i.posthog.com';
+
+  if (posthogKey && window.posthog && typeof window.posthog.init === 'function') {
+    try {
+      window.posthog.init(posthogKey, {
+        api_host: posthogHost,
+        autocapture: false,
+        capture_pageview: true,
+        disable_session_recording: true,
+        mask_all_text: true,
+        mask_all_element_attributes: true,
+        respect_dnt: true
+      });
+    } catch (err) {
+      console.warn('[Analytics] PostHog init notice:', err);
+    }
+  }
+
+  // Safe global telemetry dispatcher (noop fallback if PostHog is not enabled)
+  window.insightAnalytics = {
+    track: function(eventName, properties) {
+      if (!eventName) return;
+      if (window.posthog && typeof window.posthog.capture === 'function' && posthogKey) {
+        const safeProps = Object.assign({}, properties);
+        delete safeProps.customer_id;
+        delete safeProps.email;
+        delete safeProps.name;
+        delete safeProps.phone;
+        window.posthog.capture(eventName, safeProps);
+      }
+    }
+  };
+})();
+
 function renderInferenceEvidence(result, target) {
   if (!target) return;
   const host = target.closest('.sim-results-card, .overview-card') || target.parentElement;
@@ -161,6 +224,9 @@ function initSpaDashboardNavigation() {
     // Otherwise switch main content pane
     const targetPane = document.getElementById(`tab-${tabId}`);
     if (targetPane) {
+      if (window.insightAnalytics) {
+        window.insightAnalytics.track('dashboard_viewed', { tab: tabId });
+      }
       // Deactivate all tab panes and activate target
       const allPanes = document.querySelectorAll('.spa-tab-pane');
       allPanes.forEach(pane => pane.classList.remove('active'));
@@ -1687,6 +1753,40 @@ function initWhatIfSimulator() {
 
   let simDebounceTimer = null;
   let currentRequestId = 0;
+  let isSimInFlight = false;
+  let activeScenarioName = 'base';
+
+  function setSimLoading(loading) {
+    isSimInFlight = loading;
+    const quadGrid = document.getElementById('simQuadGrid') || document.querySelector('.sim-quad-grid');
+    if (quadGrid) {
+      if (loading) {
+        quadGrid.classList.add('sim-is-loading');
+        quadGrid.setAttribute('aria-busy', 'true');
+      } else {
+        quadGrid.classList.remove('sim-is-loading');
+        quadGrid.setAttribute('aria-busy', 'false');
+      }
+    }
+    const runBtn = document.getElementById('simRunBtn');
+    if (runBtn) {
+      if (loading) {
+        runBtn.classList.add('is-loading');
+        runBtn.setAttribute('aria-busy', 'true');
+      } else {
+        runBtn.classList.remove('is-loading');
+        runBtn.setAttribute('aria-busy', 'false');
+      }
+    }
+    const scenCards = document.querySelectorAll('.sim-scen-card');
+    scenCards.forEach(c => {
+      if (loading && c.classList.contains('active')) {
+        c.classList.add('is-in-flight');
+      } else {
+        c.classList.remove('is-in-flight');
+      }
+    });
+  }
 
   function validateField(input, row, errEl, label, fieldType) {
     const rawVal = input.value;
@@ -1790,6 +1890,11 @@ function initWhatIfSimulator() {
 
   function runSim() {
     clearTimeout(simDebounceTimer);
+    activeScenarioName = null;
+    document.querySelectorAll('.sim-scen-card').forEach(c => {
+      c.classList.remove('active');
+      c.setAttribute('aria-pressed', 'false');
+    });
     simDebounceTimer = setTimeout(() => {
       executeSim();
     }, 180);
@@ -1812,6 +1917,7 @@ function initWhatIfSimulator() {
       if (segTarget) segTarget.innerHTML = '<span style="font-size: 16px; color: #fb7185; font-weight: 700;">Invalid Input</span>';
       if (clvTarget) clvTarget.textContent = '--';
       if (churnTarget) churnTarget.textContent = '--';
+      setSimLoading(false);
       return;
     }
 
@@ -1823,6 +1929,7 @@ function initWhatIfSimulator() {
     };
 
     if (segTarget) segTarget.style.opacity = '0.5';
+    setSimLoading(true);
 
     fetch('/api/predict', {
       method: 'POST',
@@ -1878,6 +1985,9 @@ function initWhatIfSimulator() {
 
         // Render / update trajectory chart
         renderSimTrajectoryChart(clvNum);
+        if (window.insightAnalytics) {
+          window.insightAnalytics.track('prediction_completed', { status: 'success' });
+        }
 
         const infCard = segTarget ? segTarget.closest('.sim-results-card') || segTarget.closest('.overview-card') : null;
         if (infCard) {
@@ -1897,6 +2007,14 @@ function initWhatIfSimulator() {
         }
         if (clvTarget) clvTarget.textContent = '--';
         if (churnTarget) churnTarget.textContent = '--';
+        if (window.insightAnalytics) {
+          window.insightAnalytics.track('prediction_completed', { status: 'error' });
+        }
+      })
+      .finally(() => {
+        if (requestId === currentRequestId) {
+          setSimLoading(false);
+        }
       });
   }
 
@@ -1929,14 +2047,7 @@ function initWhatIfSimulator() {
   const resetBtn = document.getElementById('simResetBtn');
   if (resetBtn) {
     resetBtn.addEventListener('click', () => {
-      recInput.value = '25';
-      freqInput.value = '6';
-      spendInput.value = '1250';
-      tenureInput.value = '300';
-      document.querySelectorAll('.sim-scen-card').forEach(c => c.classList.remove('active'));
-      const baseCard = document.getElementById('simCardBase');
-      if (baseCard) baseCard.classList.add('active');
-      executeSim();
+      window.applySimScenario('base');
       window.showToast('Simulator parameters reset to default baseline', 'info');
     });
   }
@@ -1971,40 +2082,87 @@ function initWhatIfSimulator() {
     });
   }
 
+  const SCENARIO_PRESETS = {
+    conservative: { r: '75', f: '3', s: '650', t: '120' },
+    optimistic: { r: '10', f: '14', s: '2800', t: '420' },
+    base: { r: '76', f: '6', s: '1250', t: '300' }
+  };
+
   // Global helper for Scenario card selection
-  window.applySimScenario = function(scenType) {
-    document.querySelectorAll('.sim-scen-card').forEach(c => c.classList.remove('active'));
+  window.applySimScenario = function(scenType, force = false) {
+    const preset = SCENARIO_PRESETS[scenType] || SCENARIO_PRESETS.base;
+    const inputsMatch = recInput.value === preset.r &&
+                        freqInput.value === preset.f &&
+                        spendInput.value === preset.s &&
+                        tenureInput.value === preset.t;
+
+    if (!force && isSimInFlight && activeScenarioName === scenType && inputsMatch) {
+      return;
+    }
+    activeScenarioName = scenType;
+    if (window.insightAnalytics) {
+      window.insightAnalytics.track('simulator_scenario_selected', { scenario: scenType });
+    }
+
+    document.querySelectorAll('.sim-scen-card').forEach(c => {
+      c.classList.remove('active');
+      c.setAttribute('aria-pressed', 'false');
+    });
+
+    let activeCard = null;
     if (scenType === 'conservative') {
-      const el = document.getElementById('simCardConservative');
-      if (el) el.classList.add('active');
-      recInput.value = '75';
-      freqInput.value = '3';
-      spendInput.value = '650';
-      tenureInput.value = '120';
+      activeCard = document.getElementById('simCardConservative');
+      recInput.value = preset.r;
+      freqInput.value = preset.f;
+      spendInput.value = preset.s;
+      tenureInput.value = preset.t;
       window.showToast('Loaded Conservative scenario behavior', 'info');
     } else if (scenType === 'optimistic') {
-      const el = document.getElementById('simCardOptimistic');
-      if (el) el.classList.add('active');
-      recInput.value = '10';
-      freqInput.value = '14';
-      spendInput.value = '2800';
-      tenureInput.value = '420';
+      activeCard = document.getElementById('simCardOptimistic');
+      recInput.value = preset.r;
+      freqInput.value = preset.f;
+      spendInput.value = preset.s;
+      tenureInput.value = preset.t;
       window.showToast('Loaded Optimistic scenario behavior', 'info');
     } else {
-      const el = document.getElementById('simCardBase');
-      if (el) el.classList.add('active');
-      recInput.value = '76';
-      freqInput.value = '6';
-      spendInput.value = '1250';
-      tenureInput.value = '300';
+      activeCard = document.getElementById('simCardBase');
+      recInput.value = preset.r;
+      freqInput.value = preset.f;
+      spendInput.value = preset.s;
+      tenureInput.value = preset.t;
       window.showToast('Loaded Base Scenario inputs', 'info');
     }
+
+    if (activeCard) {
+      activeCard.classList.add('active');
+      activeCard.setAttribute('aria-pressed', 'true');
+    }
+
     executeSim();
   };
+
+  // Keyboard accessibility & activation for Scenario Cards
+  const scenCards = document.querySelectorAll('.sim-scen-card');
+  scenCards.forEach(card => {
+    card.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ' || e.key === 'Spacebar') {
+        e.preventDefault();
+        const scen = card.id === 'simCardConservative' ? 'conservative'
+                   : card.id === 'simCardOptimistic' ? 'optimistic'
+                   : 'base';
+        window.applySimScenario(scen);
+      }
+    });
+  });
 
   // Scenario Table Load Buttons
   document.querySelectorAll('.load-scenario-btn').forEach(btn => {
     btn.addEventListener('click', () => {
+      activeScenarioName = null;
+      document.querySelectorAll('.sim-scen-card').forEach(c => {
+        c.classList.remove('active');
+        c.setAttribute('aria-pressed', 'false');
+      });
       if (btn.dataset.r) recInput.value = btn.dataset.r;
       if (btn.dataset.f) freqInput.value = btn.dataset.f;
       if (btn.dataset.s) spendInput.value = btn.dataset.s;
@@ -3177,6 +3335,9 @@ function initShopifyStoreAnalytics() {
 
   window.filterByStore = function(storeName) {
     if (!storeName) return;
+    if (window.insightAnalytics) {
+      window.insightAnalytics.track('shopify_filter_applied', { store: storeName });
+    }
     if (typeof window.switchDashboardTab === 'function') {
       window.switchDashboardTab('lookup');
     }

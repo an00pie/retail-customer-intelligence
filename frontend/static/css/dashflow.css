@@ -7811,10 +7811,17 @@ input[type='range'].sim-slider::-moz-range-thumb {
   background: rgba(255, 255, 255, 0.02);
   border: 1px solid rgba(255, 255, 255, 0.07);
   border-radius: 8px;
-  padding: 6px 4px;
+  padding: 8px 6px;
   text-align: center;
   cursor: pointer;
   transition: all 0.2s ease;
+  user-select: none;
+  -webkit-user-select: none;
+  position: relative;
+}
+
+.sim-scen-card * {
+  pointer-events: none;
 }
 
 .sim-scen-card:hover {
@@ -7822,10 +7829,43 @@ input[type='range'].sim-slider::-moz-range-thumb {
   transform: translateY(-1px);
 }
 
+.sim-scen-card:focus-visible {
+  outline: 2px solid rgba(16, 185, 129, 0.8);
+  outline-offset: 2px;
+}
+
 .sim-scen-card.active {
   border-color: rgba(16, 185, 129, 0.6);
   background: rgba(16, 185, 129, 0.05);
   box-shadow: 0 0 10px rgba(16, 185, 129, 0.15);
+}
+
+@keyframes simCardPulseGlow {
+  0%, 100% {
+    box-shadow: 0 0 10px rgba(16, 185, 129, 0.2);
+    border-color: rgba(16, 185, 129, 0.6);
+  }
+  50% {
+    box-shadow: 0 0 18px rgba(16, 185, 129, 0.45);
+    border-color: rgba(16, 185, 129, 0.9);
+  }
+}
+
+.sim-scen-card.is-in-flight {
+  animation: simCardPulseGlow 1.2s ease-in-out infinite;
+}
+
+.sim-quad-grid.sim-is-loading .sim-quad-val {
+  opacity: 0.65;
+  transition: opacity 0.2s ease;
+}
+
+.sim-primary-btn.is-loading,
+.btn-sim-run.is-loading,
+#simRunBtn.is-loading {
+  opacity: 0.75;
+  cursor: wait;
+  pointer-events: none;
 }
 
 .sim-scen-name {
@@ -8150,6 +8190,21 @@ input[type='range'].sim-slider::-moz-range-thumb {
   }
   .sim-scenario-cards-grid {
     grid-template-columns: 1fr;
+    gap: 8px;
+  }
+  .sim-scen-card {
+    padding: 10px 12px;
+    min-height: 48px;
+    touch-action: manipulation;
+  }
+  .sim-scen-name {
+    font-size: 11px;
+  }
+  .sim-scen-val {
+    font-size: 15px;
+  }
+  .sim-scen-churn {
+    font-size: 12.5px;
   }
   .sim-slider-top {
     flex-direction: column;
