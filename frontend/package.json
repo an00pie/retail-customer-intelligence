@@ -6,7 +6,10 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build && cp -r static dist/",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "assets:check": "python3 ../scripts/sync_assets.py --check",
+    "assets:sync:from-frontend": "python3 ../scripts/sync_assets.py --from frontend",
+    "assets:sync:from-web": "python3 ../scripts/sync_assets.py --from web"
   },
   "dependencies": {
     "chart.js": "^4.4.2",
