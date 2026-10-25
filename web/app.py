@@ -184,6 +184,36 @@ def sanitize_csv_value(val):
         return "'" + s
     return val
 
+# Optional Sentry Error Monitoring (active only when SENTRY_DSN environment variable is set)
+sentry_dsn = os.environ.get("SENTRY_DSN")
+if sentry_dsn:
+    try:
+        import sentry_sdk
+        from sentry_sdk.integrations.flask import FlaskIntegration
+
+        def _scrub_sentry_event(event, hint):
+            # Strictly scrub sensitive request bodies and authentication headers
+            if "request" in event:
+                req = event["request"]
+                if "data" in req:
+                    req["data"] = "[FILTERED_PAYLOAD]"
+                if "headers" in req:
+                    for h in ("Authorization", "Cookie", "Set-Cookie", "X-Api-Key"):
+                        if h in req["headers"]:
+                            req["headers"][h] = "[FILTERED_HEADER]"
+            return event
+
+        sentry_sdk.init(
+            dsn=sentry_dsn,
+            integrations=[FlaskIntegration()],
+            environment=os.environ.get("SENTRY_ENVIRONMENT", "production"),
+            traces_sample_rate=float(os.environ.get("SENTRY_TRACES_SAMPLE_RATE", "0.1")),
+            before_send=_scrub_sentry_event,
+            send_default_pii=False,
+        )
+    except Exception as _sentry_init_err:
+        print(f"[Warning] Sentry initialization skipped: {_sentry_init_err}")
+
 app = Flask(
     __name__,
     template_folder=os.path.join(os.path.dirname(__file__), "templates"),

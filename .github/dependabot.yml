@@ -1,0 +1,45 @@
+# Dependabot Configuration for INSIGHT.arc — Retail Customer Intelligence Platform
+# Weekly automated dependency audits for pip (backend) and npm (frontend)
+version: 2
+updates:
+  # Python / pip dependencies (Flask, scikit-learn, joblib, requests, etc.)
+  - package-ecosystem: "pip"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "06:00"
+      timezone: "Etc/UTC"
+    open-pull-requests-limit: 5
+    reviewers:
+      - "an00pie"
+    groups:
+      python-minor-patch:
+        patterns:
+          - "*"
+        update-types:
+          - "minor"
+          - "patch"
+    ignore:
+      # Preserve Python 3.9 and scikit-learn 1.6.1 model parity compatibility
+      - dependency-name: "scikit-learn"
+        versions: [">=1.7.0"]
+
+  # Frontend Node / npm dependencies (Vite, React, Chart.js, etc.)
+  - package-ecosystem: "npm"
+    directory: "/frontend"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "06:00"
+      timezone: "Etc/UTC"
+    open-pull-requests-limit: 5
+    reviewers:
+      - "an00pie"
+    groups:
+      frontend-minor-patch:
+        patterns:
+          - "*"
+        update-types:
+          - "minor"
+          - "patch"

@@ -1,0 +1,96 @@
+name: Quality, Security & Regression Toolchain
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  audit-and-test:
+    name: Backend, Parity, Frontend & Security Audits
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.9
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.9"
+          cache: "pip"
+
+      - name: Set up Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: "npm"
+          cache-dependency-path: frontend/package-lock.json
+
+      - name: Install Python Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install pytest playwright pytest-playwright sentry-sdk
+          playwright install --with-deps chromium
+
+      - name: Install Frontend Dependencies
+        run: |
+          cd frontend
+          npm ci
+
+      - name: 1. Verify Asset Mirroring Integrity
+        run: |
+          python3 scripts/sync_assets.py --check
+
+      - name: 2. Run Backend & Model Parity Tests
+        run: |
+          PYTHONPATH=. pytest --ignore=tests/test_react_app.py --ignore=tests/e2e/test_playwright_e2e.py
+
+      - name: 3. Build Production Frontend
+        run: |
+          cd frontend
+          npm run build
+
+      - name: 4. Run Lighthouse CI Audit
+        run: |
+          cd frontend
+          npx lhci autorun --config=lighthouserc.cjs || true
+
+      - name: 5. Start Local Backend Test Server
+        run: |
+          PORT=5055 PYTHONPATH=. python3 web/app.py &
+          # Wait for health endpoint
+          for i in {1..20}; do
+            if curl -s http://127.0.0.1:5055/api/health | grep -q "healthy"; then
+              echo "Server is ready on port 5055"
+              break
+            fi
+            sleep 1
+          done
+
+      - name: 6. Run Playwright E2E Tests
+        env:
+          INSIGHT_TEST_URL: "http://127.0.0.1:5055"
+        run: |
+          PYTHONPATH=. pytest tests/e2e/test_playwright_e2e.py
+
+      - name: 7. Run Security Baseline Scan
+        run: |
+          PYTHONPATH=. python3 scripts/security_baseline_scan.py --target http://127.0.0.1:5055 --output-dir reports/security
+
+      - name: Upload Test & Security Artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: quality-security-reports
+          path: |
+            reports/
+            frontend/.lighthouseci/
+          if-no-files-found: ignore
