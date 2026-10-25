@@ -13,7 +13,7 @@ class GeminiTests(unittest.TestCase):
         token = self.client.post('/api/v1/auth/login', json={'username': 'admin', 'password': 'admin123'}).json['token']
         self.headers = {'Authorization': 'Bearer ' + token}
         self.inputs = {'recency_days': 25, 'frequency': 6, 'total_spend': 1250, 'tenure_days': 300}
-        self.environment = patch.dict(os.environ, {'GEMINI_API_KEY': 'test-only-key', 'GEMINI_MODEL': 'gemini-2.5-flash'})
+        self.environment = patch.dict(os.environ, {'GEMINI_API_KEY': 'test-only-key', 'GEMINI_MODEL': 'gemini-flash-lite-latest'})
         self.environment.start()
         self.addCleanup(self.environment.stop)
 

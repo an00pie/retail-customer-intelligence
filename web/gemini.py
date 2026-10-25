@@ -13,7 +13,7 @@ def explain_prediction(prediction):
     key = os.environ.get('GEMINI_API_KEY', '').strip()
     if not key:
         raise ExplanationUnavailable('Gemini is not configured on the backend.')
-    model = os.environ.get('GEMINI_MODEL', 'gemini-2.5-flash').strip()
+    model = os.environ.get('GEMINI_MODEL', 'gemini-flash-lite-latest').strip()
     if not re.fullmatch(r'gemini-[a-zA-Z0-9.\-]+', model):
         raise ExplanationUnavailable('The backend Gemini model configuration is invalid.')
     evidence = {
