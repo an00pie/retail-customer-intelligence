@@ -41,3 +41,8 @@ dist/
 !web/static/img/**
 !frontend/public/static/img/**
 loding page/
+
+# Local agent tooling and runtime state
+.agent/
+.ralph/
+
