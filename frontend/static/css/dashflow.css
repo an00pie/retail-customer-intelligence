@@ -9379,3 +9379,203 @@ input[type='range'].sim-slider::-moz-range-thumb {
 .shopify-matrix-table tr:hover td {
   background: rgba(255, 255, 255, 0.02);
 }
+
+/* ==============================================================================
+   Issue 3: Store Filter Contextual Breadcrumb & Return Navigation
+   ============================================================================== */
+.store-filter-breadcrumb {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.08) 0%, rgba(6, 78, 59, 0.12) 100%);
+  border: 1px solid rgba(16, 185, 129, 0.28);
+  border-radius: 12px;
+  padding: 10px 16px;
+  margin-bottom: 18px;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  animation: breadcrumbFadeIn 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes breadcrumbFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.breadcrumb-trail {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  font-size: 13px;
+  color: #e4e4e7;
+}
+
+.breadcrumb-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: transparent;
+  border: none;
+  padding: 0;
+  color: var(--text-muted, #a1a1aa);
+  font-size: 12.5px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: color 0.15s ease;
+}
+
+.breadcrumb-link:hover,
+.breadcrumb-link:focus-visible {
+  color: #34d399;
+  outline: none;
+}
+
+.breadcrumb-link svg {
+  color: #34d399;
+}
+
+.breadcrumb-sep {
+  color: rgba(255, 255, 255, 0.25);
+  font-weight: 300;
+  font-size: 14px;
+}
+
+.breadcrumb-current {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: #ffffff;
+}
+
+.breadcrumb-dot {
+  font-size: 10px;
+  line-height: 1;
+}
+
+.breadcrumb-dept {
+  font-size: 9.5px;
+  letter-spacing: 0.06em;
+  font-weight: 700;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  padding: 2px 7px;
+  border-radius: 4px;
+  color: #a1a1aa;
+}
+
+.breadcrumb-count {
+  font-size: 11.5px;
+  color: #34d399;
+  font-family: var(--font-mono, monospace);
+  font-weight: 600;
+}
+
+.breadcrumb-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+}
+
+.breadcrumb-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border-radius: 8px;
+  font-size: 11.5px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  box-sizing: border-box;
+}
+
+.breadcrumb-reset-btn {
+  background: rgba(244, 63, 94, 0.12);
+  border: 1px solid rgba(244, 63, 94, 0.3);
+  color: #fb7185;
+}
+
+.breadcrumb-reset-btn:hover,
+.breadcrumb-reset-btn:focus-visible {
+  background: rgba(244, 63, 94, 0.22);
+  border-color: rgba(244, 63, 94, 0.5);
+  color: #ffffff;
+  outline: none;
+}
+
+.breadcrumb-return-btn {
+  background: rgba(16, 185, 129, 0.15);
+  border: 1px solid rgba(16, 185, 129, 0.35);
+  color: #34d399;
+}
+
+.breadcrumb-return-btn:hover,
+.breadcrumb-return-btn:focus-visible {
+  background: rgba(16, 185, 129, 0.28);
+  border-color: rgba(16, 185, 129, 0.55);
+  color: #ffffff;
+  transform: translateY(-1px);
+  outline: none;
+}
+
+.shopify-store-card-active {
+  border-color: rgba(52, 211, 153, 0.6) !important;
+  box-shadow: 0 0 24px rgba(52, 211, 153, 0.22), 0 8px 32px rgba(0, 0, 0, 0.4) !important;
+  transform: translateY(-2px);
+}
+
+@media (max-width: 1024px) {
+  .store-filter-breadcrumb {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+    padding: 12px 14px;
+  }
+  .breadcrumb-actions {
+    width: 100%;
+    justify-content: flex-end;
+    padding-top: 8px;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+  }
+}
+
+@media (max-width: 640px) {
+  .store-filter-breadcrumb {
+    padding: 12px 12px;
+    margin-bottom: 14px;
+    gap: 10px;
+  }
+  .breadcrumb-trail {
+    font-size: 12px;
+    gap: 6px;
+  }
+  .breadcrumb-link {
+    font-size: 11.5px;
+  }
+  .breadcrumb-dept {
+    display: none !important;
+  }
+  .breadcrumb-actions {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
+    width: 100%;
+  }
+  .breadcrumb-btn {
+    width: 100%;
+    justify-content: center;
+    padding: 8px 12px;
+    min-height: 38px;
+    font-size: 11.5px;
+  }
+}

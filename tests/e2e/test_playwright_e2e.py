@@ -161,3 +161,81 @@ def test_responsive_layout_captures(browser_instance):
         page.locator("#tab-clv").screenshot(path=path)
         assert os.path.exists(path), f"Screenshot {path} should be generated"
         page.close()
+
+
+def test_shopify_store_filter_breadcrumb_interaction(browser_instance):
+    """Verifies Issue 3: store filtering, contextual breadcrumb display, clear filter, and return navigation."""
+    page = browser_instance.new_page(viewport={"width": 1440, "height": 900})
+    page.goto(TEST_URL, wait_until="networkidle")
+    page.wait_for_timeout(500)
+
+    # 1. Filter by Bulletproof
+    page.evaluate("() => window.filterByStore && window.filterByStore('Bulletproof')")
+    page.wait_for_timeout(500)
+
+    # Verify tab switched to lookup
+    lookup_pane = page.locator("#tab-lookup")
+    assert "active" in (lookup_pane.get_attribute("class") or ""), "Lookup tab must be active"
+
+    # Verify breadcrumb container is visible
+    breadcrumb = page.locator("#storeFilterBreadcrumb")
+    assert breadcrumb.is_visible(), "Breadcrumb must be visible when store filter is active"
+
+    # Verify metadata
+    assert "Bulletproof" in page.locator("#breadcrumbStoreName").inner_text()
+    assert "1,149" in page.locator("#breadcrumbStoreCount").inner_text()
+    assert page.locator("#lookupStoreFilter").input_value() == "Bulletproof"
+
+    # 2. Manual dropdown change to ColourPop
+    page.locator("#lookupStoreFilter").select_option("ColourPop")
+    page.wait_for_timeout(400)
+
+    assert "ColourPop" in page.locator("#breadcrumbStoreName").inner_text()
+    assert "1,191" in page.locator("#breadcrumbStoreCount").inner_text()
+
+    # 3. Clear store filter
+    page.locator("#breadcrumbClearBtn").click()
+    page.wait_for_timeout(400)
+
+    assert not breadcrumb.is_visible(), "Breadcrumb must be hidden after clearing store filter"
+    assert page.locator("#lookupStoreFilter").input_value() == "All"
+
+    # 4. Filter by Allbirds and Return to Multi-Store Dashboard
+    page.evaluate("() => window.filterByStore && window.filterByStore('Allbirds')")
+    page.wait_for_timeout(500)
+    assert breadcrumb.is_visible()
+    assert "Allbirds" in page.locator("#breadcrumbStoreName").inner_text()
+
+    page.locator("#breadcrumbReturnBtn").click()
+    page.wait_for_timeout(500)
+
+    dash_pane = page.locator("#tab-dashboard")
+    assert "active" in (dash_pane.get_attribute("class") or ""), "Dashboard tab must be active after return"
+
+    page.close()
+
+
+def test_shopify_breadcrumb_responsive_overflow(browser_instance):
+    """Verifies zero horizontal overflow across 1440px, 768px, and 390px with active store breadcrumb."""
+    viewports = [
+        ("desktop_1440", {"width": 1440, "height": 900}),
+        ("tablet_768", {"width": 768, "height": 1024}),
+        ("mobile_390", {"width": 390, "height": 844}),
+    ]
+
+    for name, vp in viewports:
+        page = browser_instance.new_page(viewport=vp)
+        page.goto(TEST_URL, wait_until="networkidle")
+        page.evaluate("() => window.filterByStore && window.filterByStore('Taylor Stitch')")
+        page.wait_for_timeout(400)
+
+        # Assert no horizontal overflow
+        has_overflow = page.evaluate("() => document.documentElement.scrollWidth > window.innerWidth")
+        assert not has_overflow, f"Horizontal overflow detected on viewport {name}"
+
+        # Capture screenshot of breadcrumb
+        b_path = os.path.join(SCREENSHOT_DIR, f"issue3_breadcrumb_{name}.png")
+        page.locator("#storeFilterBreadcrumb").screenshot(path=b_path)
+        assert os.path.exists(b_path), f"Screenshot {b_path} should be generated"
+
+        page.close()

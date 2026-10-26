@@ -3318,6 +3318,100 @@ function initGlobalSearch() {
 /* ==============================================================================
    12. SHOPIFY MULTI-STORE CHURN RISK INTELLIGENCE ENGINE
    ============================================================================== */
+let cachedShopifyStores = [];
+
+function getStoreMetadata(storeName) {
+  if (!storeName || storeName === 'All') return null;
+  if (cachedShopifyStores && cachedShopifyStores.length > 0) {
+    const found = cachedShopifyStores.find(s => s.store_name && s.store_name.toLowerCase() === storeName.toLowerCase());
+    if (found) return found;
+  }
+  const FALLBACK_STORES = {
+    'Bulletproof': { store_name: 'Bulletproof', department: 'Health, Nutrition & Coffee', total_customers: 1149, risk_level: 'Low Risk', avg_churn_risk_pct: 40.5 },
+    'ColourPop': { store_name: 'ColourPop', department: 'Cosmetics & Beauty', total_customers: 1191, risk_level: 'Moderate Risk', avg_churn_risk_pct: 50.0 },
+    'Allbirds': { store_name: 'Allbirds', department: 'Footwear & Sustainable Apparel', total_customers: 1216, risk_level: 'Moderate Risk', avg_churn_risk_pct: 54.1 },
+    'UNTUCKit': { store_name: 'UNTUCKit', department: 'Apparel & Menswear', total_customers: 1260, risk_level: 'Elevated Risk', avg_churn_risk_pct: 62.7 },
+    'Taylor Stitch': { store_name: 'Taylor Stitch', department: 'Heritage & Outdoor Menswear', total_customers: 1126, risk_level: 'High Risk', avg_churn_risk_pct: 65.2 }
+  };
+  return FALLBACK_STORES[storeName] || null;
+}
+
+function updateStoreFilterBreadcrumb(storeName) {
+  const breadcrumbEl = document.getElementById('storeFilterBreadcrumb');
+  if (!breadcrumbEl) return;
+
+  if (!storeName || storeName === 'All') {
+    breadcrumbEl.style.display = 'none';
+    document.querySelectorAll('.shopify-store-card').forEach(card => {
+      card.classList.remove('shopify-store-card-active');
+    });
+    return;
+  }
+
+  const meta = getStoreMetadata(storeName);
+  const nameEl = document.getElementById('breadcrumbStoreName');
+  const deptEl = document.getElementById('breadcrumbStoreDept');
+  const countEl = document.getElementById('breadcrumbStoreCount');
+  const dotEl = document.getElementById('breadcrumbRiskDot');
+
+  if (nameEl) nameEl.textContent = storeName;
+  if (deptEl) {
+    deptEl.textContent = meta && meta.department ? String(meta.department).toUpperCase() : '';
+    deptEl.style.display = meta && meta.department ? 'inline-block' : 'none';
+  }
+  if (countEl) {
+    const count = meta && meta.total_customers ? Number(meta.total_customers).toLocaleString() : '';
+    countEl.textContent = count ? `(${count} accounts)` : '';
+  }
+  if (dotEl && meta) {
+    if (meta.avg_churn_risk_pct < 45) {
+      dotEl.style.color = '#34d399';
+    } else if (meta.avg_churn_risk_pct >= 63) {
+      dotEl.style.color = '#fb7185';
+    } else if (meta.avg_churn_risk_pct >= 55) {
+      dotEl.style.color = '#fb923c';
+    } else {
+      dotEl.style.color = '#fbbf24';
+    }
+  }
+
+  breadcrumbEl.style.display = 'flex';
+
+  // Highlight active store card in Shopify multi-store grid
+  document.querySelectorAll('.shopify-store-card').forEach(card => {
+    const cardTitle = card.querySelector('.shopify-brand-name span');
+    if (cardTitle && cardTitle.textContent.trim().toLowerCase() === storeName.toLowerCase()) {
+      card.classList.add('shopify-store-card-active');
+    } else {
+      card.classList.remove('shopify-store-card-active');
+    }
+  });
+}
+
+window.clearStoreFilter = function() {
+  const lookupStoreFilter = document.getElementById('lookupStoreFilter');
+  if (lookupStoreFilter) {
+    lookupStoreFilter.value = 'All';
+  }
+  updateStoreFilterBreadcrumb('All');
+  if (typeof window.showToast === 'function') {
+    window.showToast('Store filter reset to All Shopify Stores (5,942 accounts)', 'info');
+  }
+};
+
+window.returnToShopifySection = function() {
+  if (typeof window.switchDashboardTab === 'function') {
+    window.switchDashboardTab('dashboard');
+  }
+  const prefersReducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  setTimeout(() => {
+    const section = document.getElementById('shopifyStoresSection') || document.querySelector('.shopify-section-container');
+    if (section) {
+      section.scrollIntoView({ behavior: prefersReducedMotion ? 'auto' : 'smooth', block: 'start' });
+    }
+  }, 120);
+};
+
 function initShopifyStoreAnalytics() {
   const grid = document.getElementById('shopifyStoresGrid');
   const summaryEl = document.getElementById('shopifyNetworkSummary');
@@ -3328,29 +3422,38 @@ function initShopifyStoreAnalytics() {
     lookupStoreFilter.addEventListener('change', (e) => {
       const selectedStore = e.target.value;
       if (selectedStore && selectedStore !== 'All') {
-        window.filterByStore(selectedStore);
+        window.filterByStore(selectedStore, false);
+      } else {
+        window.clearStoreFilter();
       }
     });
   }
 
-  window.filterByStore = function(storeName) {
+  window.filterByStore = function(storeName, switchTab = true) {
     if (!storeName) return;
     if (window.insightAnalytics) {
       window.insightAnalytics.track('shopify_filter_applied', { store: storeName });
     }
-    if (typeof window.switchDashboardTab === 'function') {
+    if (switchTab && typeof window.switchDashboardTab === 'function') {
       window.switchDashboardTab('lookup');
     }
     if (lookupStoreFilter) {
       lookupStoreFilter.value = storeName;
     }
+    updateStoreFilterBreadcrumb(storeName);
+
     const input = document.getElementById('lookupCustIdInput');
     const btn = document.getElementById('lookupSearchBtn');
+    const currentFilterStore = storeName;
 
     // Fetch verified sample customer from this specific storefront
     fetch(`/api/v1/customers?store=${encodeURIComponent(storeName)}&limit=1`)
       .then(res => res.json())
       .then(data => {
+        // Discard if the active filter changed while the fetch was in flight
+        if (lookupStoreFilter && lookupStoreFilter.value !== currentFilterStore) {
+          return;
+        }
         if (data && data.customers && data.customers.length > 0) {
           const sampleCustId = data.customers[0].customer_id;
           if (input) input.value = sampleCustId;
@@ -3374,6 +3477,7 @@ function initShopifyStoreAnalytics() {
     })
     .then(data => {
       if (!data || !data.stores) return;
+      cachedShopifyStores = data.stores;
 
       if (summaryEl && data.network_avg_churn_rate) {
         summaryEl.innerHTML = `Network Average Churn Risk: <strong style="color: #fff;">${data.network_avg_churn_rate}%</strong>`;
@@ -3505,6 +3609,11 @@ function initShopifyStoreAnalytics() {
             </tr>
           `;
         }).join('');
+      }
+
+      // Re-apply breadcrumb & active card styling now that grid DOM nodes exist
+      if (lookupStoreFilter && lookupStoreFilter.value && lookupStoreFilter.value !== 'All') {
+        updateStoreFilterBreadcrumb(lookupStoreFilter.value);
       }
     })
     .catch(err => {
