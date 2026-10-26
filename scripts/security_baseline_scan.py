@@ -7,6 +7,7 @@ and data exposure without destructive attacks or production writes.
 import os
 import sys
 import json
+import html
 import argparse
 import requests
 from typing import Dict, Any, List
@@ -37,7 +38,13 @@ def audit_target(target_url: str) -> Dict[str, Any]:
             "target": target_url,
             "status": "ERROR",
             "error": str(e),
-            "findings": [{"severity": "HIGH", "title": f"Target unreachable: {e}"}]
+            "summary": {"HIGH": 1, "MEDIUM": 0, "LOW": 0},
+            "findings": [{
+                "severity": "HIGH",
+                "category": "Connectivity",
+                "title": f"Target unreachable: {e}",
+                "recommendation": "Ensure target server is started and accepting connections."
+            }]
         }
 
     resp_headers = res.headers
@@ -55,7 +62,19 @@ def audit_target(target_url: str) -> Dict[str, Any]:
                 "recommendation": f"Add '{header}: {expected}' to web server or proxy configuration."
             })
         else:
-            headers_passed += 1
+            tokens = {t.strip() for t in val.strip().lower().split(",") if t.strip()}
+            allowed = expected if isinstance(expected, list) else [expected]
+            valid = any(exp.lower() in tokens for exp in allowed)
+            if not valid:
+                findings.append({
+                    "severity": "MEDIUM",
+                    "category": "Headers",
+                    "title": f"Invalid security header value for {header}: '{val}'",
+                    "description": f"Header value '{val}' does not match secure configurations: {expected}.",
+                    "recommendation": f"Configure {header} with a secure directive such as '{expected}'."
+                })
+            else:
+                headers_passed += 1
 
     for header in RECOMMENDED_HEADERS:
         headers_audited += 1
@@ -94,6 +113,21 @@ def audit_target(target_url: str) -> Dict[str, Any]:
             "recommendation": "Restrict Access-Control-Allow-Origin to trusted explicit origins."
         })
 
+    try:
+        cors_probe = requests.get(target_url, headers={"Origin": "https://evil.example.com"}, timeout=5)
+        probe_origin = cors_probe.headers.get("Access-Control-Allow-Origin")
+        probe_creds = cors_probe.headers.get("Access-Control-Allow-Credentials")
+        if probe_origin == "https://evil.example.com" and probe_creds == "true":
+            findings.append({
+                "severity": "HIGH",
+                "category": "CORS",
+                "title": "Insecure CORS Reflection with Credentials",
+                "description": "Arbitrary Origin header was reflected with Access-Control-Allow-Credentials set to true.",
+                "recommendation": "Do not reflect untrusted Origin headers when credentials are supported."
+            })
+    except Exception:
+        pass
+
     # 4. Insecure HTTP Methods (TRACE / TRACK)
     try:
         trace_res = requests.request("TRACE", target_url, timeout=5)
@@ -128,14 +162,21 @@ def audit_target(target_url: str) -> Dict[str, Any]:
 def generate_html_report(report_data: Dict[str, Any], filepath: str):
     findings_rows = "".join(f"""
     <tr>
-      <td><span class="badge badge-{f['severity'].lower()}">{f['severity']}</span></td>
-      <td><strong>{f.get('title', '')}</strong></td>
-      <td>{f.get('category', 'General')}</td>
-      <td>{f.get('recommendation', '')}</td>
+      <td><span class="badge badge-{html.escape(str(f.get('severity', '')).lower())}">{html.escape(str(f.get('severity', '')))}</span></td>
+      <td><strong>{html.escape(str(f.get('title', '')))}</strong></td>
+      <td>{html.escape(str(f.get('category', 'General')))}</td>
+      <td>{html.escape(str(f.get('recommendation', '')))}</td>
     </tr>
     """ for f in report_data.get("findings", []))
 
-    html = f"""<!DOCTYPE html>
+    target_val = html.escape(str(report_data.get('target', '')))
+    status_val = html.escape(str(report_data.get('status_code', report_data.get('status', 'N/A'))))
+    summary_data = report_data.get("summary", {})
+    high_count = summary_data.get('HIGH', 0)
+    med_count = summary_data.get('MEDIUM', 0)
+    low_count = summary_data.get('LOW', 0)
+
+    report_html = f"""<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="utf-8">
@@ -156,9 +197,9 @@ def generate_html_report(report_data: Dict[str, Any], filepath: str):
 <body>
   <h1>INSIGHT.arc Security Baseline Audit Report</h1>
   <div class="summary-card">
-    <p><strong>Target URL:</strong> {report_data.get('target')}</p>
-    <p><strong>Status:</strong> HTTP {report_data.get('status_code')}</p>
-    <p><strong>Findings Summary:</strong> High: {report_data['summary']['HIGH']} | Medium: {report_data['summary']['MEDIUM']} | Low: {report_data['summary']['LOW']}</p>
+    <p><strong>Target URL:</strong> {target_val}</p>
+    <p><strong>Status:</strong> HTTP {status_val}</p>
+    <p><strong>Findings Summary:</strong> High: {high_count} | Medium: {med_count} | Low: {low_count}</p>
   </div>
   <table>
     <thead>
@@ -171,7 +212,7 @@ def generate_html_report(report_data: Dict[str, Any], filepath: str):
 </body>
 </html>"""
     with open(filepath, "w", encoding="utf-8") as f:
-        f.write(html)
+        f.write(report_html)
 
 
 def main():
@@ -190,8 +231,15 @@ def main():
         json.dump(report, f, indent=2)
 
     generate_html_report(report, html_path)
-    print(f"[✔] Security scan completed. High: {report['summary']['HIGH']}, Medium: {report['summary']['MEDIUM']}, Low: {report['summary']['LOW']}")
+    summary_data = report.get("summary", {})
+    high_count = summary_data.get("HIGH", 0)
+    med_count = summary_data.get("MEDIUM", 0)
+    low_count = summary_data.get("LOW", 0)
+    print(f"[✔] Security scan completed. High: {high_count}, Medium: {med_count}, Low: {low_count}")
     print(f"    Reports: {json_path} and {html_path}")
+
+    if report.get("status") == "ERROR":
+        sys.exit(1)
 
 
 if __name__ == "__main__":

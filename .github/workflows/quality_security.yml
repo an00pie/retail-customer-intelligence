@@ -66,14 +66,19 @@ jobs:
       - name: 5. Start Local Backend Test Server
         run: |
           PORT=5055 PYTHONPATH=. python3 web/app.py &
-          # Wait for health endpoint
-          for i in {1..20}; do
-            if curl -s http://127.0.0.1:5055/api/health | grep -q "healthy"; then
+          ready=0
+          for i in {1..30}; do
+            if curl -sf http://127.0.0.1:5055/api/health | grep -q "healthy"; then
               echo "Server is ready on port 5055"
+              ready=1
               break
             fi
             sleep 1
           done
+          if [ "$ready" -ne 1 ]; then
+            echo "Backend did not become healthy" >&2
+            exit 1
+          fi
 
       - name: 6. Run Playwright E2E Tests
         env:

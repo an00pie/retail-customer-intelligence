@@ -40,7 +40,7 @@ This document outlines the six developer quality and security tools integrated i
   npm run build
   npx lhci autorun --config=lighthouserc.cjs
   ```
-- **Interpreting Results**: Reports are written to `frontend/.lighthouseci/`. Thresholds are tuned for static/SPA hydration (Accessibility >= 0.85, Best Practices >= 0.80, SEO >= 0.80).
+- **Interpreting Results**: Reports are written to `frontend/.lighthouseci/`. Thresholds are tuned for static/SPA hydration (Performance >= 0.50, Accessibility >= 0.75, Best Practices >= 0.70, SEO >= 0.70). These assertions are configured at warning level (`warn`) so audits provide actionable quality telemetry without blocking CI pipelines.
 
 ### 3. GitHub Dependabot (Automated Dependency Audits)
 - **Purpose**: Audits pip (`requirements.txt`) and npm (`frontend/package.json`) dependencies weekly on Mondays at 06:00 UTC.
@@ -52,7 +52,7 @@ This document outlines the six developer quality and security tools integrated i
 ### 4. Sentry (Error Monitoring)
 - **Purpose**: Captures uncaught frontend exceptions and backend server errors.
 - **Safe Fallback**: Monitoring is completely inert unless an explicit DSN is provided.
-- **Privacy & Scrubbing**: Automatically removes sensitive customer IDs, request payloads, and authentication headers before transmission.
+- **Privacy & Scrubbing**: Automatically scrubs authorization/cookie headers and request body payloads before transmission.
 - **Environment Variables**:
   - `SENTRY_DSN`: `https://<public_key>@o<org>.ingest.sentry.io/<project_id>` (Set in Render dashboard)
   - `SENTRY_ENVIRONMENT`: `production` or `development`
@@ -108,8 +108,8 @@ PORT=5055 PYTHONPATH=. python3 web/app.py &
 SERVER_PID=$!
 sleep 2
 INSIGHT_TEST_URL="http://127.0.0.1:5055" PYTHONPATH=. pytest tests/e2e/test_playwright_e2e.py
-kill $SERVER_PID
 
 # 6. Security Baseline
 PYTHONPATH=. python3 scripts/security_baseline_scan.py --target http://127.0.0.1:5055
+kill $SERVER_PID
 ```

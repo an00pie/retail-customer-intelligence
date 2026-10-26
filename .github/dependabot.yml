@@ -11,8 +11,6 @@ updates:
       time: "06:00"
       timezone: "Etc/UTC"
     open-pull-requests-limit: 5
-    reviewers:
-      - "an00pie"
     groups:
       python-minor-patch:
         patterns:
@@ -34,8 +32,6 @@ updates:
       time: "06:00"
       timezone: "Etc/UTC"
     open-pull-requests-limit: 5
-    reviewers:
-      - "an00pie"
     groups:
       frontend-minor-patch:
         patterns:

@@ -17,7 +17,7 @@ from playwright.sync_api import sync_playwright
 TEST_URL = os.environ.get("INSIGHT_TEST_URL", "http://127.0.0.1:5055")
 SCREENSHOT_DIR = os.environ.get(
     "INSIGHT_SCREENSHOT_DIR",
-    "/Users/jisshajan/.gemini/antigravity/brain/d10b9bcc-95d1-43bc-b8ea-b0b4f604dd54/screenshots"
+    os.path.join(os.path.abspath(os.path.dirname(__file__)), "screenshots")
 )
 os.makedirs(SCREENSHOT_DIR, exist_ok=True)
 
