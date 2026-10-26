@@ -70,7 +70,7 @@ jobs:
           PORT=5055 PYTHONPATH=. python3 web/app.py &
           ready=0
           for i in {1..30}; do
-            if curl -sf http://127.0.0.1:5055/api/health | grep -q "healthy"; then
+            if curl -sf http://127.0.0.1:5055/api/health | grep -q "operational"; then
               echo "Server is ready on port 5055"
               ready=1
               break
