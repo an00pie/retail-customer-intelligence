@@ -2085,7 +2085,7 @@ function initWhatIfSimulator() {
   const SCENARIO_PRESETS = {
     conservative: { r: '75', f: '3', s: '650', t: '120' },
     optimistic: { r: '10', f: '14', s: '2800', t: '420' },
-    base: { r: '76', f: '6', s: '1250', t: '300' }
+    base: { r: '25', f: '6', s: '1250', t: '300' }
   };
 
   // Global helper for Scenario card selection
