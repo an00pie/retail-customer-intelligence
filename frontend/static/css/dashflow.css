@@ -10196,6 +10196,12 @@ input[type='range'].sim-slider::-moz-range-thumb {
   color: #8e8e93;
 }
 
+.copilot-status-indicator .status-dot {
+  font-size: 8px;
+  color: #8e8e93;
+  line-height: 1;
+}
+
 .copilot-header-actions {
   display: flex;
   align-items: center;
