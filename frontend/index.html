@@ -1925,14 +1925,14 @@
                    TAB 5: CLV FORECAST & WHAT-IF SIMULATOR
                    ========================================================== -->
               <div class="spa-tab-pane" id="tab-clv">
-                <div class="dash-header-bar">
+                <div class="dash-header-bar sim-header-bar">
                   <div class="dash-title-block">
                     <div class="dash-title-with-icon">
-                      <span class="dash-title-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 3-1.9 5.8a2 2 0 0 1-1.3 1.3L3 12l5.8 1.9a2 2 0 0 1 1.3 1.3L12 21l1.9-5.8a2 2 0 0 1 1.3-1.3L21 12l-5.8-1.9a2 2 0 0 1-1.3-1.3L12 3z"/></svg></span>
-                      <h2>CLV FORECAST &amp; SCENARIO SIMULATOR</h2>
+                      <span class="sim-header-icon-box">✦</span>
+                      <h2 class="sim-section-title">CLV FORECAST &amp; SCENARIO SIMULATOR</h2>
                     </div>
-                    <p>Model customer behavior, test scenarios, and forecast lifetime value<br>
-                    <span style="font-size: 11.5px; color: #8e9693;">Supervised Gradient Boosting Regressor (Cohort R² 0.5238, MAE $321.78)</span></p>
+                    <p class="sim-header-sub">Model customer behavior, test scenarios, and forecast lifetime value<br>
+                    <span class="sim-header-meta">Supervised Gradient Boosting Regressor (Cohort R² 0.5238, MAE $321.78)</span></p>
                   </div>
                   <div class="dash-header-right-actions">
                     <div class="header-mascot-widget" title="INSIGHT.arc Simulator Engine">
@@ -1940,10 +1940,10 @@
                       <div class="header-mascot-bubble">
                         <span class="mascot-bubble-line1">Simulate strategies</span>
                         <span class="mascot-bubble-line2">Predict customer value</span>
-                        <span class="mascot-bubble-line3">Find what drives growth <span class="mascot-sparkle">✨</span></span>
+                        <span class="mascot-bubble-line3">Find what drives growth <span class="mascot-sparkle">✦</span></span>
                       </div>
                     </div>
-                    <button type="button" class="dash-action-pill" onclick="window.switchDashboardTab('dashboard')">← Back to Overview</button>
+                    <button type="button" class="dash-action-pill sim-back-btn" onclick="window.switchDashboardTab('dashboard')">← Back to Overview</button>
                   </div>
                 </div>
 
@@ -1954,14 +1954,14 @@
                     <div class="sim-card-header">
                       <div class="sim-card-header-left">
                         <div class="sim-card-icon-box">
-                          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+                          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
                         </div>
                         <div>
                           <div class="sim-card-title">ADJUST CUSTOMER INPUTS</div>
                           <div class="sim-card-sub">Modify customer behavior parameters to predict segment, CLV, and churn risk</div>
                         </div>
                       </div>
-                      <button type="button" class="dash-action-pill" id="simResetBtn" style="font-size: 11px; padding: 4px 10px; cursor: pointer;">↺ Reset to Defaults</button>
+                      <button type="button" class="dash-action-pill sim-reset-pill" id="simResetBtn">↺ Reset to Defaults</button>
                     </div>
 
                     <!-- Sliders List -->
@@ -2033,9 +2033,9 @@
                             <span>Monetary (Total historical spend)</span>
                           </label>
                           <div class="sim-slider-input-box">
-                            <span style="color: #ffffff; font-weight: 700; font-size: 12px;">$</span>
+                            <span class="sim-currency-prefix">$</span>
                             <input type="number" class="sim-num-input" id="simSpend" value="1250" min="0" max="50000" step="50" aria-describedby="simSpendErr" aria-invalid="false">
-                            <span class="sim-unit-text" id="simSpendVal">$1,250</span>
+                            <span class="sim-unit-text" id="simSpendVal">,250</span>
                           </div>
                         </div>
                         <div class="sim-slider-body-grid">
@@ -2090,7 +2090,7 @@
                     <div class="sim-bottom-bar">
                       <div class="sim-btn-group">
                         <button type="button" class="sim-primary-btn" id="simRunBtn">▶ Run Simulation →</button>
-                        <button type="button" class="sim-secondary-btn" id="simSaveBtn">💾 Save Scenario</button>
+                        <button type="button" class="sim-secondary-btn" id="simSaveBtn">📁 Save Scenario</button>
                         <button type="button" id="simSaveCurrentBtn" style="display: none;" aria-hidden="true">Save</button>
                       </div>
                       <div class="sim-mode-toggle-wrap">
@@ -2108,15 +2108,15 @@
                     <!-- Results Header -->
                     <div class="sim-card-header">
                       <div class="sim-card-header-left">
-                        <div class="sim-card-icon-box" style="background: rgba(16, 185, 129, 0.12); color: #34d399; border-color: rgba(16, 185, 129, 0.3);">
-                          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a10 10 0 0 0-7.743 16.33l-1.964 1.963a1 1 0 0 0 1.414 1.414l1.964-1.964A10 10 0 1 0 12 2zm0 18a8 8 0 1 1 8-8 8.009 8.009 0 0 1-8 8z"/><circle cx="12" cy="12" r="3"/></svg>
+                        <div class="sim-card-icon-box">
+                          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a10 10 0 0 0-7.743 16.33l-1.964 1.963a1 1 0 0 0 1.414 1.414l1.964-1.964A10 10 0 1 0 12 2zm0 18a8 8 0 1 1 8-8 8.009 8.009 0 0 1-8 8z"/><circle cx="12" cy="12" r="3"/></svg>
                         </div>
                         <div>
                           <div class="sim-card-title">PREDICTION RESULTS</div>
                           <div class="sim-card-sub">AI-powered customer value and churn prediction based on current inputs</div>
                         </div>
                       </div>
-                      <div class="sim-confidence-badge" title="Supervised Gradient Boosting Regressor & Churn Model assessment">
+                      <div class="sim-confidence-badge" title="Supervised Gradient Boosting Regressor &amp; Churn Model assessment">
                         Prediction confidence: <span class="sim-conf-value">Moderate</span> ⓘ
                       </div>
                     </div>
@@ -2126,49 +2126,49 @@
                       <!-- Metric 1: Segment -->
                       <div class="sim-quad-item">
                         <div class="sim-quad-header">
-                          <div class="sim-quad-icon" style="background: rgba(59, 130, 246, 0.12); color: #60a5fa; border: 1px solid rgba(59, 130, 246, 0.25);">
+                          <div class="sim-quad-icon">
                             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.45 1-1 1H7c-.55 0-1-.45-1-1v-2.34c-1.22-.64-2-1.92-2-3.32V4h16v7.34c0 1.4-.78 2.68-2 3.32V17c0 .55-.45 1-1 1h-2c-.55 0-1-.45-1-1v-2.34c-.7.37-1.5.58-2.35.63H9.35c-.85-.05-1.65-.26-2.35-.63z"/></svg>
                           </div>
                           <span class="sim-quad-caption">PREDICTED SEGMENT</span>
                         </div>
-                        <div class="sim-quad-val" id="simSegOutput" style="color: #60a5fa;">Loyal Customers</div>
+                        <div class="sim-quad-val" id="simSegOutput">Loyal Customers</div>
                         <div class="sim-quad-sub">High-value with re-engagement potential</div>
                       </div>
 
                       <!-- Metric 2: Predicted 90-Day CLV -->
                       <div class="sim-quad-item">
                         <div class="sim-quad-header">
-                          <div class="sim-quad-icon" style="background: rgba(16, 185, 129, 0.12); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.25);">
+                          <div class="sim-quad-icon">
                             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
                           </div>
                           <span class="sim-quad-caption">PREDICTED 90-DAY CLV</span>
                         </div>
-                        <div class="sim-quad-val" id="simClvOutput" style="color: #34d399;">$341.43</div>
-                        <div class="sim-quad-sub"><span style="color: #34d399; font-weight: 700;">↑ + 32.1%</span> vs. segment average</div>
+                        <div class="sim-quad-val" id="simClvOutput">.43</div>
+                        <div class="sim-quad-sub"><span class="sim-delta-neutral">↑ + 32.1%</span> vs. segment average</div>
                       </div>
 
                       <!-- Metric 3: Churn Risk -->
                       <div class="sim-quad-item">
                         <div class="sim-quad-header">
-                          <div class="sim-quad-icon" style="background: rgba(244, 63, 94, 0.12); color: #fb7185; border: 1px solid rgba(244, 63, 94, 0.25);">
+                          <div class="sim-quad-icon">
                             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
                           </div>
                           <span class="sim-quad-caption">CHURN RISK</span>
                         </div>
-                        <div class="sim-quad-val" id="simChurnOutput" style="color: #ffffff;">23.5%</div>
-                        <div class="sim-quad-sub"><span style="color: #fb7185; font-weight: 700;">↑ + 18.6%</span> vs. segment average</div>
+                        <div class="sim-quad-val" id="simChurnOutput">23.5%</div>
+                        <div class="sim-quad-sub"><span class="sim-delta-neutral">↑ + 18.6%</span> vs. segment average</div>
                       </div>
 
                       <!-- Metric 4: Orders Heuristic -->
                       <div class="sim-quad-item">
                         <div class="sim-quad-header">
-                          <div class="sim-quad-icon" style="background: rgba(20, 184, 166, 0.12); color: #2dd4bf; border: 1px solid rgba(20, 184, 166, 0.25);">
+                          <div class="sim-quad-icon">
                             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
                           </div>
                           <span class="sim-quad-caption">ORDERS HEURISTIC</span>
                         </div>
-                        <div class="sim-quad-val" id="simOrdersOutput" style="color: #2dd4bf;">4.6</div>
-                        <div class="sim-quad-sub"><span style="color: #2dd4bf; font-weight: 700;">↓ + 12.3%</span> vs. segment average</div>
+                        <div class="sim-quad-val" id="simOrdersOutput">4.6</div>
+                        <div class="sim-quad-sub"><span class="sim-delta-neutral">↓ + 12.3%</span> vs. segment average</div>
                       </div>
                     </div>
 
@@ -2176,12 +2176,12 @@
                     <div class="sim-trajectory-panel">
                       <div class="sim-trajectory-header">
                         <div class="sim-trajectory-title">
-                          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color: #10b981;"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
+                          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
                           <span>PREDICTED CLV TRAJECTORY (NEXT 12 MONTHS)</span>
                         </div>
                         <div class="sim-trajectory-legend">
-                          <span class="sim-legend-item"><span class="sim-legend-dot" style="background: #10b981;"></span> Projected CLV (Base Scenario)</span>
-                          <span class="sim-legend-item"><span class="sim-legend-box" style="background: rgba(16, 185, 129, 0.25);"></span> Confidence Range (±20%)</span>
+                          <span class="sim-legend-item"><span class="sim-legend-dot"></span> Projected CLV (Base Scenario)</span>
+                          <span class="sim-legend-item"><span class="sim-legend-box"></span> Confidence Range (±20%)</span>
                         </div>
                       </div>
                       <div class="sim-trajectory-chart-wrap" style="position: relative; height: 165px; width: 100%;">
@@ -2203,23 +2203,23 @@
                         <div class="sim-scenario-cards-grid">
                           <!-- Conservative -->
                           <div class="sim-scen-card" id="simCardConservative" onclick="window.applySimScenario('conservative')" role="button" tabindex="0" aria-pressed="false" aria-label="Load Conservative behavior scenario" title="Click to load conservative scenario">
-                            <div class="sim-scen-name" style="color: #fb7185;">
+                            <div class="sim-scen-name">
                               <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 18 13.5 8.5 8.5 13.5 1 6"/></svg>
                               Conservative
                             </div>
-                            <div class="sim-scen-val" id="simScenConservativeClv">$218.76</div>
+                            <div class="sim-scen-val" id="simScenConservativeClv">.76</div>
                             <div class="sim-scen-caption">90-day CLV</div>
                             <div class="sim-scen-churn" id="simScenConservativeChurn">28.9%</div>
                             <div class="sim-scen-caption">Churn Risk</div>
-                            <div class="sim-scen-badge badge-down">- 35.9% vs. base</div>
+                            <div class="sim-scen-badge">- 35.9% vs. base</div>
                           </div>
 
                           <!-- Base Scenario -->
                           <div class="sim-scen-card active" id="simCardBase" onclick="window.applySimScenario('base')" role="button" tabindex="0" aria-pressed="true" aria-label="Load Base behavior scenario" title="Current simulated baseline">
-                            <div class="sim-scen-name" style="color: #34d399;">
+                            <div class="sim-scen-name">
                               Base Scenario
                             </div>
-                            <div class="sim-scen-val" id="simScenBaseClv">$341.43</div>
+                            <div class="sim-scen-val" id="simScenBaseClv">.43</div>
                             <div class="sim-scen-caption">90-day CLV</div>
                             <div class="sim-scen-churn" id="simScenBaseChurn">23.5%</div>
                             <div class="sim-scen-caption">Churn Risk</div>
@@ -2228,15 +2228,15 @@
 
                           <!-- Optimistic -->
                           <div class="sim-scen-card" id="simCardOptimistic" onclick="window.applySimScenario('optimistic')" role="button" tabindex="0" aria-pressed="false" aria-label="Load Optimistic behavior scenario" title="Click to load optimistic scenario">
-                            <div class="sim-scen-name" style="color: #60a5fa;">
+                            <div class="sim-scen-name">
                               <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/></svg>
                               Optimistic
                             </div>
-                            <div class="sim-scen-val" id="simScenOptimisticClv">$512.17</div>
+                            <div class="sim-scen-val" id="simScenOptimisticClv">.17</div>
                             <div class="sim-scen-caption">90-day CLV</div>
                             <div class="sim-scen-churn" id="simScenOptimisticChurn">15.2%</div>
                             <div class="sim-scen-caption">Churn Risk</div>
-                            <div class="sim-scen-badge badge-up">+ 50.0% vs. base</div>
+                            <div class="sim-scen-badge">+ 50.0% vs. base</div>
                           </div>
                         </div>
                       </div>
@@ -2245,40 +2245,40 @@
                       <div class="sim-sub-card">
                         <div class="sim-sub-header">
                           <div class="sim-sub-title">
-                            <span style="font-size: 14px; color: #fbbf24;">💡</span>
+                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
                             <span>KEY INSIGHTS</span>
                           </div>
                         </div>
                         <div class="sim-insights-list">
                           <!-- Insight 1 -->
                           <div class="sim-insight-item">
-                            <div class="sim-insight-icon" style="background: rgba(16, 185, 129, 0.12); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.25);">
-                              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+                            <div class="sim-insight-icon">
+                              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
                             </div>
                             <div class="sim-insight-body">
-                              <div class="sim-insight-title" style="color: #34d399;">High Purchase Habit</div>
+                              <div class="sim-insight-title">High Purchase Habit</div>
                               <div class="sim-insight-desc" id="simInsightText1">Your customer shows moderate purchase habituation with good value potential.</div>
                             </div>
                           </div>
 
                           <!-- Insight 2 -->
                           <div class="sim-insight-item">
-                            <div class="sim-insight-icon" style="background: rgba(251, 191, 36, 0.12); color: #fbbf24; border: 1px solid rgba(251, 191, 36, 0.25);">
-                              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                            <div class="sim-insight-icon">
+                              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
                             </div>
                             <div class="sim-insight-body">
-                              <div class="sim-insight-title" style="color: #fbbf24;">Retention Opportunity</div>
+                              <div class="sim-insight-title">Retention Opportunity</div>
                               <div class="sim-insight-desc" id="simInsightText2">Moderate churn risk. Targeted engagement recommended within 14 days.</div>
                             </div>
                           </div>
 
                           <!-- Insight 3 -->
                           <div class="sim-insight-item">
-                            <div class="sim-insight-icon" style="background: rgba(168, 85, 247, 0.12); color: #c084fc; border: 1px solid rgba(168, 85, 247, 0.25);">
-                              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+                            <div class="sim-insight-icon">
+                              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/></svg>
                             </div>
                             <div class="sim-insight-body">
-                              <div class="sim-insight-title" style="color: #c084fc;">Value Growth Potential</div>
+                              <div class="sim-insight-title">Value Growth Potential</div>
                               <div class="sim-insight-desc" id="simInsightText3">Increasing frequency by 20% could increase 90-day CLV by ~32%.</div>
                             </div>
                           </div>
@@ -2286,15 +2286,15 @@
                       </div>
                     </div>
 
-                    <!-- Model Provenance, Inputs & Driver Evidence Accordion (Matching Reference Standard) -->
-                    <details class="sim-provenance-collapse" id="simProvenanceDetails" style="margin-top: 10px; background: rgba(255, 255, 255, 0.015); border: 1px solid rgba(255, 255, 255, 0.07); border-radius: 8px; padding: 7px 10px; font-size: 10px; color: #8e9693; transition: all 0.2s ease;">
-                      <summary style="cursor: pointer; font-weight: 600; color: #a1a1aa; display: flex; align-items: center; gap: 6px; list-style: none; user-select: none;">
-                        <span style="font-size: 9px; color: #10b981;">▶</span>
+                    <!-- Model Provenance, Inputs & Driver Evidence Accordion -->
+                    <details class="sim-provenance-collapse" id="simProvenanceDetails">
+                      <summary class="sim-provenance-summary">
+                        <span class="sim-provenance-arrow">▶</span>
                         <span>Model provenance, inputs &amp; driver evidence</span>
                       </summary>
-                      <div id="simEvidenceContainer" style="margin-top: 8px; padding-top: 8px; border-top: 1px solid rgba(255, 255, 255, 0.06); font-size: 9.5px; line-height: 1.4; color: #71717a;">
+                      <div id="simEvidenceContainer" class="sim-evidence-content">
                         <div>Architecture: Supervised Gradient Boosting Regressor · Features: RFM + Account Tenure</div>
-                        <div>Inference Status: <span style="color: #34d399;" id="simInferenceStatus">Verified Production Serving</span> · Model Version: v2.4-gbm</div>
+                        <div>Inference Status: <span class="sim-status-active" id="simInferenceStatus">Verified Production Serving</span> · Model Version: v2.4-gbm</div>
                       </div>
                     </details>
                   </div>
@@ -2889,9 +2889,367 @@
               </div> <!-- End tab-churn -->
 
               <section class="spa-tab-pane" id="tab-operations" aria-labelledby="operations-title">
-                <h2 id="operations-title">Trust &amp; Operations</h2>
-                <p>Check data quality, inspect prediction evidence, and manage follow-up work and campaign outcomes.</p>
-                <iframe src="/api/v1/operations/workspace" title="Data quality, action queue, and campaign measurement" loading="lazy" style="display:block;width:100%;height:850px;margin-top:20px;border:1px solid #355347;border-radius:16px"></iframe>
+                <div class="dash-header-bar ops-header-bar">
+                  <div class="dash-title-block">
+                    <div class="dash-title-with-icon">
+                      <span class="ops-header-icon-box">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+                      </span>
+                      <h2 id="operations-title" class="ops-section-title">Trust &amp; Operations</h2>
+                    </div>
+                    <p class="ops-header-sub">Monitor data health, model performance, and manage operational workflows.</p>
+                  </div>
+                  <div class="dash-header-right-actions">
+                    <button type="button" class="dash-action-pill ops-action-btn" onclick="window.switchDashboardTab('dashboard')">← Back to Overview</button>
+                  </div>
+                </div>
+
+                <div class="ops-container reveal-fade-up">
+                  <!-- ROW 1: SYSTEM STATUS & KEY METRICS -->
+                  <div class="ops-grid-2col">
+                    <!-- Card 1: System Status -->
+                    <div class="ops-card">
+                      <div class="ops-card-header">
+                        <div>
+                          <div class="ops-card-title">System Status</div>
+                          <div class="ops-card-sub">Real-time health of data pipelines and ML serving</div>
+                        </div>
+                      </div>
+                      <div class="ops-status-list" id="opsStatusList">
+                        <div class="ops-status-row">
+                          <div class="ops-status-label-wrap">
+                            <span class="ops-status-dot"></span>
+                            <span class="ops-status-label">Data Pipeline</span>
+                          </div>
+                          <div class="ops-status-value-wrap">
+                            <span class="ops-status-badge">Healthy</span>
+                            <span class="ops-status-detail" id="opsPipelineDetail">5,942 records loaded</span>
+                          </div>
+                        </div>
+                        <div class="ops-status-row">
+                          <div class="ops-status-label-wrap">
+                            <span class="ops-status-dot"></span>
+                            <span class="ops-status-label">Model Service</span>
+                          </div>
+                          <div class="ops-status-value-wrap">
+                            <span class="ops-status-badge">Online</span>
+                            <span class="ops-status-detail">Gradient Boosting v2.4</span>
+                          </div>
+                        </div>
+                        <div class="ops-status-row">
+                          <div class="ops-status-label-wrap">
+                            <span class="ops-status-dot"></span>
+                            <span class="ops-status-label">API Services</span>
+                          </div>
+                          <div class="ops-status-value-wrap">
+                            <span class="ops-status-badge">Operational</span>
+                            <span class="ops-status-detail" id="opsLatencyDetail">Latency 42ms</span>
+                          </div>
+                        </div>
+                        <div class="ops-status-row">
+                          <div class="ops-status-label-wrap">
+                            <span class="ops-status-dot"></span>
+                            <span class="ops-status-label">Last Refresh</span>
+                          </div>
+                          <div class="ops-status-value-wrap">
+                            <span class="ops-status-badge">Automated sync</span>
+                            <span class="ops-status-detail" id="opsRefreshDetail">Just now</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- Card 2: Key Metrics -->
+                    <div class="ops-card">
+                      <div class="ops-card-header">
+                        <div>
+                          <div class="ops-card-title">Key Metrics</div>
+                          <div class="ops-card-sub">Dataset integrity and ingestion metrics</div>
+                        </div>
+                      </div>
+                      <div class="ops-metrics-grid">
+                        <div class="ops-metric-item">
+                          <div class="ops-metric-label">TOTAL RECORDS</div>
+                          <div class="ops-metric-val" id="opsTotalRecords">5,942</div>
+                          <div class="ops-metric-sub">+100% complete</div>
+                        </div>
+                        <div class="ops-metric-item">
+                          <div class="ops-metric-label">VALID RECORDS</div>
+                          <div class="ops-metric-val" id="opsValidRecords">5,942</div>
+                          <div class="ops-metric-sub">100% valid</div>
+                        </div>
+                        <div class="ops-metric-item">
+                          <div class="ops-metric-label">INVALID RECORDS</div>
+                          <div class="ops-metric-val" id="opsInvalidRecords">0</div>
+                          <div class="ops-metric-sub">0% error rate</div>
+                        </div>
+                        <div class="ops-metric-item">
+                          <div class="ops-metric-label">IMPORT REJECTIONS</div>
+                          <div class="ops-metric-val" id="opsRejectedRecords">0</div>
+                          <div class="ops-metric-sub">clean import</div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- ROW 2: DATA FRESHNESS & QUALITY & DATA INGESTION HISTORY -->
+                  <div class="ops-grid-2col">
+                    <!-- Card 3: Data Freshness & Quality -->
+                    <div class="ops-card">
+                      <div class="ops-card-header">
+                        <div>
+                          <div class="ops-card-title">Data Freshness &amp; Quality</div>
+                          <div class="ops-card-sub">Automated data validation and schema integrity</div>
+                        </div>
+                      </div>
+                      <div class="ops-pill-tags">
+                        <span class="ops-pill-tag">Transactions: 5,942</span>
+                        <span class="ops-pill-tag">Customers: 4,372</span>
+                        <span class="ops-pill-tag">Validation: Passed</span>
+                        <span class="ops-pill-tag">Anomaly Score: 0.02</span>
+                      </div>
+                      <div class="ops-progress-list">
+                        <div class="ops-progress-row">
+                          <div class="ops-progress-header">
+                            <span class="ops-progress-label">Freshness</span>
+                            <span class="ops-progress-num">99.8% <span class="ops-target-lbl">Target &gt; 95%</span></span>
+                          </div>
+                          <div class="ops-progress-track">
+                            <div class="ops-progress-fill" style="width: 99.8%;"></div>
+                          </div>
+                        </div>
+                        <div class="ops-progress-row">
+                          <div class="ops-progress-header">
+                            <span class="ops-progress-label">Completeness</span>
+                            <span class="ops-progress-num">100.0% <span class="ops-target-lbl">Target &gt; 99%</span></span>
+                          </div>
+                          <div class="ops-progress-track">
+                            <div class="ops-progress-fill" style="width: 100%;"></div>
+                          </div>
+                        </div>
+                        <div class="ops-progress-row">
+                          <div class="ops-progress-header">
+                            <span class="ops-progress-label">Feature Coverage</span>
+                            <span class="ops-progress-num">97.4% <span class="ops-target-lbl">Target &gt; 95%</span></span>
+                          </div>
+                          <div class="ops-progress-track">
+                            <div class="ops-progress-fill" style="width: 97.4%;"></div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- Card 4: Data Ingestion History -->
+                    <div class="ops-card">
+                      <div class="ops-card-header">
+                        <div>
+                          <div class="ops-card-title">Data Ingestion History</div>
+                          <div class="ops-card-sub">Recent pipeline ingestion runs and validation logs</div>
+                        </div>
+                      </div>
+                      <div class="ops-table-wrap">
+                        <table class="ops-table">
+                          <thead>
+                            <tr>
+                              <th>Date/Time</th>
+                              <th>Source</th>
+                              <th>Records</th>
+                              <th>Status</th>
+                              <th>Duration</th>
+                            </tr>
+                          </thead>
+                          <tbody id="opsIngestionTableBody">
+                            <tr>
+                              <td>2026-03-31 08:30</td>
+                              <td>Batch Pipeline</td>
+                              <td>5,942</td>
+                              <td><span class="ops-table-badge">SUCCESS</span></td>
+                              <td>1.42s</td>
+                            </tr>
+                            <tr>
+                              <td>2026-03-30 08:30</td>
+                              <td>Batch Pipeline</td>
+                              <td>5,942</td>
+                              <td><span class="ops-table-badge">SUCCESS</span></td>
+                              <td>1.38s</td>
+                            </tr>
+                            <tr>
+                              <td>2026-03-29 08:30</td>
+                              <td>Batch Pipeline</td>
+                              <td>5,942</td>
+                              <td><span class="ops-table-badge">SUCCESS</span></td>
+                              <td>1.45s</td>
+                            </tr>
+                            <tr>
+                              <td>2026-03-28 08:30</td>
+                              <td>Batch Pipeline</td>
+                              <td>5,942</td>
+                              <td><span class="ops-table-badge">SUCCESS</span></td>
+                              <td>1.41s</td>
+                            </tr>
+                            <tr>
+                              <td>2026-03-27 08:30</td>
+                              <td>Batch Pipeline</td>
+                              <td>5,942</td>
+                              <td><span class="ops-table-badge">SUCCESS</span></td>
+                              <td>1.39s</td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- ROW 3: MODEL PERFORMANCE & DRIFT & INSPECT A CUSTOMER PREDICTION -->
+                  <div class="ops-grid-2col">
+                    <!-- Card 5: Model Performance & Drift -->
+                    <div class="ops-card">
+                      <div class="ops-card-header">
+                        <div>
+                          <div class="ops-card-title">Model Performance &amp; Drift</div>
+                          <div class="ops-card-sub">Production model metrics and drift monitoring</div>
+                        </div>
+                      </div>
+                      <div class="ops-model-stats-row">
+                        <div class="ops-model-stat">
+                          <div class="ops-stat-sub">Model Type</div>
+                          <div class="ops-stat-val">Gradient Boosting</div>
+                        </div>
+                        <div class="ops-model-stat">
+                          <div class="ops-stat-sub">Task</div>
+                          <div class="ops-stat-val">CLV Regression</div>
+                        </div>
+                        <div class="ops-model-stat">
+                          <div class="ops-stat-sub">MAE</div>
+                          <div class="ops-stat-val">$321.78</div>
+                        </div>
+                        <div class="ops-model-stat">
+                          <div class="ops-stat-sub">R² Score</div>
+                          <div class="ops-stat-val">0.5238</div>
+                        </div>
+                      </div>
+                      <div class="ops-chart-panel">
+                        <div class="ops-chart-title">Prediction Accuracy Over Time (Last 30 Days)</div>
+                        <div class="ops-chart-wrap" style="position: relative; height: 140px; width: 100%;">
+                          <canvas id="opsAccuracyChart"></canvas>
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- Card 6: Inspect a Customer Prediction -->
+                    <div class="ops-card">
+                      <div class="ops-card-header">
+                        <div>
+                          <div class="ops-card-title">Inspect a Customer Prediction</div>
+                          <div class="ops-card-sub">Run inference and view feature importance drivers</div>
+                        </div>
+                      </div>
+                      <form id="opsInspectForm" onsubmit="window.handleOpsInference(event)">
+                        <div class="ops-inputs-grid">
+                          <div class="ops-input-field">
+                            <label for="opsInspectRecency">Recency (days)</label>
+                            <input type="number" id="opsInspectRecency" value="25" min="0" max="730">
+                          </div>
+                          <div class="ops-input-field">
+                            <label for="opsInspectFreq">Frequency (orders)</label>
+                            <input type="number" id="opsInspectFreq" value="6" min="1" max="150">
+                          </div>
+                          <div class="ops-input-field">
+                            <label for="opsInspectSpend">Monetary ($ spend)</label>
+                            <input type="number" id="opsInspectSpend" value="1250" min="0" max="50000">
+                          </div>
+                          <div class="ops-input-field">
+                            <label for="opsInspectTenure">Tenure (days)</label>
+                            <input type="number" id="opsInspectTenure" value="300" min="0" max="1000">
+                          </div>
+                        </div>
+                        <div class="ops-form-actions">
+                          <button type="submit" class="ops-primary-btn" id="opsRunInferenceBtn">Run Inference →</button>
+                        </div>
+                      </form>
+                      <div class="ops-inference-results" id="opsInferenceResults">
+                        <div class="ops-inf-metrics">
+                          <div class="ops-inf-item">
+                            <div class="ops-inf-lbl">PREDICTED CLV</div>
+                            <div class="ops-inf-val" id="opsInspectClv">$341.43</div>
+                          </div>
+                          <div class="ops-inf-item">
+                            <div class="ops-inf-lbl">PREDICTED SEGMENT</div>
+                            <div class="ops-inf-val" id="opsInspectSeg">Loyal Customers</div>
+                          </div>
+                          <div class="ops-inf-item">
+                            <div class="ops-inf-lbl">CHURN RISK</div>
+                            <div class="ops-inf-val" id="opsInspectChurn">23.5%</div>
+                          </div>
+                        </div>
+                        <div class="ops-drivers-wrap">
+                          <div class="ops-drivers-title">Key Drivers</div>
+                          <div class="ops-driver-row">
+                            <span class="ops-driver-name">Monetary Spend</span>
+                            <div class="ops-driver-bar-wrap">
+                              <div class="ops-driver-bar" style="width: 42%;"></div>
+                            </div>
+                            <span class="ops-driver-pct">+42% impact</span>
+                          </div>
+                          <div class="ops-driver-row">
+                            <span class="ops-driver-name">Purchase Frequency</span>
+                            <div class="ops-driver-bar-wrap">
+                              <div class="ops-driver-bar" style="width: 28%;"></div>
+                            </div>
+                            <span class="ops-driver-pct">+28% impact</span>
+                          </div>
+                          <div class="ops-driver-row">
+                            <span class="ops-driver-name">Recency</span>
+                            <div class="ops-driver-bar-wrap">
+                              <div class="ops-driver-bar" style="width: 18%;"></div>
+                            </div>
+                            <span class="ops-driver-pct">-18% impact</span>
+                          </div>
+                          <div class="ops-driver-row">
+                            <span class="ops-driver-name">Tenure</span>
+                            <div class="ops-driver-bar-wrap">
+                              <div class="ops-driver-bar" style="width: 12%;"></div>
+                            </div>
+                            <span class="ops-driver-pct">+12% impact</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- ROW 4: OPERATIONAL WORKSPACE -->
+                  <div class="ops-grid-1col">
+                    <div class="ops-card ops-workspace-card">
+                      <div class="ops-card-header">
+                        <div>
+                          <div class="ops-card-title">Operational Workspace</div>
+                          <div class="ops-card-sub">Sign in to access admin workflows, retraining pipelines, and export controls</div>
+                        </div>
+                      </div>
+                      <form id="opsLoginForm" class="ops-login-form" onsubmit="window.handleOpsLogin(event)">
+                        <div class="ops-login-fields">
+                          <div class="ops-input-field">
+                            <label for="opsUsername">Username</label>
+                            <input type="text" id="opsUsername" name="username" value="admin" autocomplete="username" required>
+                          </div>
+                          <div class="ops-input-field">
+                            <label for="opsPassword">Password</label>
+                            <div class="ops-password-wrap">
+                              <input type="password" id="opsPassword" name="password" placeholder="Enter password" autocomplete="current-password" required>
+                              <button type="button" class="ops-pw-toggle" onclick="window.toggleOpsPasswordVisibility()" aria-label="Toggle password visibility">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                              </button>
+                            </div>
+                          </div>
+                          <div class="ops-login-submit">
+                            <button type="submit" class="ops-primary-btn" id="opsLoginBtn">Sign In →</button>
+                          </div>
+                        </div>
+                        <div id="opsLoginMsg" class="ops-login-msg" role="status" aria-live="polite"></div>
+                      </form>
+                    </div>
+                  </div>
+                </div>
               </section>
             </main>
           </div>
