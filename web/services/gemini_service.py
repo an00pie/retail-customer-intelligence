@@ -45,10 +45,10 @@ class GeminiService:
 
     @property
     def model_id(self) -> str:
-        model = os.environ.get("GEMINI_MODEL", "gemini-2.5-flash").strip()
+        model = os.environ.get("GEMINI_MODEL", "gemini-3.8-flash").strip()
         # Validate model ID format (allow standard gemini models)
         if not re.fullmatch(r"gemini-[a-zA-Z0-9.\-]+", model):
-            return "gemini-2.5-flash"
+            return "gemini-3.8-flash"
         return model
 
     @property

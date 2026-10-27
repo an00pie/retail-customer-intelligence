@@ -3979,7 +3979,7 @@ function initInsightCopilot() {
       if (!data) return;
       if (data.configured) {
         if (statusDot) statusDot.className = 'status-dot green';
-        if (statusText) statusText.textContent = `${data.model || 'Gemini 2.5 Flash'} Grounded`;
+        if (statusText) statusText.textContent = `${data.model || 'Gemini'} Grounded`;
         if (statusBanner) statusBanner.style.display = 'none';
       } else {
         if (statusDot) statusDot.className = 'status-dot amber';

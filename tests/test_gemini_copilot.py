@@ -64,7 +64,7 @@ class TestGeminiConfigurationAndStatus:
         """When GEMINI_API_KEY is configured, status is available: True and key is never leaked."""
         secret_key = "AIzaSy_super_secret_production_key_12345"
         monkeypatch.setenv("GEMINI_API_KEY", secret_key)
-        monkeypatch.setenv("GEMINI_MODEL", "gemini-2.5-flash")
+        monkeypatch.setenv("GEMINI_MODEL", "gemini-3.8-flash")
         monkeypatch.setenv("GEMINI_AI_ENABLED", "true")
 
         res = client.get("/api/v1/ai/status")
@@ -72,7 +72,7 @@ class TestGeminiConfigurationAndStatus:
         data = res.get_json()
         assert data["available"] is True
         assert data["configured"] is True
-        assert data["model"] == "gemini-2.5-flash"
+        assert data["model"] == "gemini-3.8-flash"
         assert data["mode"] == "live_copilot"
         # Verify secret key is NEVER exposed in JSON response
         assert secret_key not in str(data)
@@ -89,9 +89,9 @@ class TestGeminiConfigurationAndStatus:
         assert data["enabled"] is False
 
     def test_invalid_model_id_falls_back_safely(self, clean_gemini_service, monkeypatch):
-        """Invalid or malformed model identifiers fall back to safe default gemini-2.5-flash."""
+        """Invalid or malformed model identifiers fall back to safe default gemini-3.8-flash."""
         monkeypatch.setenv("GEMINI_MODEL", "invalid;model$(rm -rf)")
-        assert clean_gemini_service.model_id == "gemini-2.5-flash"
+        assert clean_gemini_service.model_id == "gemini-3.8-flash"
 
 
 class TestGeminiRateLimitingAndValidation:
@@ -197,7 +197,7 @@ class TestCopilotExecutionWithMockedGemini:
     def test_copilot_successful_mocked_query(self, mock_client_cls, client, monkeypatch):
         """Verifies that ask_copilot calls the model and returns formatted grounded response."""
         monkeypatch.setenv("GEMINI_API_KEY", "mock_key_for_test")
-        monkeypatch.setenv("GEMINI_MODEL", "gemini-2.5-flash")
+        monkeypatch.setenv("GEMINI_MODEL", "gemini-3.8-flash")
         monkeypatch.setenv("GEMINI_AI_ENABLED", "true")
 
         # Mock the SDK client
@@ -217,7 +217,7 @@ class TestCopilotExecutionWithMockedGemini:
         data = res.get_json()
         assert data["status"] == "success"
         assert "5,942 customers" in data["answer"]
-        assert data["model"] == "gemini-2.5-flash"
+        assert data["model"] == "gemini-3.8-flash"
         assert "timestamp" in data
 
     @patch("google.genai.Client")
