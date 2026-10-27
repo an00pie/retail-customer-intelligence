@@ -23,6 +23,11 @@ class GeminiUnavailableError(GeminiError):
     pass
 
 
+class GeminiHighDemandError(GeminiUnavailableError):
+    """Raised when Google Gemini API reports temporary high demand or 503 UNAVAILABLE."""
+    pass
+
+
 class GeminiRateLimitError(GeminiError):
     """Raised when request frequency exceeds allowed rate limits."""
     pass
@@ -37,11 +42,19 @@ class GeminiService:
         self._global_request_timestamps = []
         self._max_per_ip_per_min = 20
         self._max_global_per_min = 60
+
+    @property
+    def timeout_seconds(self) -> int:
         timeout_env = os.environ.get("GEMINI_TIMEOUT_SECONDS", "30").strip()
         try:
-            self._timeout_seconds = max(10, min(60, int(timeout_env)))
+            return max(10, min(60, int(timeout_env)))
         except ValueError:
-            self._timeout_seconds = 30
+            return 30
+
+    @property
+    def _timeout_seconds(self) -> int:
+        """Backwards compatibility alias for timeout_seconds."""
+        return self.timeout_seconds
 
     @property
     def api_key(self) -> str:
@@ -109,6 +122,7 @@ class GeminiService:
             "configured": bool(self.api_key),
             "available": is_ready,
             "model": self.model_id,
+            "timeout_seconds": self.timeout_seconds,
             "provider": "Google Gemini",
             "sdk": "google-genai (v1)",
             "allowed_tools": [fn.__name__ for fn in ALLOWED_AI_TOOLS],
@@ -169,6 +183,10 @@ class GeminiService:
             "5. Keep answers concise, executive-ready, and formatted in clean markdown."
         )
 
+        timeout = self.timeout_seconds
+        start_time = time.time()
+        max_attempts = 2
+
         try:
             from google.genai import types
 
@@ -184,41 +202,75 @@ class GeminiService:
                 "max_output_tokens": 1500,
                 "system_instruction": system_instruction,
                 "tools": wrapped_tools,
-                "http_options": types.HttpOptions(timeout=self._timeout_seconds * 1000)
+                "http_options": types.HttpOptions(timeout=timeout * 1000)
             }
             if thinking_config is not None:
                 config_kwargs["thinking_config"] = thinking_config
 
             config = types.GenerateContentConfig(**config_kwargs)
 
-            response = client.models.generate_content(
-                model=self.model_id,
-                contents=clean_prompt,
-                config=config
-            )
+            for attempt in range(max_attempts):
+                try:
+                    response = client.models.generate_content(
+                        model=self.model_id,
+                        contents=clean_prompt,
+                        config=config
+                    )
 
-            text_output = response.text or ""
-            if not text_output.strip():
-                text_output = "I queried the retail analytics tools, but could not produce a text summary. Please refine your query."
+                    text_output = response.text or ""
+                    if not text_output.strip():
+                        text_output = "I queried the retail analytics tools, but could not produce a text summary. Please refine your query."
 
-            return {
-                "status": "success",
-                "answer": text_output,
-                "model": self.model_id,
-                "tools_invoked": tools_called,
-                "timestamp": datetime.now(timezone.utc).isoformat()
-            }
+                    return {
+                        "status": "success",
+                        "answer": text_output,
+                        "model": self.model_id,
+                        "tools_invoked": tools_called,
+                        "timestamp": datetime.now(timezone.utc).isoformat()
+                    }
+                except GeminiRateLimitError:
+                    raise
+                except Exception as attempt_err:
+                    err_str = str(attempt_err)
+                    err_lower = err_str.lower()
+                    is_transient_503 = (
+                        "503" in err_str or
+                        "unavailable" in err_lower or
+                        "high demand" in err_lower or
+                        "overloaded" in err_lower
+                    )
+                    elapsed = time.time() - start_time
+                    remaining = timeout - elapsed
 
-        except GeminiRateLimitError:
+                    # Retry once if transient capacity issue and at least 6s remaining
+                    if is_transient_503 and attempt < max_attempts - 1 and remaining > 6.0:
+                        time.sleep(1.5)
+                        continue
+
+                    # Final error classification
+                    if "timeout" in err_lower or "timed out" in err_lower or "deadline" in err_lower:
+                        raise GeminiUnavailableError(
+                            f"Gemini API request timed out ({timeout}s limit reached). Please try again."
+                        ) from None
+                    if is_transient_503:
+                        raise GeminiHighDemandError(
+                            "Google Gemini is temporarily experiencing high demand. Please try again in a few moments."
+                        ) from None
+                    if "resource_exhausted" in err_lower or "quota" in err_lower:
+                        raise GeminiUnavailableError("Gemini API quota exceeded. Please check your Google AI Studio plan.") from None
+                    if "unauthenticated" in err_lower or "api key not valid" in err_lower:
+                        raise GeminiUnavailableError("Gemini API key is invalid or unauthenticated.") from None
+                    raise GeminiError(f"AI query failed: {err_str}") from None
+
+        except (GeminiRateLimitError, GeminiUnavailableError, GeminiError):
             raise
         except Exception as e:
             err_str = str(e)
-            if "timeout" in err_str.lower() or "timed out" in err_str.lower() or "deadline" in err_str.lower():
-                raise GeminiUnavailableError(f"Gemini API request timed out ({self._timeout_seconds}s limit reached). Please try again.") from None
-            if "RESOURCE_EXHAUSTED" in err_str or "quota" in err_str.lower():
-                raise GeminiUnavailableError("Gemini API quota exceeded. Please check your Google AI Studio plan.") from None
-            if "UNAUTHENTICATED" in err_str or "API key not valid" in err_str:
-                raise GeminiUnavailableError("Gemini API key is invalid or unauthenticated.") from None
+            err_lower = err_str.lower()
+            if "timeout" in err_lower or "timed out" in err_lower or "deadline" in err_lower:
+                raise GeminiUnavailableError(f"Gemini API request timed out ({timeout}s limit reached). Please try again.") from None
+            if "503" in err_str or "unavailable" in err_lower or "high demand" in err_lower or "overloaded" in err_lower:
+                raise GeminiHighDemandError("Google Gemini is temporarily experiencing high demand. Please try again in a few moments.") from None
             raise GeminiError(f"AI query failed: {err_str}") from None
 
 

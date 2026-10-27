@@ -5,7 +5,7 @@ services:
     plan: free
     branch: main
     buildCommand: pip install -r requirements.txt
-    startCommand: gunicorn web.app:app --bind 0.0.0.0:$PORT
+    startCommand: gunicorn web.app:app --bind 0.0.0.0:$PORT --timeout 60
     healthCheckPath: /api/health
     envVars:
       - key: PYTHON_VERSION
