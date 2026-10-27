@@ -20,7 +20,7 @@ plotly>=5.20.0
 # Machine learning, AI & utilities
 scikit-learn>=1.6.1
 numpy>=2.0.0
-joblib>=1.3.0
+joblib>=1.6.0
 google-genai>=1.0.0
 
 # Observability & error monitoring (optional; active only if SENTRY_DSN is set)
