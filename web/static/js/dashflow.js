@@ -102,6 +102,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initDashboardCharts();
   initOverviewModules();
   initShopifyStoreAnalytics();
+  initInsightCopilot();
   initAnchorScroll();
 });
 
@@ -1570,7 +1571,7 @@ function renderCustomerProfile(data) {
 
         <!-- Action Buttons (Message & Assign Task) -->
         <div class="lookup-action-buttons-row">
-          <button type="button" class="btn-pill-secondary lookup-honest-btn" onclick="window.showToast('Outbound messaging gateway not configured. SMS/Email dispatch requires messaging provider credentials.', 'info')" title="Direct customer messaging gateway not configured">💬 Message <span class="honest-sub">(Unavailable)</span></button>
+          <button type="button" class="btn-pill-secondary lookup-honest-btn" id="lookupMessageBtn" onclick="window.openMessagingModal('${escapeHtml(custId)}')" title="View messaging gateway status and integration guide" aria-label="Open messaging gateway status for Customer ${escapeHtml(custId)}">💬 Message <span class="honest-sub">(Setup Required)</span></button>
           <button type="button" class="btn-pill-primary lookup-task-btn" id="lookupAssignTaskBtn" onclick="window.openAssignTaskModal('${escapeHtml(custId)}')" title="Assign an operational follow-up task for this customer">+ Assign Task</button>
         </div>
 
@@ -1687,6 +1688,72 @@ function loadCustomerAppliedRecommendations(custId) {
     })
     .catch(() => {});
 }
+
+window.openMessagingModal = function(custId) {
+  const profile = window.currentCustomerProfile;
+  const customerId = custId || (profile && profile.customer_id) || '';
+  const segment = (profile && profile.segment) || 'Standard';
+  const name = (profile && (profile.name || profile.customer_name)) || `Customer #${customerId}`;
+
+  const displayEl = document.getElementById('messagingCustomerDisplay');
+  const segmentEl = document.getElementById('messagingCustomerSegment');
+  const previewText = document.getElementById('messagingDraftPreview');
+  const statusBadge = document.getElementById('messagingGatewayStatusBadge');
+
+  if (displayEl) displayEl.textContent = `${name} (#${customerId})`;
+  if (segmentEl) segmentEl.textContent = segment;
+
+  if (previewText) {
+    if (segment.includes('Lost') || segment.includes('At-Risk')) {
+      previewText.textContent = `Hi ${name}, we miss you at INSIGHT Retail! Here is an exclusive 20% reactivation perk on your next order: CODE: WELCOMEBACK20. Valid for 14 days.`;
+    } else if (segment.includes('Loyal') || segment.includes('VIP')) {
+      previewText.textContent = `Hello ${name}, thank you for your continued loyalty with INSIGHT Retail. Your exclusive VIP early access perk is now ready for your account.`;
+    } else {
+      previewText.textContent = `Hello ${name}, thank you for your recent visit to INSIGHT Retail! We have unlocked complimentary priority assistance for your upcoming orders.`;
+    }
+  }
+
+  // Fetch live gateway configuration status
+  fetch('/api/v1/messaging/status')
+    .then(res => res.ok ? res.json() : null)
+    .then(data => {
+      if (statusBadge && data) {
+        if (data.configured) {
+          statusBadge.className = 'messaging-status-badge configured';
+          statusBadge.innerHTML = `<span class="status-dot green">●</span> Connected via ${escapeHtml(data.provider || 'Gateway')}`;
+        } else {
+          statusBadge.className = 'messaging-status-badge unconfigured';
+          statusBadge.innerHTML = '<span class="status-dot amber">●</span> Outbound Gateway Not Configured (Demo Safe Mode)';
+        }
+      }
+    })
+    .catch(() => {});
+
+  if (typeof window.openSpaModal === 'function') {
+    window.openSpaModal('messaging-integration');
+  }
+};
+
+window.convertMessagingToTask = function() {
+  if (typeof window.closeSpaModal === 'function') {
+    window.closeSpaModal('messaging-integration');
+  }
+  const profile = window.currentCustomerProfile;
+  const customerId = (profile && profile.customer_id) || '';
+  setTimeout(() => {
+    if (typeof window.openAssignTaskModal === 'function') {
+      window.openAssignTaskModal(customerId);
+      const titleInput = document.getElementById('taskTitleInput');
+      const descInput = document.getElementById('taskDescriptionInput');
+      if (titleInput) {
+        titleInput.value = `Outreach follow-up for Customer #${customerId}`;
+      }
+      if (descInput) {
+        descInput.value = `Schedule manual outreach review. Note: Outbound automated messaging gateway is unconfigured in this environment.`;
+      }
+    }
+  }, 100);
+};
 
 window.openAssignTaskModal = function(custId) {
   const profile = window.currentCustomerProfile;
@@ -3891,3 +3958,205 @@ function initShopifyStoreAnalytics() {
       console.warn('[DashFlow] Shopify store analytics fetch notice:', err);
     });
 }
+
+/* ==============================================================================
+   23. INSIGHT COPILOT (DATA-GROUNDED ENTERPRISE AI ASSISTANT)
+   ============================================================================== */
+function initInsightCopilot() {
+  const launcher = document.getElementById('insightCopilotLauncher');
+  const drawer = document.getElementById('insightCopilotDrawer');
+  const statusDot = document.getElementById('copilotStatusDot');
+  const statusText = document.getElementById('copilotStatusText');
+  const statusBanner = document.getElementById('copilotStatusBanner');
+  const bannerText = document.getElementById('copilotBannerText');
+
+  if (!launcher || !drawer) return;
+
+  // Fetch live AI configuration and service status
+  fetch('/api/v1/ai/status')
+    .then(res => res.ok ? res.json() : null)
+    .then(data => {
+      if (!data) return;
+      if (data.configured) {
+        if (statusDot) statusDot.className = 'status-dot green';
+        if (statusText) statusText.textContent = `${data.model || 'Gemini 2.5 Flash'} Grounded`;
+        if (statusBanner) statusBanner.style.display = 'none';
+      } else {
+        if (statusDot) statusDot.className = 'status-dot amber';
+        if (statusText) statusText.textContent = 'Setup Required (Demo Mode)';
+        if (statusBanner) {
+          statusBanner.style.display = 'flex';
+          if (bannerText) {
+            bannerText.textContent = 'Gemini API key not configured on backend. Live synthesis requires GEMINI_API_KEY.';
+          }
+        }
+      }
+    })
+    .catch(() => {});
+
+  // Keyboard accessibility: ESC closes drawer
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && drawer.style.display !== 'none') {
+      window.toggleCopilotDrawer(false);
+    }
+  });
+}
+
+function formatCopilotMarkdown(raw) {
+  if (!raw) return '';
+  let text = escapeHtml(raw);
+  // Bold
+  text = text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+  // Italic
+  text = text.replace(/\*(.*?)\*/g, '<em>$1</em>');
+  // Inline code
+  text = text.replace(/`([^`]+)`/g, '<code style="background:rgba(255,255,255,0.08);padding:1px 4px;border-radius:3px;font-family:monospace;font-size:11px;">$1</code>');
+  // Bullet lists
+  text = text.replace(/^[\*\-]\s+(.*)$/gm, '<li style="margin-left: 16px; list-style-type: disc;">$1</li>');
+  // Line breaks
+  text = text.replace(/\n\n+/g, '<div style="height: 8px;"></div>');
+  text = text.replace(/\n/g, '<br>');
+  return text;
+}
+
+window.toggleCopilotDrawer = function(forceOpen) {
+  const drawer = document.getElementById('insightCopilotDrawer');
+  if (!drawer) return;
+
+  const isOpen = drawer.style.display !== 'none';
+  const shouldOpen = typeof forceOpen === 'boolean' ? forceOpen : !isOpen;
+
+  if (shouldOpen) {
+    drawer.style.display = 'flex';
+    drawer.classList.add('open');
+    setTimeout(() => {
+      const input = document.getElementById('copilotInput');
+      if (input) input.focus();
+    }, 120);
+  } else {
+    drawer.style.display = 'none';
+    drawer.classList.remove('open');
+  }
+};
+
+window.resetCopilotChat = function() {
+  const container = document.getElementById('copilotMessagesContainer');
+  if (!container) return;
+
+  const welcomeCard = document.getElementById('copilotWelcomeCard');
+  // Remove all message bubbles and indicators
+  const bubbles = container.querySelectorAll('.copilot-message-bubble, .copilot-loading-indicator');
+  bubbles.forEach(b => b.remove());
+
+  if (welcomeCard) {
+    welcomeCard.style.display = 'block';
+  }
+
+  const input = document.getElementById('copilotInput');
+  if (input) {
+    input.value = '';
+    input.focus();
+  }
+};
+
+window.sendCopilotPreset = function(button) {
+  if (!button) return;
+  const text = button.textContent.trim();
+  const input = document.getElementById('copilotInput');
+  if (input) {
+    input.value = text;
+  }
+  window.handleCopilotSubmit();
+};
+
+window.handleCopilotSubmit = function(event) {
+  if (event) event.preventDefault();
+  const input = document.getElementById('copilotInput');
+  const container = document.getElementById('copilotMessagesContainer');
+  const sendBtn = document.getElementById('copilotSendBtn');
+  if (!input || !container) return;
+
+  const prompt = input.value.trim();
+  if (!prompt) return;
+
+  // Hide welcome card if visible
+  const welcomeCard = document.getElementById('copilotWelcomeCard');
+  if (welcomeCard) {
+    welcomeCard.style.display = 'none';
+  }
+
+  // Append user bubble
+  const userBubble = document.createElement('div');
+  userBubble.className = 'copilot-message-bubble user';
+  userBubble.textContent = prompt;
+  container.appendChild(userBubble);
+
+  // Clear input & disable button
+  input.value = '';
+  if (sendBtn) sendBtn.disabled = true;
+
+  // Append loading indicator
+  const loading = document.createElement('div');
+  loading.className = 'copilot-loading-indicator';
+  loading.id = 'copilotLoadingIndicator';
+  loading.innerHTML = '<span class="copilot-loading-spinner"></span> Synthesizing data-grounded insights...';
+  container.appendChild(loading);
+  container.scrollTop = container.scrollHeight;
+
+  // Customer context if currently viewing profile
+  const custId = (window.currentCustomerProfile && window.currentCustomerProfile.customer_id) || null;
+
+  fetch('/api/v1/ai/copilot', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ prompt: prompt, customer_id: custId })
+  })
+    .then(async (res) => {
+      const loadingEl = document.getElementById('copilotLoadingIndicator');
+      if (loadingEl) loadingEl.remove();
+      if (sendBtn) sendBtn.disabled = false;
+      if (input) input.focus();
+
+      const assistantBubble = document.createElement('div');
+      assistantBubble.className = 'copilot-message-bubble assistant';
+
+      if (res.ok) {
+        const data = await res.json();
+        let contentHtml = formatCopilotMarkdown(data.response || 'No response returned.');
+
+        // Render tool badges if analytics tools were executed
+        if (Array.isArray(data.tool_invocations) && data.tool_invocations.length > 0) {
+          const badges = data.tool_invocations.map(t => {
+            const toolName = typeof t === 'string' ? t : (t.tool || 'analytics_tool');
+            return `<span class="copilot-tool-tag" title="Data fetched directly via ${escapeHtml(toolName)}">⚡ ${escapeHtml(toolName)}</span>`;
+          }).join('');
+          contentHtml += `<div style="margin-top: 8px; display: flex; flex-wrap: wrap; gap: 4px; align-items: center;"><span style="font-size: 10px; color: var(--text-muted, #71717a); margin-right: 2px;">Grounded in:</span>${badges}</div>`;
+        }
+        assistantBubble.innerHTML = contentHtml;
+      } else if (res.status === 429) {
+        assistantBubble.innerHTML = `<strong style="color: #fbbf24;">Rate Limit Reached</strong><br>Requests are temporarily limited to 20 inquiries per minute. Please pause for a moment before querying Copilot again.`;
+      } else if (res.status === 503) {
+        const err = await res.json().catch(() => ({}));
+        const msg = err.error || 'Gemini AI service is currently unavailable or unconfigured.';
+        assistantBubble.innerHTML = `<strong style="color: #f87171;">Setup Mode / Service Notice</strong><br>${escapeHtml(msg)}<br><span style="font-size: 11px; color: #a1a1aa; margin-top: 4px; display: inline-block;">Configure <code>GEMINI_API_KEY</code> on your environment to activate live synthesis.</span>`;
+      } else {
+        const err = await res.json().catch(() => ({}));
+        assistantBubble.innerHTML = `<strong style="color: #f87171;">Query Error</strong><br>${escapeHtml(err.error || 'Unable to process inquiry at this moment.')}`;
+      }
+
+      container.appendChild(assistantBubble);
+      container.scrollTop = container.scrollHeight;
+    })
+    .catch((err) => {
+      const loadingEl = document.getElementById('copilotLoadingIndicator');
+      if (loadingEl) loadingEl.remove();
+      if (sendBtn) sendBtn.disabled = false;
+      if (input) input.focus();
+
+      const assistantBubble = document.createElement('div');
+      assistantBubble.className = 'copilot-message-bubble assistant';
+      assistantBubble.innerHTML = `<strong style="color: #f87171;">Network Connection Error</strong><br>Failed to reach the INSIGHT Copilot backend service. Please check your connection and try again.`;
+      container.appendChild(assistantBubble);
+      container.scrollTop = container.scrollHeight;
+    });
+};

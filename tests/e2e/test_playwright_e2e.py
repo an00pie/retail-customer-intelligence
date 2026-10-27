@@ -336,6 +336,44 @@ def test_customer_task_assignment_flow(browser_instance):
     page.close()
 
 
+def test_messaging_gateway_modal_ux(browser_instance):
+    """Verifies clicking Message button opens the informative setup modal instead of an error toast."""
+    page = browser_instance.new_page(viewport={"width": 1440, "height": 900})
+    page.goto(TEST_URL, wait_until="networkidle")
+    page.evaluate("() => window.switchDashboardTab('lookup')")
+    page.fill("#lookupCustIdInput", "15485")
+    page.click("#lookupSearchBtn")
+
+    msg_btn = page.locator("#lookupMessageBtn")
+    msg_btn.wait_for(timeout=15000)
+    assert msg_btn.is_visible()
+    assert "Setup Required" in msg_btn.inner_text()
+
+    # Click Message button
+    msg_btn.click()
+    modal = page.locator("#modal-messaging-integration")
+    page.locator("#modal-messaging-integration.open").wait_for(timeout=5000)
+
+    # Verify modal is open and informative
+    assert "open" in (modal.get_attribute("class") or "")
+    assert "Customer Outreach & Messaging Gateway" in modal.inner_text()
+    assert "Demo Safe Mode" in modal.inner_text()
+    assert "MESSAGING_PROVIDER" in modal.inner_text()
+    assert "MESSAGING_API_KEY" in modal.inner_text()
+
+    # Verify preview text is rendered
+    preview = page.locator("#messagingDraftPreview")
+    assert preview.is_visible()
+    assert len(preview.inner_text().strip()) > 10
+
+    # Test closing modal
+    page.click("#modal-messaging-integration .spa-modal-close-btn")
+    page.wait_for_timeout(300)
+    assert "open" not in (modal.get_attribute("class") or "")
+
+    page.close()
+
+
 def test_rewards_and_tasks_responsive_overflow(browser_instance):
     """Verifies zero horizontal overflow across 1440px, 768px, and 390px with active rewards & tasks."""
     viewports = [
@@ -362,3 +400,69 @@ def test_rewards_and_tasks_responsive_overflow(browser_instance):
         assert os.path.exists(shot_path), f"Screenshot {shot_path} should be generated"
 
         page.close()
+
+
+def test_insight_copilot_drawer_and_query(browser_instance):
+    """Verifies floating Copilot launcher, slide-out drawer, preset queries, and safe execution."""
+    page = browser_instance.new_page(viewport={"width": 1440, "height": 900})
+    page.goto(TEST_URL, wait_until="networkidle")
+
+    # 1. Launcher button visible
+    launcher = page.locator("#insightCopilotLauncher")
+    launcher.wait_for(timeout=10000)
+    assert launcher.is_visible()
+    assert "INSIGHT Copilot" in launcher.inner_text()
+
+    # 2. Drawer initially hidden, opens on click
+    drawer = page.locator("#insightCopilotDrawer")
+    assert not drawer.is_visible()
+
+    launcher.click()
+    page.wait_for_timeout(300)
+    assert drawer.is_visible()
+
+    # 3. Status indicator present
+    status_dot = page.locator("#copilotStatusDot")
+    assert status_dot.is_visible()
+    status_text = page.locator("#copilotStatusText")
+    assert status_text.is_visible()
+
+    # 4. Preset query chips present
+    chips = page.locator(".copilot-example-chips .example-chip")
+    assert chips.count() >= 3
+
+    # 5. Click first preset chip
+    first_chip = chips.first
+    chip_text = first_chip.inner_text().strip()
+    first_chip.click()
+
+    # Submitting via button
+    page.click("#copilotSendBtn")
+
+    # 6. User message bubble rendered
+    user_bubble = page.locator(".copilot-message-bubble.user")
+    user_bubble.wait_for(timeout=5000)
+    assert user_bubble.is_visible()
+    assert chip_text in user_bubble.inner_text()
+
+    # 7. Assistant response bubble rendered (either live AI or graceful setup mode)
+    assistant_bubble = page.locator(".copilot-message-bubble.assistant")
+    assistant_bubble.wait_for(timeout=15000)
+    assert assistant_bubble.is_visible()
+
+    # 8. Reset chat restores welcome card
+    reset_btn = page.locator(".copilot-icon-btn", has_text="↺")
+    reset_btn.click()
+    page.wait_for_timeout(200)
+    welcome_card = page.locator("#copilotWelcomeCard")
+    assert welcome_card.is_visible()
+    assert page.locator(".copilot-message-bubble.user").count() == 0
+
+    # 9. Close drawer
+    close_btn = page.locator(".copilot-close-btn")
+    close_btn.click()
+    page.wait_for_timeout(200)
+    assert not drawer.is_visible()
+
+    page.close()
+

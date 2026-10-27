@@ -3705,6 +3705,168 @@
       </div>
     </div>
   </div>
+
+  <!-- ==============================================================================
+       MODAL 5: CUSTOMER MESSAGING & OUTREACH GATEWAY
+       ============================================================================== -->
+  <div class="spa-modal-overlay" id="modal-messaging-integration" role="dialog" aria-modal="true" aria-labelledby="messagingModalTitle">
+    <div class="spa-modal-dialog messaging-modal-dialog">
+      <div class="spa-modal-header">
+        <div class="spa-modal-title">
+          <span class="dash-title-icon" style="width: 26px; height: 26px; border-radius: 6px;">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+          </span>
+          <span id="messagingModalTitle">Customer Outreach &amp; Messaging Gateway</span>
+        </div>
+        <button type="button" class="spa-modal-close-btn" onclick="window.closeSpaModal('messaging-integration')" aria-label="Close Messaging Gateway Modal">✕</button>
+      </div>
+      <div class="spa-modal-body">
+        <!-- Gateway Integration Status Card -->
+        <div class="messaging-gateway-card">
+          <div class="messaging-gateway-status-row">
+            <span class="messaging-status-badge unconfigured" id="messagingGatewayStatusBadge">
+              <span class="status-dot amber">●</span> Outbound Gateway Not Configured (Demo Safe Mode)
+            </span>
+            <span class="messaging-env-tag">Backend Integration Required</span>
+          </div>
+          <p class="messaging-gateway-desc">
+            Direct SMS, WhatsApp, and transactional email dispatch require an active messaging provider. Outbound transmission is locked in Demo Safe Mode to prevent unauthorized communication and unnecessary provider charges.
+          </p>
+        </div>
+
+        <!-- Target Customer Context -->
+        <div class="messaging-context-section">
+          <div class="messaging-context-header">
+            <span class="messaging-context-label">Target:</span>
+            <span class="messaging-customer-name" id="messagingCustomerDisplay">Customer Profile</span>
+            <span class="messaging-segment-badge" id="messagingCustomerSegment">Standard</span>
+          </div>
+
+          <!-- Sample Draft Message Preview -->
+          <div class="messaging-preview-container">
+            <div class="messaging-preview-header">
+              <span class="messaging-preview-label">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"></rect><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path></svg>
+                <span>Draft Outreach Template (Read-Only Preview)</span>
+              </span>
+              <span class="messaging-channel-pill">SMS / Email Preview</span>
+            </div>
+            <div class="messaging-draft-bubble" id="messagingDraftPreview">
+              Loading tailored outreach template...
+            </div>
+          </div>
+        </div>
+
+        <!-- Integration Requirements Guide -->
+        <div class="messaging-setup-guide">
+          <div class="messaging-guide-title">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+            <span>Production Messaging Setup Requirements</span>
+          </div>
+          <div class="messaging-params-list">
+            <div class="messaging-param-item">
+              <code>MESSAGING_PROVIDER</code>
+              <span>Supported: <strong>twilio</strong>, <strong>sendgrid</strong>, or <strong>aws_ses</strong></span>
+            </div>
+            <div class="messaging-param-item">
+              <code>MESSAGING_API_KEY</code>
+              <span>Provider authentication token / secret</span>
+            </div>
+            <div class="messaging-param-item">
+              <code>MESSAGING_SENDER_ID</code>
+              <span>Verified outbound phone number or sender email address</span>
+            </div>
+          </div>
+          <div class="messaging-guide-note">
+            Keys must be supplied as Render / backend environment variables. Never hardcode credentials in frontend code.
+          </div>
+        </div>
+
+        <!-- Alternative Internal Task Workflow -->
+        <div class="messaging-action-alternative">
+          <div class="alternative-left">
+            <span class="alternative-heading">Need to take action now?</span>
+            <span class="alternative-text">Create an internal follow-up task assigned to your retention or care team.</span>
+          </div>
+        </div>
+
+        <div class="messaging-modal-actions">
+          <button type="button" class="btn-pill-ghost" onclick="window.closeSpaModal('messaging-integration')">Close</button>
+          <button type="button" class="btn-pill-primary" onclick="window.convertMessagingToTask()">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path><rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect></svg>
+            <span>+ Create Follow-up Task Instead</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==============================================================================
+       FLOATING INSIGHT COPILOT ASSISTANT (GOOGLE GEMINI 2.5 FLASH)
+       ============================================================================== -->
+  <!-- Floating Launcher Button -->
+  <button type="button" id="insightCopilotLauncher" class="copilot-floating-launcher" onclick="window.toggleCopilotDrawer()" aria-label="Open INSIGHT Copilot AI Assistant">
+    <span class="copilot-launcher-sparkle">✨</span>
+    <span class="copilot-launcher-text">INSIGHT Copilot</span>
+    <span class="copilot-launcher-pulse" aria-hidden="true"></span>
+  </button>
+
+  <!-- Sliding Copilot Drawer -->
+  <div id="insightCopilotDrawer" class="copilot-drawer" role="dialog" aria-modal="false" aria-labelledby="copilotHeaderTitle" style="display: none;">
+    <!-- Drawer Header -->
+    <div class="copilot-header">
+      <div class="copilot-header-left">
+        <span class="copilot-brand-icon">✨</span>
+        <div class="copilot-title-group">
+          <span class="copilot-header-title" id="copilotHeaderTitle">INSIGHT Copilot</span>
+          <div class="copilot-status-indicator" id="copilotStatusIndicator">
+            <span class="status-dot green" id="copilotStatusDot">●</span>
+            <span id="copilotStatusText">Gemini 2.5 Flash Grounded</span>
+          </div>
+        </div>
+      </div>
+      <div class="copilot-header-actions">
+        <button type="button" class="copilot-icon-btn" onclick="window.resetCopilotChat()" title="Reset Conversation" aria-label="Clear chat">↺</button>
+        <button type="button" class="copilot-icon-btn copilot-close-btn" onclick="window.toggleCopilotDrawer()" title="Close Copilot" aria-label="Close Copilot">✕</button>
+      </div>
+    </div>
+
+    <!-- Messages List -->
+    <div class="copilot-messages" id="copilotMessagesContainer">
+      <!-- Welcome Card with Starter Chips -->
+      <div class="copilot-welcome-card" id="copilotWelcomeCard">
+        <div class="welcome-heading">Enterprise Retail Intelligence</div>
+        <p class="welcome-desc">
+          Ask questions about your store's customer retention, segment analytics, CLV predictions, or individual customer profiles. Answers are grounded in real platform data.
+        </p>
+        <div class="copilot-example-chips">
+          <span class="example-chip-label">Suggested Queries:</span>
+          <button type="button" class="example-chip" onclick="window.sendCopilotPreset(this)">Summarize the main customer-retention risks.</button>
+          <button type="button" class="example-chip" onclick="window.sendCopilotPreset(this)">Which customer segments have the highest churn risk?</button>
+          <button type="button" class="example-chip" onclick="window.sendCopilotPreset(this)">Summarize the key business metrics for the selected period.</button>
+          <button type="button" class="example-chip" onclick="window.sendCopilotPreset(this)">Who are our top customers by total spend?</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Status / Notice Banner (if unconfigured or offline) -->
+    <div class="copilot-status-banner" id="copilotStatusBanner" style="display: none;">
+      <span class="banner-icon">ℹ️</span>
+      <span class="banner-text" id="copilotBannerText">Gemini API is not configured on this server.</span>
+    </div>
+
+    <!-- Input Box -->
+    <form class="copilot-input-area" id="copilotForm" onsubmit="window.handleCopilotSubmit(event)">
+      <input type="text" id="copilotInput" class="copilot-input" placeholder="Ask INSIGHT Copilot about retention, CLV, or segments..." maxlength="1000" autocomplete="off" aria-label="Ask INSIGHT Copilot">
+      <button type="submit" id="copilotSendBtn" class="copilot-send-btn" aria-label="Send query">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+      </button>
+    </form>
+
+    <div class="copilot-disclaimer">
+      <span>AI-generated interpretations grounded in live retail tools • No autonomous data changes</span>
+    </div>
+  </div>
   <script src="/static/js/chart.min.js"></script>
   <script src="/static/js/dashflow.js"></script>
 </body>
