@@ -3978,12 +3978,12 @@ function initInsightCopilot() {
     .then(data => {
       if (!data) return;
       if (data.configured) {
-        if (statusDot) statusDot.className = 'status-dot green';
-        if (statusText) statusText.textContent = `${data.model || 'Gemini'} Grounded`;
+        if (statusDot) statusDot.className = 'status-dot';
+        if (statusText) statusText.textContent = `${data.model || 'Gemini-3.8-flash'} · Grounded`;
         if (statusBanner) statusBanner.style.display = 'none';
       } else {
-        if (statusDot) statusDot.className = 'status-dot amber';
-        if (statusText) statusText.textContent = 'Setup Required (Demo Mode)';
+        if (statusDot) statusDot.className = 'status-dot';
+        if (statusText) statusText.textContent = 'Setup Required · Offline';
         if (statusBanner) {
           statusBanner.style.display = 'flex';
           if (bannerText) {
@@ -4018,6 +4018,12 @@ function formatCopilotMarkdown(raw) {
   text = text.replace(/\n/g, '<br>');
   return text;
 }
+
+window.toggleCopilotExpand = function() {
+  const drawer = document.getElementById('insightCopilotDrawer');
+  if (!drawer) return;
+  drawer.classList.toggle('expanded');
+};
 
 window.toggleCopilotDrawer = function(forceOpen) {
   const drawer = document.getElementById('insightCopilotDrawer');
@@ -4122,26 +4128,37 @@ window.handleCopilotSubmit = function(event) {
 
       if (res.ok) {
         const data = await res.json();
-        let contentHtml = formatCopilotMarkdown(data.response || 'No response returned.');
+        const rawText = data.answer || data.response || 'No response returned.';
+        let contentHtml = formatCopilotMarkdown(rawText);
 
         // Render tool badges if analytics tools were executed
-        if (Array.isArray(data.tool_invocations) && data.tool_invocations.length > 0) {
-          const badges = data.tool_invocations.map(t => {
+        const tools = Array.isArray(data.tools_invoked) ? data.tools_invoked : (Array.isArray(data.tool_invocations) ? data.tool_invocations : []);
+        if (tools.length > 0) {
+          const badges = tools.map(t => {
             const toolName = typeof t === 'string' ? t : (t.tool || 'analytics_tool');
             return `<span class="copilot-tool-tag" title="Data fetched directly via ${escapeHtml(toolName)}">⚡ ${escapeHtml(toolName)}</span>`;
           }).join('');
-          contentHtml += `<div style="margin-top: 8px; display: flex; flex-wrap: wrap; gap: 4px; align-items: center;"><span style="font-size: 10px; color: var(--text-muted, #71717a); margin-right: 2px;">Grounded in:</span>${badges}</div>`;
+          contentHtml += `<div style="margin-top: 10px; display: flex; flex-wrap: wrap; gap: 4px; align-items: center;"><span style="font-size: 10px; color: #737373; margin-right: 2px;">Grounded in:</span>${badges}</div>`;
         }
         assistantBubble.innerHTML = contentHtml;
       } else if (res.status === 429) {
-        assistantBubble.innerHTML = `<strong style="color: #fbbf24;">Rate Limit Reached</strong><br>Requests are temporarily limited to 20 inquiries per minute. Please pause for a moment before querying Copilot again.`;
+        assistantBubble.innerHTML = `<strong style="color: #d4d4d4;">Rate Limit Reached</strong><br>Requests are temporarily limited to 20 inquiries per minute. Please pause for a moment before querying Copilot again.`;
       } else if (res.status === 503) {
         const err = await res.json().catch(() => ({}));
-        const msg = err.error || 'Gemini AI service is currently unavailable or unconfigured.';
-        assistantBubble.innerHTML = `<strong style="color: #f87171;">Setup Mode / Service Notice</strong><br>${escapeHtml(msg)}<br><span style="font-size: 11px; color: #a1a1aa; margin-top: 4px; display: inline-block;">Configure <code>GEMINI_API_KEY</code> on your environment to activate live synthesis.</span>`;
+        const msg = err.error || 'Gemini AI service is currently unavailable.';
+        const isTimeout = /time(d)?\s*out/i.test(msg);
+        const isKeyMissing = /key.*not configured|unauthenticated|invalid/i.test(msg);
+
+        if (isTimeout) {
+          assistantBubble.innerHTML = `<strong style="color: #d4d4d4;">Request Timed Out</strong><br>${escapeHtml(msg)}<br><span style="font-size: 11px; color: #8e8e93; margin-top: 5px; display: inline-block;">The AI analysis took longer than expected. Please try asking again or refine your query.</span>`;
+        } else if (isKeyMissing) {
+          assistantBubble.innerHTML = `<strong style="color: #d4d4d4;">Service Setup Required</strong><br>${escapeHtml(msg)}<br><span style="font-size: 11px; color: #8e8e93; margin-top: 5px; display: inline-block;">Configure <code>GEMINI_API_KEY</code> on your environment to activate live synthesis.</span>`;
+        } else {
+          assistantBubble.innerHTML = `<strong style="color: #d4d4d4;">Service Notice</strong><br>${escapeHtml(msg)}`;
+        }
       } else {
         const err = await res.json().catch(() => ({}));
-        assistantBubble.innerHTML = `<strong style="color: #f87171;">Query Error</strong><br>${escapeHtml(err.error || 'Unable to process inquiry at this moment.')}`;
+        assistantBubble.innerHTML = `<strong style="color: #d4d4d4;">Query Notice</strong><br>${escapeHtml(err.error || 'Unable to process inquiry at this moment.')}`;
       }
 
       container.appendChild(assistantBubble);
@@ -4155,7 +4172,7 @@ window.handleCopilotSubmit = function(event) {
 
       const assistantBubble = document.createElement('div');
       assistantBubble.className = 'copilot-message-bubble assistant';
-      assistantBubble.innerHTML = `<strong style="color: #f87171;">Network Connection Error</strong><br>Failed to reach the INSIGHT Copilot backend service. Please check your connection and try again.`;
+      assistantBubble.innerHTML = `<strong style="color: #d4d4d4;">Connection Notice</strong><br>Failed to reach the INSIGHT Copilot backend service. Please check your connection and try again.`;
       container.appendChild(assistantBubble);
       container.scrollTop = container.scrollHeight;
     });
