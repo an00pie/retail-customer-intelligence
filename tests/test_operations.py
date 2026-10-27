@@ -135,6 +135,17 @@ class OperationsTests(unittest.TestCase):
         self.assertEqual(result.json['feature_inputs']['frequency'], 3)
         self.assertEqual({d['model'] for d in result.json['drivers']}, {'clv', 'churn'})
 
+    def test_cython_loss_shim_unpickles_clv_model(self):
+        import sys
+        import sklearn._loss._loss as _sklearn_loss_cy
+        # Ensure _loss is in sys.modules and model unpickles cleanly
+        sys.modules['_loss'] = _sklearn_loss_cy
+        import joblib
+        from web.app import CLV_MODEL_PATH
+        clv = joblib.load(CLV_MODEL_PATH)
+        self.assertIsNotNone(clv)
+        self.assertTrue(hasattr(clv, 'predict'))
+
     def test_invalid_prediction_payload(self):
         for payload in ([], {'total_spend': float('inf')}, {'frequency': float('inf')}):
             self.assertEqual(self.client.post('/api/predict', json=payload).status_code, 400)
