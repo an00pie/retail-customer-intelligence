@@ -3802,13 +3802,13 @@
   </div>
 
   <!-- ==============================================================================
-       FLOATING INSIGHT COPILOT ASSISTANT (POWERED BY GOOGLE GEMINI)
+       FLOATING INSIGHT COPILOT ASSISTANT (PREMIUM MONOCHROME DESIGN)
        ============================================================================== -->
   <!-- Floating Launcher Button -->
   <button type="button" id="insightCopilotLauncher" class="copilot-floating-launcher" onclick="window.toggleCopilotDrawer()" aria-label="Open INSIGHT Copilot AI Assistant">
-    <span class="copilot-launcher-sparkle">✨</span>
+    <span class="copilot-launcher-sparkle">✦</span>
     <span class="copilot-launcher-text">INSIGHT Copilot</span>
-    <span class="copilot-launcher-pulse" aria-hidden="true"></span>
+    <svg class="copilot-launcher-chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="18 15 12 9 6 15"></polyline></svg>
   </button>
 
   <!-- Sliding Copilot Drawer -->
@@ -3816,18 +3816,19 @@
     <!-- Drawer Header -->
     <div class="copilot-header">
       <div class="copilot-header-left">
-        <span class="copilot-brand-icon">✨</span>
+        <span class="copilot-brand-icon">✦</span>
         <div class="copilot-title-group">
           <span class="copilot-header-title" id="copilotHeaderTitle">INSIGHT Copilot</span>
           <div class="copilot-status-indicator" id="copilotStatusIndicator">
-            <span class="status-dot green" id="copilotStatusDot">●</span>
-            <span id="copilotStatusText">INSIGHT Copilot Active</span>
+            <span class="status-dot" id="copilotStatusDot">●</span>
+            <span id="copilotStatusText">Gemini-3.8-flash · Grounded</span>
           </div>
         </div>
       </div>
       <div class="copilot-header-actions">
+        <button type="button" class="copilot-icon-btn" onclick="window.toggleCopilotExpand()" title="Expand / Collapse Drawer" aria-label="Expand Copilot">⤢</button>
         <button type="button" class="copilot-icon-btn" onclick="window.resetCopilotChat()" title="Reset Conversation" aria-label="Clear chat">↺</button>
-        <button type="button" class="copilot-icon-btn copilot-close-btn" onclick="window.toggleCopilotDrawer()" title="Close Copilot" aria-label="Close Copilot">✕</button>
+        <button type="button" class="copilot-icon-btn copilot-close-btn" onclick="window.toggleCopilotDrawer(false)" title="Close Copilot" aria-label="Close Copilot">✕</button>
       </div>
     </div>
 
@@ -3835,12 +3836,12 @@
     <div class="copilot-messages" id="copilotMessagesContainer">
       <!-- Welcome Card with Starter Chips -->
       <div class="copilot-welcome-card" id="copilotWelcomeCard">
-        <div class="welcome-heading">Enterprise Retail Intelligence</div>
+        <div class="welcome-heading">ENTERPRISE RETAIL INTELLIGENCE</div>
         <p class="welcome-desc">
           Ask questions about your store's customer retention, segment analytics, CLV predictions, or individual customer profiles. Answers are grounded in real platform data.
         </p>
         <div class="copilot-example-chips">
-          <span class="example-chip-label">Suggested Queries:</span>
+          <span class="example-chip-label">SUGGESTED QUERIES:</span>
           <button type="button" class="example-chip" onclick="window.sendCopilotPreset(this)">Summarize the main customer-retention risks.</button>
           <button type="button" class="example-chip" onclick="window.sendCopilotPreset(this)">Which customer segments have the highest churn risk?</button>
           <button type="button" class="example-chip" onclick="window.sendCopilotPreset(this)">Summarize the key business metrics for the selected period.</button>
@@ -3857,10 +3858,12 @@
 
     <!-- Input Box -->
     <form class="copilot-input-area" id="copilotForm" onsubmit="window.handleCopilotSubmit(event)">
-      <input type="text" id="copilotInput" class="copilot-input" placeholder="Ask INSIGHT Copilot about retention, CLV, or segments..." maxlength="1000" autocomplete="off" aria-label="Ask INSIGHT Copilot">
-      <button type="submit" id="copilotSendBtn" class="copilot-send-btn" aria-label="Send query">
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
-      </button>
+      <div class="copilot-input-wrapper">
+        <input type="text" id="copilotInput" class="copilot-input" placeholder="Ask INSIGHT Copilot about retention, CLV, or segments..." maxlength="1000" autocomplete="off" aria-label="Ask INSIGHT Copilot">
+        <button type="submit" id="copilotSendBtn" class="copilot-send-btn" aria-label="Send query">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+        </button>
+      </div>
     </form>
 
     <div class="copilot-disclaimer">

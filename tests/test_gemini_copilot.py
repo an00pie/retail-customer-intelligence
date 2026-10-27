@@ -241,7 +241,7 @@ class TestCopilotExecutionWithMockedGemini:
         """Request timeout errors return friendly HTTP 503 with timeout indication."""
         monkeypatch.setenv("GEMINI_API_KEY", "mock_key_for_test")
         mock_instance = MagicMock()
-        mock_instance.models.generate_content.side_effect = Exception("DeadlineExceeded: request timed out after 15000ms")
+        mock_instance.models.generate_content.side_effect = Exception("DeadlineExceeded: request timed out after 30000ms")
         mock_client_cls.return_value = mock_instance
 
         service = get_gemini_service()
@@ -251,3 +251,18 @@ class TestCopilotExecutionWithMockedGemini:
         assert res.status_code == 503
         data = res.get_json()
         assert "timed out" in data["error"].lower()
+
+    def test_timeout_seconds_config(self, monkeypatch):
+        """GEMINI_TIMEOUT_SECONDS parses valid integer and enforces safe bounds (10s to 60s)."""
+        from web.services.gemini_service import GeminiService
+        monkeypatch.setenv("GEMINI_TIMEOUT_SECONDS", "45")
+        svc = GeminiService()
+        assert svc._timeout_seconds == 45
+
+        monkeypatch.setenv("GEMINI_TIMEOUT_SECONDS", "999")
+        svc_clamped = GeminiService()
+        assert svc_clamped._timeout_seconds == 60
+
+        monkeypatch.setenv("GEMINI_TIMEOUT_SECONDS", "not-a-number")
+        svc_default = GeminiService()
+        assert svc_default._timeout_seconds == 30
