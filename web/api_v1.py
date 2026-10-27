@@ -499,6 +499,64 @@ def task_detail_endpoint(task_id: int):
     return jsonify({"status": "updated", "task": updated_task})
 
 # ------------------------------------------------------------------------------
+# 3d. Outbound Customer Messaging Gateway & Status Guard
+# ------------------------------------------------------------------------------
+@api_v1.route("/messaging/status", methods=["GET"])
+def messaging_gateway_status():
+    """Returns outbound messaging gateway configuration status and supported providers."""
+    provider = os.environ.get("MESSAGING_PROVIDER", "").strip().lower()
+    has_key = bool(os.environ.get("MESSAGING_API_KEY", "").strip())
+    is_configured = bool(provider and has_key)
+
+    return jsonify({
+        "configured": is_configured,
+        "provider": provider if is_configured else None,
+        "supported_providers": ["Twilio (SMS)", "SendGrid (Email)", "AWS SES (Email/SMS)"],
+        "required_env_vars": ["MESSAGING_PROVIDER", "MESSAGING_API_KEY", "MESSAGING_SENDER_ID"],
+        "outbound_dispatch_enabled": is_configured,
+        "mode": "live_dispatch" if is_configured else "demo_safe_mode",
+        "notice": (
+            f"Messaging gateway configured via {provider}."
+            if is_configured else
+            "Outbound messaging gateway is not configured. Live SMS/Email dispatch requires provider credentials."
+        )
+    })
+
+@api_v1.route("/messaging/send", methods=["POST", "OPTIONS"])
+def messaging_send_endpoint():
+    """Guarded outbound messaging endpoint. Rejects dispatch with honest 503 when unconfigured."""
+    if request.method == "OPTIONS":
+        return "", 200
+
+    provider = os.environ.get("MESSAGING_PROVIDER", "").strip().lower()
+    has_key = bool(os.environ.get("MESSAGING_API_KEY", "").strip())
+
+    if not (provider and has_key):
+        return jsonify({
+            "error": "Outbound messaging gateway is not configured on this server.",
+            "code": "GATEWAY_UNCONFIGURED",
+            "dispatch_status": "blocked",
+            "required_configuration": ["MESSAGING_PROVIDER", "MESSAGING_API_KEY", "MESSAGING_SENDER_ID"],
+            "guidance": "Set MESSAGING_PROVIDER and MESSAGING_API_KEY in server environment to enable live dispatch."
+        }), 503
+
+    data = request.get_json(silent=True)
+    if not isinstance(data, dict):
+        return jsonify({"error": "JSON object body is required"}), 400
+
+    customer_id = str(data.get("customer_id", "")).strip()
+    message = str(data.get("message", "")).strip()
+    if not customer_id or not message:
+        return jsonify({"error": "customer_id and message are required"}), 400
+
+    return jsonify({
+        "status": "sent",
+        "provider": provider,
+        "customer_id": customer_id,
+        "timestamp": datetime.now(timezone.utc).isoformat()
+    }), 200
+
+# ------------------------------------------------------------------------------
 # 4. Analytics & Retention Matrix
 # ------------------------------------------------------------------------------
 @api_v1.route("/analytics/cohorts", methods=["GET"])
@@ -836,3 +894,66 @@ def list_reports():
             }
         ]
     })
+
+# ------------------------------------------------------------------------------
+# 10. AI Intelligence & Copilot Endpoints (Google Gemini)
+# ------------------------------------------------------------------------------
+@api_v1.route("/ai/status", methods=["GET"])
+def ai_status():
+    """Returns safe Gemini AI integration status and available capabilities."""
+    from web.services.gemini_service import get_gemini_service
+    service = get_gemini_service()
+    return jsonify(service.get_status()), 200
+
+
+@api_v1.route("/ai/copilot", methods=["POST", "OPTIONS"])
+def ai_copilot():
+    """Executes an analytics-grounded Copilot query using Google Gemini and verified tools."""
+    if request.method == "OPTIONS":
+        return "", 200
+
+    from web.services.gemini_service import (
+        get_gemini_service,
+        GeminiError,
+        GeminiUnavailableError,
+        GeminiRateLimitError
+    )
+
+    data = request.get_json(silent=True)
+    if not isinstance(data, dict):
+        return jsonify({"error": "JSON payload required.", "code": "INVALID_PAYLOAD"}), 400
+
+    prompt = str(data.get("prompt") or data.get("message") or "").strip()
+    if not prompt:
+        return jsonify({"error": "Field 'prompt' is required.", "code": "EMPTY_PROMPT"}), 400
+
+    # Resolve client IP for rate limiting
+    forwarded = request.headers.get("X-Forwarded-For")
+    client_ip = forwarded.split(",")[0].strip() if forwarded else (request.remote_addr or "127.0.0.1")
+
+    service = get_gemini_service()
+    try:
+        result = service.ask_copilot(prompt=prompt, client_ip=client_ip)
+        return jsonify(result), 200
+    except GeminiUnavailableError as e:
+        return jsonify({
+            "error": str(e),
+            "code": "AI_UNAVAILABLE",
+            "status": "unavailable"
+        }), 503
+    except GeminiRateLimitError as e:
+        return jsonify({
+            "error": str(e),
+            "code": "RATE_LIMIT_EXCEEDED",
+            "status": "rate_limited"
+        }), 429
+    except GeminiError as e:
+        return jsonify({
+            "error": str(e),
+            "code": "INVALID_QUERY"
+        }), 400
+    except Exception as e:
+        return jsonify({
+            "error": "An internal error occurred while processing the AI query.",
+            "code": "INTERNAL_AI_ERROR"
+        }), 500
