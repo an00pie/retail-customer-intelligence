@@ -1229,6 +1229,7 @@ function renderCustomerProfile(data) {
   if (!container) return;
 
   const rawId = String(data.customer_id || '');
+  const custId = rawId;
   const safeId = escapeHtml(rawId);
   const rawSeg = String(data.segment || 'Loyal Customers');
   const safeSeg = escapeHtml(rawSeg);
@@ -1540,7 +1541,7 @@ function renderCustomerProfile(data) {
                 <span class="lookup-nba-desc">Offer early access to upcoming luxury collection.</span>
                 <span class="lookup-nba-impact">High Impact • +15% Spend</span>
               </div>
-              <button type="button" class="nba-apply-btn" onclick="window.showToast('Messaging integration unavailable: Outbound SMS/Email gateway not configured', 'info')">Apply</button>
+              <button type="button" class="nba-apply-btn" id="nba-btn-vip_rewards" data-rec-id="vip_rewards" onclick="window.applyCustomerRecommendation('${escapeHtml(custId)}', 'vip_rewards', 'VIP Exclusive Rewards', 'vip_perk', 'High Impact • +15% Spend', this)">Apply</button>
             </div>
             <div class="lookup-nba-item">
               <div class="lookup-nba-avatar-wrap">
@@ -1551,7 +1552,7 @@ function renderCustomerProfile(data) {
                 <span class="lookup-nba-desc">Recommend items from frequently co-purchased categories.</span>
                 <span class="lookup-nba-impact">Med Impact • +8% AOV</span>
               </div>
-              <button type="button" class="nba-apply-btn" onclick="window.showToast('Messaging integration unavailable: Outbound SMS/Email gateway not configured', 'info')">Apply</button>
+              <button type="button" class="nba-apply-btn" id="nba-btn-cross_sell" data-rec-id="cross_sell" onclick="window.applyCustomerRecommendation('${escapeHtml(custId)}', 'cross_sell', 'Cross-Sell Opportunity', 'cross_sell', 'Med Impact • +8% AOV', this)">Apply</button>
             </div>
             <div class="lookup-nba-item">
               <div class="lookup-nba-avatar-wrap">
@@ -1562,15 +1563,26 @@ function renderCustomerProfile(data) {
                 <span class="lookup-nba-desc">Schedule automated personalized touchpoint in 14 days.</span>
                 <span class="lookup-nba-impact">Low Impact • Retention</span>
               </div>
-              <button type="button" class="nba-apply-btn" onclick="window.showToast('Messaging integration unavailable: Outbound SMS/Email gateway not configured', 'info')">Apply</button>
+              <button type="button" class="nba-apply-btn" id="nba-btn-reengage_campaign" data-rec-id="reengage_campaign" onclick="window.applyCustomerRecommendation('${escapeHtml(custId)}', 'reengage_campaign', 'Re-Engagement Campaign', 'campaign', 'Low Impact • Retention', this)">Apply</button>
             </div>
           </div>
         </div>
 
-        <!-- Honest Unavailable Action Buttons -->
+        <!-- Action Buttons (Message & Assign Task) -->
         <div class="lookup-action-buttons-row">
-          <button type="button" class="btn-pill-secondary lookup-honest-btn" onclick="window.showToast('Messaging integration unavailable: Outbound SMS/Email gateway not configured', 'info')" title="Direct customer messaging gateway not configured">💬 Message <span class="honest-sub">(Unavailable)</span></button>
-          <button type="button" class="btn-pill-primary lookup-honest-btn" onclick="window.showToast('Task assignment unavailable: CRM/Task integration not configured', 'info')" title="CRM/Task assignment integration not configured">+ Assign Task <span class="honest-sub">(Unavailable)</span></button>
+          <button type="button" class="btn-pill-secondary lookup-honest-btn" onclick="window.showToast('Outbound messaging gateway not configured. SMS/Email dispatch requires messaging provider credentials.', 'info')" title="Direct customer messaging gateway not configured">💬 Message <span class="honest-sub">(Unavailable)</span></button>
+          <button type="button" class="btn-pill-primary lookup-task-btn" id="lookupAssignTaskBtn" onclick="window.openAssignTaskModal('${escapeHtml(custId)}')" title="Assign an operational follow-up task for this customer">+ Assign Task</button>
+        </div>
+
+        <!-- Assigned Follow-up Tasks Section -->
+        <div class="customer-tasks-section" id="customerTasksContainer" style="display: none;">
+          <div class="customer-tasks-header">
+            <span class="customer-tasks-title">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path><rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect></svg>
+              <span>Assigned Follow-up Tasks (<span id="customerTasksCount">0</span>)</span>
+            </span>
+          </div>
+          <div id="customerTasksList"></div>
         </div>
       </div>
     </div>
@@ -1596,7 +1608,266 @@ function renderCustomerProfile(data) {
       renderCustomerJourneyChart(data, pill.dataset.period || 'ALL');
     });
   });
+
+  // Hydrate persistent recommendation state & assigned tasks
+  loadCustomerAppliedRecommendations(custId);
+  loadCustomerTasks(custId);
 }
+
+/* ==============================================================================
+   5b. REWARD APPLICATIONS & OPERATIONAL TASK ASSIGNMENT CLIENT
+   ============================================================================== */
+window.applyCustomerRecommendation = function(custId, recId, actionTitle, actionType, impactText, btnElement) {
+  if (!custId || !recId || !btnElement) return;
+  if (btnElement.disabled) return;
+
+  btnElement.disabled = true;
+  const originalText = btnElement.textContent;
+  btnElement.textContent = 'Applying...';
+
+  fetch(`/api/v1/customers/${encodeURIComponent(custId)}/recommendations/apply`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      recommendation_id: recId,
+      action_title: actionTitle,
+      action_type: actionType,
+      impact_text: impactText
+    })
+  })
+    .then(res => {
+      if (!res.ok) {
+        return res.json().then(errData => { throw new Error(errData.error || `HTTP ${res.status}`); });
+      }
+      return res.json();
+    })
+    .then(data => {
+      btnElement.classList.add('applied');
+      btnElement.textContent = 'Applied ✓';
+      btnElement.title = `Applied on ${new Date().toLocaleDateString()}`;
+      btnElement.disabled = true;
+      if (typeof window.showToast === 'function') {
+        window.showToast(`Applied ${actionTitle} for Customer #${custId}`, 'success');
+      }
+      if (window.insightAnalytics) {
+        window.insightAnalytics.track('recommendation_applied', { customer_id: custId, recommendation_id: recId });
+      }
+    })
+    .catch(err => {
+      btnElement.disabled = false;
+      btnElement.textContent = originalText;
+      if (typeof window.showToast === 'function') {
+        window.showToast(`Failed to apply recommendation: ${err.message}`, 'error');
+      }
+    });
+};
+
+function isCurrentCustomer(custId) {
+  const cur = window.currentCustomerProfile;
+  return !!cur && String(cur.customer_id) === String(custId);
+}
+
+function loadCustomerAppliedRecommendations(custId) {
+  if (!custId) return;
+  fetch(`/api/v1/customers/${encodeURIComponent(custId)}/recommendations`)
+    .then(res => res.ok ? res.json() : null)
+    .then(data => {
+      if (!isCurrentCustomer(custId)) return;
+      if (data && Array.isArray(data.recommendations)) {
+        data.recommendations.forEach(rec => {
+          const btn = document.querySelector(`.nba-apply-btn[data-rec-id="${rec.recommendation_id}"]`);
+          if (btn) {
+            btn.classList.add('applied');
+            btn.textContent = 'Applied ✓';
+            btn.disabled = true;
+            btn.title = `Applied on ${new Date(rec.applied_at).toLocaleDateString()}`;
+          }
+        });
+      }
+    })
+    .catch(() => {});
+}
+
+window.openAssignTaskModal = function(custId) {
+  const profile = window.currentCustomerProfile;
+  const customerId = custId || (profile && profile.customer_id) || '';
+  const segment = (profile && profile.segment) || 'Standard';
+
+  const idInput = document.getElementById('taskCustomerIdInput');
+  const displayInput = document.getElementById('taskCustomerDisplay');
+  const titleInput = document.getElementById('taskTitleInput');
+  const descInput = document.getElementById('taskDescriptionInput');
+  const dateInput = document.getElementById('taskDueDateInput');
+  const errorEl = document.getElementById('taskTitleError');
+  const submitBtn = document.getElementById('taskSubmitBtn');
+
+  if (idInput) idInput.value = customerId;
+  if (displayInput) displayInput.value = `Customer #${customerId} (${segment})`;
+  if (titleInput) {
+    titleInput.value = '';
+    titleInput.classList.remove('has-error');
+  }
+  if (descInput) descInput.value = '';
+  if (errorEl) errorEl.style.display = 'none';
+  if (submitBtn) {
+    submitBtn.disabled = false;
+    submitBtn.innerHTML = '<span>Create Task</span>';
+  }
+
+  // Set default due date to 7 days from now
+  if (dateInput) {
+    const future = new Date();
+    future.setDate(future.getDate() + 7);
+    dateInput.value = future.toISOString().split('T')[0];
+  }
+
+  if (typeof window.openSpaModal === 'function') {
+    window.openSpaModal('assign-task');
+    setTimeout(() => {
+      if (titleInput) titleInput.focus();
+    }, 150);
+  }
+};
+
+window.handleAssignTaskSubmit = function(event) {
+  if (event) event.preventDefault();
+  const idInput = document.getElementById('taskCustomerIdInput');
+  const titleInput = document.getElementById('taskTitleInput');
+  const assigneeSelect = document.getElementById('taskAssigneeSelect');
+  const prioritySelect = document.getElementById('taskPrioritySelect');
+  const dueDateInput = document.getElementById('taskDueDateInput');
+  const descInput = document.getElementById('taskDescriptionInput');
+  const errorEl = document.getElementById('taskTitleError');
+  const submitBtn = document.getElementById('taskSubmitBtn');
+
+  const customerId = idInput ? idInput.value : '';
+  const title = titleInput ? titleInput.value.trim() : '';
+  const assignee = assigneeSelect ? assigneeSelect.value : 'Retention Specialist';
+  const priority = prioritySelect ? prioritySelect.value : 'Medium';
+  const dueDate = dueDateInput ? dueDateInput.value : '';
+  const description = descInput ? descInput.value.trim() : '';
+
+  if (!title) {
+    if (errorEl) {
+      errorEl.textContent = 'Task title is required.';
+      errorEl.style.display = 'block';
+    }
+    if (titleInput) titleInput.focus();
+    return;
+  }
+  if (errorEl) errorEl.style.display = 'none';
+
+  if (submitBtn) {
+    submitBtn.disabled = true;
+    submitBtn.innerHTML = '<span>Creating...</span>';
+  }
+
+  fetch(`/api/v1/customers/${encodeURIComponent(customerId)}/tasks`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      title,
+      assignee,
+      priority,
+      due_date: dueDate || null,
+      description
+    })
+  })
+    .then(res => {
+      if (!res.ok) {
+        return res.json().then(errData => { throw new Error(errData.error || `HTTP ${res.status}`); });
+      }
+      return res.json();
+    })
+    .then(data => {
+      if (typeof window.closeSpaModal === 'function') {
+        window.closeSpaModal('assign-task');
+      }
+      if (typeof window.showToast === 'function') {
+        window.showToast(`Task assigned: "${title}" to ${assignee}`, 'success');
+      }
+      if (window.insightAnalytics) {
+        window.insightAnalytics.track('customer_task_created', { customer_id: customerId, priority, assignee });
+      }
+      loadCustomerTasks(customerId);
+    })
+    .catch(err => {
+      if (submitBtn) {
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = '<span>Create Task</span>';
+      }
+      if (errorEl) {
+        errorEl.textContent = err.message;
+        errorEl.style.display = 'block';
+      }
+    });
+};
+
+function loadCustomerTasks(custId) {
+  if (!custId) return;
+  const container = document.getElementById('customerTasksContainer');
+  const listEl = document.getElementById('customerTasksList');
+  const countEl = document.getElementById('customerTasksCount');
+  if (!container || !listEl) return;
+
+  fetch(`/api/v1/customers/${encodeURIComponent(custId)}/tasks`)
+    .then(res => res.ok ? res.json() : null)
+    .then(data => {
+      if (!isCurrentCustomer(custId)) return;
+      if (!data || !Array.isArray(data.tasks) || data.tasks.length === 0) {
+        container.style.display = 'none';
+        listEl.innerHTML = '';
+        if (countEl) countEl.textContent = '0';
+        return;
+      }
+      container.style.display = 'block';
+      if (countEl) countEl.textContent = String(data.tasks.length);
+
+      listEl.innerHTML = data.tasks.map(task => {
+        const isDone = task.status === 'completed';
+        const priorityClass = `task-priority-${(task.priority || 'medium').toLowerCase()}`;
+        return `
+          <div class="customer-task-item ${isDone ? 'completed' : ''}" id="taskItem-${task.id}">
+            <div class="task-item-left">
+              <span class="task-item-title">${escapeHtml(task.title)}</span>
+              <div class="task-item-meta">
+                <span class="task-priority-badge ${priorityClass}">${escapeHtml(task.priority)}</span>
+                <span>👤 ${escapeHtml(task.assignee)}</span>
+                ${task.due_date ? `<span>📅 Due ${escapeHtml(task.due_date)}</span>` : ''}
+              </div>
+            </div>
+            <button type="button" class="btn-pill-ghost" style="padding: 4px 8px; font-size: 11px;" onclick="window.toggleCustomerTaskStatus(${task.id}, '${isDone ? 'open' : 'completed'}', '${escapeHtml(custId)}')">
+              ${isDone ? 'Reopen' : 'Mark Done ✓'}
+            </button>
+          </div>
+        `;
+      }).join('');
+    })
+    .catch(() => {});
+}
+
+window.toggleCustomerTaskStatus = function(taskId, newStatus, custId) {
+  fetch(`/api/v1/tasks/${taskId}`, {
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ status: newStatus })
+  })
+    .then(res => {
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      return res.json();
+    })
+    .then(() => {
+      loadCustomerTasks(custId);
+      if (typeof window.showToast === 'function') {
+        window.showToast(`Task marked as ${newStatus}`, 'info');
+      }
+    })
+    .catch(err => {
+      if (typeof window.showToast === 'function') {
+        window.showToast(`Failed to update task: ${err.message}`, 'error');
+      }
+    });
+};
 
 /* ==============================================================================
    6. WHAT-IF SCENARIO SIMULATOR (Live ML Model Client with Real-Time Validation)

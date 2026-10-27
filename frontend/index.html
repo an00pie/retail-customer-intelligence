@@ -3639,6 +3639,72 @@
       </div>
     </div>
   </div>
+
+  <!-- ==============================================================================
+       MODAL 4: ASSIGN OPERATIONAL TASK
+       ============================================================================== -->
+  <div class="spa-modal-overlay" id="modal-assign-task" role="dialog" aria-modal="true" aria-labelledby="assignTaskModalTitle">
+    <div class="spa-modal-dialog task-modal-dialog">
+      <div class="spa-modal-header">
+        <div class="spa-modal-title">
+          <span class="dash-title-icon" style="width: 26px; height: 26px; border-radius: 6px;">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path><rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect></svg>
+          </span>
+          <span id="assignTaskModalTitle">Assign Customer Follow-up Task</span>
+        </div>
+        <button type="button" class="spa-modal-close-btn" onclick="window.closeSpaModal('assign-task')" aria-label="Close Task Assignment Modal">✕</button>
+      </div>
+      <div class="spa-modal-body">
+        <form id="assignTaskForm" onsubmit="window.handleAssignTaskSubmit(event)" novalidate>
+          <div class="task-form-group">
+            <label for="taskCustomerDisplay" class="task-form-label">Customer Profile</label>
+            <input type="text" id="taskCustomerDisplay" class="task-form-input task-readonly-input" readonly value="Customer #" aria-readonly="true">
+            <input type="hidden" id="taskCustomerIdInput" value="">
+          </div>
+          <div class="task-form-group">
+            <label for="taskTitleInput" class="task-form-label">Task Title <span style="color: #fb7185;">*</span></label>
+            <input type="text" id="taskTitleInput" class="task-form-input" placeholder="e.g. Schedule VIP loyalty preview call" required maxlength="200" autocomplete="off">
+            <span class="task-field-error" id="taskTitleError" style="display: none;" role="alert">Task title is required (1-200 characters).</span>
+          </div>
+          <div class="task-form-row">
+            <div class="task-form-group" style="flex: 1;">
+              <label for="taskAssigneeSelect" class="task-form-label">Assignee <span style="color: #fb7185;">*</span></label>
+              <select id="taskAssigneeSelect" class="task-form-select" required>
+                <option value="Retention Specialist">Retention Specialist</option>
+                <option value="VIP Account Executive">VIP Account Executive</option>
+                <option value="Customer Care Lead">Customer Care Lead</option>
+                <option value="Store Manager">Store Manager</option>
+                <option value="Marketing Operations">Marketing Operations</option>
+              </select>
+            </div>
+            <div class="task-form-group" style="flex: 1;">
+              <label for="taskPrioritySelect" class="task-form-label">Priority</label>
+              <select id="taskPrioritySelect" class="task-form-select">
+                <option value="Medium" selected>Medium Priority</option>
+                <option value="High">High Priority</option>
+                <option value="Critical">Critical Priority</option>
+                <option value="Low">Low Priority</option>
+              </select>
+            </div>
+          </div>
+          <div class="task-form-group">
+            <label for="taskDueDateInput" class="task-form-label">Due Date</label>
+            <input type="date" id="taskDueDateInput" class="task-form-input">
+          </div>
+          <div class="task-form-group">
+            <label for="taskDescriptionInput" class="task-form-label">Task Notes &amp; Playbook Context</label>
+            <textarea id="taskDescriptionInput" class="task-form-textarea" rows="3" placeholder="Context from customer journey, segment, or specific risk driver..." maxlength="2000"></textarea>
+          </div>
+          <div class="task-modal-actions">
+            <button type="button" class="btn-pill-ghost" onclick="window.closeSpaModal('assign-task')">Cancel</button>
+            <button type="submit" id="taskSubmitBtn" class="btn-pill-primary">
+              <span>Create Task</span>
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
   <script src="/static/js/chart.min.js"></script>
   <script src="/static/js/dashflow.js"></script>
 </body>

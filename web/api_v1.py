@@ -31,6 +31,12 @@ from web.db import (
     revoke_session,
     add_customer_note,
     list_customer_notes,
+    apply_customer_recommendation,
+    list_customer_recommendations,
+    create_customer_task,
+    list_customer_tasks,
+    get_customer_task,
+    update_customer_task_status,
 )
 
 api_v1 = Blueprint("api_v1", __name__, url_prefix="/api/v1")
@@ -300,6 +306,197 @@ def customer_notes(customer_id: str):
     saved = add_customer_note(customer_id, note, user["id"])
     log_audit_event("customer_note_created", "customer", customer_id, user["id"], {"note_id": saved["id"]})
     return jsonify({"note": saved}), 201
+
+# ------------------------------------------------------------------------------
+# 3b. Customer Recommendation Applications (Next Best Actions)
+# ------------------------------------------------------------------------------
+@api_v1.route("/customers/<path:customer_id>/recommendations/apply", methods=["POST", "OPTIONS"])
+def apply_customer_recommendation_endpoint(customer_id: str):
+    """Applies a recommended next-best-action (reward/perk/retention campaign) for a customer."""
+    if request.method == "OPTIONS":
+        return "", 200
+    from web.app import get_serving
+    if not get_serving().get_customer(customer_id):
+        return jsonify({"error": "Customer not found", "customer_id": customer_id}), 404
+
+    data = request.get_json(silent=True)
+    if not isinstance(data, dict):
+        return jsonify({"error": "JSON object body is required"}), 400
+
+    rec_id = str(data.get("recommendation_id", "")).strip()
+    title = str(data.get("action_title", "")).strip()
+    action_type = str(data.get("action_type", "reward")).strip()
+    impact_text = str(data.get("impact_text", "")).strip()
+    notes = str(data.get("notes", "")).strip()
+
+    if not rec_id:
+        return jsonify({"error": "recommendation_id is required"}), 400
+    if len(rec_id) > 100:
+        return jsonify({"error": "recommendation_id must not exceed 100 characters"}), 400
+    if not title or len(title) > 160:
+        return jsonify({"error": "action_title is required and must not exceed 160 characters"}), 400
+    if len(action_type) > 50:
+        return jsonify({"error": "action_type must not exceed 50 characters"}), 400
+    if len(impact_text) > 200:
+        return jsonify({"error": "impact_text must not exceed 200 characters"}), 400
+    if len(notes) > 2000:
+        return jsonify({"error": "notes must not exceed 2000 characters"}), 400
+
+    user = get_current_user()
+    user_id = user["id"] if user else None
+
+    result = apply_customer_recommendation(
+        customer_id=customer_id,
+        recommendation_id=rec_id,
+        action_title=title,
+        action_type=action_type,
+        impact_text=impact_text,
+        notes=notes
+    )
+    log_audit_event(
+        "recommendation_applied",
+        "customer",
+        customer_id,
+        user_id,
+        {"recommendation_id": rec_id, "action_title": title, "already_applied": result.get("already_applied", False)}
+    )
+
+    status_code = 200 if result.get("already_applied") else 201
+    msg = (
+        f"Recommendation '{title}' is already active for Customer #{customer_id}"
+        if result.get("already_applied")
+        else f"Successfully applied '{title}' for Customer #{customer_id}"
+    )
+    return jsonify({
+        "status": "already_applied" if result.get("already_applied") else "applied",
+        "message": msg,
+        "recommendation": result
+    }), status_code
+
+@api_v1.route("/customers/<path:customer_id>/recommendations", methods=["GET"])
+def customer_recommendations_list_endpoint(customer_id: str):
+    """Lists all applied recommendations for a customer."""
+    from web.app import get_serving
+    if not get_serving().get_customer(customer_id):
+        return jsonify({"error": "Customer not found", "customer_id": customer_id}), 404
+    recs = list_customer_recommendations(customer_id)
+    return jsonify({"customer_id": customer_id, "recommendations": recs, "total_count": len(recs)})
+
+@api_v1.route("/recommendations/<path:rec_id>/apply", methods=["POST", "OPTIONS"])
+def apply_rec_direct_endpoint(rec_id: str):
+    """Direct recommendation apply endpoint accepting customer_id in JSON payload."""
+    if request.method == "OPTIONS":
+        return "", 200
+    data = request.get_json(silent=True) or {}
+    customer_id = str(data.get("customer_id", "")).strip()
+    if not customer_id:
+        return jsonify({"error": "customer_id is required in JSON payload"}), 400
+    data["recommendation_id"] = rec_id
+    return apply_customer_recommendation_endpoint(customer_id)
+
+# ------------------------------------------------------------------------------
+# 3c. Customer Operational Follow-Up Tasks
+# ------------------------------------------------------------------------------
+@api_v1.route("/customers/<path:customer_id>/tasks", methods=["GET", "POST", "OPTIONS"])
+def customer_tasks_endpoint(customer_id: str):
+    """Creates and lists operational follow-up tasks for a customer."""
+    if request.method == "OPTIONS":
+        return "", 200
+    from web.app import get_serving
+    if not get_serving().get_customer(customer_id):
+        return jsonify({"error": "Customer not found", "customer_id": customer_id}), 404
+
+    if request.method == "GET":
+        tasks = list_customer_tasks(customer_id)
+        return jsonify({"customer_id": customer_id, "tasks": tasks, "total_count": len(tasks)})
+
+    data = request.get_json(silent=True)
+    if not isinstance(data, dict):
+        return jsonify({"error": "JSON object body is required"}), 400
+
+    title = str(data.get("title", "")).strip()
+    assignee = str(data.get("assignee", "Retention Specialist")).strip()
+    priority = str(data.get("priority", "Medium")).strip()
+    description = str(data.get("description", "")).strip()
+    due_date = data.get("due_date")
+
+    if not title or len(title) > 200:
+        return jsonify({"error": "title is required and must be between 1 and 200 characters"}), 400
+    if len(description) > 2000:
+        return jsonify({"error": "description must not exceed 2000 characters"}), 400
+    if not assignee or len(assignee) > 100:
+        return jsonify({"error": "assignee is required and must be between 1 and 100 characters"}), 400
+    if priority not in ("Low", "Medium", "High", "Critical"):
+        return jsonify({"error": "priority must be Low, Medium, High, or Critical"}), 400
+    if due_date:
+        due_date = str(due_date).strip()
+        try:
+            datetime.strptime(due_date, "%Y-%m-%d")
+        except ValueError:
+            return jsonify({"error": "due_date must be in YYYY-MM-DD format"}), 400
+    else:
+        due_date = None
+
+    user = get_current_user()
+    user_id = user["id"] if user else None
+
+    task = create_customer_task(
+        customer_id=customer_id,
+        title=title,
+        description=description,
+        assignee=assignee,
+        priority=priority,
+        due_date=due_date
+    )
+    log_audit_event(
+        "customer_task_created",
+        "task",
+        str(task["id"]),
+        user_id,
+        {"customer_id": customer_id, "title": title, "assignee": assignee, "priority": priority}
+    )
+    return jsonify({
+        "status": "created",
+        "message": f"Task '{title}' assigned to {assignee} for Customer #{customer_id}",
+        "task": task
+    }), 201
+
+@api_v1.route("/tasks", methods=["POST", "OPTIONS"])
+def global_tasks_endpoint():
+    """Global task creation endpoint accepting customer_id in JSON payload."""
+    if request.method == "OPTIONS":
+        return "", 200
+    data = request.get_json(silent=True)
+    if not isinstance(data, dict):
+        return jsonify({"error": "JSON object body is required"}), 400
+    customer_id = str(data.get("customer_id", "")).strip()
+    if not customer_id:
+        return jsonify({"error": "customer_id is required in JSON payload"}), 400
+    return customer_tasks_endpoint(customer_id)
+
+@api_v1.route("/tasks/<int:task_id>", methods=["GET", "PATCH", "OPTIONS"])
+def task_detail_endpoint(task_id: int):
+    """Retrieves or updates status of an assigned task."""
+    if request.method == "OPTIONS":
+        return "", 200
+    task = get_customer_task(task_id)
+    if not task:
+        return jsonify({"error": "Task not found", "task_id": task_id}), 404
+    if request.method == "GET":
+        return jsonify({"task": task})
+
+    data = request.get_json(silent=True)
+    if not isinstance(data, dict):
+        return jsonify({"error": "JSON object body is required"}), 400
+    new_status = str(data.get("status", "")).strip().lower()
+    if new_status not in ("open", "completed"):
+        return jsonify({"error": "status must be 'open' or 'completed'"}), 400
+
+    update_customer_task_status(task_id, new_status)
+    user = get_current_user()
+    log_audit_event("customer_task_updated", "task", str(task_id), user["id"] if user else None, {"status": new_status})
+    updated_task = get_customer_task(task_id)
+    return jsonify({"status": "updated", "task": updated_task})
 
 # ------------------------------------------------------------------------------
 # 4. Analytics & Retention Matrix
