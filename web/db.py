@@ -106,6 +106,40 @@ def init_db():
     """)
     cursor.execute("CREATE INDEX IF NOT EXISTS idx_customer_notes_customer ON customer_notes(customer_id)")
 
+    # 5. Customer Recommendation Applications (Durable Next Best Actions)
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS customer_recommendations (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            customer_id TEXT NOT NULL,
+            recommendation_id TEXT NOT NULL,
+            action_title TEXT NOT NULL,
+            action_type TEXT NOT NULL,
+            impact_text TEXT,
+            status TEXT NOT NULL DEFAULT 'applied',
+            applied_at TEXT NOT NULL,
+            notes TEXT
+        )
+    """)
+    cursor.execute("CREATE INDEX IF NOT EXISTS idx_customer_recs_cust ON customer_recommendations(customer_id)")
+    cursor.execute("CREATE UNIQUE INDEX IF NOT EXISTS idx_customer_rec_unique ON customer_recommendations(customer_id, recommendation_id)")
+
+    # 6. Customer Operational Follow-up Tasks
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS customer_tasks (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            customer_id TEXT NOT NULL,
+            title TEXT NOT NULL,
+            description TEXT DEFAULT '',
+            assignee TEXT NOT NULL,
+            priority TEXT NOT NULL DEFAULT 'Medium',
+            due_date TEXT,
+            status TEXT NOT NULL DEFAULT 'open',
+            created_at TEXT NOT NULL,
+            updated_at TEXT NOT NULL
+        )
+    """)
+    cursor.execute("CREATE INDEX IF NOT EXISTS idx_customer_tasks_cust ON customer_tasks(customer_id)")
+
     # Seed default demonstration user if none exists
     cursor.execute("SELECT COUNT(*) FROM users")
     if cursor.fetchone()[0] == 0:
@@ -335,6 +369,148 @@ def log_audit_event(action: str, entity_type: str = "", entity_id: str = "",
         conn.close()
     except Exception as e:
         print(f"[WARN] Failed to write audit log: {e}")
+
+# ------------------------------------------------------------------------------
+# Customer Recommendation Applications (Durable Next Best Actions)
+# ------------------------------------------------------------------------------
+def apply_customer_recommendation(customer_id: str, recommendation_id: str, action_title: str,
+                                  action_type: str = "reward", impact_text: str = "",
+                                  notes: str = "") -> Dict[str, Any]:
+    """Durably records an applied recommendation for a customer with idempotency."""
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    cursor.execute("""
+        SELECT id, customer_id, recommendation_id, action_title, action_type, impact_text, status, applied_at, notes
+        FROM customer_recommendations
+        WHERE customer_id = ? AND recommendation_id = ?
+    """, (str(customer_id), str(recommendation_id)))
+    existing = cursor.fetchone()
+    if existing:
+        conn.close()
+        res = dict(existing)
+        res["already_applied"] = True
+        return res
+
+    now_iso = datetime.now(timezone.utc).isoformat()
+    cursor.execute("""
+        INSERT OR IGNORE INTO customer_recommendations (
+            customer_id, recommendation_id, action_title, action_type, impact_text, status, applied_at, notes
+        ) VALUES (?, ?, ?, ?, ?, 'applied', ?, ?)
+    """, (str(customer_id), str(recommendation_id), action_title.strip(), action_type.strip(), impact_text.strip(), now_iso, notes.strip()))
+    if cursor.rowcount == 0:
+        cursor.execute("""
+            SELECT id, customer_id, recommendation_id, action_title, action_type, impact_text, status, applied_at, notes
+            FROM customer_recommendations
+            WHERE customer_id = ? AND recommendation_id = ?
+        """, (str(customer_id), str(recommendation_id)))
+        existing = cursor.fetchone()
+        conn.close()
+        res = dict(existing)
+        res["already_applied"] = True
+        return res
+    rec_id = cursor.lastrowid
+    conn.commit()
+    conn.close()
+    return {
+        "id": rec_id,
+        "customer_id": str(customer_id),
+        "recommendation_id": str(recommendation_id),
+        "action_title": action_title.strip(),
+        "action_type": action_type.strip(),
+        "impact_text": impact_text.strip(),
+        "status": "applied",
+        "applied_at": now_iso,
+        "notes": notes.strip(),
+        "already_applied": False
+    }
+
+def list_customer_recommendations(customer_id: str) -> List[Dict[str, Any]]:
+    """Returns all applied recommendations for a customer."""
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    cursor.execute("""
+        SELECT id, customer_id, recommendation_id, action_title, action_type, impact_text, status, applied_at, notes
+        FROM customer_recommendations
+        WHERE customer_id = ?
+        ORDER BY id DESC
+    """, (str(customer_id),))
+    rows = cursor.fetchall()
+    conn.close()
+    return [dict(r) for r in rows]
+
+# ------------------------------------------------------------------------------
+# Customer Tasks & Operational Follow-ups
+# ------------------------------------------------------------------------------
+def create_customer_task(customer_id: str, title: str, description: str = "",
+                         assignee: str = "Retention Specialist", priority: str = "Medium",
+                         due_date: Optional[str] = None) -> Dict[str, Any]:
+    """Durably creates an assigned follow-up task for a customer."""
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    now_iso = datetime.now(timezone.utc).isoformat()
+    cursor.execute("""
+        INSERT INTO customer_tasks (
+            customer_id, title, description, assignee, priority, due_date, status, created_at, updated_at
+        ) VALUES (?, ?, ?, ?, ?, ?, 'open', ?, ?)
+    """, (str(customer_id), title.strip(), (description or "").strip(),
+          assignee.strip(), priority.strip(), due_date or None, now_iso, now_iso))
+    task_id = cursor.lastrowid
+    conn.commit()
+    conn.close()
+    return {
+        "id": task_id,
+        "customer_id": str(customer_id),
+        "title": title.strip(),
+        "description": (description or "").strip(),
+        "assignee": assignee.strip(),
+        "priority": priority.strip(),
+        "due_date": due_date,
+        "status": "open",
+        "created_at": now_iso,
+        "updated_at": now_iso
+    }
+
+def list_customer_tasks(customer_id: str) -> List[Dict[str, Any]]:
+    """Returns all tasks associated with a customer."""
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    cursor.execute("""
+        SELECT id, customer_id, title, description, assignee, priority, due_date, status, created_at, updated_at
+        FROM customer_tasks
+        WHERE customer_id = ?
+        ORDER BY id DESC
+    """, (str(customer_id),))
+    rows = cursor.fetchall()
+    conn.close()
+    return [dict(r) for r in rows]
+
+def get_customer_task(task_id: int) -> Optional[Dict[str, Any]]:
+    """Returns a specific task by ID."""
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    cursor.execute("""
+        SELECT id, customer_id, title, description, assignee, priority, due_date, status, created_at, updated_at
+        FROM customer_tasks
+        WHERE id = ?
+    """, (int(task_id),))
+    row = cursor.fetchone()
+    conn.close()
+    return dict(row) if row else None
+
+def update_customer_task_status(task_id: int, status: str) -> bool:
+    """Updates the status of a task."""
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    now_iso = datetime.now(timezone.utc).isoformat()
+    cursor.execute("""
+        UPDATE customer_tasks
+        SET status = ?, updated_at = ?
+        WHERE id = ?
+    """, (status.strip(), now_iso, int(task_id)))
+    updated = cursor.rowcount > 0
+    conn.commit()
+    conn.close()
+    return updated
 
 # Run schema init on import
 init_db()
