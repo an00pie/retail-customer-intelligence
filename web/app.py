@@ -35,9 +35,19 @@ SCALER_PATH = os.path.join(MODELS_DIR, "rfm_scaler.joblib")
 MAPPING_PATH = os.path.join(MODELS_DIR, "segment_mapping.json")
 METRICS_PATH = os.path.join(MODELS_DIR, "evaluation_metrics.json")
 
-# Global Cache
+# Global Cache & Model Loading Diagnostics
 _models_cache = {}
+_model_load_error: Optional[str] = None
+_model_load_status: str = "uninitialized"
 _serving_instance: Optional[CustomerServingLayer] = None
+
+# Backward compatibility shim for numpy._core when loading numpy 2 pickled models in older numpy
+if not hasattr(np, "_core"):
+    try:
+        sys.modules["numpy._core"] = np.core
+        sys.modules["numpy._core.multiarray"] = np.core.multiarray
+    except Exception:
+        pass
 
 def get_serving() -> CustomerServingLayer:
     global _serving_instance
@@ -46,7 +56,22 @@ def get_serving() -> CustomerServingLayer:
     return _serving_instance
 
 def get_models():
+    global _model_load_error, _model_load_status
     if not _models_cache:
+        required_artifacts = {
+            "clv": CLV_MODEL_PATH,
+            "churn": CHURN_MODEL_PATH,
+            "kmeans": KMEANS_PATH,
+            "scaler": SCALER_PATH,
+            "mapping": MAPPING_PATH,
+        }
+        missing = [name for name, path in required_artifacts.items() if not os.path.exists(path)]
+        if missing:
+            _model_load_error = f"Missing model artifacts: {', '.join(missing)}"
+            _model_load_status = "missing_artifacts"
+            print(f"[WARN] {_model_load_error}")
+            return _models_cache
+
         try:
             clv = joblib.load(CLV_MODEL_PATH)
             churn = joblib.load(CHURN_MODEL_PATH)
@@ -61,8 +86,12 @@ def get_models():
                 "scaler": scaler,
                 "mapping": mapping
             })
+            _model_load_error = None
+            _model_load_status = "loaded"
         except Exception as e:
-            print(f"[WARN] Error loading joblib models: {e}")
+            _model_load_error = f"{type(e).__name__}: {str(e)}"
+            _model_load_status = "load_error"
+            print(f"[WARN] Error loading joblib models: {_model_load_error}")
     return _models_cache
 
 def load_evaluation_metrics() -> Dict[str, Any]:
@@ -148,11 +177,27 @@ def predict_customer(recency_days: int, frequency: int, total_spend: float, tenu
                 "avg_order_value": round(aov, 2)
             }
         except Exception as e:
-            print(f"[WARN] Trained inference unavailable: {type(e).__name__}")
+            runtime_err = f"{type(e).__name__}: {str(e)}"
+            print(f"[WARN] Trained inference execution failed: {runtime_err}")
+            return {
+                **evidence,
+                "error": f"Trained inference runtime error: {runtime_err}",
+                "error_reason": "inference_runtime_error",
+                "segment": None,
+                "predicted_clv": None,
+                "churn_probability": None,
+                "recency_days": int(recency_days),
+                "frequency": int(frequency),
+                "monetary": round(float(total_spend), 2),
+                "tenure_days": int(tenure_days),
+                "avg_order_value": round(aov, 2)
+            }
 
+    error_msg = f"Trained inference is unavailable: {_model_load_error}" if _model_load_error else "Trained inference is unavailable. No fallback estimate was produced."
     return {
         **evidence,
-        "error": "Trained inference is unavailable. No fallback estimate was produced.",
+        "error": error_msg,
+        "error_reason": _model_load_status if _model_load_status != "uninitialized" else "model_unavailable",
         "segment": None,
         "predicted_clv": None,
         "churn_probability": None,
@@ -381,13 +426,21 @@ def api_metrics():
 @app.route("/api/health")
 def api_health():
     serving = get_serving()
+    models = get_models()
+    model_active = bool(models)
+    model_engine_status = (
+        "Scikit-Learn & Spark MLlib Inference Engine (Active)"
+        if model_active
+        else f"Degraded - Model load failure: {_model_load_error or 'unloaded'}"
+    )
     return jsonify({
         "status": "operational",
         "timestamp": datetime.now(timezone.utc).isoformat(),
         "serving_records": serving.count(),
         "serving_backend": "Apache HBase (Live)" if serving.use_hbase else "Embedded NoSQL KV Store",
         "warehouse_status": "Analytical Parquet & Aggregated JSON (1.06M rows verified)",
-        "model_engine": "Scikit-Learn & Spark MLlib Inference Engine (Active)",
+        "model_engine": model_engine_status,
+        "model_inference_status": "available" if model_active else "unavailable",
         "p99_latency_ms": 0.84
     })
 

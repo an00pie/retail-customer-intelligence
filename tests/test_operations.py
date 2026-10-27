@@ -1,6 +1,6 @@
 """Operational contracts: authentication, frozen cohorts, audit and honest inference."""
 import unittest
-from unittest.mock import patch
+from unittest.mock import patch, MagicMock
 from web.app import app
 
 
@@ -96,6 +96,36 @@ class OperationsTests(unittest.TestCase):
         self.assertEqual(result.json['inference_status'], 'unavailable')
         self.assertIsNone(result.json['predicted_clv'])
         self.assertIsNone(result.json['churn_probability'])
+        self.assertIn('error_reason', result.json)
+
+    def test_failed_inference_distinguishes_runtime_error(self):
+        fake_model = MagicMock()
+        fake_model.predict.side_effect = RuntimeError("Incompatible tensor layout")
+        with patch('web.app.get_models', return_value={
+            'clv': fake_model, 'churn': fake_model, 'kmeans': fake_model,
+            'scaler': fake_model, 'mapping': {0: 'Loyal'}
+        }):
+            result = self.client.post('/api/predict', json={'recency_days': 10, 'frequency': 3, 'total_spend': 100})
+        self.assertEqual(result.status_code, 503)
+        self.assertEqual(result.json['inference_status'], 'unavailable')
+        self.assertEqual(result.json['error_reason'], 'inference_runtime_error')
+        self.assertIn('RuntimeError', result.json['error'])
+        self.assertIsNone(result.json['predicted_clv'])
+
+    def test_health_reflects_model_inference_availability(self):
+        # Operational with models loaded
+        res = self.client.get('/api/health')
+        self.assertEqual(res.status_code, 200)
+        self.assertEqual(res.json['status'], 'operational')
+        self.assertEqual(res.json['model_inference_status'], 'available')
+        self.assertIn('(Active)', res.json['model_engine'])
+
+        # Degraded model status when models cannot be loaded
+        with patch('web.app.get_models', return_value={}), patch('web.app._model_load_error', 'InconsistentVersionWarning: sklearn mismatch'):
+            res_degraded = self.client.get('/api/health')
+            self.assertEqual(res_degraded.status_code, 200)
+            self.assertEqual(res_degraded.json['model_inference_status'], 'unavailable')
+            self.assertIn('Degraded', res_degraded.json['model_engine'])
 
     def test_successful_inference_is_auditable(self):
         result = self.client.post('/api/predict', json={'recency_days': 10, 'frequency': 3, 'total_spend': 100})
