@@ -49,6 +49,13 @@ if not hasattr(np, "_core"):
     except Exception:
         pass
 
+# Cython module compatibility shim for unpickling scikit-learn loss functions
+try:
+    import sklearn._loss._loss as _sklearn_loss_cy
+    sys.modules.setdefault("_loss", _sklearn_loss_cy)
+except Exception:
+    pass
+
 def get_serving() -> CustomerServingLayer:
     global _serving_instance
     if _serving_instance is None:
