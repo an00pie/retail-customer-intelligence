@@ -3979,7 +3979,12 @@ function initInsightCopilot() {
       if (!data) return;
       if (data.configured) {
         if (statusDot) statusDot.className = 'status-dot';
-        if (statusText) statusText.textContent = `${data.model || 'Gemini-3.8-flash'} · Grounded`;
+        if (statusText) {
+          statusText.textContent = `${data.model || 'Gemini-3.8-flash'} · Grounded`;
+          if (data.timeout_seconds) {
+            statusText.title = `Model: ${data.model || 'gemini-3.8-flash'} | Timeout: ${data.timeout_seconds}s`;
+          }
+        }
         if (statusBanner) statusBanner.style.display = 'none';
       } else {
         if (statusDot) statusDot.className = 'status-dot';
@@ -4147,10 +4152,13 @@ window.handleCopilotSubmit = function(event) {
         const err = await res.json().catch(() => ({}));
         const msg = err.error || 'Gemini AI service is currently unavailable.';
         const isTimeout = /time(d)?\s*out/i.test(msg);
+        const isHighDemand = /high demand|unavailable|overloaded|capacity/i.test(msg) || err.code === 'AI_HIGH_DEMAND';
         const isKeyMissing = /key.*not configured|unauthenticated|invalid/i.test(msg);
 
         if (isTimeout) {
           assistantBubble.innerHTML = `<strong style="color: #d4d4d4;">Request Timed Out</strong><br>${escapeHtml(msg)}<br><span style="font-size: 11px; color: #8e8e93; margin-top: 5px; display: inline-block;">The AI analysis took longer than expected. Please try asking again or refine your query.</span>`;
+        } else if (isHighDemand) {
+          assistantBubble.innerHTML = `<strong style="color: #d4d4d4;">Temporary High Demand</strong><br>${escapeHtml(msg)}<br><span style="font-size: 11px; color: #8e8e93; margin-top: 5px; display: inline-block;">Google Gemini is currently experiencing a temporary traffic spike. Please retry your inquiry in a moment.</span>`;
         } else if (isKeyMissing) {
           assistantBubble.innerHTML = `<strong style="color: #d4d4d4;">Service Setup Required</strong><br>${escapeHtml(msg)}<br><span style="font-size: 11px; color: #8e8e93; margin-top: 5px; display: inline-block;">Configure <code>GEMINI_API_KEY</code> on your environment to activate live synthesis.</span>`;
         } else {

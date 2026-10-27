@@ -257,12 +257,89 @@ class TestCopilotExecutionWithMockedGemini:
         from web.services.gemini_service import GeminiService
         monkeypatch.setenv("GEMINI_TIMEOUT_SECONDS", "45")
         svc = GeminiService()
+        assert svc.timeout_seconds == 45
         assert svc._timeout_seconds == 45
 
         monkeypatch.setenv("GEMINI_TIMEOUT_SECONDS", "999")
         svc_clamped = GeminiService()
+        assert svc_clamped.timeout_seconds == 60
         assert svc_clamped._timeout_seconds == 60
 
         monkeypatch.setenv("GEMINI_TIMEOUT_SECONDS", "not-a-number")
         svc_default = GeminiService()
+        assert svc_default.timeout_seconds == 30
         assert svc_default._timeout_seconds == 30
+
+    @patch("google.genai.Client")
+    def test_copilot_timeout_message_matches_configured_seconds(self, mock_client_cls, client, monkeypatch):
+        """Regression test: Timeout message must match configured timeout and never emit legacy 15s limit."""
+        monkeypatch.setenv("GEMINI_API_KEY", "mock_key_for_test")
+        monkeypatch.setenv("GEMINI_TIMEOUT_SECONDS", "30")
+        mock_instance = MagicMock()
+        mock_instance.models.generate_content.side_effect = Exception("DeadlineExceeded: request timed out after 30000ms")
+        mock_client_cls.return_value = mock_instance
+
+        service = get_gemini_service()
+        service._client = mock_instance
+
+        res = client.post("/api/v1/ai/copilot", json={"prompt": "Summarize customer churn."})
+        assert res.status_code == 503
+        data = res.get_json()
+        assert "30s limit reached" in data["error"]
+        assert "15s limit reached" not in data["error"]
+
+    @patch("google.genai.Client")
+    def test_copilot_high_demand_503_retry_and_sanitized_error(self, mock_client_cls, client, monkeypatch):
+        """When Google returns 503 UNAVAILABLE, service retries once and sanitizes raw error dictionaries."""
+        monkeypatch.setenv("GEMINI_API_KEY", "mock_key_for_test")
+        mock_instance = MagicMock()
+        mock_instance.models.generate_content.side_effect = Exception(
+            "503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.', 'status': 'UNAVAILABLE'}}"
+        )
+        mock_client_cls.return_value = mock_instance
+
+        service = get_gemini_service()
+        service._client = mock_instance
+
+        res = client.post("/api/v1/ai/copilot", json={"prompt": "Summarize KPIs."})
+        assert res.status_code == 503
+        data = res.get_json()
+        assert data["code"] == "AI_HIGH_DEMAND"
+        assert "temporarily experiencing high demand" in data["error"]
+        # Must NOT expose raw internal Python/Google dictionary
+        assert "{'error':" not in data["error"]
+        # Verify 2 attempts were made (1 initial + 1 retry)
+        assert mock_instance.models.generate_content.call_count == 2
+
+    @patch("google.genai.Client")
+    def test_copilot_high_demand_503_recovers_on_retry(self, mock_client_cls, client, monkeypatch):
+        """When initial call hits 503 UNAVAILABLE but retry succeeds, returns genuine response."""
+        monkeypatch.setenv("GEMINI_API_KEY", "mock_key_for_test")
+        mock_instance = MagicMock()
+        success_response = MagicMock()
+        success_response.text = "Recovered after transient high demand: Revenue is $16.7M."
+        mock_instance.models.generate_content.side_effect = [
+            Exception("503 UNAVAILABLE: high demand spike"),
+            success_response
+        ]
+        mock_client_cls.return_value = mock_instance
+
+        service = get_gemini_service()
+        service._client = mock_instance
+
+        res = client.post("/api/v1/ai/copilot", json={"prompt": "Summarize KPIs."})
+        assert res.status_code == 200
+        data = res.get_json()
+        assert data["status"] == "success"
+        assert "Revenue is $16.7M" in data["answer"]
+        assert mock_instance.models.generate_content.call_count == 2
+
+    def test_status_endpoint_reports_timeout_seconds(self, client, monkeypatch):
+        """Endpoint /api/v1/ai/status reports configured timeout_seconds for observability."""
+        monkeypatch.setenv("GEMINI_API_KEY", "mock_key")
+        monkeypatch.setenv("GEMINI_TIMEOUT_SECONDS", "35")
+
+        res = client.get("/api/v1/ai/status")
+        assert res.status_code == 200
+        data = res.get_json()
+        assert data["timeout_seconds"] == 35

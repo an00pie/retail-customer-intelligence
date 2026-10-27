@@ -916,6 +916,7 @@ def ai_copilot():
         get_gemini_service,
         GeminiError,
         GeminiUnavailableError,
+        GeminiHighDemandError,
         GeminiRateLimitError
     )
 
@@ -935,6 +936,12 @@ def ai_copilot():
     try:
         result = service.ask_copilot(prompt=prompt, client_ip=client_ip)
         return jsonify(result), 200
+    except GeminiHighDemandError as e:
+        return jsonify({
+            "error": str(e),
+            "code": "AI_HIGH_DEMAND",
+            "status": "unavailable"
+        }), 503
     except GeminiUnavailableError as e:
         return jsonify({
             "error": str(e),
