@@ -40,6 +40,7 @@ dist/
 !frontend/static/img/**
 !web/static/img/**
 !frontend/public/static/img/**
+!docs/screenshots/**
 loding page/
 
 # Local agent tooling and runtime state
