@@ -13,7 +13,7 @@
     "assets:sync:from-web": "python3 ../scripts/sync_assets.py --from web"
   },
   "dependencies": {
-    "chart.js": "^4.4.2",
+    "chart.js": "^4.6.1",
     "clsx": "^2.1.0",
     "lucide-react": "^0.363.0",
     "react": "^18.2.0",
